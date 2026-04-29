@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   description:
     'TenderLab is a specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. 92% win rate across 200+ local authority and NHS submissions.',
   keywords: 'tender writing, bid writing, health social care, UK, tender consultancy',
+  icons: {
+    icon: '/images/Logo/tenderlab-logo-transparent.png',
+    apple: '/images/Logo/tenderlab-logo-transparent.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

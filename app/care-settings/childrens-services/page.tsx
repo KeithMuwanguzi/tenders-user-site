@@ -17,34 +17,6 @@ const DELIVERS = [
   'Compliance with Children Act 1989, Children Act 2004, and relevant statutory guidance',
 ]
 
-const SUB_SETTINGS = [
-  {
-    id: 'care-home-accommodation',
-    title: 'Care Home Accommodation',
-    desc: 'Residential care home submissions for children require Ofsted-aligned quality evidence, named registered managers, and therapeutic environment descriptions. We build responses that demonstrate your home\'s capacity to deliver against the inspection framework.',
-  },
-  {
-    id: 'supported-accommodation',
-    title: 'Supported Accommodation',
-    desc: 'Supported accommodation for young people demands evidence of key worker relationships, pathway planning, and move-on outcomes. We structure your response around the transition to independence evidence commissioners need to see.',
-  },
-  {
-    id: 'temporary-accommodation',
-    title: 'Temporary Accommodation',
-    desc: 'Temporary accommodation submissions require rapid access evidence, crisis management protocols, and clear pathway planning. We evidence your response infrastructure and move-on outcomes in the language commissioners score.',
-  },
-  {
-    id: 'emergency-accommodation',
-    title: 'Emergency Accommodation',
-    desc: 'Emergency accommodation tenders are evaluated on response times, safeguarding integration, and crisis support capacity. We ensure your safeguarding protocols and emergency response model are presented with operational specificity.',
-  },
-  {
-    id: 'supported-living',
-    title: 'Supported Living',
-    desc: 'Supported living for young people and care leavers requires evidence of tenancy sustainment, independence skill development, and multi-agency working. We build submissions around your key worker model and measurable independence outcomes.',
-  },
-]
-
 const WHY_MATTERS = [
   {
     title: 'Safeguarding is the Threshold',
@@ -118,18 +90,6 @@ export default function ChildrensServicesPage() {
                 ))}
               </div>
 
-              <h2 className="cs-detail-body__subheading" style={{ marginTop: 16 }}>Care Areas Within Children&apos;s Services</h2>
-              <p style={{ fontSize: 15, color: 'var(--slate)', lineHeight: 1.7, marginBottom: 8, maxWidth: 'none' }}>
-                Children&apos;s services encompasses a range of distinct provision types, each with its own evaluation emphasis. Select a setting below to see how TenderLab approaches it.
-              </p>
-              <div className="cs-sub-grid">
-                {SUB_SETTINGS.map((s) => (
-                  <div key={s.id} id={s.id} className="cs-sub-card">
-                    <h3 className="cs-sub-card__title">{s.title}</h3>
-                    <p className="cs-sub-card__desc">{s.desc}</p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Sidebar */}
@@ -162,6 +122,29 @@ export default function ChildrensServicesPage() {
             </aside>
 
           </div>
+
+          {/* Care Areas — full-width below the sidebar grid */}
+          <div className="cs-care-areas">
+            <h2 className="cs-detail-body__subheading">Care Areas Within Children&apos;s Services</h2>
+            <p style={{ fontSize: 15, color: 'var(--slate)', lineHeight: 1.7, marginBottom: 24, maxWidth: 'none' }}>
+              Children&apos;s services encompasses a range of distinct provision types, each with its own commissioning culture and evaluation emphasis. Select a setting below to explore how TenderLab approaches it.
+            </p>
+            <div className="cs-sub-grid">
+              {[
+                { slug: 'care-home-accommodation', title: 'Care Home Accommodation', desc: 'Residential care home submissions for children require Ofsted-aligned quality evidence, named registered managers, and therapeutic environment descriptions that go beyond regulatory compliance.' },
+                { slug: 'supported-accommodation',  title: 'Supported Accommodation',  desc: 'Supported accommodation for young people demands evidence of key worker relationships, pathway planning, and measurable move-on outcomes to independent living.' },
+                { slug: 'temporary-accommodation',  title: 'Temporary Accommodation',  desc: 'Temporary accommodation submissions require rapid access evidence, crisis management protocols, and clear pathway planning from first placement to settled outcome.' },
+                { slug: 'emergency-accommodation',  title: 'Emergency Accommodation',  desc: 'Emergency accommodation tenders are evaluated on response times, safeguarding integration, and crisis support capacity — every section must demonstrate operational readiness.' },
+                { slug: 'supported-living',          title: 'Supported Living',          desc: 'Supported living for young people and care leavers requires evidence of tenancy sustainment, independence skill development, and multi-agency working that underpins long-term stability.' },
+              ].map((s) => (
+                <Link key={s.slug} href={`/care-settings/childrens-services/${s.slug}`} className="cs-sub-card">
+                  <h3 className="cs-sub-card__title">{s.title}</h3>
+                  <p className="cs-sub-card__desc">{s.desc}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 

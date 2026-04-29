@@ -66,21 +66,26 @@ const portals = [
   'NHS Supply Chain',
 ]
 
+const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
+
 const services = [
   {
     title: 'Tender Review',
     desc: 'Independent evaluation against scoring criteria to identify strengths, gaps, and winning potential.',
     href: '/services#tender-review',
+    img: `${WP}/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg`,
   },
   {
     title: 'Full Tender Writing',
     desc: 'End-to-end tender writing service from requirement analysis to submission-ready documentation.',
     href: '/services#bid-writing',
+    img: `${WP}/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg`,
   },
   {
     title: 'Tender Retainer',
     desc: 'Ongoing expert support with priority access to manage and scale your tender pipeline.',
     href: '/services#retainer',
+    img: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
   },
 ]
 
@@ -190,18 +195,21 @@ const blogPosts = [
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/tender-writing-courses-uk-5-options-compared',
+    img: `${WP}/team-architects-working-town-project-conference-room-architect-business-suit_482257-26513-rlech3dwy1clh1rrgzpxq067wt5p662hx5uscbdh2k.jpg`,
   },
   {
     title: 'Tender Writing Software vs Human Bid Writers: 2026 Comparison',
     category: 'Commissioning Trends',
     date: '22 Apr 2026',
     slug: '/tender-writing-software-vs-human-bid-writers-2026-comparison',
+    img: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
   },
   {
     title: "Free Tender Writing Training: A Beginner's Guide",
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/free-tender-writing-training-a-beginners-guide',
+    img: `${WP}/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg`,
   },
 ]
 
@@ -338,7 +346,12 @@ export default function HomePage() {
               <Link href="/about" className="btn btn-primary">About Us</Link>
             </div>
             <div className="about-snippet__image">
-              <svg viewBox="0 0 640 512" fill="none"><path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z" fill="currentColor"/></svg>
+              <Image
+                src="/images/business-people-video-call-meeting.jpg"
+                alt="TenderLab specialists collaborating on a tender strategy"
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+              />
             </div>
           </div>
         </div>
@@ -356,7 +369,8 @@ export default function HomePage() {
             {services.map((svc) => (
               <div key={svc.title} className="svc-card">
                 <div className="svc-card__visual">
-                  <svg viewBox="0 0 448 512"><path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-32 252c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92H92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"/></svg>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={svc.img} alt={svc.title} />
                 </div>
                 <div className="svc-card__body">
                   <h3 className="svc-card__title">{svc.title}</h3>
@@ -484,7 +498,8 @@ export default function HomePage() {
             {blogPosts.map((post) => (
               <Link href={post.slug} key={post.slug} className="blog-card">
                 <div className="blog-card__img">
-                  <svg viewBox="0 0 448 512"><path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zm-128 80H96c-26.5 0-48-21.5-48-48s21.5-48 48-48h224v96zm32-240H80v-32h272v32zm0-64H80v-32h272v32z"/></svg>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={post.img} alt={post.title} />
                 </div>
                 <div className="blog-card__body">
                   <div className="blog-card__meta">

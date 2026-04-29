@@ -17,59 +17,6 @@ const DELIVERS = [
   'Quality gate review before submission',
 ]
 
-const SUB_SETTINGS = [
-  {
-    id: 'domiciliary-care',
-    title: 'Domiciliary Care',
-    desc: 'In-home personal care frameworks require evidence of person-centred planning, independence-focused outcomes, and robust staffing models. We build responses that demonstrate your operational model against every scored criterion.',
-  },
-  {
-    id: 'shared-lives',
-    title: 'Shared Lives',
-    desc: 'Shared Lives commissioning values relationship quality, matching processes, and carer support infrastructure. We translate your matching framework and carer development approach into evidence that scores at the highest level.',
-  },
-  {
-    id: 'residential-care',
-    title: 'Residential Care',
-    desc: 'Residential care tenders demand CQC compliance evidence, quality-of-life outcome data, and named clinical governance leads. We structure your submission to mirror how evaluators assess residential provision.',
-  },
-  {
-    id: 'nursing-care',
-    title: 'Nursing Care',
-    desc: 'Nursing care submissions must demonstrate clinical governance infrastructure, registered nurse deployment models, and complex health needs management. We ensure your clinical evidence is presented precisely.',
-  },
-  {
-    id: 'extra-care-services',
-    title: 'Extra Care Services',
-    desc: 'Extra care commissioning requires evidence of integrated housing and care delivery, independence outcomes, and community integration approaches. We map your delivery model against the commissioner\'s specific framework.',
-  },
-  {
-    id: 'reablement-services',
-    title: 'Reablement Services',
-    desc: 'Reablement tenders are outcomes-intensive. Commissioners expect measurable independence goals, timeframes, and reduction-in-care-need data. We build goal-focused evidence narratives from your operational records.',
-  },
-  {
-    id: 'day-services',
-    title: 'Day Services',
-    desc: 'Day services commissioning prioritises meaningful activity, social engagement outcomes, and complex needs management. We evidence your activity programme and outcomes framework against the evaluation criteria.',
-  },
-  {
-    id: 'live-in-care-services',
-    title: 'Live-In Care Services',
-    desc: '24/7 live-in care submissions require evidence of carer-matching processes, person-centred planning, and risk management. We structure responses to address the specific safeguarding and quality expectations of live-in care commissioners.',
-  },
-  {
-    id: 'short-breaks',
-    title: 'Short Breaks (Respite Care)',
-    desc: 'Short breaks tenders focus on carer experience, service user wellbeing, and flexibility of provision. We build submissions that demonstrate your model\'s impact on both carers and service users with measurable outcomes.',
-  },
-  {
-    id: 'housing-support',
-    title: 'Housing Support',
-    desc: 'Housing support commissioning demands tenancy sustainment outcome data, multi-agency working evidence, and prevention-focused approaches. We evidence your housing support model in the language commissioners use to score it.',
-  },
-]
-
 const WHY_MATTERS = [
   {
     title: 'Complex Commissioning Landscape',
@@ -143,18 +90,6 @@ export default function HealthSocialCarePage() {
                 ))}
               </div>
 
-              <h2 className="cs-detail-body__subheading" style={{ marginTop: 16 }}>Care Areas Within Health &amp; Social Care</h2>
-              <p style={{ fontSize: 15, color: 'var(--slate)', lineHeight: 1.7, marginBottom: 8, maxWidth: 'none' }}>
-                Each care area within the health and social care sector has its own commissioning culture and evaluation priorities. Select a setting below to see how TenderLab approaches it.
-              </p>
-              <div className="cs-sub-grid">
-                {SUB_SETTINGS.map((s) => (
-                  <div key={s.id} id={s.id} className="cs-sub-card">
-                    <h3 className="cs-sub-card__title">{s.title}</h3>
-                    <p className="cs-sub-card__desc">{s.desc}</p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Sidebar */}
@@ -187,6 +122,34 @@ export default function HealthSocialCarePage() {
             </aside>
 
           </div>
+
+          {/* Care Areas — full-width below the sidebar grid */}
+          <div className="cs-care-areas">
+            <h2 className="cs-detail-body__subheading">Care Areas Within Health &amp; Social Care</h2>
+            <p style={{ fontSize: 15, color: 'var(--slate)', lineHeight: 1.7, marginBottom: 24, maxWidth: 'none' }}>
+              Each care area within the health and social care sector has its own commissioning culture and evaluation priorities. Select a setting below to explore how TenderLab approaches it.
+            </p>
+            <div className="cs-sub-grid">
+              {[
+                { slug: 'domiciliary-care',      title: 'Domiciliary Care',         desc: 'In-home personal care frameworks require evidence of person-centred planning, independence-focused outcomes, and robust staffing models.' },
+                { slug: 'shared-lives',           title: 'Shared Lives',             desc: 'Shared Lives commissioning values relationship quality, matching processes, and carer support infrastructure.' },
+                { slug: 'residential-care',       title: 'Residential Care',         desc: 'Residential care tenders demand CQC compliance evidence, quality-of-life outcome data, and named clinical governance leads.' },
+                { slug: 'nursing-care',           title: 'Nursing Care',             desc: 'Nursing care submissions must demonstrate clinical governance infrastructure, registered nurse deployment models, and complex health needs management.' },
+                { slug: 'extra-care-services',    title: 'Extra Care Services',      desc: 'Extra care commissioning requires evidence of integrated housing and care delivery, independence outcomes, and community integration.' },
+                { slug: 'reablement-services',    title: 'Reablement Services',      desc: 'Reablement tenders are outcomes-intensive. Commissioners expect measurable independence goals, timeframes, and reduction-in-care-need data.' },
+                { slug: 'day-services',           title: 'Day Services',             desc: 'Day services commissioning prioritises meaningful activity, social engagement outcomes, and complex needs management.' },
+                { slug: 'live-in-care-services',  title: 'Live-In Care Services',    desc: '24/7 live-in care submissions require evidence of carer-matching processes, person-centred planning, and risk management.' },
+                { slug: 'short-breaks',           title: 'Short Breaks',             desc: 'Short breaks tenders focus on carer experience, service user wellbeing, and flexibility of provision.' },
+                { slug: 'housing-support',        title: 'Housing Support',          desc: 'Housing support commissioning demands tenancy sustainment outcome data, multi-agency working evidence, and prevention-focused approaches.' },
+              ].map((s) => (
+                <Link key={s.slug} href={`/care-settings/health-social-care/${s.slug}`} className="cs-sub-card">
+                  <h3 className="cs-sub-card__title">{s.title}</h3>
+                  <p className="cs-sub-card__desc">{s.desc}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 

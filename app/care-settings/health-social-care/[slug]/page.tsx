@@ -1,20 +1,15 @@
-'use client'
-import { useSearchParams, useRouter, usePathname } from 'next/navigation'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
 
-type SubSection = {
-  id: string
-  title: string
-  img: string
-  paragraphs: string[]
-}
-
-const SECTIONS: SubSection[] = [
+const SECTIONS = [
   {
-    id: 'domiciliary-care',
+    slug: 'domiciliary-care',
     title: 'Domiciliary Care',
+    subtitle: 'Winning domiciliary care contracts through operational specificity, evidence-led methodology, and a deep understanding of community-based commissioning.',
     img: `${WP}/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg`,
     paragraphs: [
       "Domiciliary care providers are frequently delivering care to 20 or more individuals per day, managing complex rota systems, variable care packages, and the full range of stakeholder engagement that goes with community-based delivery. Commissioning bodies understand the operational pressures of domiciliary provision and their evaluation criteria reflect it — they are looking for evidence that you can manage complexity at scale without compromising quality, continuity, or compliance.",
@@ -23,8 +18,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'shared-lives',
+    slug: 'shared-lives',
     title: 'Shared Lives',
+    subtitle: 'Shared Lives commissioning values relationship quality, matching processes, and carer support infrastructure above all else.',
     img: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
     paragraphs: [
       "Shared Lives care is a fundamentally different approach from other care delivery models, and commissioners procuring Shared Lives arrangements know it. The Shared Lives model values relationship quality, the matching process, carer development, and the integration of the person into family and community life. Commissioners are not looking for institutional quality assurance language — they are looking for evidence that your Shared Lives scheme genuinely embeds the principles of ordinary living.",
@@ -33,8 +29,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'residential-care',
+    slug: 'residential-care',
     title: 'Residential Care',
+    subtitle: 'Residential care tenders demand CQC compliance evidence, quality-of-life outcome data, and named clinical governance leads — we deliver all three.',
     img: `${WP}/service5-rld2tb6l874u29gi0ghbat2xqz5o9gd2l6ub88mmcs.webp`,
     paragraphs: [
       "Residential care homes operate at the intersection of CQC compliance, quality-of-life outcomes, and commissioning expectations that are shaped by years of national policy on personalisation and dignity. Local authority evaluators for residential care contracts expect to see evidence that your home goes beyond regulatory compliance — they want to see how your service improves residents' lives, not just how it avoids inspection failures.",
@@ -43,8 +40,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'nursing-care',
+    slug: 'nursing-care',
     title: 'Nursing Care',
+    subtitle: 'Nursing care submissions require clinical governance infrastructure, registered nursing oversight, and complex health needs management presented with precision.',
     img: `${WP}/business-team-situation-present-share-idea-scaled-rlxsy44mcljsvgn3s6rt9ksf6do8u1w5ltqwwxuh0s.jpg`,
     paragraphs: [
       "Nursing care tenders require you to demonstrate a combination of clinical governance infrastructure, registered nursing oversight, and complex health needs management that goes significantly beyond standard social care requirements. Commissioning bodies and NHS procurement teams evaluating nursing care submissions expect detailed evidence of how your clinical governance operates, how registered nurses are deployed and supervised, and how complex health needs are identified, assessed, and managed across the care home.",
@@ -53,8 +51,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'extra-care-services',
+    slug: 'extra-care-services',
     title: 'Extra Care Services',
+    subtitle: 'Extra care commissioning sits at the intersection of housing and care delivery — a dual-commissioning context generalist writers consistently misread.',
     img: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
     paragraphs: [
       "Extra care housing developments require a very different competitive bidding strategy from standard domiciliary or residential care commissioning. The integration of housing management and care delivery, the emphasis on independence and community integration, and the specific outcomes frameworks used by housing associations and local authorities jointly commissioning extra care schemes all create a commissioning environment that generalist bid writers consistently misunderstand.",
@@ -63,8 +62,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'reablement-services',
+    slug: 'reablement-services',
     title: 'Reablement Services',
+    subtitle: 'Reablement tenders are outcomes-intensive. Commissioners expect measurable independence goals, timeframes, and reduction-in-care-need data.',
     img: `${WP}/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg`,
     paragraphs: [
       "Reablement services are a short-term community programme with a single, measurable purpose: restoring independence and reducing ongoing support needs. Commissioning bodies procure reablement services with clear outcome expectations and they evaluate responses on whether providers can demonstrate they genuinely deliver on that purpose — not just describe it. A reablement tender that reads like a domiciliary care submission will not score well, because commissioners can see immediately that the provider does not understand the model.",
@@ -73,8 +73,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'day-services',
+    slug: 'day-services',
     title: 'Day Services',
+    subtitle: 'Day services commissioning prioritises meaningful activity, social engagement outcomes, and genuine complex needs capability — not time-filling programmes.',
     img: `${WP}/team-architects-working-town-project-conference-room-architect-business-suit_482257-26513-rlech3dwy1clh1rrgzpxq067wt5p662hx5uscbdh2k.jpg`,
     paragraphs: [
       "Day services form a critical resource for adults with complex needs and their carers, and commissioning bodies procuring day service contracts are acutely aware of the difference between meaningful social engagement and time-filling activity. Day service tenders require evidence that your programme delivers genuine outcomes for individuals — improved wellbeing, social connection, skill development, and maintained independence — not simply a structured day away from home.",
@@ -83,8 +84,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'live-in-care-services',
+    slug: 'live-in-care-services',
     title: 'Live-In Care Services',
+    subtitle: '24/7 live-in care submissions require evidence of carer-matching processes, person-centred planning, and the unique safeguarding dynamics of home-based care.',
     img: `${WP}/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg`,
     paragraphs: [
       "Live-in care services are fundamentally personal and require a very different evidence base from other care models. Commissioners and local authorities procuring live-in care arrangements are looking for evidence that your matching process, your carer training and support model, and your safeguarding infrastructure are all built around the unique dynamics of a carer living in a client's home — not adapted from a domiciliary or residential framework.",
@@ -93,8 +95,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'short-breaks',
+    slug: 'short-breaks',
     title: 'Short Breaks (Respite Care)',
+    subtitle: 'Short breaks tenders must satisfy two distinct outcome sets — the service user experience and the carer benefit. We evidence both.',
     img: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
     paragraphs: [
       "Short breaks and respite care commissioning can be particularly challenging because the evaluation must satisfy two distinct sets of outcomes — the experience and wellbeing of the service user during the break, and the rest, relief, and support experience of the carer. Commissioners procuring short break services want to see evidence that your provision is genuinely restorative for carers and genuinely positive for service users, not simply a safe place to spend a few days.",
@@ -103,8 +106,9 @@ const SECTIONS: SubSection[] = [
     ],
   },
   {
-    id: 'housing-support',
+    slug: 'housing-support',
     title: 'Housing Support',
+    subtitle: 'Housing support commissioning demands tenancy sustainment outcome data, multi-agency working evidence, and a prevention-focused approach that stands out.',
     img: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
     paragraphs: [
       "Housing support services are often procured within broader community services frameworks, which means providers tendering for housing support contracts are competing against a wide range of organisations — housing associations, voluntary sector providers, and specialist support agencies — each with different evidence bases and commissioning relationships. Standing out in housing support procurement requires a clear articulation of your tenancy sustainment model and your prevention-focused approach.",
@@ -114,79 +118,108 @@ const SECTIONS: SubSection[] = [
   },
 ]
 
-export default function SubSectionTabs() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
+export function generateStaticParams() {
+  return SECTIONS.map((s) => ({ slug: s.slug }))
+}
 
-  const tabParam = searchParams.get('tab')
-  const activeId = (tabParam && SECTIONS.some((s) => s.id === tabParam))
-    ? tabParam
-    : SECTIONS[0].id
-  const active = SECTIONS.find((s) => s.id === activeId)!
-
-  const setTab = (id: string) => {
-    router.replace(`${pathname}?tab=${id}`, { scroll: false })
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const section = SECTIONS.find((s) => s.slug === slug)
+  if (!section) return {}
+  return {
+    title: `${section.title} Tenders | TenderLab`,
+    description: section.subtitle,
   }
+}
+
+export default async function HSCSubPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const section = SECTIONS.find((s) => s.slug === slug)
+  if (!section) notFound()
 
   return (
-    <div className="cs-sub-tabs">
+    <main>
 
-      {/* Tab strip */}
-      <div className="cs-sub-tabs__strip" role="tablist" aria-label="Care setting sub-sections">
-        {SECTIONS.map((s) => (
-          <button
-            key={s.id}
-            role="tab"
-            aria-selected={activeId === s.id}
-            aria-controls={`panel-${s.id}`}
-            id={`tab-${s.id}`}
-            className={`cs-sub-tabs__tab${activeId === s.id ? ' active' : ''}`}
-            onClick={() => setTab(s.id)}
-          >
-            {s.title}
-          </button>
-        ))}
-      </div>
-
-      {/* Content panel */}
-      <div
-        id={`panel-${active.id}`}
-        role="tabpanel"
-        aria-labelledby={`tab-${active.id}`}
-        className="cs-sub-tabs__panel"
-        key={active.id}
-      >
-        {/* Mini hero */}
-        <div className="cs-sub-hero">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={active.img} alt={active.title} />
-          <div className="cs-sub-hero__overlay" />
-          <h2 className="cs-sub-hero__title">{active.title}</h2>
+      {/* ── Hero ── */}
+      <section className="page-hero page-hero--img">
+        <div className="page-hero__bg">
+          <Image
+            src="/images/business-people-video-call-meeting.jpg"
+            alt={section.title}
+            fill
+            priority
+            style={{ objectFit: 'cover', objectPosition: 'center 20%' }}
+          />
         </div>
+        <div className="page-hero__overlay" />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <p className="page-hero__breadcrumb">
+            <Link href="/care-settings">Care Settings</Link>
+            {' / '}
+            <Link href="/care-settings/health-social-care">Health &amp; Social Care</Link>
+            {' / '}
+            {section.title}
+          </p>
+          <h1 className="page-hero__title">{section.title}</h1>
+          <p className="page-hero__sub">{section.subtitle}</p>
+        </div>
+      </section>
 
-        {/* Body */}
-        <div className="cs-sub-body">
-          <div className="cs-sub-body__photo">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={active.img} alt={active.title} />
-          </div>
-          <div className="cs-sub-body__text">
-            <h3 className="cs-sub-body__heading">{active.title}</h3>
-            {active.paragraphs.map((p, i) => (
-              <p key={i} className="cs-sub-body__para">{p}</p>
-            ))}
-            <Link href="/contact" className="btn btn-primary" style={{ marginTop: 8 }}>
-              Get Started
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
-                strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
-                <path d="M7 17L17 7M17 7H7M17 7v10" />
-              </svg>
-            </Link>
+      {/* ── Body ── */}
+      <section className="hsc-sub-page-body">
+        <div className="container">
+          <div className="hsc-sub-page-layout">
+            {/* Photo */}
+            <div className="hsc-sub-page-photo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={section.img} alt={section.title} />
+            </div>
+            {/* Text */}
+            <div className="hsc-sub-page-text">
+              <h2 className="hsc-sub-page-heading">{section.title}</h2>
+              {section.paragraphs.map((p, i) => (
+                <p key={i} className="hsc-sub-page-para">{p}</p>
+              ))}
+              <div className="hsc-sub-page-actions">
+                <Link href="/contact" className="btn btn-primary">
+                  Get a Free Consultation
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"
+                    strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
+                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                  </svg>
+                </Link>
+                <Link href="/care-settings/health-social-care" className="btn btn-ghost">
+                  ← Back to Health &amp; Social Care
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-    </div>
+      {/* ── CTA ── */}
+      <section className="services-cta">
+        <div className="container">
+          <p className="section-label">Health &amp; Social Care</p>
+          <h2 className="services-cta__headline">Ready to Win Your Next Contract?</h2>
+          <p className="services-cta__sub">
+            Book a free consultation and we&apos;ll assess your next opportunity, the commissioning landscape, and what it takes to win.
+          </p>
+          <div className="services-cta__actions">
+            <Link href="/contact" className="btn btn-white">Book a Free Call</Link>
+            <Link href="/services" className="btn btn-outline-white">View All Services</Link>
+          </div>
+        </div>
+      </section>
+
+    </main>
   )
 }
