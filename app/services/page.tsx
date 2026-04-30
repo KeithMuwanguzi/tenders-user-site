@@ -3,9 +3,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Services | TenderLab — Health & Social Care Tender Writing',
+  title: 'Services | TenderLab — Eight Services Across the Tendering Lifecycle',
   description:
-    'Specialist tender writing and bid consultancy services for UK health and social care providers. Bid Writing, Pre-Submission Review, Lost Bid Debrief, and more.',
+    'From spec-to-submission writing through pre-submission review, lost-bid debrief and mobilisation. Eight services structured around when to use them, what you receive, and the outcome they deliver.',
 }
 
 const SERVICES = [
@@ -13,8 +13,9 @@ const SERVICES = [
     id: 'bid-writing',
     num: '01',
     title: 'Bid Writing',
-    tagline: 'Specification-led writing. Evaluator-tested precision.',
-    desc: 'Commissioning bodies across UK health and social care are raising the bar on every scored submission. Evaluation criteria are becoming more granular, mark schemes more demanding, and the gap between a compliant response and a winning one continues to narrow. Generic content no longer passes threshold. Evaluators expect operational specificity, named evidence.',
+    tagline: 'From specification to submission, structured to score.',
+    desc: 'End-to-end tender writing for UK health and social care contracts.',
+    whenUsed: 'When the tender drops and there is no internal capacity to write it.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg',
     href: '/services/bid-writing',
   },
@@ -22,8 +23,9 @@ const SERVICES = [
     id: 'pre-submission-review',
     num: '02',
     title: 'Pre-Submission Review',
-    tagline: 'Independent scoring. Evaluator-level scrutiny.',
-    desc: "Submitting a tender without an independent review is the single most common reason providers score below threshold. Internal teams are too close to the content. They know what they meant to say, so they read what they intended rather than what the evaluator will actually mark. TenderLab's Pre-Submission Review applies the same 20-criterion scoring framework used by commissioning bodies.",
+    tagline: 'Know the score before the commissioner does.',
+    desc: 'Forensic scoring of a completed draft against the published evaluation criteria.',
+    whenUsed: 'Final draft complete, one to two weeks before submission.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/business-team-situation-present-share-idea-scaled-rlxsy44mcljsvgn3s6rt9ksf6do8u1w5ltqwwxuh0s.jpg',
     href: '/services/pre-submission-review',
   },
@@ -31,8 +33,9 @@ const SERVICES = [
     id: 'lost-bid-debrief',
     num: '03',
     title: 'Lost Bid Debrief',
-    tagline: 'Evidence-based analysis. Actionable intelligence.',
-    desc: 'Losing a tender is costly. Losing the same way twice is avoidable. Most providers receive a results letter and evaluator feedback but lack the framework to translate that information into meaningful improvements. Feedback is often vague, scores are listed without context, and the real reasons for the loss remain unclear.',
+    tagline: 'Convert losses into a compounding answer bank.',
+    desc: 'Structured post-loss analysis that turns a loss into reusable content.',
+    whenUsed: 'Within 30 days of the award notice, while feedback is still accessible.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg',
     href: '/services/lost-bid-debrief',
   },
@@ -40,8 +43,9 @@ const SERVICES = [
     id: 'tender-readiness-audit',
     num: '04',
     title: 'Tender Readiness Audit',
-    tagline: 'Assessed capability. Identified gaps. Clear action plan.',
-    desc: 'Winning tenders starts before the ITT is released. Providers who wait for a tender opportunity to assess their readiness are already behind. The organisations that score highest are those with pre-built evidence banks, current policies, documented outcomes, and a clear understanding of what commissioning bodies expect before the clock starts.',
+    tagline: 'Be ready before the opportunity arrives.',
+    desc: 'Diagnostic for providers preparing to enter the tender market or to step up to larger frameworks.',
+    whenUsed: '90 to 180 days before the first target tender drops.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/service5-rld2tb6l874u29gi0ghbat2xqz5o9gd2l6ub88mmcs.webp',
     href: '/services/tender-readiness-audit',
   },
@@ -49,8 +53,9 @@ const SERVICES = [
     id: 'bid-team-coaching',
     num: '05',
     title: 'Bid Team Coaching',
-    tagline: 'Practical skills. Evaluator perspective. Lasting capability.',
-    desc: 'Many care providers want to develop the internal capability to write and manage tenders without permanent reliance on external consultants. The challenge is that tender writing in health and social care is a specialist discipline. It requires understanding how evaluators think and what commissioning bodies genuinely look for.',
+    tagline: 'Build a tender function that delivers beyond the bid.',
+    desc: 'In-house capability build for providers with an internal bid writer or bid team.',
+    whenUsed: 'When the internal team is writing its own bids but scoring inconsistently.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/team-architects-working-town-project-conference-room-architect-business-suit_482257-26513-rlech3dwy1clh1rrgzpxq067wt5p662hx5uscbdh2k.jpg',
     href: '/services/bid-team-coaching',
   },
@@ -58,8 +63,9 @@ const SERVICES = [
     id: 'pipeline-tracking',
     num: '06',
     title: 'Pipeline Tracking',
-    tagline: 'Organised opportunities. Strategic priorities. No missed deadlines.',
-    desc: 'Tender opportunities in UK health and social care are published across multiple portals, frameworks, and Dynamic Purchasing Systems with varying timescales, different submission requirements, and overlapping deadlines. Providers who rely on ad hoc monitoring miss opportunities.',
+    tagline: 'See every opportunity before competitors do.',
+    desc: "Weekly feed of relevant opportunities scored against the provider's service scope, geography and capacity.",
+    whenUsed: 'When the provider is ready to bid consistently but cannot monitor every portal every day.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg',
     href: '/services/pipeline-tracking',
   },
@@ -67,8 +73,9 @@ const SERVICES = [
     id: 'mobilisation-support',
     num: '07',
     title: 'Mobilisation Support',
-    tagline: 'Contract won. Delivery planned. Transition secured.',
-    desc: 'Winning a health and social care contract is the starting point, not the finish line. Commissioning bodies expect a detailed mobilisation plan that demonstrates your ability to transition from contract award to full operational delivery within the specified timeframe.',
+    tagline: 'Ready for contract day one.',
+    desc: 'Post-award delivery from contract award through to the first 90 days of live service.',
+    whenUsed: 'From the moment the award notice arrives, through the first 90 days of live delivery.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg',
     href: '/services/mobilisation-support',
   },
@@ -76,8 +83,9 @@ const SERVICES = [
     id: 'tender-retainer',
     num: '08',
     title: 'Tender Retainer',
-    tagline: 'Ongoing partnership. Priority access. Consistent results.',
-    desc: 'For providers with a regular flow of tender opportunities, a retainer arrangement delivers the consistency, priority access, and strategic oversight that one-off engagements cannot. The commissioning landscape in UK health and social care moves continuously.',
+    tagline: 'Turn tendering into a growth function.',
+    desc: 'Monthly engagement bundling Pipeline Tracking, two Pre-Submission Reviews and priority access to Bid Writing.',
+    whenUsed: 'When tender income is central to the provider\'s growth plan.',
     img: 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg',
     href: '/services/tender-retainer',
   },
@@ -181,8 +189,9 @@ export default function ServicesPage() {
         </div>
         <div className="page-hero__overlay" />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="page-hero__title">Services</h1>
-          <p className="page-hero__sub">Strategic solutions for winning health and social care tenders.</p>
+          <p className="page-hero__label">Services · UK Health and Social Care</p>
+          <h1 className="page-hero__title">Eight services across the tendering lifecycle.</h1>
+          <p className="page-hero__sub">From spec-to-submission writing through pre-submission review, lost-bid debrief and mobilisation. Each service is structured around when to use it, what you receive, and the outcome it delivers.</p>
         </div>
       </section>
 
@@ -203,7 +212,8 @@ export default function ServicesPage() {
                 <div className="svc-card-wp__body">
                   <p className="svc-card-wp__tagline">{s.tagline}</p>
                   <p className="svc-card-wp__desc">{s.desc}</p>
-                  <Link href={s.href} className="svc-card-wp__btn">View More</Link>
+                  <div className="svc-card-wp__when"><strong>When used:</strong> {s.whenUsed}</div>
+                  <Link href={s.href} className="svc-card-wp__btn">View service →</Link>
                 </div>
               </article>
             ))}

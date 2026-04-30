@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>End of Life and Palliative Care | TenderLab Care Settings</title>
+<meta name="description" content="End of Life and Palliative Care tender writing for UK health and social care providers. Care for adults in the final months of life, including symptom management and family support.">
+<style>
+:root{
+  --brand-red-deep:#B02727;
+  --brand-red-bright:#F24B4B;
+  --brand-red-glow:rgba(212,56,44,0.18);
+  --ink:#1F1F1F;
+  --cream:#F7F4EE;
+  --cream-deep:#F0EBE3;
+  --stone:#D1CBC2;
+  --mid-grey:#4A4A4A;
+  --soft-grey:#6B7280;
+  --space-xs:8px;
+  --space-sm:14px;
+  --space-md:24px;
+  --space-lg:40px;
+  --space-xl:56px;
+  --shadow-sm:0 1px 3px rgba(31,31,31,.06);
+  --shadow-md:0 6px 18px rgba(31,31,31,.10),0 2px 4px rgba(31,31,31,.04);
+  --shadow-lg:0 16px 36px rgba(31,31,31,.12),0 4px 10px rgba(31,31,31,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#FFFFFF;color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:var(--brand-red-deep);text-decoration:none;transition:color .15s ease}
+a:hover{color:var(--brand-red-bright)}
+img{max-width:100%;height:auto;display:block}
+
+/* Site chrome */
+.site-header{background:rgba(255,255,255,.96);border-bottom:1px solid var(--stone);padding:16px 0;position:sticky;top:0;z-index:60;backdrop-filter:saturate(180%) blur(6px)}
+.site-header .wrap{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+.site-header .brand img{height:44px;width:auto;transition:transform .15s ease}
+.site-header .brand:hover img{transform:scale(1.02)}
+.site-header nav{display:flex;align-items:center;gap:0}
+.site-header nav a{color:var(--ink);margin-left:22px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;letter-spacing:.6px;text-transform:uppercase;font-weight:500;transition:color .15s ease;position:relative}
+.site-header nav a:hover{color:var(--brand-red-deep);text-decoration:none}
+.site-header nav a.start{color:var(--brand-red-deep);font-weight:700;position:relative;padding-bottom:2px}
+.site-header nav a.start:after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--brand-red-bright);transform:scaleX(.6);transform-origin:left;transition:transform .25s ease}
+.site-header nav a.start:hover:after{transform:scaleX(1)}
+.site-header nav a.cta{background:var(--brand-red-deep);color:#fff;padding:9px 16px;letter-spacing:.8px;margin-left:18px;transition:background .15s ease,transform .15s ease}
+.site-header nav a.cta:hover{background:var(--brand-red-bright);color:#fff;transform:translateY(-1px);text-decoration:none}
+
+/* Footer with intent capture */
+.site-footer{background:var(--ink);color:#D1CBC2;padding:48px 0 22px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;letter-spacing:.3px}
+.site-footer .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.site-footer .footer-cta{background:var(--brand-red-deep);margin:0 auto 36px;padding:24px 28px;display:grid;grid-template-columns:1.6fr 1fr;gap:24px;align-items:center}
+@media (max-width: 800px){.site-footer .footer-cta{grid-template-columns:1fr}}
+.site-footer .footer-cta h3{font-family:Georgia,serif;color:#fff;font-size:22px;margin:0 0 6px;font-weight:700;letter-spacing:-.2px}
+.site-footer .footer-cta p{color:#FFD7D2;margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13.5px;line-height:1.55}
+.site-footer .footer-cta .btn{display:inline-block;background:#fff;color:var(--brand-red-deep);font-weight:700;padding:13px 22px;letter-spacing:1.2px;text-transform:uppercase;font-size:13px;transition:all .15s ease;text-align:center}
+.site-footer .footer-cta .btn:hover{background:var(--cream);transform:translateY(-1px);text-decoration:none;color:var(--brand-red-deep)}
+.site-footer .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-bottom:24px}
+@media (max-width: 800px){.site-footer .grid{grid-template-columns:repeat(2,1fr)}}
+.site-footer h4{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--brand-red-bright);margin:0 0 12px;font-weight:700}
+.site-footer ul{list-style:none;padding:0;margin:0}
+.site-footer ul li{margin-bottom:7px}
+.site-footer a{color:#D1CBC2;text-decoration:none;transition:color .15s ease}
+.site-footer a:hover{color:#fff}
+.site-footer .positioning{font-family:Georgia,serif;font-size:14px;color:#fff;line-height:1.55;font-style:italic;margin:0 0 8px;max-width:520px}
+.site-footer .copy{border-top:1px solid rgba(255,255,255,.12);padding-top:18px;text-align:center;color:#9aa4b6}
+.site-footer .copy b{color:#fff}
+
+/* Sticky bottom CTA - scenario-led */
+.sticky-cta{position:fixed;bottom:0;left:0;right:0;background:var(--brand-red-deep);color:#fff;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:55;box-shadow:0 -8px 22px rgba(0,0,0,.20);font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;letter-spacing:.4px}
+.sticky-cta .msg{font-weight:500}
+.sticky-cta .msg b{font-weight:700;color:#fff}
+.sticky-cta .btn{background:#fff;color:var(--brand-red-deep);padding:9px 18px;font-weight:700;font-size:13px;letter-spacing:.8px;text-transform:uppercase;transition:all .15s ease}
+.sticky-cta .btn:hover{background:var(--cream);text-decoration:none;color:var(--brand-red-deep);transform:translateY(-1px)}
+@media (max-width: 600px){.sticky-cta{flex-direction:column;gap:8px;padding:10px 14px;font-size:13px;text-align:center}}
+
+/* Article container */
+.tl-post{max-width:1100px;margin:0 auto;padding:32px 32px 80px}
+.tl-post *{box-sizing:border-box}
+
+.tl-post .crumbs{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mid-grey);margin-bottom:16px}
+.tl-post .crumbs a{color:var(--mid-grey)}
+.tl-post .crumbs a:hover{color:var(--brand-red-deep)}
+
+.tl-post .care-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--care-color);color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.tl-post .care-tag .dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7}
+
+.tl-post .kicker{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--brand-red-bright);font-size:11.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;margin-bottom:14px}
+
+.tl-post h1{font-family:Georgia,serif;font-size:36px;line-height:1.18;color:var(--ink);margin:0 0 14px;letter-spacing:-.4px;font-weight:700}
+
+/* Verdict line - decisive single sentence under H1 */
+.tl-post .verdict{font-family:Georgia,serif;font-size:19px;line-height:1.55;color:var(--brand-red-deep);font-weight:600;margin:0 0 26px;padding:14px 18px;background:linear-gradient(to right, var(--cream), #fff);border-left:4px solid var(--brand-red-bright);max-width:none;font-style:italic}
+
+/* Entry anchor strip - Started with / Result / Context */
+.tl-post .entry-anchor{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0 0 22px;border-top:3px solid var(--care-color);border-bottom:1px solid var(--stone);background:linear-gradient(to bottom, var(--cream), #fff)}
+.tl-post .entry-anchor .row{padding:14px 18px;border-right:1px solid var(--stone)}
+.tl-post .entry-anchor .row:last-child{border-right:none}
+.tl-post .entry-anchor .row .label{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--brand-red-deep);font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.tl-post .entry-anchor .row .label:before{content:"";width:14px;height:1px;background:var(--brand-red-bright)}
+.tl-post .entry-anchor .row .value{font-family:Georgia,serif;font-size:15.5px;color:var(--ink);font-weight:700;line-height:1.4}
+@media (max-width: 700px){.tl-post .entry-anchor{grid-template-columns:1fr}.tl-post .entry-anchor .row{border-right:none;border-bottom:1px solid var(--stone);padding:11px 14px}.tl-post .entry-anchor .row:last-child{border-bottom:none}}
+
+/* Starting position dark strip - clear entry-barrier signal */
+.tl-post .starting-strip{background:var(--ink);color:#fff;padding:14px 18px;margin:0 0 22px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13.5px;line-height:1.55;letter-spacing:.2px;display:flex;gap:14px;align-items:flex-start}
+.tl-post .starting-strip .label{flex:0 0 auto;color:var(--brand-red-bright);font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding-top:2px;border-right:1px solid rgba(255,255,255,.18);padding-right:14px}
+.tl-post .starting-strip .body{flex:1}
+
+/* Meta bar - lead human-readable, FTS link prominent */
+.tl-post .meta-bar{background:var(--cream);padding:12px 18px;border-left:4px solid var(--brand-red-deep);font-size:13.5px;color:var(--ink);margin:0 0 24px;font-family:'Helvetica Neue',Arial,sans-serif;line-height:1.7;display:flex;flex-wrap:wrap;gap:0 16px;align-items:center}
+.tl-post .meta-bar .item{display:inline-flex;align-items:center;gap:6px}
+.tl-post .meta-bar .item:not(:last-child)::after{content:"·";color:var(--stone);margin-left:16px}
+.tl-post .meta-bar strong{color:var(--brand-red-deep);font-weight:700}
+.tl-post .meta-bar a.fts-link{display:inline-flex;align-items:center;gap:6px;background:var(--brand-red-deep);color:#fff;padding:6px 12px;font-weight:700;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;transition:background .15s ease,transform .15s ease;text-decoration:none}
+.tl-post .meta-bar a.fts-link:hover{background:var(--brand-red-bright);text-decoration:none;color:#fff;transform:translateY(-1px)}
+.tl-post .meta-bar a.fts-link svg{width:11px;height:11px;flex:0 0 11px}
+
+/* Stamp row */
+.tl-post .stamp-row{display:flex;align-items:center;gap:28px;margin:0 0 26px;flex-wrap:wrap}
+.tl-post .won-stamp-link{display:flex;flex-direction:column;align-items:center;text-decoration:none;flex:0 0 auto;cursor:pointer}
+.tl-post .won-stamp-link:hover{text-decoration:none}
+.tl-post .won-stamp{width:160px;height:160px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(circle at 32% 30%, #FF8276 0%, #FF6B5A 25%, var(--brand-red-bright) 60%, var(--brand-red-deep) 100%);color:#fff;border:6px double rgba(255,255,255,.5);box-shadow:0 14px 32px rgba(176,39,39,.45), inset 0 0 0 5px rgba(255,255,255,.10), inset 0 -4px 12px rgba(0,0,0,.18);transform:rotate(-12deg);text-align:center;font-family:Georgia,serif;position:relative;transition:transform .35s cubic-bezier(.175,.885,.32,1.075)}
+.tl-post .won-stamp:before{content:"";position:absolute;inset:11px;border:2px dashed rgba(255,255,255,.55);border-radius:50%}
+.tl-post .won-stamp:after{content:"";position:absolute;top:8px;left:14px;width:32px;height:8px;background:rgba(255,255,255,.35);border-radius:50%;filter:blur(3px)}
+.tl-post .won-stamp .label{font-size:9.5px;letter-spacing:3px;font-weight:700;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.tl-post .won-stamp .word{font-size:42px;font-weight:900;letter-spacing:5px;line-height:1;margin:4px 0;text-shadow:0 2px 3px rgba(0,0,0,.35)}
+.tl-post .won-stamp .sub{font-size:8.5px;letter-spacing:2px;font-weight:600;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.tl-post .won-stamp-link:hover .won-stamp{transform:rotate(-3deg) scale(1.04)}
+.tl-post .won-stamp-link .stamp-caption{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--mid-grey);margin-top:10px;text-align:center;max-width:170px;line-height:1.4;font-weight:600}
+.tl-post .stamp-row .stamp-summary{flex:1;min-width:280px;font-family:Georgia,serif;font-size:18px;color:var(--ink);line-height:1.5;border-left:3px solid var(--brand-red-bright);padding-left:18px}
+.tl-post .stamp-row .stamp-summary .transformation{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:var(--brand-red-deep);text-transform:uppercase;letter-spacing:1.4px;font-weight:700;margin-bottom:8px;display:block}
+
+/* Snapshot grid - leads with Starting Gap and Outcome Achieved */
+.tl-post .snapshot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:8px 0 30px;border:1px solid var(--stone);background:var(--cream)}
+.tl-post .snapshot-grid .cell{padding:16px 16px;border-right:1px solid var(--stone);border-bottom:1px solid var(--stone)}
+.tl-post .snapshot-grid .cell:nth-child(3n){border-right:none}
+.tl-post .snapshot-grid .cell:nth-last-child(-n+3){border-bottom:none}
+.tl-post .snapshot-grid .cell .label{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid-grey);margin-bottom:5px;font-weight:700}
+.tl-post .snapshot-grid .cell .value{font-family:Georgia,serif;font-size:16px;color:var(--brand-red-deep);font-weight:600;line-height:1.35}
+/* The first three cells are the transformation cells - emphasis */
+.tl-post .snapshot-grid .cell.lead{background:#fff;border-bottom-color:var(--brand-red-bright);border-bottom-width:2px}
+.tl-post .snapshot-grid .cell.lead .label{color:var(--brand-red-deep)}
+.tl-post .snapshot-grid .cell.lead .value{color:var(--ink);font-weight:700}
+@media (max-width: 700px){.tl-post .snapshot-grid{grid-template-columns:1fr 1fr}.tl-post .snapshot-grid .cell:nth-child(3n){border-right:1px solid var(--stone)}.tl-post .snapshot-grid .cell:nth-child(2n){border-right:none}.tl-post .snapshot-grid .cell:nth-last-child(-n+3){border-bottom:1px solid var(--stone)}.tl-post .snapshot-grid .cell:nth-last-child(-n+2){border-bottom:none}}
+
+/* Trust badge strip */
+.tl-post .trust-strip{display:flex;flex-wrap:wrap;gap:0;margin:0 0 28px;border:1px solid var(--stone);background:#fff}
+.tl-post .trust-strip .badge{flex:1;min-width:180px;padding:12px 14px;border-right:1px solid var(--stone);display:flex;align-items:center;gap:10px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:var(--ink);font-weight:600;letter-spacing:.3px;line-height:1.4}
+.tl-post .trust-strip .badge:last-child{border-right:none}
+.tl-post .trust-strip .badge .check{width:18px;height:18px;border-radius:50%;background:var(--brand-red-deep);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 18px}
+
+/* Section H2 */
+.tl-post .tl-h2,.tl-post h2{font-family:Georgia,serif;font-size:24px;line-height:1.25;color:var(--brand-red-deep);margin:44px 0 12px;padding-left:14px;border-left:4px solid var(--brand-red-bright);font-weight:700;letter-spacing:-.2px}
+.tl-post h2 .num,.tl-post .tl-h2 .num{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;color:var(--brand-red-bright);display:block;margin-bottom:5px;text-transform:uppercase;font-weight:700}
+
+.tl-post h3,.tl-post .tl-h3{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--ink);margin:22px 0 8px;font-weight:700}
+
+.tl-post p{margin:0 0 18px;color:var(--ink);max-width:720px}
+
+.tl-post .callout{background:var(--cream);border-left:4px solid var(--brand-red-bright);padding:18px 22px;margin:22px 0;font-style:italic;color:var(--ink);max-width:760px}
+.tl-post .callout .label{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--brand-red-deep);margin-bottom:8px;font-style:normal;font-weight:700}
+
+.tl-post .lot-block{border:1px solid var(--stone);padding:18px 22px;margin-bottom:18px;background:#FFFFFF}
+.tl-post .lot-block .lot-head{font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--brand-red-deep);text-transform:uppercase;font-size:13px;letter-spacing:1.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--brand-red-bright);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tl-post .lot-block p{margin:0 0 10px;max-width:none}
+.tl-post .lot-block p:last-child{margin-bottom:0}
+
+.tl-post table.spec-table{width:100%;border-collapse:collapse;margin:22px 0 26px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;background:#FFFFFF;border:1px solid var(--stone);table-layout:fixed}
+.tl-post table.spec-table thead th{background:var(--brand-red-deep);color:#FFFFFF;text-align:left;padding:10px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;border-right:1px solid var(--brand-red-bright)}
+.tl-post table.spec-table thead th:last-child{border-right:none}
+.tl-post table.spec-table tbody td{padding:10px 12px;border-bottom:1px solid var(--stone);border-right:1px solid var(--stone);vertical-align:top;color:var(--ink);word-wrap:break-word}
+.tl-post table.spec-table tbody td:last-child{border-right:none}
+.tl-post table.spec-table tbody tr:last-child td{border-bottom:none}
+.tl-post table.spec-table tbody tr:nth-child(even){background:var(--cream)}
+.tl-post table.spec-table td .row-label{font-weight:700;color:var(--brand-red-deep);letter-spacing:.5px}
+
+.tl-post ul.tl-list,.tl-post ol.tl-list{margin:4px 0 20px;padding-left:22px;font-family:Georgia,serif;font-size:16.5px;line-height:1.65;color:var(--ink);max-width:720px}
+.tl-post ul.tl-list li,.tl-post ol.tl-list li{margin-bottom:6px;padding-left:4px}
+.tl-post ul.tl-list li::marker{color:var(--brand-red-bright)}
+
+/* Mid-page consultation block */
+.tl-post .mid-cta{background:var(--cream);border-top:3px solid var(--brand-red-bright);border-bottom:3px solid var(--brand-red-bright);padding:28px 32px;margin:36px 0;display:grid;grid-template-columns:1.5fr 1fr;gap:28px;align-items:center}
+@media (max-width: 800px){.tl-post .mid-cta{grid-template-columns:1fr;text-align:left}}
+.tl-post .mid-cta h3{font-family:Georgia,serif;font-size:22px;color:var(--brand-red-deep);margin:0 0 8px;font-weight:700;letter-spacing:-.2px;text-transform:none}
+.tl-post .mid-cta p{font-family:Georgia,serif;font-size:15.5px;color:var(--ink);margin:0;max-width:none}
+.tl-post .mid-cta .btn{display:inline-block;background:var(--brand-red-deep);color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700;padding:14px 24px;letter-spacing:1px;text-transform:uppercase;font-size:13px;text-align:center;transition:all .15s ease}
+.tl-post .mid-cta .btn:hover{background:var(--brand-red-bright);text-decoration:none;color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px rgba(176,39,39,.30)}
+
+/* Award letter gallery with hierarchy */
+.tl-post .gallery-section{margin:8px 0 28px}
+.tl-post .gallery-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.tl-post .gallery-head h3{margin:0;font-size:14px;color:var(--ink);text-transform:uppercase;letter-spacing:1px;font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700}
+.tl-post .gallery-head .official-badge{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:var(--brand-red-deep);padding:4px 10px;font-weight:700}
+/* First image takes a full row, the rest fill below */
+.tl-post .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.tl-post .gallery .lead{grid-column:1 / -1;display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+@media (max-width: 700px){.tl-post .gallery .lead{grid-template-columns:1fr}}
+.tl-post .gallery .lead .lead-thumb{position:relative}
+.tl-post .gallery .lead .lead-meta{padding:18px 22px;background:var(--cream);border:1px solid var(--stone);display:flex;flex-direction:column;justify-content:center;gap:10px}
+.tl-post .gallery .lead .lead-meta .tag{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:var(--brand-red-deep);padding:4px 10px;font-weight:700;align-self:flex-start}
+.tl-post .gallery .lead .lead-meta h4{font-family:Georgia,serif;font-size:18px;color:var(--ink);margin:0;font-weight:700;line-height:1.4}
+.tl-post .gallery .lead .lead-meta p{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:var(--mid-grey);margin:0;line-height:1.55}
+.tl-post .gallery a{display:block;background:#FFFFFF;border:1px solid var(--stone);overflow:hidden;transition:all .25s ease;position:relative;cursor:zoom-in}
+.tl-post .gallery a:hover{transform:translateY(-4px);border-color:var(--brand-red-bright);box-shadow:var(--shadow-md)}
+.tl-post .gallery a img{display:block;width:100%}
+.tl-post .gallery a .caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top, rgba(31,31,31,.94), rgba(31,31,31,.65) 70%, transparent);color:#fff;padding:14px 12px 10px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.4px;line-height:1.4;font-weight:600;opacity:.95;transition:opacity .2s ease}
+.tl-post .gallery a:hover .caption{opacity:1}
+.tl-post .gallery a .doc-badge{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.94);color:var(--brand-red-deep);font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 6px;font-weight:700}
+.tl-post .gallery a .page-tag{position:absolute;top:8px;left:8px;background:var(--brand-red-deep);color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;font-weight:700}
+.tl-post .gallery .lead .lead-thumb a .page-tag{background:var(--brand-red-bright)}
+.tl-post .gallery-foot{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:var(--mid-grey);margin-top:12px;letter-spacing:.3px;line-height:1.5}
+
+/* Related case studies */
+.tl-post .related{margin:48px 0 8px;padding-top:32px;border-top:1px solid var(--stone)}
+.tl-post .related h3{font-family:Georgia,serif;font-size:24px;color:var(--ink);margin:0 0 18px;font-weight:700;letter-spacing:-.2px;text-transform:none;border-left:4px solid var(--brand-red-bright);padding-left:14px}
+.tl-post .related .row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width: 800px){.tl-post .related .row{grid-template-columns:1fr}}
+.tl-post .related .rcard{display:block;background:#fff;border:1px solid var(--stone);overflow:hidden;text-decoration:none;color:var(--ink);transition:all .2s ease}
+.tl-post .related .rcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--brand-red-bright);text-decoration:none}
+.tl-post .related .rcard .accent{height:4px;background:var(--rcard-color, var(--brand-red-deep))}
+.tl-post .related .rcard .body{padding:16px 18px}
+.tl-post .related .rcard .tag{display:inline-block;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--rcard-color, var(--brand-red-deep));font-weight:700;margin-bottom:8px}
+.tl-post .related .rcard h4{font-family:Georgia,serif;font-size:16px;color:var(--ink);margin:0 0 8px;line-height:1.35;font-weight:700;text-transform:none;letter-spacing:0}
+.tl-post .related .rcard p{font-family:Georgia,serif;font-size:13.5px;color:var(--mid-grey);margin:0;line-height:1.5;max-width:none;font-style:italic}
+
+/* Bottom CTA closer */
+.tl-post .closer{margin-top:36px;padding:36px 32px;background:var(--brand-red-deep);color:#FFFFFF;font-family:Georgia,serif;font-size:22px;text-align:center;letter-spacing:.3px;line-height:1.45;position:relative;overflow:hidden}
+.tl-post .closer:before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle, rgba(255,255,255,.10), transparent 60%);pointer-events:none}
+.tl-post .closer .lead{font-size:26px;font-weight:700;margin-bottom:10px;display:block;letter-spacing:-.2px}
+.tl-post .closer .sub{font-size:15px;font-weight:400;font-family:'Helvetica Neue',Arial,sans-serif;letter-spacing:.5px;margin-bottom:20px;display:block;color:#FFD7D2}
+.tl-post .closer .btn{display:inline-block;background:#fff;color:var(--brand-red-deep);font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700;padding:14px 28px;letter-spacing:1.2px;text-transform:uppercase;font-size:13px;transition:all .15s ease;text-decoration:none;position:relative;z-index:2}
+.tl-post .closer .btn:hover{background:var(--cream);text-decoration:none;color:var(--brand-red-deep);transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.15)}
+
+@media (max-width: 900px){
+  .tl-post{padding:24px 18px 80px}
+  .tl-post h1{font-size:26px;line-height:1.22}
+  .tl-post .verdict{font-size:16px}
+  .tl-post h2,.tl-post .tl-h2{font-size:21px}
+  .tl-post .stamp-row .stamp-summary{font-size:16px}
+  .tl-post table.spec-table{font-size:13px}
+  .tl-post table.spec-table thead th,.tl-post table.spec-table tbody td{padding:8px 9px}
+  .site-header nav a:not(.cta):not(.start){display:none}
+}
+
+.site-header nav{display:flex;align-items:center;gap:0}
+.site-header nav .has-drop{position:relative}
+.site-header nav .has-drop > a{padding-right:14px;cursor:pointer;display:inline-flex;align-items:center}
+.site-header nav .has-drop > a:after{content:"";display:inline-block;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid currentColor;margin-left:6px;vertical-align:middle;opacity:.6}
+.site-header nav .drop{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid var(--stone);box-shadow:0 12px 36px rgba(31,31,31,.14);min-width:240px;padding:8px 0;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .18s ease;z-index:60}
+.site-header nav .has-drop:hover .drop,.site-header nav .has-drop:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0)}
+.site-header nav .drop ul{list-style:none;margin:0;padding:0}
+.site-header nav .drop li a{display:block;padding:8px 18px;color:var(--ink);font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;letter-spacing:.3px;text-transform:none;font-weight:500;margin:0;border-left:3px solid transparent;transition:all .15s ease;background:transparent}
+.site-header nav .drop li a:hover{background:var(--cream);color:var(--brand-red-deep);border-left-color:var(--brand-red-bright);text-decoration:none}
+.site-header nav .has-drop.mega-wrap > .drop{min-width:920px;padding:18px 22px 14px;left:auto;right:0}
+.site-header nav .has-drop .mega.four{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.site-header nav .has-drop .mega .col-head{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink);margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand-red-bright);display:flex;align-items:center;gap:7px}
+.site-header nav .has-drop .mega .col-dot{width:8px;height:8px;border-radius:50%}
+.site-header nav .has-drop .mega .col ul{list-style:none;margin:0;padding:0}
+.site-header nav .has-drop .mega .col li a{padding:5px 0;border-left:none;font-size:12.5px;color:var(--ink);background:transparent}
+.site-header nav .has-drop .mega .col li a:hover{color:var(--brand-red-deep);background:transparent;padding-left:4px}
+.site-header nav .has-drop .mega-foot{margin-top:14px;padding-top:10px;border-top:1px solid var(--stone);text-align:right}
+.site-header nav .has-drop .mega-foot a{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:.5px;color:var(--brand-red-deep);font-weight:700;text-transform:uppercase;padding:0;border:none}
+.site-header nav .has-drop .mega-foot a:hover{color:var(--brand-red-bright)}
+.site-footer .copy-line{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;letter-spacing:.4px;color:#9aa4b6;text-align:center;padding:0 0 12px}
+.site-footer .copy-line a{color:#D1CBC2}
+.site-footer .copy-line a:hover{color:#fff}
+@media (max-width: 1100px){
+  .site-header nav .has-drop{display:none}
+}
+
+.site-header nav{display:flex;align-items:center;gap:0}
+.site-header nav .has-drop{position:relative}
+.site-header nav .has-drop > a{padding-right:14px;cursor:pointer;display:inline-flex;align-items:center}
+.site-header nav .has-drop > a:after{content:"";display:inline-block;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid currentColor;margin-left:6px;vertical-align:middle;opacity:.6}
+.site-header nav .drop{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border:1px solid var(--stone);box-shadow:0 12px 36px rgba(31,31,31,.14);min-width:240px;padding:8px 0;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .18s ease;z-index:60}
+.site-header nav .has-drop:hover .drop,.site-header nav .has-drop:focus-within .drop{opacity:1;visibility:visible;transform:translateY(0)}
+.site-header nav .drop ul{list-style:none;margin:0;padding:0}
+.site-header nav .drop li a{display:block;padding:8px 18px;color:var(--ink);font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;letter-spacing:.3px;text-transform:none;font-weight:500;margin:0;border-left:3px solid transparent;transition:all .15s ease;background:transparent}
+.site-header nav .drop li a:hover{background:var(--cream);color:var(--brand-red-deep);border-left-color:var(--brand-red-bright);text-decoration:none}
+.site-header nav .has-drop.mega-wrap > .drop{min-width:920px;padding:18px 22px 14px;left:auto;right:0}
+.site-header nav .has-drop .mega.four{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.site-header nav .has-drop .mega .col-head{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink);margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand-red-bright);display:flex;align-items:center;gap:7px}
+.site-header nav .has-drop .mega .col-dot{width:8px;height:8px;border-radius:50%}
+.site-header nav .has-drop .mega .col ul{list-style:none;margin:0;padding:0}
+.site-header nav .has-drop .mega .col li a{padding:5px 0;border-left:none;font-size:12.5px;color:var(--ink);background:transparent}
+.site-header nav .has-drop .mega .col li a:hover{color:var(--brand-red-deep);background:transparent;padding-left:4px}
+.site-header nav .has-drop .mega-foot{margin-top:14px;padding-top:10px;border-top:1px solid var(--stone);text-align:right}
+.site-header nav .has-drop .mega-foot a{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:.5px;color:var(--brand-red-deep);font-weight:700;text-transform:uppercase;padding:0;border:none}
+.site-header nav .has-drop .mega-foot a:hover{color:var(--brand-red-bright)}
+.site-footer .copy-line{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;letter-spacing:.4px;color:#9aa4b6;text-align:center;padding:0 0 12px}
+.site-footer .copy-line a{color:#D1CBC2}
+.site-footer .copy-line a:hover{color:#fff}
+@media (max-width: 1100px){
+  .site-header nav .has-drop{display:none}
+}
+
+/* New structural pages (care settings, services, about) */
+.tlp{max-width:1100px;margin:0 auto;padding:32px 32px 60px}
+.tlp .crumbs{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mid-grey);margin-bottom:14px}
+.tlp .crumbs a{color:var(--mid-grey)}
+.tlp .crumbs a:hover{color:var(--brand-red-deep)}
+.cat-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--cat-color);color:#fff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.cat-tag .dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7}
+.tlp h1{font-family:Georgia,serif;font-size:38px;line-height:1.15;color:var(--ink);margin:0 0 12px;letter-spacing:-.4px;font-weight:700}
+.tlp .lede{font-family:Georgia,serif;font-size:18px;color:var(--brand-red-deep);font-weight:600;margin:0 0 14px;line-height:1.5;font-style:italic;max-width:760px}
+.tlp .pos{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13.5px;color:var(--mid-grey);margin:0 0 22px;line-height:1.55;letter-spacing:.2px;max-width:780px}
+
+.cohort-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 26px;padding:14px 16px;background:var(--cream);border-left:3px solid var(--brand-red-bright)}
+.cohort-bar .label{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brand-red-deep);font-weight:700;align-self:center;margin-right:6px}
+.cohort-bar .tag{display:inline-block;padding:4px 9px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--stone);letter-spacing:.3px}
+
+section.cs-block{margin:36px 0 0}
+section.cs-block h2{font-family:Georgia,serif;font-size:24px;line-height:1.25;color:var(--brand-red-deep);margin:0 0 12px;padding-left:14px;border-left:4px solid var(--brand-red-bright);font-weight:700;letter-spacing:-.2px;display:flex;align-items:baseline;gap:12px}
+section.cs-block h2 .num{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:var(--brand-red-bright);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;flex:0 0 auto}
+section.cs-block p{font-family:Georgia,serif;font-size:16.5px;color:var(--ink);line-height:1.65;margin:0 0 14px;max-width:760px}
+section.cs-block ul{margin:0 0 14px;padding-left:22px;font-family:Georgia,serif;font-size:16px;line-height:1.6;max-width:760px}
+section.cs-block ul li{margin-bottom:6px}
+section.cs-block ul li::marker{color:var(--brand-red-bright)}
+
+.transform-strip{margin:24px 0;padding:18px 22px;background:linear-gradient(to right, var(--cream), #fff);border-left:4px solid var(--brand-red-bright)}
+.transform-strip h3{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brand-red-deep);font-weight:700;margin:0 0 10px}
+.transform-strip .row{display:flex;align-items:center;gap:14px;font-family:Georgia,serif;font-size:15.5px;color:var(--ink);margin-bottom:8px;font-weight:600}
+.transform-strip .row:last-child{margin-bottom:0}
+.transform-strip .from{color:var(--mid-grey);font-style:italic}
+.transform-strip .arrow{color:var(--brand-red-bright);font-weight:700}
+.transform-strip .to{color:var(--brand-red-deep);font-weight:700}
+
+.related-cases{margin:36px 0 0;padding-top:24px;border-top:1px solid var(--stone)}
+.related-cases h3{font-family:Georgia,serif;font-size:22px;color:var(--ink);margin:0 0 14px;font-weight:700;letter-spacing:-.2px;border-left:4px solid var(--brand-red-bright);padding-left:14px}
+.related-cases .row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:800px){.related-cases .row{grid-template-columns:1fr}}
+.related-cases .rcard{display:block;background:#fff;border:1px solid var(--stone);text-decoration:none;color:var(--ink);transition:all .2s ease;padding:0;overflow:hidden}
+.related-cases .rcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--brand-red-bright);text-decoration:none}
+.related-cases .rcard .accent{height:4px;background:var(--rcard-color, var(--brand-red-deep))}
+.related-cases .rcard .body{padding:14px 16px}
+.related-cases .rcard .tag{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--rcard-color, var(--brand-red-deep));font-weight:700;margin-bottom:8px}
+.related-cases .rcard h4{font-family:Georgia,serif;font-size:15.5px;color:var(--ink);margin:0 0 8px;line-height:1.35;font-weight:700;text-transform:none;letter-spacing:0}
+.related-cases .rcard p{font-family:Georgia,serif;font-size:13px;color:var(--mid-grey);margin:0;line-height:1.5;font-style:italic}
+
+.cta-block{background:var(--brand-red-deep);color:#fff;padding:32px 32px;text-align:center;margin:40px 0 0;font-family:Georgia,serif;font-size:20px;line-height:1.45}
+.cta-block .lead{font-size:24px;font-weight:700;display:block;margin-bottom:10px;letter-spacing:-.2px}
+.cta-block .sub{font-size:14px;font-weight:400;font-family:'Helvetica Neue',Arial,sans-serif;letter-spacing:.5px;display:block;margin-bottom:18px;color:#FFD7D2}
+.cta-block .btn{display:inline-block;background:#fff;color:var(--brand-red-deep);font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700;padding:14px 26px;letter-spacing:1.2px;text-transform:uppercase;font-size:13px;text-decoration:none;transition:all .15s ease}
+.cta-block .btn:hover{background:var(--cream);transform:translateY(-2px)}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.png" alt="TenderLab">
+    </a>
+    <nav>
+      <a href="../about.html">About Us</a>
+      <div class="has-drop"><a href="../services/index.html">Services</a>
+        <div class="drop"><ul><li><a href="../services/tender-writing.html">Bid Writing</a></li><li><a href="../services/pre-submission-review.html">Pre-Submission Review</a></li><li><a href="../services/lost-tender-debrief.html">Lost Bid Debrief</a></li><li><a href="../services/tender-readiness-audit.html">Tender Readiness Audit</a></li><li><a href="../services/bid-team-coaching.html">Bid Team Coaching</a></li><li><a href="../services/pipeline-tracking.html">Pipeline Tracking</a></li><li><a href="../services/mobilisation-support.html">Mobilisation Support</a></li><li><a href="../services/tender-retainer.html">Tender Retainer</a></li></ul></div>
+      </div>
+      <div class="has-drop mega-wrap"><a href="../care-settings/index.html">Care Settings</a>
+        <div class="drop">
+          <div class="mega four">
+            <div class="col">
+              <div class="col-head" style="border-bottom-color:#B02727"><span class="col-dot" style="background:#B02727"></span>Adult Social Care</div>
+              <ul><li><a href="../care-settings/domiciliary-care.html">Domiciliary Care</a></li><li><a href="../care-settings/live-in-care.html">Live-In Care</a></li><li><a href="../care-settings/residential-care.html">Residential Care</a></li><li><a href="../care-settings/nursing-care.html">Nursing Care</a></li><li><a href="../care-settings/supported-living.html">Supported Living</a></li><li><a href="../care-settings/extra-care-housing.html">Extra Care Housing</a></li></ul>
+            </div>
+            <div class="col">
+              <div class="col-head" style="border-bottom-color:#2E5E8C"><span class="col-dot" style="background:#2E5E8C"></span>Children&#x27;s Services</div>
+              <ul><li><a href="../care-settings/childrens-residential-care.html">Children&#x27;s Residential Care</a></li><li><a href="../care-settings/supported-accommodation.html">Supported Accommodation (16-17 / 16+)</a></li><li><a href="../care-settings/fostering-services.html">Fostering Services</a></li><li><a href="../care-settings/leaving-care-services.html">Leaving Care Services</a></li><li><a href="../care-settings/childrens-short-breaks.html">Short Breaks (Children)</a></li><li><a href="../care-settings/family-support-and-outreach.html">Family Support and Outreach</a></li></ul>
+            </div>
+            <div class="col">
+              <div class="col-head" style="border-bottom-color:#0A6E5A"><span class="col-dot" style="background:#0A6E5A"></span>Housing and Support</div>
+              <ul><li><a href="../care-settings/housing-related-support.html">Housing Related Support</a></li><li><a href="../care-settings/temporary-accommodation.html">Temporary Accommodation</a></li><li><a href="../care-settings/emergency-accommodation.html">Emergency Accommodation</a></li><li><a href="../care-settings/supported-housing.html">Supported Housing</a></li></ul>
+            </div>
+            <div class="col">
+              <div class="col-head" style="border-bottom-color:#5B3A8B"><span class="col-dot" style="background:#5B3A8B"></span>Health and Clinical Services</div>
+              <ul><li><a href="../care-settings/community-health-services.html">Community Health Services</a></li><li><a href="../care-settings/continuing-healthcare.html">Continuing Healthcare (CHC)</a></li><li><a href="../care-settings/complex-care.html">Complex Care</a></li><li><a href="../care-settings/rehabilitation-services.html">Rehabilitation Services</a></li><li><a href="../care-settings/end-of-life-and-palliative-care.html">End of Life and Palliative Care</a></li><li><a href="../care-settings/hospital-discharge-services.html">Hospital Discharge Services</a></li></ul>
+            </div></div>
+          <div class="mega-foot"><a href="../care-settings/index.html">View all care settings →</a></div>
+        </div>
+      </div>
+      <a href="../index.html">Case Studies</a>
+      <a href="#" onclick="return false">Blogs</a>
+      <a class="cta" href="#consultation">Free Consultation</a>
+    </nav>
+  </div>
+</header>
+
+    <article class="tlp" style="--cat-color:#5B3A8B">
+      <div class="crumbs"><a href="index.html">Care Settings</a> &nbsp;·&nbsp; Health and Clinical Services</div>
+      <div class="cat-tag" style="background:#5B3A8B"><span class="dot"></span>Health and Clinical Services</div>
+      <h1>End of Life and Palliative Care</h1>
+      <div class="lede">Care for adults in the final months of life, including symptom management and family support.</div>
+      <div class="pos">We write end-of-life care tenders that demonstrate ReSPECT alignment, anticipatory medication protocols and family liaison.</div>
+
+      <div class="cohort-bar"><span class="label">Cohort coverage:</span><span class="tag">Older People</span><span class="tag">Complex Care</span></div>
+
+      
+    <section class="cs-block">
+      <h2><span class="num">Section 01</span>Service definition</h2>
+      <p>End of life and palliative care provision encompasses services that support people in the final stages of life, focusing on comfort, dignity, symptom management, and quality of remaining life. This includes community-based palliative care, hospice at home services, fast-track continuing healthcare packages, and end-of-life support within residential and nursing care settings. The commissioning focus is on enabling people to die in their preferred place of death with appropriate clinical and emotional support.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 02</span>Typical client cohort</h2>
+      <p>People with terminal diagnoses, people in the last year of life, and individuals eligible for fast-track continuing healthcare due to rapidly deteriorating conditions. Referrals come from hospital discharge teams, GPs, community nursing, hospice services, and specialist palliative care consultants.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 03</span>Commissioning and procurement context</h2>
+      <p>End of life services are commissioned by NHS Integrated Care Boards, local authorities, and through joint commissioning arrangements. Procurement routes include NHS Standard Contract for clinical palliative care, framework agreements for community-based provision, and fast-track CHC processes for individuals with rapidly deteriorating conditions. Hospice services receive a combination of NHS funding and charitable income.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 04</span>Core service requirements</h2>
+      <p>Specifications require evidence of clinical competence in symptom management, advance care planning processes, partnership with hospice and specialist palliative care services, support for families and carers, bereavement support, and how the service enables preferred place of death. Rapid response capability and 24-hour availability are frequently specified.</p><p><strong>Advance Care Planning.</strong> Covers how the service initiates and maintains advance care planning conversations, including preferred place of death, treatment escalation plans, DNAR decisions, and lasting power of attorney.</p><p><strong>Symptom Management.</strong> Addresses clinical competence in managing pain, nausea, breathlessness, anxiety, and other end-of-life symptoms. Includes use of anticipatory medications and syringe driver management.</p><p><strong>Supporting Families and Carers.</strong> Details how families are involved, supported, and communicated with throughout the end-of-life journey, and how bereavement support is provided after death.</p><p><strong>Rapid Response and 24-Hour Availability.</strong> Covers how the service responds to deterioration, crisis, and death outside normal working hours.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 05</span>Regulatory and compliance framework</h2>
+      <p>CQC regulation applies where personal or nursing care is delivered. Services must comply with NICE Quality Standard QS13 for end of life care, the National Framework for NHS Continuing Healthcare, and the NHS England Ambitions for Palliative and End of Life Care framework. Clinical governance requirements include compliance with prescribing standards for anticipatory medications and syringe drivers.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 06</span>Key operational challenges</h2>
+      <p>Staffing includes registered nurses with palliative care competence, healthcare assistants with end-of-life training, and access to specialist palliative care advice. Training requirements include syringe driver competency, verification of expected death, and communication skills for sensitive conversations.</p><p>Providers fail when responses lack clinical specificity, omit advance care planning detail, demonstrate weak 24-hour coverage, or fail to evidence partnership with specialist palliative care services.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 07</span>How we approach this setting</h2>
+      <p>We write end of life responses with clinical precision and emotional intelligence. Responses demonstrate how symptom management is delivered, how advance care plans are developed and respected, and how the service wraps around the person and their family. We embed clinical frameworks, named partnerships, and evidence of compassionate, competent delivery.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 08</span>Typical starting points we handle</h2>
+      <p>First-time bidders entering this setting, scaling providers expanding across districts, established providers seeking score improvement, and providers building the evidence base required for competitive frameworks.</p>
+    </section>
+    <section class="cs-block">
+      <h2><span class="num">Section 09</span>Outcomes achieved</h2>
+      <p>KPIs include percentage of people achieving preferred place of death, advance care plan completion rates, response times to urgent referrals, hospital admission avoidance in last 30 days of life, and family satisfaction.</p>
+    </section>
+
+      
+    <div class="transform-strip">
+      <h3>Starting point → Outcome</h3>
+      <div class="row"><span class="from">No prior framework experience</span><span class="arrow">→</span><span class="to">Framework entry secured</span></div>
+      <div class="row"><span class="from">Low scores on cohort questions</span><span class="arrow">→</span><span class="to">Exceptional-rated responses</span></div>
+      <div class="row"><span class="from">Generic narrative</span><span class="arrow">→</span><span class="to">Specification-mapped, evidence-led</span></div>
+    </div>
+
+      
+    <section class="cs-block">
+      <h2><span class="num">Section 10</span>Related case examples</h2>
+      <p>The case studies below match this care setting and demonstrate the operational evidence base behind successful submissions.</p>
+    </section>
+      
+      
+    <section class="cs-block">
+      <h2><span class="num">Section 12</span>Where this applies</h2>
+      <p>Partners include hospices, specialist palliative care teams, GPs, community nursing, hospital discharge teams, bereavement services, and chaplaincy.</p>
+    </section>
+      
+    <div class="cta-block" id="consultation">
+      <span class="lead">Working within end of life and palliative care.</span>
+      <span class="sub">We show how this applies to your next tender.</span>
+      <a class="btn" href="mailto:hello@tenderlab.co.uk?subject=Free%20consultation%20-%20End of Life and Palliative Care">Free consultation</a>
+    </div>
+    </article>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cta">
+      <div>
+        <h3>Start your next tender</h3>
+        <p>Free consultation. We will read the specification, identify the deterministic and discretionary points, and tell you whether the win is realistic.</p>
+      </div>
+      <div style="text-align:center"><a class="btn" href="mailto:hello@tenderlab.co.uk?subject=Free%20consultation">Free Consultation</a></div>
+    </div>
+    <p class="positioning">UK health and social care tender writing built from evaluator intelligence. Specification-led writing, evaluator-tested methods, verified outcomes.</p>
+    <div class="grid">
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="../services/tender-writing.html">Bid Writing</a></li>
+          <li><a href="../services/pre-submission-review.html">Pre-Submission Review</a></li>
+          <li><a href="../services/tender-readiness-audit.html">Tender Readiness Audit</a></li>
+          <li><a href="../services/mobilisation-support.html">Mobilisation Support</a></li>
+          <li><a href="../services/tender-retainer.html">Tender Retainer</a></li>
+          <li><a href="../services/index.html">All services</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Adult Social Care</h4>
+        <ul>
+          <li><a href="../care-settings/domiciliary-care.html">Domiciliary Care</a></li>
+          <li><a href="../care-settings/supported-living.html">Supported Living</a></li>
+          <li><a href="../care-settings/residential-care.html">Residential Care</a></li>
+          <li><a href="../care-settings/nursing-care.html">Nursing Care</a></li>
+          <li><a href="../care-settings/live-in-care.html">Live-In Care</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Children's Services</h4>
+        <ul>
+          <li><a href="../care-settings/childrens-residential-care.html">Children's Residential Care</a></li>
+          <li><a href="../care-settings/supported-accommodation.html">Supported Accommodation</a></li>
+          <li><a href="../care-settings/fostering-services.html">Fostering Services</a></li>
+          <li><a href="../care-settings/leaving-care-services.html">Leaving Care Services</a></li>
+          <li><a href="../care-settings/family-support-and-outreach.html">Family Support and Outreach</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Housing &amp; Health</h4>
+        <ul>
+          <li><a href="../care-settings/housing-related-support.html">Housing Related Support</a></li>
+          <li><a href="../care-settings/supported-housing.html">Supported Housing</a></li>
+          <li><a href="../care-settings/continuing-healthcare.html">Continuing Healthcare</a></li>
+          <li><a href="../care-settings/hospital-discharge-services.html">Hospital Discharge</a></li>
+          <li><a href="../care-settings/end-of-life-and-palliative-care.html">End of Life</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy-line">
+      <a href="../about.html">About</a> · <a href="../index.html">Case Studies</a> · <a href="mailto:hello@tenderlab.co.uk">hello@tenderlab.co.uk</a> · <a href="tel:01707240393">01707 240393</a>
+    </div>
+    <div class="copy">
+      <p><b>TenderLab</b>. The science of winning tenders.</p>
+    </div>
+  </div>
+</footer>
+<div class="sticky-cta">
+  <div class="msg"><b>Starting from no prior experience.</b> We take you to award.</div>
+  <a class="btn" href="#consultation">Free Consultation</a>
+</div>
+</body>
+</html>

@@ -1,304 +1,143 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Care Settings | TenderLab — Tender Support Across Every Care Environment',
+  title: 'Care Settings | TenderLab — Every Commissioning Route',
   description:
-    'TenderLab provides specialist tender writing and bid support across every health and social care setting — from domiciliary care to children\'s services.',
+    "TenderLab covers every UK commissioning route. Adult Social Care, Children's Services, Housing and Support, Health and Clinical Services across 28 specialised tender-writing pages.",
 }
 
-const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
+type SettingCard = { title: string; desc: string; slug: string }
+type Category = { num: string; label: string; desc: string; color: string; cards: SettingCard[] }
 
-type HexItem = { title: string; desc: string; red: boolean; href?: string }
-type HexRow = { offset: boolean; items: HexItem[] }
+const CATEGORIES: Category[] = [
+  {
+    num: '01',
+    label: 'Adult Social Care',
+    desc: 'Care delivered to adults with assessed needs across home, community and accommodation-based services.',
+    color: '#B02727',
+    cards: [
+      { title: 'Domiciliary Care',         slug: 'domiciliary-care',         desc: 'Personal care and practical support delivered to people in their own homes through scheduled visits.' },
+      { title: 'Live-In Care',              slug: 'live-in-care',             desc: 'Continuous support delivered by a carer living in the service user\'s home for extended periods.' },
+      { title: 'Residential Care',          slug: 'residential-care',         desc: 'Twenty-four-hour care delivered in registered residential or care home settings.' },
+      { title: 'Nursing Care',              slug: 'nursing-care',             desc: 'Nursing-led care for adults with health needs that require qualified clinical oversight.' },
+      { title: 'Supported Living',          slug: 'supported-living',         desc: 'Tenancy-based housing combined with personalised support for adults with disability or mental health needs.' },
+      { title: 'Extra Care Housing',        slug: 'extra-care-housing',       desc: 'Self-contained housing for older adults with on-site care available across the development.' },
+      { title: 'Day Services',              slug: 'day-services',             desc: 'Centre-based or community-based day support for adults with disability or mental health needs.' },
+      { title: 'Reablement Services',       slug: 'reablement-services',      desc: 'Time-limited, goal-focused intensive support to restore independence after illness or hospital admission.' },
+      { title: 'Short Breaks and Respite',  slug: 'short-breaks-and-respite', desc: 'Planned, time-limited respite stays for adults with assessed needs to support family carers.' },
+      { title: 'Shared Lives',              slug: 'shared-lives',             desc: 'Family-based care arrangement where Shared Lives carers share their home with adults requiring support.' },
+      { title: 'Outreach and Community Support', slug: 'outreach-community-support', desc: 'Visit-based support for adults living independently with mental health, learning disability or substance misuse needs.' },
+      { title: 'Crisis and Rapid Response', slug: 'crisis-rapid-response',    desc: 'Time-critical short-term support to prevent crisis escalation, hospital admission or placement breakdown.' },
+    ],
+  },
+  {
+    num: '02',
+    label: "Children's Services",
+    desc: 'Statutory and commissioned services for children, young people and care leavers.',
+    color: '#2E5E8C',
+    cards: [
+      { title: "Children's Residential Care",       slug: 'childrens-residential-care',  desc: 'Ofsted-registered residential placements for children and young people unable to live at home.' },
+      { title: 'Supported Accommodation (16-17 / 16+)', slug: 'supported-accommodation', desc: 'Ofsted-registered supported accommodation for 16 and 17 year olds, with semi-independent and independent options.' },
+      { title: 'Fostering Services',                slug: 'fostering-services',          desc: 'Ofsted-registered fostering provision for looked-after children and young people.' },
+      { title: 'Leaving Care Services',             slug: 'leaving-care-services',       desc: 'Statutory and commissioned support for care leavers transitioning from care into adulthood.' },
+      { title: 'Short Breaks (Children)',           slug: 'childrens-short-breaks',      desc: 'Time-limited respite stays and outreach for disabled children, including children with SEND.' },
+      { title: 'Family Support and Outreach',       slug: 'family-support-and-outreach', desc: 'Edge-of-care, early help and family support services delivered to children and families at home.' },
+    ],
+  },
+  {
+    num: '03',
+    label: 'Housing and Support',
+    desc: 'Housing-led services where the support function is contracted alongside or independent of accommodation.',
+    color: '#0A6E5A',
+    cards: [
+      { title: 'Housing Related Support', slug: 'housing-related-support', desc: 'Floating support delivered to people in their own tenancies to sustain housing and prevent homelessness.' },
+      { title: 'Temporary Accommodation', slug: 'temporary-accommodation', desc: 'Short-term accommodation for people in housing crisis, including families and single adults.' },
+      { title: 'Emergency Accommodation', slug: 'emergency-accommodation', desc: 'Same-day emergency placement for people facing immediate homelessness or crisis.' },
+      { title: 'Supported Housing',       slug: 'supported-housing',       desc: 'Long-term housing with on-site or visiting support for adults with mental health, substance misuse or learning disability needs.' },
+    ],
+  },
+  {
+    num: '04',
+    label: 'Health and Clinical Services',
+    desc: 'NHS-commissioned and joint-commissioned health services delivered in community, home or rehabilitation settings.',
+    color: '#5B3A8B',
+    cards: [
+      { title: 'Community Health Services',       slug: 'community-health-services',         desc: 'Community-based clinical and nursing services delivered outside hospital settings.' },
+      { title: 'Continuing Healthcare (CHC)',     slug: 'continuing-healthcare',             desc: 'Care commissioned by NHS ICBs for adults with primary health needs that meet CHC eligibility.' },
+      { title: 'Complex Care',                    slug: 'complex-care',                      desc: 'Bespoke clinical and personal care for adults with complex health needs, often delivered 1:1 or 2:1.' },
+      { title: 'Rehabilitation Services',         slug: 'rehabilitation-services',           desc: 'Multi-disciplinary rehabilitation following injury, illness or hospital admission.' },
+      { title: 'End of Life and Palliative Care', slug: 'end-of-life-and-palliative-care',   desc: 'Care for adults in the final months of life, including symptom management and family support.' },
+      { title: 'Hospital Discharge Services',     slug: 'hospital-discharge-services',       desc: 'Time-critical care commissioned to support safe discharge from hospital under the Discharge to Assess model.' },
+    ],
+  },
+]
 
-const HEX_ROWS: HexRow[] = [
-  {
-    offset: false,
-    items: [
-      {
-        title: 'Health and Social Care',
-        desc: 'Integrated health and social care services with complex compliance requirements and multi-agency coordination.',
-        red: false,
-        href: '/care-settings/health-social-care',
-      },
-      {
-        title: "Children's Services",
-        desc: 'Safeguarding-focused services including early intervention, family support, and child protection.',
-        red: true,
-        href: '/care-settings/childrens-services',
-      },
-      {
-        title: 'Domiciliary Care',
-        desc: 'In-home personal care with focus on independence, dignity, and individual outcome achievement.',
-        red: false,
-      },
-    ],
-  },
-  {
-    offset: true,
-    items: [
-      {
-        title: 'Day Services',
-        desc: 'Day-based activities, learning, and social engagement for adults with complex needs.',
-        red: true,
-      },
-      {
-        title: 'Extra Care Services',
-        desc: 'Integrated housing and care for older adults with emphasis on independence and community integration.',
-        red: false,
-      },
-      {
-        title: 'Live-In Care Services',
-        desc: '24/7 residential care in client homes with focus on person-centred planning and specialist support.',
-        red: true,
-      },
-    ],
-  },
-  {
-    offset: false,
-    items: [
-      {
-        title: 'Housing Support',
-        desc: 'Tenancy support and housing-related support helping people maintain independent housing.',
-        red: false,
-      },
-      {
-        title: 'Reablement Services',
-        desc: 'Time-limited, goal-focused services restoring independence and reducing ongoing support needs.',
-        red: true,
-      },
-      {
-        title: 'Nursing Care',
-        desc: 'Registered nurse-led services with clinical governance and complex health needs management.',
-        red: false,
-      },
-    ],
-  },
-  {
-    offset: true,
-    items: [
-      {
-        title: 'Residential Care',
-        desc: 'Care home accommodation with focus on quality of life, dignity, and person-centred care.',
-        red: true,
-      },
-      {
-        title: 'Shared Lives',
-        desc: 'Family-based care with strong emphasis on relationships, integration, and ordinary living.',
-        red: false,
-      },
-      {
-        title: 'Short Breaks (Respite Care)',
-        desc: 'Planned breaks for carers with focus on quality experience for service users.',
-        red: true,
-      },
-    ],
-  },
-  {
-    offset: false,
-    items: [
-      {
-        title: 'Care Home Accommodation',
-        desc: 'Residential care homes including specialist provision for dementia and complex needs.',
-        red: false,
-      },
-      {
-        title: 'Supported Living',
-        desc: 'Person-centred support in independent or community-based accommodation.',
-        red: true,
-      },
-      {
-        title: 'Supported Accommodation',
-        desc: 'Accommodation with integrated support for people with complex or multiple needs.',
-        red: false,
-      },
-    ],
-  },
-  {
-    offset: true,
-    items: [
-      {
-        title: 'Emergency Accommodation',
-        desc: 'Immediate emergency housing with rapid access and crisis support integration.',
-        red: true,
-      },
-      {
-        title: 'Temporary Accommodation',
-        desc: 'Time-limited housing with focus on moving toward permanent solutions.',
-        red: false,
-      },
-    ],
-  },
+const COHORTS = [
+  'Mental Health', 'Learning Disabilities', 'Autism', 'Substance Misuse',
+  'Physical Disabilities', 'Older People', 'Forensic / High Risk',
 ]
 
 export default function CareSettingsPage() {
   return (
     <main>
 
-      {/* ── Hero ── */}
-      <section className="page-hero page-hero--img">
-        <div className="page-hero__bg">
-          <Image
-            src="/images/business-people-video-call-meeting.jpg"
-            alt="Care settings tender support"
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
-          />
-        </div>
-        <div className="page-hero__overlay" />
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="page-hero__title">Care Settings</h1>
-          <p className="page-hero__sub">Tailored tender support across every health and social care environment.</p>
+      {/* Hero */}
+      <section className="cs-index-hero">
+        <div className="container cs-index-hero__inner">
+          <div className="cs-index-hero__kicker">Care Settings · UK Health and Social Care</div>
+          <h1>Every commissioning route, every service model.</h1>
+          <p className="cs-index-hero__lede">Adult Social Care · Children&apos;s Services · Housing and Support · Health and Clinical Services</p>
+          <p className="cs-index-hero__sub">
+            Twenty-eight specialised tender-writing pages mapped to how commissioners actually procure. Specialist cohorts (Mental Health, Learning Disability, Autism, Substance Misuse, Physical Disabilities, Older People, Forensic) appear as overlays across the categories below.
+          </p>
         </div>
       </section>
 
-      {/* ── Intro ── */}
-      <section className="cs-intro">
+      {/* Cohort row */}
+      <section className="cs-cohort-row">
+        <div className="container cs-cohort-row__inner">
+          <span className="cs-cohort-label">Specialist cohorts:</span>
+          {COHORTS.map((c) => (
+            <span key={c} className="cs-cohort-tag">{c}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* 4-category grid */}
+      <section className="cs-categories-section">
         <div className="container">
-          <div className="cs-intro__grid">
-            <div className="cs-intro__left">
-              <p className="section-label">Care Settings</p>
-              <h2 className="cs-intro__headline">Tailored Tender Support Across Every Care Environment</h2>
-              <p className="cs-intro__body">
-                Different care settings require different approaches and evaluators expect you to understand the difference. A domiciliary care tender is not a supported living tender. A children&apos;s services bid is not a nursing care submission. Generic responses fail because commissioners can tell when a provider does not truly understand the environment they are bidding for.
-              </p>
-              <p className="cs-intro__body">
-                TenderLab writes sector-specific responses. We understand the commissioning priorities, the safeguarding requirements, the outcome frameworks, and the language evaluators respond to in each care setting we cover.
-              </p>
-            </div>
-            <div className="cs-intro__right">
-              <h3 className="cs-intro__right-heading">Our Expertise Across Care Settings</h3>
-              <p className="cs-intro__body">
-                Our team holds direct experience across the full range of health and social care procurement routes. We have written winning submissions for local authority frameworks, NHS contracts, Dynamic Purchasing Systems, and spot purchase arrangements — across every care setting listed below.
-              </p>
-              <p className="cs-intro__body">
-                Whether you are tendering for a single service or building a multi-lot portfolio, we apply the same rigorous, rubric-first methodology to every submission — adapted to the specific evaluation culture of the setting you are targeting.
-              </p>
-              <Link href="/contact" className="btn btn-primary" style={{ marginTop: 8 }}>
-                Discuss Your Setting
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
-                  <path d="M7 17L17 7M17 7H7M17 7v10" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Hexagon grid ── */}
-      <section className="cs-hex-section">
-        <div className="cs-hex-outer">
-          {HEX_ROWS.map((row, ri) => (
-            <div key={ri} className={`cs-hex-row${row.offset ? ' cs-hex-row--offset' : ''}`}>
-              {row.items.map((item) =>
-                item.href ? (
-                  <Link key={item.title} href={item.href} className={`cs-hex${item.red ? ' cs-hex--red' : ''}`}>
-                    <strong className="cs-hex__title">{item.title}</strong>
-                    <p className="cs-hex__desc">{item.desc}</p>
+          {CATEGORIES.map((cat) => (
+            <div key={cat.num} className="cs-cat-block">
+              <div className="cs-cat-header" style={{ '--cat-c': cat.color } as React.CSSProperties}>
+                <div className="cs-cat-num">{cat.num}</div>
+                <div>
+                  <h2>{cat.label}</h2>
+                  <p>{cat.desc}</p>
+                </div>
+              </div>
+              <div className="cs-cat-grid">
+                {cat.cards.map((card) => (
+                  <Link
+                    key={card.slug}
+                    href={`/care-settings/${card.slug}`}
+                    className="setting-card"
+                    style={{ '--card-c': cat.color } as React.CSSProperties}
+                  >
+                    <div className="setting-card__accent" />
+                    <div className="setting-card__tag">{cat.label}</div>
+                    <h3>{card.title}</h3>
+                    <p>{card.desc}</p>
+                    <div className="setting-card__cta">View setting →</div>
                   </Link>
-                ) : (
-                  <div key={item.title} className={`cs-hex${item.red ? ' cs-hex--red' : ''}`}>
-                    <strong className="cs-hex__title">{item.title}</strong>
-                    <p className="cs-hex__desc">{item.desc}</p>
-                  </div>
-                )
-              )}
+                ))}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Empowering section ── */}
-      <section className="cs-empower">
-        <div className="container">
-          <div className="cs-empower__grid">
-
-            {/* Left: photo stack + stat */}
-            <div className="cs-empower__photos">
-              <div className="cs-empower__photo-top">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`${WP}/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg`} alt="Consulting" />
-              </div>
-              <div className="cs-empower__photo-bottom">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`${WP}/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg`} alt="Bid writing" />
-              </div>
-              <div className="cs-empower__stat-card">
-                <span className="cs-empower__stat-label">Success Score</span>
-                <div className="cs-empower__stat-ring">
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <circle cx="40" cy="40" r="34" fill="none" stroke="var(--border)" strokeWidth="6"/>
-                    <circle cx="40" cy="40" r="34" fill="none" stroke="var(--heritage-red)" strokeWidth="6"
-                      strokeDasharray="213.6" strokeDashoffset="17" strokeLinecap="round"
-                      transform="rotate(-90 40 40)"/>
-                  </svg>
-                  <span className="cs-empower__stat-num">92<small>%</small></span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: copy */}
-            <div className="cs-empower__copy">
-              <p className="section-label">Expert Care Consulting</p>
-              <h2 className="cs-empower__headline">
-                Empowering Care Providers to Win Big.
-              </h2>
-              <p className="cs-empower__sub">
-                We bridge the gap between operational excellence and winning tender submissions with data-driven strategies.
-              </p>
-
-              <div className="cs-empower__points">
-                <div className="cs-empower__point">
-                  <div className="cs-empower__point-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>Strategic Intelligence</strong>
-                    <p>Turning complex requirements into high-scoring bids.</p>
-                  </div>
-                </div>
-                <div className="cs-empower__point">
-                  <div className="cs-empower__point-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <strong>Proven Methodology</strong>
-                    <p>Aligning your services with the latest evaluator standards.</p>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/process" className="cs-empower__btn">
-                Learn Our Strategy
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                </svg>
-              </Link>
-            </div>
-
-            {/* Floating badge */}
-            <div className="cs-empower__badge">
-              <div className="cs-empower__badge-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              </div>
-              <strong>Industry-Leading Success</strong>
-              <p>Unlocking sustainable growth through precision and expertise.</p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
+      {/* CTA */}
       <section className="services-cta">
         <div className="container">
           <p className="section-label">Get Started</p>

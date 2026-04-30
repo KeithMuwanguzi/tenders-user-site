@@ -6,10 +6,10 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 
 /* ── Types ── */
 type GrandChild = { label: string; href: string }
-type Child = { label: string; href: string; children?: GrandChild[] }
+type Child = { label: string; href: string; children?: GrandChild[]; color?: string }
 type NavItem =
-  | { label: string; href: string; children?: undefined }
-  | { label: string; href: string; children: Child[] }
+  | { label: string; href: string; children?: undefined; mega?: undefined }
+  | { label: string; href: string; children: Child[]; mega?: boolean }
 
 /* ── Nav data ── */
 const NAV: NavItem[] = [
@@ -41,32 +41,56 @@ const NAV: NavItem[] = [
   {
     label: 'Care Settings',
     href: '/care-settings',
+    mega: true,
     children: [
       {
-        label: 'Health & Social Care',
-        href: '/care-settings/health-social-care',
+        label: 'Adult Social Care',
+        href: '/care-settings',
+        color: '#B02727',
         children: [
-          { label: 'Domiciliary Care',       href: '/care-settings/health-social-care/domiciliary-care' },
-          { label: 'Shared Lives',           href: '/care-settings/health-social-care/shared-lives' },
-          { label: 'Residential Care',       href: '/care-settings/health-social-care/residential-care' },
-          { label: 'Nursing Care',           href: '/care-settings/health-social-care/nursing-care' },
-          { label: 'Extra Care Services',    href: '/care-settings/health-social-care/extra-care-services' },
-          { label: 'Reablement Services',    href: '/care-settings/health-social-care/reablement-services' },
-          { label: 'Day Services',           href: '/care-settings/health-social-care/day-services' },
-          { label: 'Live-In Care Services',  href: '/care-settings/health-social-care/live-in-care-services' },
-          { label: 'Short Breaks',           href: '/care-settings/health-social-care/short-breaks' },
-          { label: 'Housing Support',        href: '/care-settings/health-social-care/housing-support' },
+          { label: 'Domiciliary Care',          href: '/care-settings/domiciliary-care' },
+          { label: 'Live-In Care',              href: '/care-settings/live-in-care' },
+          { label: 'Residential Care',          href: '/care-settings/residential-care' },
+          { label: 'Nursing Care',              href: '/care-settings/nursing-care' },
+          { label: 'Supported Living',          href: '/care-settings/supported-living' },
+          { label: 'Extra Care Housing',        href: '/care-settings/extra-care-housing' },
         ],
       },
       {
         label: "Children's Services",
-        href: '/care-settings/childrens-services',
+        href: '/care-settings',
+        color: '#2E5E8C',
         children: [
-          { label: 'Care Home Accommodation',  href: '/care-settings/childrens-services/care-home-accommodation' },
-          { label: 'Supported Accommodation',  href: '/care-settings/childrens-services/supported-accommodation' },
-          { label: 'Temporary Accommodation',  href: '/care-settings/childrens-services/temporary-accommodation' },
-          { label: 'Emergency Accommodation',  href: '/care-settings/childrens-services/emergency-accommodation' },
-          { label: 'Supported Living',         href: '/care-settings/childrens-services/supported-living' },
+          { label: "Children's Residential Care",     href: '/care-settings/childrens-residential-care' },
+          { label: 'Supported Accommodation (16+)',   href: '/care-settings/supported-accommodation' },
+          { label: 'Fostering Services',              href: '/care-settings/fostering-services' },
+          { label: 'Leaving Care Services',           href: '/care-settings/leaving-care-services' },
+          { label: 'Short Breaks (Children)',         href: '/care-settings/childrens-short-breaks' },
+          { label: 'Family Support and Outreach',     href: '/care-settings/family-support-and-outreach' },
+        ],
+      },
+      {
+        label: 'Housing and Support',
+        href: '/care-settings',
+        color: '#0A6E5A',
+        children: [
+          { label: 'Housing Related Support',  href: '/care-settings/housing-related-support' },
+          { label: 'Temporary Accommodation',  href: '/care-settings/temporary-accommodation' },
+          { label: 'Emergency Accommodation',  href: '/care-settings/emergency-accommodation' },
+          { label: 'Supported Housing',        href: '/care-settings/supported-housing' },
+        ],
+      },
+      {
+        label: 'Health and Clinical Services',
+        href: '/care-settings',
+        color: '#5B3A8B',
+        children: [
+          { label: 'Community Health Services',           href: '/care-settings/community-health-services' },
+          { label: 'Continuing Healthcare (CHC)',         href: '/care-settings/continuing-healthcare' },
+          { label: 'Complex Care',                        href: '/care-settings/complex-care' },
+          { label: 'Rehabilitation Services',             href: '/care-settings/rehabilitation-services' },
+          { label: 'End of Life and Palliative Care',     href: '/care-settings/end-of-life-and-palliative-care' },
+          { label: 'Hospital Discharge Services',         href: '/care-settings/hospital-discharge-services' },
         ],
       },
     ],
@@ -179,6 +203,65 @@ export default function Nav() {
               }
 
               const isOpen = openMenu === item.label
+
+              /* ── Mega menu (Care Settings) ── */
+              if (item.mega) {
+                return (
+                  <div key={item.label}
+                    className={`nav__dropdown nav__dropdown--mega${isOpen ? ' open' : ''}`}
+                    onMouseEnter={() => openDropdown(item.label)}
+                    onMouseLeave={scheduleClose}
+                  >
+                    <div className="nav__link nav__link--trigger" style={{ display: 'inline-flex', alignItems: 'center', gap: 0, padding: 0 }}>
+                      <Link href={item.href} onClick={closeAll}
+                        className={['nav__trigger-label', isActive(item.href) ? 'nav__link--active' : ''].filter(Boolean).join(' ')}>
+                        {item.label}
+                      </Link>
+                      <button className="nav__trigger-chevron" aria-haspopup="true" aria-expanded={isOpen}
+                        onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}>
+                        <span className={`nav__chevron-wrap${isOpen ? ' rotated' : ''}`}>
+                          <ArrowDown />
+                        </span>
+                      </button>
+                    </div>
+
+                    {isOpen && (
+                      <div className="nav__mega-panel" role="menu"
+                        onMouseEnter={() => openDropdown(item.label)}
+                        onMouseLeave={scheduleClose}
+                      >
+                        <div className="nav__mega-grid">
+                          {item.children.map((col) => (
+                            <div key={col.label} className="nav__mega-col">
+                              <div className="nav__mega-col-head" style={{ borderBottomColor: col.color }}>
+                                <span className="nav__mega-col-dot" style={{ background: col.color }} />
+                                {col.label}
+                              </div>
+                              <ul className="nav__mega-col-list">
+                                {col.children?.map((link) => (
+                                  <li key={link.href}>
+                                    <Link href={link.href} role="menuitem"
+                                      className="nav__mega-link" onClick={closeAll}>
+                                      {link.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="nav__mega-foot">
+                          <Link href="/care-settings" onClick={closeAll} className="nav__mega-foot-link">
+                            View all care settings →
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+
+              /* ── Standard dropdown ── */
               return (
                 <div key={item.label}
                   className={`nav__dropdown${isOpen ? ' open' : ''}`}
@@ -288,43 +371,61 @@ export default function Nav() {
 
                   {expanded && (
                     <div className="nav__mobile-submenu">
-                      {item.children.map((child) => {
-                        const hasSub = !!(child.children && child.children.length > 0)
-                        const subExpanded = mobileSub === child.label
-                        return (
-                          <div key={child.href}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                              <Link href={child.href}
-                                className="nav__mobile-sublink" style={{ flex: 1 }}
+                      {item.mega ? (
+                        /* Mobile mega: flat list of all links grouped by column */
+                        item.children.map((col) => (
+                          <div key={col.label}>
+                            <div className="nav__mobile-mega-head" style={{ borderLeftColor: col.color }}>
+                              {col.label}
+                            </div>
+                            {col.children?.map((link) => (
+                              <Link key={link.href} href={link.href}
+                                className="nav__mobile-sublink nav__mobile-sublink--indented"
                                 onClick={closeAll}>
-                                {child.label}
+                                {link.label}
                               </Link>
-                              {hasSub && (
-                                <button
-                                  className="nav__mobile-trigger-chevron"
-                                  style={{ padding: '8px 0 8px 12px' }}
-                                  onClick={() => setMobileSub(subExpanded ? null : child.label)}
-                                  aria-expanded={subExpanded}>
-                                  <span style={{ transform: subExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.22s ease', display: 'flex' }}>
-                                    <ArrowDown />
-                                  </span>
-                                </button>
+                            ))}
+                          </div>
+                        ))
+                      ) : (
+                        item.children.map((child) => {
+                          const hasSub = !!(child.children && child.children.length > 0)
+                          const subExpanded = mobileSub === child.label
+                          return (
+                            <div key={child.href}>
+                              <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Link href={child.href}
+                                  className="nav__mobile-sublink" style={{ flex: 1 }}
+                                  onClick={closeAll}>
+                                  {child.label}
+                                </Link>
+                                {hasSub && (
+                                  <button
+                                    className="nav__mobile-trigger-chevron"
+                                    style={{ padding: '8px 0 8px 12px' }}
+                                    onClick={() => setMobileSub(subExpanded ? null : child.label)}
+                                    aria-expanded={subExpanded}>
+                                    <span style={{ transform: subExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.22s ease', display: 'flex' }}>
+                                      <ArrowDown />
+                                    </span>
+                                  </button>
+                                )}
+                              </div>
+                              {hasSub && subExpanded && (
+                                <div className="nav__mobile-subsubmenu">
+                                  {child.children!.map((gc) => (
+                                    <Link key={gc.href} href={gc.href}
+                                      className="nav__mobile-subsublink"
+                                      onClick={closeAll}>
+                                      {gc.label}
+                                    </Link>
+                                  ))}
+                                </div>
                               )}
                             </div>
-                            {hasSub && subExpanded && (
-                              <div className="nav__mobile-subsubmenu">
-                                {child.children!.map((gc) => (
-                                  <Link key={gc.href} href={gc.href}
-                                    className="nav__mobile-subsublink"
-                                    onClick={closeAll}>
-                                    {gc.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
+                          )
+                        })
+                      )}
                     </div>
                   )}
                 </div>
