@@ -48,7 +48,6 @@ export default function HeroSlider() {
     [isExiting, idx]
   )
 
-  // Complete the transition after exit animation
   useEffect(() => {
     if (!isExiting) return
     const t = setTimeout(() => {
@@ -58,7 +57,6 @@ export default function HeroSlider() {
     return () => clearTimeout(t)
   }, [isExiting])
 
-  // Auto-advance
   useEffect(() => {
     if (isExiting) return
     const t = setTimeout(() => {
@@ -91,7 +89,6 @@ export default function HeroSlider() {
             Specialist Health &amp; Social Care Bid Writing
           </p>
 
-          {/* key=idx remounts on slide change → triggers entrance CSS animation */}
           <div
             key={idx}
             className={`hero__content${isExiting ? ' is-exiting' : ''}`}

@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         hostname: 'tenderlab.co.uk',
         pathname: '/wp-content/uploads/**',
       },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
   },
 }
