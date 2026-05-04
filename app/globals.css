@@ -3531,3 +3531,197 @@ section.cs-block ul li::marker {
   .faq-item__trigger { padding: 16px 18px; }
   .faq-item__body { padding: 0 18px 18px; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL RESPONSIVE IMPROVEMENTS
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Section spacing: tighten on mobile ─── */
+@media (max-width: 768px) {
+  :root {
+    --section-y: 56px;
+    --section-y-lg: 72px;
+  }
+}
+@media (max-width: 480px) {
+  :root {
+    --section-y: 40px;
+    --section-y-lg: 52px;
+    --container-px: 16px;
+  }
+}
+
+/* ─── Page hero label (kicker text, e.g. services page) ─── */
+.page-hero__label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.13em;
+  text-transform: uppercase; color: rgba(212,56,44,0.85);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  max-width: none;
+}
+.page-hero__label::before {
+  content: ''; display: block; width: 20px; height: 2px;
+  background: rgba(212,56,44,0.85); border-radius: 1px; flex-shrink: 0;
+}
+
+/* ─── Page hero — mobile ─── */
+@media (max-width: 768px) {
+  .page-hero { padding: 56px 0 44px; }
+  .page-hero--img { padding: 64px 0 52px; }
+}
+@media (max-width: 480px) {
+  .page-hero--img { padding: 44px 0 36px; }
+  .page-hero__title { font-size: clamp(28px, 9vw, 44px); }
+  .page-hero__headline { font-size: clamp(24px, 7.5vw, 40px); }
+}
+
+/* ─── Services intro: 3 → 2 → 1 ─── */
+@media (max-width: 960px) {
+  .services-intro__grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* existing @media(max-width:768px) already collapses to 1fr */
+
+/* ─── Service detail band padding: tighter on mobile ─── */
+@media (max-width: 768px) {
+  .svc-band { padding: 40px 0; }
+}
+@media (max-width: 480px) {
+  .svc-band { padding: 28px 0; }
+  .svc-detail-hero { min-height: 240px; padding-bottom: 28px; }
+}
+
+/* ─── Services CTA: stack buttons on mobile ─── */
+@media (max-width: 560px) {
+  .services-cta__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  .services-cta__actions .btn {
+    width: 100%; max-width: 320px;
+    justify-content: center;
+  }
+}
+
+/* ─── Care settings index: category header ─── */
+@media (max-width: 480px) {
+  .cs-cat-header { gap: 10px; align-items: flex-start; }
+  .cs-cat-header h2 { font-size: 20px; }
+  .cs-cat-num { font-size: 28px; }
+  .cs-cohort-row { padding: 12px 0; }
+}
+
+/* ─── About page: h2 and CTA on small screens ─── */
+@media (max-width: 480px) {
+  .ab-section h2 { font-size: 22px; }
+  .ab-final .lead { font-size: 22px; }
+  .ab-final { padding: 28px 20px; }
+}
+
+/* ─── Section header h2 on tiny screens ─── */
+@media (max-width: 480px) {
+  .section-header h2 { font-size: clamp(24px, 8vw, 38px); }
+}
+
+/* ─── Blog hero mobile ─── */
+@media (max-width: 600px) {
+  .blog-hero { padding: 48px 0 40px; }
+}
+
+/* ─── Contact page hero mobile ─── */
+@media (max-width: 600px) {
+  .contact-hero { padding: 52px 0 44px; }
+}
+
+/* ─── Reviews stats: 1-col on tiny screens ─── */
+@media (max-width: 400px) {
+  .reviews-stats__grid { grid-template-columns: 1fr; }
+  .reviews-stat { border-right: none; }
+}
+
+/* ─── Win cards compact on mobile ─── */
+@media (max-width: 480px) {
+  .win-card__body { padding: 14px 16px; }
+}
+
+/* ─── Hero stats: 2-col already set; compact padding ─── */
+@media (max-width: 400px) {
+  .hero__stat { padding: 16px 10px; }
+  .hero__stat-value { font-size: 28px; }
+}
+
+/* ─── Buttons: comfortable touch targets on mobile ─── */
+@media (max-width: 480px) {
+  .btn { padding: 12px 22px; font-size: 13.5px; }
+}
+
+/* ─── Nav mobile menu: compact on very small ─── */
+@media (max-width: 380px) {
+  .nav__mobile { padding: 8px 0; }
+  .nav__mobile-link { font-size: 14px; padding: 11px 16px; }
+}
+
+/* ─── Care settings detail (tlp) block: content fit ─── */
+@media (max-width: 480px) {
+  .tlp { padding: 20px 16px 48px; }
+  .tlp h1 { font-size: 24px; }
+  .tlp .lede { font-size: 16px; }
+  section.cs-block h2 { font-size: 18px; }
+  .cta-block { padding: 24px 16px; }
+  .cta-block .lead { font-size: 20px; }
+}
+
+/* ─── Svc detail body: sidebar order on mobile ─── */
+@media (max-width: 900px) {
+  .svc-detail-body__sidebar { order: -1; }
+}
+
+/* ─── Transform strip label on mobile ─── */
+@media (max-width: 480px) {
+  .svc-transform-row__from,
+  .svc-transform-row__to { font-size: 13px; }
+}
+
+/* ─── Process / Why partner stats: wrap nicely ─── */
+@media (max-width: 480px) {
+  .why-partner__intro-stat { gap: 24px; flex-wrap: wrap; }
+  .why-partner__big-num { font-size: clamp(36px, 10vw, 56px); }
+}
+
+/* ─── Methodology section header ─── */
+@media (max-width: 480px) {
+  .methodology__header { margin-bottom: 28px; }
+}
+
+/* ─── Footer brand column: compact ─── */
+@media (max-width: 480px) {
+  .footer__tagline { font-size: 13px; line-height: 1.6; }
+  .footer__contact-item { font-size: 13px; }
+  .footer__bottom { flex-direction: column; gap: 10px; text-align: center; }
+  .footer__legal { justify-content: center; flex-wrap: wrap; gap: 12px; }
+}
+
+/* ─── Services overview grid: 3→2→1 ─── */
+@media (max-width: 960px) {
+  .services-overview__grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* existing @media(max-width:768px) collapses to 1fr */
+
+/* ─── About snippet gap tighter on tablet ─── */
+@media (max-width: 900px) {
+  .about-snippet__inner { gap: 48px; }
+}
+
+/* ─── Svc cards (services page): stay 2-col longer ─── */
+@media (max-width: 600px) {
+  .svc-cards { grid-template-columns: 1fr; }
+}
+/* remove the 768px rule override — keep 2-col on tablet */
+
+/* ─── svc-detail-body sidebar: compact padding on mobile ─── */
+@media (max-width: 480px) {
+  .svc-delivers { padding: 22px 18px; }
+}
+
+/* ─── Override: svc-cards keep 2-col on tablet (601-768px) ─── */
+@media (min-width: 601px) and (max-width: 768px) {
+  .svc-cards { grid-template-columns: repeat(2, 1fr); }
+}
