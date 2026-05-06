@@ -4,130 +4,114 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-/* ── Types ── */
 type GrandChild = { label: string; href: string }
-type Child = { label: string; href: string; children?: GrandChild[]; color?: string }
+type Child = {
+  label: string; href: string; desc?: string
+  children?: GrandChild[]; color?: string
+}
 type NavItem =
   | { label: string; href: string; children?: undefined; mega?: undefined }
   | { label: string; href: string; children: Child[]; mega?: boolean }
 
-/* ── Nav data ── */
 const NAV: NavItem[] = [
   { label: 'Home', href: '/' },
   {
-    label: 'Services',
-    href: '/services',
+    label: 'Services', href: '/services',
     children: [
-      { label: 'Bid Writing',            href: '/services/bid-writing' },
-      { label: 'Pre-Submission Review',  href: '/services/pre-submission-review' },
-      { label: 'Lost Bid Debrief',       href: '/services/lost-bid-debrief' },
-      { label: 'Tender Readiness Audit', href: '/services/tender-readiness-audit' },
-      { label: 'Bid Team Coaching',      href: '/services/bid-team-coaching' },
-      { label: 'Pipeline Tracking',      href: '/services/pipeline-tracking' },
-      { label: 'Mobilisation Support',   href: '/services/mobilisation-support' },
-      { label: 'Tender Retainer',        href: '/services/tender-retainer' },
+      { label: 'Bid Writing',            href: '/services/bid-writing',            desc: 'Expert-crafted tender responses' },
+      { label: 'Pre-Submission Review',  href: '/services/pre-submission-review',  desc: 'Quality checks before you submit' },
+      { label: 'Lost Bid Debrief',       href: '/services/lost-bid-debrief',       desc: 'Understand why and improve fast' },
+      { label: 'Tender Readiness Audit', href: '/services/tender-readiness-audit', desc: 'Assess your bid capability' },
+      { label: 'Bid Team Coaching',      href: '/services/bid-team-coaching',      desc: 'Build internal bid competence' },
+      { label: 'Pipeline Tracking',      href: '/services/pipeline-tracking',      desc: 'Stay ahead of opportunities' },
+      { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Win-to-deliver transition' },
+      { label: 'Tender Retainer',        href: '/services/tender-retainer',        desc: 'Ongoing bid partnership' },
     ],
   },
   {
-    label: 'About',
-    href: '/about',
+    label: 'About', href: '/about',
     children: [
-      { label: 'About',   href: '/about' },
-      { label: 'Process', href: '/process' },
-      { label: 'Reviews', href: '/reviews' },
+      { label: 'Our Story',     href: '/about' },
+      { label: 'Our Process',   href: '/process' },
+      { label: 'Client Reviews', href: '/reviews' },
     ],
   },
   { label: 'Live Tenders', href: '/tenders' },
   {
-    label: 'Care Settings',
-    href: '/care-settings',
-    mega: true,
+    label: 'Care Settings', href: '/care-settings', mega: true,
     children: [
       {
-        label: 'Adult Social Care',
-        href: '/care-settings',
-        color: '#B02727',
+        label: 'Adult Social Care', href: '/care-settings', color: '#B02727',
         children: [
-          { label: 'Domiciliary Care',          href: '/care-settings/domiciliary-care' },
-          { label: 'Live-In Care',              href: '/care-settings/live-in-care' },
-          { label: 'Residential Care',          href: '/care-settings/residential-care' },
-          { label: 'Nursing Care',              href: '/care-settings/nursing-care' },
-          { label: 'Supported Living',          href: '/care-settings/supported-living' },
-          { label: 'Extra Care Housing',        href: '/care-settings/extra-care-housing' },
+          { label: 'Domiciliary Care',      href: '/care-settings/domiciliary-care' },
+          { label: 'Live-In Care',          href: '/care-settings/live-in-care' },
+          { label: 'Residential Care',      href: '/care-settings/residential-care' },
+          { label: 'Nursing Care',          href: '/care-settings/nursing-care' },
+          { label: 'Supported Living',      href: '/care-settings/supported-living' },
+          { label: 'Extra Care Housing',    href: '/care-settings/extra-care-housing' },
         ],
       },
       {
-        label: "Children's Services",
-        href: '/care-settings',
-        color: '#2E5E8C',
+        label: "Children's Services", href: '/care-settings', color: '#2E5E8C',
         children: [
-          { label: "Children's Residential Care",     href: '/care-settings/childrens-residential-care' },
-          { label: 'Supported Accommodation (16+)',   href: '/care-settings/supported-accommodation' },
-          { label: 'Fostering Services',              href: '/care-settings/fostering-services' },
-          { label: 'Leaving Care Services',           href: '/care-settings/leaving-care-services' },
-          { label: 'Short Breaks (Children)',         href: '/care-settings/childrens-short-breaks' },
-          { label: 'Family Support and Outreach',     href: '/care-settings/family-support-and-outreach' },
+          { label: "Children's Residential Care",   href: '/care-settings/childrens-residential-care' },
+          { label: 'Supported Accommodation (16+)', href: '/care-settings/supported-accommodation' },
+          { label: 'Fostering Services',            href: '/care-settings/fostering-services' },
+          { label: 'Leaving Care Services',         href: '/care-settings/leaving-care-services' },
+          { label: 'Short Breaks (Children)',       href: '/care-settings/childrens-short-breaks' },
+          { label: 'Family Support & Outreach',     href: '/care-settings/family-support-and-outreach' },
         ],
       },
       {
-        label: 'Housing and Support',
-        href: '/care-settings',
-        color: '#0A6E5A',
+        label: 'Housing and Support', href: '/care-settings', color: '#0A6E5A',
         children: [
-          { label: 'Housing Related Support',  href: '/care-settings/housing-related-support' },
-          { label: 'Temporary Accommodation',  href: '/care-settings/temporary-accommodation' },
-          { label: 'Emergency Accommodation',  href: '/care-settings/emergency-accommodation' },
-          { label: 'Supported Housing',        href: '/care-settings/supported-housing' },
+          { label: 'Housing Related Support', href: '/care-settings/housing-related-support' },
+          { label: 'Temporary Accommodation', href: '/care-settings/temporary-accommodation' },
+          { label: 'Emergency Accommodation', href: '/care-settings/emergency-accommodation' },
+          { label: 'Supported Housing',       href: '/care-settings/supported-housing' },
         ],
       },
       {
-        label: 'Health and Clinical Services',
-        href: '/care-settings',
-        color: '#5B3A8B',
+        label: 'Health & Clinical', href: '/care-settings', color: '#5B3A8B',
         children: [
-          { label: 'Community Health Services',           href: '/care-settings/community-health-services' },
-          { label: 'Continuing Healthcare (CHC)',         href: '/care-settings/continuing-healthcare' },
-          { label: 'Complex Care',                        href: '/care-settings/complex-care' },
-          { label: 'Rehabilitation Services',             href: '/care-settings/rehabilitation-services' },
-          { label: 'End of Life and Palliative Care',     href: '/care-settings/end-of-life-and-palliative-care' },
-          { label: 'Hospital Discharge Services',         href: '/care-settings/hospital-discharge-services' },
+          { label: 'Community Health Services',         href: '/care-settings/community-health-services' },
+          { label: 'Continuing Healthcare (CHC)',       href: '/care-settings/continuing-healthcare' },
+          { label: 'Complex Care',                      href: '/care-settings/complex-care' },
+          { label: 'Rehabilitation Services',           href: '/care-settings/rehabilitation-services' },
+          { label: 'End of Life & Palliative Care',     href: '/care-settings/end-of-life-and-palliative-care' },
+          { label: 'Hospital Discharge Services',       href: '/care-settings/hospital-discharge-services' },
         ],
       },
     ],
   },
-  { label: 'Blogs',        href: '/blog' },
+  { label: 'Blog',         href: '/blog' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Contact',      href: '/contact' },
 ]
 
-/* ── Arrow icons ── */
-function ArrowDown() {
+function ChevronDown({ className }: { className?: string }) {
   return (
-    <svg width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true">
-      <path d="M1 1l3.5 3.5L8 1" stroke="currentColor" strokeWidth="1.5"
-        strokeLinecap="round" strokeLinejoin="round" />
+    <svg className={className} width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+      <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
+
 function ArrowRight() {
   return (
-    <svg width="6" height="9" viewBox="0 0 6 9" fill="none" aria-hidden="true">
-      <path d="M1 1l3.5 3.5L1 8" stroke="currentColor" strokeWidth="1.5"
-        strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M3 7h8M7.5 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
 export default function Nav() {
   const pathname = usePathname()
-  const [scrolled,          setScrolled]          = useState(false)
-  const [menuOpen,          setMenuOpen]           = useState(false)
-  const [mobileExpanded,    setMobileExpanded]     = useState<string | null>(null)
-  const [mobileSub,         setMobileSub]          = useState<string | null>(null)
-  const [openMenu,          setOpenMenu]           = useState<string | null>(null)
-  const [openSubMenu,       setOpenSubMenu]        = useState<string | null>(null)
-  const closeTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const subCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [scrolled,       setScrolled]       = useState(false)
+  const [menuOpen,       setMenuOpen]        = useState(false)
+  const [mobileExpanded, setMobileExpanded]  = useState<string | null>(null)
+  const [openMenu,       setOpenMenu]        = useState<string | null>(null)
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 40)
@@ -136,30 +120,24 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handle)
   }, [])
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   const openDropdown  = useCallback((label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
     setOpenMenu(label)
   }, [])
 
   const scheduleClose = useCallback(() => {
-    closeTimer.current = setTimeout(() => { setOpenMenu(null); setOpenSubMenu(null) }, 140)
-  }, [])
-
-  const openSub = useCallback((label: string) => {
-    if (subCloseTimer.current) clearTimeout(subCloseTimer.current)
-    setOpenSubMenu(label)
-  }, [])
-
-  const scheduleSub = useCallback(() => {
-    subCloseTimer.current = setTimeout(() => setOpenSubMenu(null), 100)
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 180)
   }, [])
 
   const closeAll = useCallback(() => {
     setMenuOpen(false)
     setMobileExpanded(null)
-    setMobileSub(null)
     setOpenMenu(null)
-    setOpenSubMenu(null)
   }, [])
 
   const isActive = (href: string) => {
@@ -169,184 +147,161 @@ export default function Nav() {
   }
 
   return (
-    <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
-      <div className="container">
-        <div className="nav__inner">
+    <>
+      <nav className={`nav${scrolled ? ' nav--scrolled' : ''}`}>
+        {/* Main bar */}
+        <div className="nav__strip">
+          <div className="container">
+            <div className="nav__inner">
 
-          {/* Logo */}
-          <Link href="/" className="nav__logo" onClick={closeAll}>
-            <Image
-              src="/images/Logo/tenderlab-logo-transparent.png"
-              alt="TenderLab"
-              height={34} width={136} priority
-              style={{
-                objectFit: 'contain', objectPosition: 'left center',
-                filter: scrolled ? 'none' : 'brightness(0) invert(1)',
-                transition: 'filter 0.35s ease',
-              }}
-            />
-          </Link>
+              {/* Logo */}
+              <Link href="/" className="nav__logo" onClick={closeAll}>
+                <Image
+                  src="/images/Logo/tenderlab-logo-transparent.png"
+                  alt="TenderLab"
+                  height={32} width={130} priority
+                  style={{
+                    objectFit: 'contain', objectPosition: 'left center',
+                    filter: scrolled ? 'none' : 'brightness(0) invert(1)',
+                    transition: 'filter 0.35s ease',
+                  }}
+                />
+              </Link>
 
-          {/* Desktop links */}
-          <div className="nav__links">
-            {NAV.map((item) => {
-              if (!item.children) {
-                return (
-                  <Link key={item.label} href={item.href} onClick={closeAll}
-                    className={['nav__link',
-                      item.label === 'Home' ? 'nav__link--home' : '',
-                      isActive(item.href) ? 'nav__link--active' : '',
-                    ].filter(Boolean).join(' ')}>
-                    {item.label}
-                  </Link>
-                )
-              }
+              {/* Desktop links */}
+              <ul className="nav__links" role="list">
+                {NAV.map((item) => {
+                  const isOpen = openMenu === item.label
+                  const active = isActive(item.href)
 
-              const isOpen = openMenu === item.label
+                  if (!item.children) {
+                    return (
+                      <li key={item.label} className="nav__item-wrap">
+                        <Link href={item.href} onClick={closeAll}
+                          className={`nav__item${active ? ' nav__item--active' : ''}`}>
+                          {item.label}
+                        </Link>
+                      </li>
+                    )
+                  }
 
-              /* ── Mega menu (Care Settings) ── */
-              if (item.mega) {
-                return (
-                  <div key={item.label}
-                    className={`nav__dropdown nav__dropdown--mega${isOpen ? ' open' : ''}`}
-                    onMouseEnter={() => openDropdown(item.label)}
-                    onMouseLeave={scheduleClose}
-                  >
-                    <div className="nav__link nav__link--trigger" style={{ display: 'inline-flex', alignItems: 'center', gap: 0, padding: 0 }}>
-                      <Link href={item.href} onClick={closeAll}
-                        className={['nav__trigger-label', isActive(item.href) ? 'nav__link--active' : ''].filter(Boolean).join(' ')}>
-                        {item.label}
-                      </Link>
-                      <button className="nav__trigger-chevron" aria-haspopup="true" aria-expanded={isOpen}
-                        onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}>
-                        <span className={`nav__chevron-wrap${isOpen ? ' rotated' : ''}`}>
-                          <ArrowDown />
-                        </span>
-                      </button>
-                    </div>
-
-                    {isOpen && (
-                      <div className="nav__mega-panel" role="menu"
-                        onMouseEnter={() => openDropdown(item.label)}
-                        onMouseLeave={scheduleClose}
-                      >
-                        <div className="nav__mega-grid">
-                          {item.children.map((col) => (
-                            <div key={col.label} className="nav__mega-col">
-                              <div className="nav__mega-col-head" style={{ borderBottomColor: col.color }}>
-                                <span className="nav__mega-col-dot" style={{ background: col.color }} />
-                                {col.label}
-                              </div>
-                              <ul className="nav__mega-col-list">
-                                {col.children?.map((link) => (
-                                  <li key={link.href}>
-                                    <Link href={link.href} role="menuitem"
-                                      className="nav__mega-link" onClick={closeAll}>
-                                      {link.label}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="nav__mega-foot">
-                          <Link href="/care-settings" onClick={closeAll} className="nav__mega-foot-link">
-                            View all care settings →
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )
-              }
-
-              /* ── Standard dropdown ── */
-              return (
-                <div key={item.label}
-                  className={`nav__dropdown${isOpen ? ' open' : ''}`}
-                  onMouseEnter={() => openDropdown(item.label)}
-                  onMouseLeave={scheduleClose}
-                >
-                  <div className="nav__link nav__link--trigger" style={{ display: 'inline-flex', alignItems: 'center', gap: 0, padding: 0 }}>
-                    <Link href={item.href} onClick={closeAll}
-                      className={['nav__trigger-label', isActive(item.href) ? 'nav__link--active' : ''].filter(Boolean).join(' ')}>
-                      {item.label}
-                    </Link>
-                    <button className="nav__trigger-chevron" aria-haspopup="true" aria-expanded={isOpen}
-                      onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}>
-                      <span className={`nav__chevron-wrap${isOpen ? ' rotated' : ''}`}>
-                        <ArrowDown />
-                      </span>
-                    </button>
-                  </div>
-
-                  {isOpen && (
-                    <div className="nav__panel" role="menu"
+                  return (
+                    <li key={item.label}
+                      className={`nav__item-wrap nav__item-wrap--drop${item.mega ? ' nav__item-wrap--mega' : ''}`}
                       onMouseEnter={() => openDropdown(item.label)}
                       onMouseLeave={scheduleClose}
                     >
-                      {item.children.map((child) => {
-                        const hasSub = !!(child.children && child.children.length > 0)
-                        const subOpen = openSubMenu === child.label
-                        return (
-                          <div key={child.href}
-                            className={`nav__panel-item${hasSub ? ' nav__panel-item--has-sub' : ''}${subOpen ? ' open' : ''}`}
-                            onMouseEnter={() => hasSub ? openSub(child.label) : scheduleSub()}
-                            onMouseLeave={() => hasSub ? scheduleSub() : undefined}
-                          >
-                            <Link href={child.href} role="menuitem"
-                              className="nav__panel-link" onClick={closeAll}>
-                              {child.label}
-                              {hasSub && <span className="nav__sub-arrow"><ArrowRight /></span>}
+                      <button
+                        className={`nav__item nav__item--btn${active ? ' nav__item--active' : ''}${isOpen ? ' nav__item--open' : ''}`}
+                        aria-expanded={isOpen}
+                        aria-haspopup="true"
+                        onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}
+                      >
+                        {item.label}
+                        <ChevronDown className={`nav__chevron${isOpen ? ' nav__chevron--up' : ''}`} />
+                      </button>
+
+                      {/* Standard dropdown */}
+                      {!item.mega && (
+                        <div
+                          className={`nav__drop${isOpen ? ' nav__drop--open' : ''}`}
+                          role="menu"
+                          onMouseEnter={() => openDropdown(item.label)}
+                          onMouseLeave={scheduleClose}
+                        >
+                          {item.children.map((child) => (
+                            <Link key={child.href} href={child.href} role="menuitem"
+                              className="nav__drop-link" onClick={closeAll}>
+                              <span className="nav__drop-label">{child.label}</span>
+                              {child.desc && <span className="nav__drop-desc">{child.desc}</span>}
                             </Link>
-                            {hasSub && subOpen && (
-                              <div className="nav__sub-panel" role="menu"
-                                onMouseEnter={() => openSub(child.label)}
-                                onMouseLeave={scheduleSub}
-                              >
-                                {child.children!.map((gc) => (
-                                  <Link key={gc.href} href={gc.href} role="menuitem"
-                                    className="nav__panel-link" onClick={closeAll}>
-                                    {gc.label}
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
 
-          {/* CTA */}
-          <div className="nav__right">
-            <Link href="/contact" className="nav__score-btn" onClick={closeAll}>
-              Score My Response
-            </Link>
+              {/* CTA + Burger */}
+              <div className="nav__actions">
+                <Link href="/contact" className="nav__cta" onClick={closeAll}>
+                  Score My Response
+                </Link>
+                <button
+                  className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
+                  onClick={() => setMenuOpen((o) => !o)}
+                  aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                  aria-expanded={menuOpen}
+                >
+                  <span /><span />
+                </button>
+              </div>
+            </div>
           </div>
-
-          {/* Burger */}
-          <button className={`nav__burger${menuOpen ? ' open' : ''}`}
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}>
-            <span /><span /><span />
-          </button>
         </div>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="nav__mobile">
+        {/* Mega panels — full-width, absolutely below nav__strip */}
+        {(NAV.filter((i): i is NavItem & { mega: true; children: Child[] } => !!i.mega)).map((item) => {
+          const isOpen = openMenu === item.label
+          return (
+            <div key={item.label}
+              className={`nav__mega${isOpen ? ' nav__mega--open' : ''}`}
+              role="menu"
+              onMouseEnter={() => openDropdown(item.label)}
+              onMouseLeave={scheduleClose}
+            >
+              <div className="container">
+                <div className="nav__mega-inner">
+                  <div className="nav__mega-grid">
+                    {item.children.map((col) => (
+                      <div key={col.label} className="nav__mega-col">
+                        <div
+                          className="nav__mega-col-head"
+                          style={{ '--col-accent': col.color } as React.CSSProperties}
+                        >
+                          <span className="nav__mega-col-dot" />
+                          {col.label}
+                        </div>
+                        <ul className="nav__mega-list" role="list">
+                          {col.children?.map((link) => (
+                            <li key={link.href}>
+                              <Link href={link.href} role="menuitem"
+                                className="nav__mega-link" onClick={closeAll}>
+                                {link.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="nav__mega-foot">
+                    <Link href="/care-settings" className="nav__mega-cta" onClick={closeAll}>
+                      Browse all care settings <ArrowRight />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </nav>
+
+      {/* Mobile drawer */}
+      <div
+        className={`nav__drawer${menuOpen ? ' nav__drawer--open' : ''}`}
+        aria-hidden={!menuOpen}
+        role="dialog"
+        aria-label="Site navigation"
+      >
+        <div className="nav__drawer-scroll">
+          <div className="nav__drawer-links">
             {NAV.map((item) => {
               if (!item.children) {
                 return (
                   <Link key={item.label} href={item.href}
-                    className={`nav__mobile-link${isActive(item.href) ? ' active' : ''}`}
+                    className={`nav__drawer-link${isActive(item.href) ? ' active' : ''}`}
                     onClick={closeAll}>
                     {item.label}
                   </Link>
@@ -355,89 +310,57 @@ export default function Nav() {
 
               const expanded = mobileExpanded === item.label
               return (
-                <div key={item.label} className="nav__mobile-group">
-                  <div className="nav__mobile-link nav__mobile-trigger" style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
-                    <Link href={item.href} className="nav__mobile-trigger-label" onClick={closeAll}>
-                      {item.label}
-                    </Link>
-                    <button className="nav__mobile-trigger-chevron"
-                      onClick={() => setMobileExpanded(expanded ? null : item.label)}
-                      aria-expanded={expanded}>
-                      <span style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.22s ease', display: 'flex' }}>
-                        <ArrowDown />
-                      </span>
-                    </button>
+                <div key={item.label} className="nav__drawer-group">
+                  <button
+                    className={`nav__drawer-trigger${expanded ? ' open' : ''}`}
+                    onClick={() => setMobileExpanded(expanded ? null : item.label)}
+                    aria-expanded={expanded}
+                  >
+                    <span>{item.label}</span>
+                    <ChevronDown className={`nav__chevron${expanded ? ' nav__chevron--up' : ''}`} />
+                  </button>
+                  <div className={`nav__drawer-sub${expanded ? ' nav__drawer-sub--open' : ''}`}>
+                    {item.mega ? (
+                      item.children.map((col) => (
+                        <div key={col.label}>
+                          <p className="nav__drawer-col-head" style={{ color: col.color }}>
+                            {col.label}
+                          </p>
+                          {col.children?.map((link) => (
+                            <Link key={link.href} href={link.href}
+                              className="nav__drawer-sublink nav__drawer-sublink--deep"
+                              onClick={closeAll}>
+                              {link.label}
+                            </Link>
+                          ))}
+                        </div>
+                      ))
+                    ) : (
+                      item.children.map((child) => (
+                        <Link key={child.href} href={child.href}
+                          className="nav__drawer-sublink" onClick={closeAll}>
+                          {child.label}
+                        </Link>
+                      ))
+                    )}
                   </div>
-
-                  {expanded && (
-                    <div className="nav__mobile-submenu">
-                      {item.mega ? (
-                        /* Mobile mega: flat list of all links grouped by column */
-                        item.children.map((col) => (
-                          <div key={col.label}>
-                            <div className="nav__mobile-mega-head" style={{ borderLeftColor: col.color }}>
-                              {col.label}
-                            </div>
-                            {col.children?.map((link) => (
-                              <Link key={link.href} href={link.href}
-                                className="nav__mobile-sublink nav__mobile-sublink--indented"
-                                onClick={closeAll}>
-                                {link.label}
-                              </Link>
-                            ))}
-                          </div>
-                        ))
-                      ) : (
-                        item.children.map((child) => {
-                          const hasSub = !!(child.children && child.children.length > 0)
-                          const subExpanded = mobileSub === child.label
-                          return (
-                            <div key={child.href}>
-                              <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Link href={child.href}
-                                  className="nav__mobile-sublink" style={{ flex: 1 }}
-                                  onClick={closeAll}>
-                                  {child.label}
-                                </Link>
-                                {hasSub && (
-                                  <button
-                                    className="nav__mobile-trigger-chevron"
-                                    style={{ padding: '8px 0 8px 12px' }}
-                                    onClick={() => setMobileSub(subExpanded ? null : child.label)}
-                                    aria-expanded={subExpanded}>
-                                    <span style={{ transform: subExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.22s ease', display: 'flex' }}>
-                                      <ArrowDown />
-                                    </span>
-                                  </button>
-                                )}
-                              </div>
-                              {hasSub && subExpanded && (
-                                <div className="nav__mobile-subsubmenu">
-                                  {child.children!.map((gc) => (
-                                    <Link key={gc.href} href={gc.href}
-                                      className="nav__mobile-subsublink"
-                                      onClick={closeAll}>
-                                      {gc.label}
-                                    </Link>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })
-                      )}
-                    </div>
-                  )}
                 </div>
               )
             })}
+          </div>
 
-            <Link href="/contact" className="nav__score-btn nav__score-btn--mobile" onClick={closeAll}>
+          <div className="nav__drawer-foot">
+            <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
               Score My Response
             </Link>
           </div>
-        )}
+        </div>
       </div>
-    </nav>
+
+      {/* Backdrop */}
+      {menuOpen && (
+        <div className="nav__backdrop" onClick={closeAll} aria-hidden="true" />
+      )}
+    </>
   )
 }
