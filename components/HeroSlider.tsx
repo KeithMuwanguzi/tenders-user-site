@@ -73,10 +73,11 @@ export default function HeroSlider() {
       <div className="hero__bg">
         <Image
           src="/images/business-people-video-call-meeting.jpg"
-          alt="Professional bid writing consultation"
+          alt="Senior consultants reviewing a tender strategy document"
           fill
           priority
-          style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+          sizes="100vw"
+          style={{ objectFit: 'cover', objectPosition: '60% 30%' }}
         />
       </div>
       <div className="hero__overlay" />
@@ -95,12 +96,12 @@ export default function HeroSlider() {
           >
             <p className="hero__eyebrow">{slide.eyebrow}</p>
             <h1 className="hero__headline">{slide.headline}</h1>
-            <p className="hero__quote">&ldquo;{slide.quote}&rdquo;</p>
+            <p className="hero__quote">{slide.quote}</p>
             <Link href={slide.href} className="hero__pill-cta">
-              Get a Free Consultation
+              Read More
               <span className="hero__pill-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 17L17 7M17 7H7M17 7v10" />
+                <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M0 6h22M18 1l5 5-5 5" />
                 </svg>
               </span>
             </Link>

@@ -30,21 +30,25 @@ const contractWins = [
     council: 'Essex County Council',
     care: 'Domiciliary Care',
     framework: 'Live at Home 2025 Framework',
+    img: '/Page Content HTML Files/assets/feedback/c2-01.png',
   },
   {
     council: 'Southend-on-Sea City Council',
     care: "Children's Services",
     framework: "Children's Residential and Accommodation Framework",
+    img: '/Page Content HTML Files/assets/feedback/c3-1.png',
   },
   {
     council: 'Bedford Borough Council',
     care: 'Supported Living',
     framework: 'Supported Living and Community Based Support Services Framework',
+    img: '/Page Content HTML Files/assets/feedback/c4-1.png',
   },
   {
     council: 'Dorset Council',
     care: 'Multiple Lots',
     framework: 'Care, Support, Housing and Community Safety Framework',
+    img: '/Page Content HTML Files/assets/feedback/c6-1.png',
   },
 ]
 
@@ -109,21 +113,29 @@ const methodologySteps = [
     number: '01',
     title: 'Specification Intelligence',
     desc: 'Full specification analysis before a word is written. Every evaluator criterion extracted, weighted, and mapped to the question structure.',
+    stat: '100%',
+    statLabel: 'Criteria coverage',
   },
   {
     number: '02',
     title: 'Framework-First Drafting',
     desc: 'Each response is drafted against our 20-criterion scoring framework built from real evaluator feedback across 200+ submissions.',
+    stat: '20',
+    statLabel: 'Scoring criteria',
   },
   {
     number: '03',
     title: 'Evidence Calibration',
     desc: 'Named staff. Specific case examples. Measurable outcomes. Dated policies. Every criterion that evaluators mark gets addressed precisely.',
+    stat: '200+',
+    statLabel: 'Submissions scored',
   },
   {
     number: '04',
     title: 'Quality Gate',
     desc: 'No response leaves without scoring 4 or above on every criterion. The gate is not a review. It is a hard stop. If it does not pass, it does not go.',
+    stat: '4/5',
+    statLabel: 'Minimum score to pass',
   },
 ]
 
@@ -239,28 +251,6 @@ export default function HomePage() {
       {/* ─── HERO ─── */}
       <HeroSlider />
 
-      {/* ─── SERVICES INTRO ─── */}
-      <section className="services-intro">
-        <div className="container">
-          <div className="section-header">
-            <div className="section-label">Our Services</div>
-            <h2>Three Ways We Help You Win</h2>
-            <p>From a single submission review to ongoing pipeline support — choose the level of service that fits your bid strategy.</p>
-          </div>
-          <div className="services-intro__grid">
-            {serviceCards.map((card) => (
-              <div key={card.tag} className="service-card">
-                <div className="service-card__tag">{card.tag}</div>
-                <div className="service-card__type">{card.type}</div>
-                <h3 className="service-card__title">{card.title}</h3>
-                <p className="service-card__desc">{card.desc}</p>
-                <Link href="/contact" className="service-card__cta">Get a Free Consultation</Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ─── PORTALS ─── */}
       <section className="portals">
         <div className="portals__heading">Portals We Work With</div>
@@ -282,12 +272,12 @@ export default function HomePage() {
             <p>Selected results across local authority and NHS frameworks.</p>
           </div>
           <div className="wins__grid">
-            {contractWins.map((w, i) => (
+            {contractWins.map((w) => (
               <div key={w.council} className="win-card">
                 <div className="win-card__photo">
                   <Image
-                    src={`/images/contracts/contract-${i + 1}.jpg`}
-                    alt={`Contract win document: ${w.council}`}
+                    src={w.img}
+                    alt={`Award letter: ${w.council} – ${w.framework}`}
                     fill
                     style={{ objectFit: 'cover', objectPosition: 'center top' }}
                   />
@@ -303,6 +293,28 @@ export default function HomePage() {
           </div>
           <div className="wins__cta">
             <Link href="/case-studies" className="btn btn-ghost">View More Case Studies</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SERVICES INTRO ─── */}
+      <section className="services-intro">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-label">Our Services</div>
+            <h2>Three Ways We Help You Win</h2>
+            <p>From a single submission review to ongoing pipeline support — choose the level of service that fits your bid strategy.</p>
+          </div>
+          <div className="services-intro__grid">
+            {serviceCards.map((card) => (
+              <div key={card.tag} className="service-card">
+                <div className="service-card__tag">{card.tag}</div>
+                <div className="service-card__type">{card.type}</div>
+                <h3 className="service-card__title">{card.title}</h3>
+                <p className="service-card__desc">{card.desc}</p>
+                <Link href="/contact" className="service-card__cta">Get a Free Consultation</Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -418,17 +430,32 @@ export default function HomePage() {
       {/* ─── METHODOLOGY ─── */}
       <section className="methodology">
         <div className="container">
-          <div className="methodology__header">
-            <div className="section-label">The Method</div>
-            <h2>Other firms write tenders.<br />We engineer them.</h2>
-            <p>A four-stage process built on evaluator intelligence and evidence precision.</p>
+          <div className="methodology__intro">
+            <div className="methodology__intro-text">
+              <div className="section-label section-label--light">The Method</div>
+              <h2>Other firms write tenders.<br />We engineer them.</h2>
+              <p>A four-stage process built on evaluator intelligence and evidence precision. Every step exists because evaluators told us it matters.</p>
+            </div>
+            <div className="methodology__intro-stat">
+              <span className="methodology__big-num">92%</span>
+              <span className="methodology__big-label">Win rate across 200+ submissions</span>
+            </div>
           </div>
-          <div className="methodology__grid">
-            {methodologySteps.map((step) => (
-              <div key={step.number} className="method-card">
-                <div className="method-card__number">{step.number}</div>
-                <h3 className="method-card__title">{step.title}</h3>
-                <p className="method-card__desc">{step.desc}</p>
+          <div className="methodology__timeline">
+            {methodologySteps.map((step, i) => (
+              <div key={step.number} className="method-step">
+                <div className="method-step__line">
+                  <div className="method-step__dot">{step.number}</div>
+                  {i < methodologySteps.length - 1 && <div className="method-step__connector" />}
+                </div>
+                <div className="method-step__content">
+                  <div className="method-step__stat">
+                    <span className="method-step__stat-num">{step.stat}</span>
+                    <span className="method-step__stat-label">{step.statLabel}</span>
+                  </div>
+                  <h3 className="method-step__title">{step.title}</h3>
+                  <p className="method-step__desc">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>

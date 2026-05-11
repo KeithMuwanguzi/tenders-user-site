@@ -14,7 +14,6 @@ type NavItem =
   | { label: string; href: string; children: Child[]; mega?: boolean }
 
 const NAV: NavItem[] = [
-  { label: 'Home', href: '/' },
   {
     label: 'Services', href: '/services',
     children: [
@@ -28,15 +27,6 @@ const NAV: NavItem[] = [
       { label: 'Tender Retainer',        href: '/services/tender-retainer',        desc: 'Ongoing bid partnership' },
     ],
   },
-  {
-    label: 'About', href: '/about',
-    children: [
-      { label: 'Our Story',     href: '/about' },
-      { label: 'Our Process',   href: '/process' },
-      { label: 'Client Reviews', href: '/reviews' },
-    ],
-  },
-  { label: 'Live Tenders', href: '/tenders' },
   {
     label: 'Care Settings', href: '/care-settings', mega: true,
     children: [
@@ -84,9 +74,18 @@ const NAV: NavItem[] = [
       },
     ],
   },
-  { label: 'Blog',         href: '/blog' },
+  { label: 'Live Tenders', href: '/tenders' },
   { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Contact',      href: '/contact' },
+  { label: 'Blogs',         href: '/blog' },
+  {
+    label: 'About', href: '/about',
+    children: [
+      { label: 'Our Story',     href: '/about' },
+      { label: 'Our Process',   href: '/process' },
+      { label: 'Client Reviews', href: '/reviews' },
+    ],
+  },
+  { label: 'Contact Us',      href: '/contact' },
 ]
 
 function ChevronDown({ className }: { className?: string }) {
@@ -107,17 +106,24 @@ function ArrowRight() {
 
 export default function Nav() {
   const pathname = usePathname()
-  const [scrolled,       setScrolled]       = useState(false)
+  const [scrolled,       setScrolled]        = useState(false)
   const [menuOpen,       setMenuOpen]        = useState(false)
   const [mobileExpanded, setMobileExpanded]  = useState<string | null>(null)
   const [openMenu,       setOpenMenu]        = useState<string | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 40)
-    handle()
-    window.addEventListener('scroll', handle, { passive: true })
-    return () => window.removeEventListener('scroll', handle)
+    const onScroll = () => {
+      const hero = document.querySelector('.hero')
+      if (hero) {
+        setScrolled(window.scrollY >= hero.getBoundingClientRect().height - 72)
+      } else {
+        setScrolled(window.scrollY > 100)
+      }
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
@@ -149,21 +155,31 @@ export default function Nav() {
   return (
     <>
       <nav className={`nav${scrolled ? ' nav--scrolled' : ''}`}>
-        {/* Main bar */}
+        <div className="nav__topbar" />
         <div className="nav__strip">
           <div className="container">
             <div className="nav__inner">
+
+              {/* Burger — visible on mobile, Bain puts it left */}
+              <button
+                className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
+                onClick={() => setMenuOpen((o) => !o)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={menuOpen}
+              >
+                <span /><span /><span />
+              </button>
 
               {/* Logo */}
               <Link href="/" className="nav__logo" onClick={closeAll}>
                 <Image
                   src="/images/Logo/tenderlab-logo-transparent.png"
                   alt="TenderLab"
-                  height={32} width={130} priority
+                  height={28} width={120} priority
                   style={{
                     objectFit: 'contain', objectPosition: 'left center',
                     filter: scrolled ? 'none' : 'brightness(0) invert(1)',
-                    transition: 'filter 0.35s ease',
+                    transition: 'filter 0.3s ease',
                   }}
                 />
               </Link>
@@ -191,15 +207,19 @@ export default function Nav() {
                       onMouseEnter={() => openDropdown(item.label)}
                       onMouseLeave={scheduleClose}
                     >
-                      <button
-                        className={`nav__item nav__item--btn${active ? ' nav__item--active' : ''}${isOpen ? ' nav__item--open' : ''}`}
-                        aria-expanded={isOpen}
-                        aria-haspopup="true"
-                        onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}
-                      >
-                        {item.label}
-                        <ChevronDown className={`nav__chevron${isOpen ? ' nav__chevron--up' : ''}`} />
-                      </button>
+                      <span className={`nav__item nav__item--btn${active ? ' nav__item--active' : ''}${isOpen ? ' nav__item--open' : ''}`}>
+                        <Link href={item.href} onClick={closeAll} className="nav__item-link">
+                          {item.label}
+                        </Link>
+                        <button
+                          className="nav__chevron-btn"
+                          aria-expanded={isOpen}
+                          aria-haspopup="true"
+                          onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}
+                        >
+                          <ChevronDown className={`nav__chevron${isOpen ? ' nav__chevron--up' : ''}`} />
+                        </button>
+                      </span>
 
                       {/* Standard dropdown */}
                       {!item.mega && (
@@ -223,19 +243,11 @@ export default function Nav() {
                 })}
               </ul>
 
-              {/* CTA + Burger */}
+              {/* Right actions */}
               <div className="nav__actions">
-                <Link href="/contact" className="nav__cta" onClick={closeAll}>
+                <Link href="/score-my-response" className="nav__cta" onClick={closeAll}>
                   Score My Response
                 </Link>
-                <button
-                  className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
-                  onClick={() => setMenuOpen((o) => !o)}
-                  aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                  aria-expanded={menuOpen}
-                >
-                  <span /><span />
-                </button>
               </div>
             </div>
           </div>
@@ -260,7 +272,6 @@ export default function Nav() {
                           className="nav__mega-col-head"
                           style={{ '--col-accent': col.color } as React.CSSProperties}
                         >
-                          <span className="nav__mega-col-dot" />
                           {col.label}
                         </div>
                         <ul className="nav__mega-list" role="list">
@@ -351,7 +362,7 @@ export default function Nav() {
 
           <div className="nav__drawer-foot">
             <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
-              Score My Response
+              Free Consultation
             </Link>
           </div>
         </div>
