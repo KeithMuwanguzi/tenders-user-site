@@ -17,15 +17,13 @@ export type ServiceData = {
   tiers: ServiceTier[]
 }
 
-const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
-
 export const SERVICES_DATA: ServiceData[] = [
   {
     slug: 'bid-writing',
     title: 'Bid Writing',
     tagline: 'From specification to submission, structured to score.',
     description: 'End-to-end tender writing for UK health and social care contracts.',
-    heroImg: `${WP}/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80',
     paragraphs: [
       'Bid Writing is the end-to-end authoring of a tender response. From the moment the tender drops to the moment it lands on the commissioner\'s portal, every word, every method statement, every case example and every line of pricing narrative is built specifically for the procurement in front of us.',
       'The discipline that separates winning submissions from compliant ones is not vocabulary. It is structure. Commissioners score against published evaluation criteria with weighted questions, named subpoints, and minimum thresholds. The submissions that win are the submissions whose architecture mirrors that scoring sheet line for line. Each paragraph closes a scoring point. Each operational claim is anchored to a named system, a named role, a dated case example or a verifiable document. Generic narrative is removed. Marketing language is removed. Adjective clusters that say nothing are removed.',
@@ -73,7 +71,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Pre-Submission Review',
     tagline: 'Know the score before the commissioner does.',
     description: 'Forensic scoring of a completed draft against the published evaluation criteria.',
-    heroImg: `${WP}/business-team-situation-present-share-idea-scaled-rlxsy44mcljsvgn3s6rt9ksf6do8u1w5ltqwwxuh0s.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80',
     paragraphs: [
       'Pre-Submission Review is a forensic, evaluator-grade scoring of a completed draft against the published evaluation criteria of the procurement. It is delivered in a 72-hour turnaround so it fits inside the final week of any bid window.',
       'The review is structured around three deliverables. A scored workbook against the commissioner\'s own framework, with a rubric mark on every scored question. A gap list mapped directly to the specification, naming the line, the subpoint and the missing element. A rewrite priority list ranked by marks at stake, so the final week of the bid window is spent rewriting the answers that will move the score, not the answers the team feels least comfortable with.',
@@ -116,7 +114,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Lost Bid Debrief',
     tagline: 'Convert losses into a compounding answer bank.',
     description: 'Structured post-loss analysis that turns a loss into reusable content.',
-    heroImg: `${WP}/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80',
     paragraphs: [
       'Lost Bid Debrief converts a lost tender into reusable bid material. It runs within 30 days of the award notice, while feedback is still accessible and the answers are still fresh in the team\'s mind.',
       'The debrief begins by requesting the commissioner\'s written feedback through the formal route. That feedback is then cross-referenced against publicly available information on the winning bidder, including their CQC profile, contract history, registered manager, and any published case studies. The combination reveals the structural reasons marks were lost: missed subpoints, weak operational evidence, evaluator-language mismatch, or a winning competitor who built a stronger case example library.',
@@ -157,7 +155,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Tender Readiness Audit',
     tagline: 'Be ready before the opportunity arrives.',
     description: 'Diagnostic for providers preparing to enter the tender market or to step up to larger frameworks.',
-    heroImg: `${WP}/service5-rld2tb6l874u29gi0ghbat2xqz5o9gd2l6ub88mmcs.webp`,
+    heroImg: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
     paragraphs: [
       'Tender Readiness Audit is a diagnostic for providers preparing to enter the tender market for the first time, or stepping up from smaller local contracts to larger frameworks and Dynamic Purchasing Systems. It is run 90 to 180 days before the first target tender drops, when there is still time to build the evidence base properly.',
       'The audit covers every document a commissioner will ask for. Policy suite completeness against published expectations. Case study bank depth against the question categories that recur in the target sector. KPI evidence and contract performance data. CQC alignment and inspection readiness. Reference quality from current contracts. Commissioner relationships and named officer-level engagement. The audit is benchmarked against the evidence thresholds of the contracts the provider intends to bid for, so the gap is concrete, not abstract.',
@@ -199,7 +197,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Bid Team Coaching',
     tagline: 'Build a tender function that delivers beyond the bid.',
     description: 'In-house capability build for providers with an internal bid writer or bid team.',
-    heroImg: `${WP}/team-architects-working-town-project-conference-room-architect-business-suit_482257-26513-rlech3dwy1clh1rrgzpxq067wt5p662hx5uscbdh2k.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1531538606174-e1ac68e4e9d0?w=1200&q=80',
     paragraphs: [
       'Bid Team Coaching is an in-house capability build for providers who already have an internal bid writer or a small bid team but whose scoring is inconsistent across submissions. It is a four-session live programme designed to leave behind a repeatable internal methodology rather than to write a single bid.',
       'The four sessions cover specification analysis (how to extract a scoring sheet from a procurement document), answer architecture (how to map paragraphs to scoring points before drafting prose), evidence banking (how to build a reusable answer library that compounds across bids), and evaluator psychology (how a panel reads, scores, and ranks responses). Each session ends with a live rewrite of one of the team\'s current in-flight answers, so the coaching is calibrated to the work the team is actually doing.',
@@ -240,7 +238,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Pipeline Tracking',
     tagline: 'See every opportunity before competitors do.',
     description: "Weekly feed of relevant opportunities scored against the provider's service scope, geography and capacity.",
-    heroImg: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
     paragraphs: [
       'Pipeline Tracking is a weekly feed of relevant tender opportunities sourced across Find a Tender, Contracts Finder, In-Tend, ProContract, Atamis, and regional procurement portals. Every opportunity is scored for fit against the provider\'s service scope, geography, and delivery capacity, with a bid or no-bid recommendation and an internal drafting deadline for every go decision.',
       'The pipeline arrives every Monday morning. Each opportunity carries a fit score, a commissioner profile, a likely evaluator weighting, and a recommended drafting window back-calculated from the submission deadline to leave a buffer for review. The team can move straight into specification analysis on the opportunities they decide to bid, rather than spending Monday hunting through portals.',
@@ -282,7 +280,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Mobilisation Support',
     tagline: 'Ready for contract day one.',
     description: 'Post-award delivery from contract award through to the first 90 days of live service.',
-    heroImg: `${WP}/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',
     paragraphs: [
       'Mobilisation Support closes the gap between winning the bid and delivering the service on contract day one. It begins within 72 hours of the award notice, runs through the standstill window where applicable, and continues through the first 90 days of live delivery.',
       'The mobilisation plan is phased and Gantt-charted. TUPE workstreams are documented and named to clear owners, with consultation timelines aligned to statutory requirements. Policy alignment runs in parallel against the contract specification, so any policy gap surfaced during commissioner monitoring is closed before the meeting rather than during it. The first-90-day reporting framework is built to match the commissioner\'s expectation, ready for the first contract monitoring meeting from the outset.',
@@ -324,7 +322,7 @@ export const SERVICES_DATA: ServiceData[] = [
     title: 'Tender Retainer',
     tagline: 'Turn tendering into a growth function.',
     description: 'Monthly engagement bundling Pipeline Tracking, two Pre-Submission Reviews and priority access to Bid Writing.',
-    heroImg: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
+    heroImg: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80',
     paragraphs: [
       'Tender Retainer is a monthly engagement that bundles Pipeline Tracking, two Pre-Submission Reviews per month, and priority access to Bid Writing at a fixed retainer discount. It is designed for providers who treat tendering as a continuous growth function rather than as a project that runs once or twice a year.',
       'The retainer delivers a Monday-morning pipeline report every week, covering Contracts Finder, Find a Tender, ProContract, In-Tend, Atamis and regional portals filtered for the provider\'s care setting and geography. Two Pre-Submission Reviews are included each month, so the team always has rapid access to evaluator-grade scoring on any draft. Bid Writing slots are reserved on priority access, bypassing the standard lead time when an urgent submission lands.',

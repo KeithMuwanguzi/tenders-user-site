@@ -80,26 +80,24 @@ const portals = [
   { name: 'eTendersNI', logo: '/images/portals/etendersni.png' },
 ]
 
-const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
-
 const services = [
   {
     title: 'Tender Review',
     desc: 'Independent evaluation against scoring criteria to identify strengths, gaps, and winning potential.',
     href: '/services#tender-review',
-    img: `${WP}/two-men-discussing-contract-desk_31965-128846-rlxnbi11686q9ey6wluvspfhgcbxmtj32zb0tq9i98.jpg`,
+    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
   },
   {
     title: 'Full Tender Writing',
     desc: 'End-to-end tender writing service from requirement analysis to submission-ready documentation.',
     href: '/services#bid-writing',
-    img: `${WP}/mature-person-college-campus-study-area-writing-notes-ideas_482257-122475-1-rlxsw0xj5uov2nobza9nq3rjnjyvq9lmnhk2isxyuk.jpg`,
+    img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80',
   },
   {
     title: 'Tender Retainer',
     desc: 'Ongoing expert support with priority access to manage and scale your tender pipeline.',
     href: '/services#retainer',
-    img: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
+    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
   },
 ]
 
@@ -179,21 +177,21 @@ const blogPosts = [
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/tender-writing-courses-uk-5-options-compared',
-    img: `${WP}/team-architects-working-town-project-conference-room-architect-business-suit_482257-26513-rlech3dwy1clh1rrgzpxq067wt5p662hx5uscbdh2k.jpg`,
+    img: 'https://images.unsplash.com/photo-1531538606174-e1ac68e4e9d0?w=800&q=80',
   },
   {
     title: 'Tender Writing Software vs Human Bid Writers: 2026 Comparison',
     category: 'Commissioning Trends',
     date: '22 Apr 2026',
     slug: '/tender-writing-software-vs-human-bid-writers-2026-comparison',
-    img: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
+    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
   },
   {
     title: "Free Tender Writing Training: A Beginner's Guide",
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/free-tender-writing-training-a-beginners-guide',
-    img: `${WP}/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg`,
+    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
   },
 ]
 

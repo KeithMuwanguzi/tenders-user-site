@@ -3,14 +3,12 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
-
 const SECTIONS = [
   {
     slug: 'care-home-accommodation',
     title: 'Care Home Accommodation',
     subtitle: 'Residential care home submissions for children require Ofsted-aligned quality evidence, named registered managers, and a therapeutic environment that commissioners can evidence.',
-    img: `${WP}/two-colleagues-working-together-office-color-background-corporate-business-colleagues-working_265223-44392-rlxnlsdfyy9pbs08u1xw33z3i5mjvkdbtwcbwr0e5o.jpg`,
+    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
     paragraphs: [
       "Children's residential care home procurement sits at the highest end of scrutiny in children's services commissioning. Local authority commissioners procuring residential placements for children with complex needs, trauma histories, and challenging behaviours are evaluating every response against Ofsted's inspection framework — whether or not that framework is explicitly referenced in the specification. A response that demonstrates regulatory awareness without operational depth will not score at the level needed to win.",
       "Evaluation criteria for residential care home contracts focus on your therapeutic environment, the qualifications and stability of your residential staff team, your named registered manager's experience and Ofsted track record, your safeguarding infrastructure, your approach to behaviour support and de-escalation, and your outcomes data from current placements. Commissioners look for evidence that your home delivers therapeutic progress — not simply a safe place to live.",
@@ -21,7 +19,7 @@ const SECTIONS = [
     slug: 'supported-accommodation',
     title: 'Supported Accommodation',
     subtitle: 'Supported accommodation for young people demands evidence of key worker relationships, pathway planning, and measurable move-on outcomes that commissioners can verify.',
-    img: `${WP}/businessman-shaking-hand-with-his-colleague-office-scaled-rlxt0xn6uperpcjnbeniqv67bzrvxd35zs7cqtnycs.jpg`,
+    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
     paragraphs: [
       "Supported accommodation for young people aged 16-25, including care leavers and young people at risk of homelessness, is one of the most outcomes-focused commissioning environments in children's services. Local authority commissioners and combined authority housing teams procuring supported accommodation contracts are evaluating responses on the evidence of your key worker model, your approach to independent living skills, and the move-on outcomes you deliver — not your generic statements about young person-centred support.",
       "Evaluation criteria for supported accommodation commissioning focus on your key worker allocation and relationship model, your pathway planning methodology, your approach to building independent living skills, your outcomes data showing successful move-on to independent accommodation, your multi-agency working with housing, employment, and health services, and your specific capability with young people who have care experience or complex needs backgrounds.",
@@ -32,7 +30,7 @@ const SECTIONS = [
     slug: 'temporary-accommodation',
     title: 'Temporary Accommodation',
     subtitle: 'Temporary accommodation submissions require rapid access evidence, crisis management protocols, and clear pathway planning from first placement to settled outcome.',
-    img: `${WP}/service5-rld2tb6l874u29gi0ghbat2xqz5o9gd2l6ub88mmcs.webp`,
+    img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
     paragraphs: [
       "Temporary accommodation for young people and families in housing crisis sits at the intersection of children's services commissioning, housing procurement, and crisis intervention. Commissioners procuring temporary accommodation contracts are evaluating your ability to respond rapidly, manage complex presentations safely, and move individuals and families towards settled accommodation within defined timeframes. Generic statements about providing a safe and supportive environment do not score — operational specificity does.",
       "Evaluation criteria for temporary accommodation contracts focus on your access and response time to emergency placements, your assessment and support planning methodology, your safeguarding infrastructure for crisis presentations, your multi-agency working with children's social care, housing, and voluntary sector partners, your staffing model for out-of-hours support, and your pathway planning approach and move-on outcome data.",
@@ -43,7 +41,7 @@ const SECTIONS = [
     slug: 'emergency-accommodation',
     title: 'Emergency Accommodation',
     subtitle: 'Emergency accommodation tenders are evaluated on response times, safeguarding integration, and crisis support capacity — every section must demonstrate operational readiness.',
-    img: `${WP}/business-team-situation-present-share-idea-scaled-rlxsy44mcljsvgn3s6rt9ksf6do8u1w5ltqwwxuh0s.jpg`,
+    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80',
     paragraphs: [
       "Emergency accommodation for children and young people is commissioned in the highest-stakes procurement environment in the children's services sector. Local authorities procuring emergency placements need absolute confidence that your service can respond within hours, safely manage complex and often traumatised young people in crisis, and maintain safeguarding standards under pressure. Evaluators are not looking for aspirational language — they are looking for evidence that your emergency response infrastructure is genuinely operational.",
       "Evaluation criteria for emergency accommodation contracts focus on your response time guarantees and how you deliver against them, your 24/7 staffing model, your safeguarding protocols specific to emergency placements, your approach to initial assessment and risk management, your liaison with referring social workers and out-of-hours teams, your physical environment standards, and your approach to stabilisation and onward pathway planning.",
@@ -54,7 +52,7 @@ const SECTIONS = [
     slug: 'supported-living',
     title: 'Supported Living',
     subtitle: 'Supported living for young people and care leavers requires evidence of tenancy sustainment, independence skill development, and the multi-agency working that underpins long-term stability.',
-    img: `${WP}/two-businessman-discussing-their-chart-coffee-shop-scaled-rlecdsy90wugu6jsokixzu2529dg8b0bgvnlvg92uk.jpg`,
+    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
     paragraphs: [
       "Supported living for young people, particularly care leavers transitioning to independence, is one of the most outcome-intensive commissioning environments in children's services. Local authority commissioners and leaving care teams procuring supported living contracts are evaluating responses on the evidence of your independence pathway model, your tenancy sustainment approach, and your outcomes data — not your description of the support you intend to provide. A response that describes a key worker model without evidencing outcomes will not score at the top of the framework.",
       "Evaluation criteria for supported living contracts focus on your key worker model and relationship approach, your independence skills building methodology, your tenancy sustainment outcome data, your approach to financial capability and employment readiness, your multi-agency working with Leaving Care teams, mental health services, employment support, and housing providers, and your specific capability with young people who have complex needs including trauma, mental health challenges, and substance misuse backgrounds.",
