@@ -81,20 +81,33 @@ export default function ProcessPage() {
         </div>
         <div className="page-hero__overlay" />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="page-hero__title">Process</h1>
+          <h1 className="page-hero__title">Our Process</h1>
           <p className="page-hero__sub">Six disciplined steps from Discovery Call to Submission-Ready document.</p>
         </div>
       </section>
 
-      {/* ── Steps ── */}
-      <section className="process-steps">
+      {/* ── Steps timeline ── */}
+      <section className="proc-flow">
         <div className="container">
-          <div className="process-steps__grid">
-            {STEPS.map((s) => (
-              <div key={s.num} className="step-card">
-                <span className="step-card__num">{s.num}</span>
-                <h3 className="step-card__title">{s.title}</h3>
-                <p className="step-card__desc">{s.desc}</p>
+          <div className="proc-flow__header">
+            <div className="section-label">The Journey</div>
+            <h2 className="proc-flow__headline">From first conversation<br />to contract award.</h2>
+            <p className="proc-flow__sub">Every engagement follows the same six-stage sequence. No shortcuts. No skipped steps. Each one exists because evaluators told us it matters.</p>
+          </div>
+          <div className="proc-flow__timeline">
+            {STEPS.map((s, i) => (
+              <div key={s.num} className={`proc-step${i % 2 === 1 ? ' proc-step--alt' : ''}`}>
+                <div className="proc-step__line">
+                  <div className="proc-step__dot">
+                    <span>{String(i + 1).padStart(2, '0')}</span>
+                  </div>
+                  {i < STEPS.length - 1 && <div className="proc-step__connector" />}
+                </div>
+                <div className="proc-step__card">
+                  <span className="proc-step__tag">{s.num}</span>
+                  <h3 className="proc-step__title">{s.title}</h3>
+                  <p className="proc-step__desc">{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -102,40 +115,31 @@ export default function ProcessPage() {
       </section>
 
       {/* ── The Method ── */}
-      <section className="process-method">
+      <section className="proc-method">
         <div className="container">
-          <div className="process-method__top">
-            <div className="process-method__headline-wrap">
-              <p className="section-label">The Method</p>
-              <h2 className="process-method__headline">
-                Other firms write tenders.<br />We engineer them.
-              </h2>
-            </div>
-            <div className="process-method__book">
-              <div className="process-method__book-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-              </div>
-              <h4>Book An Appointment</h4>
-              <Link href="/contact" className="process-method__book-btn">
-                Book Now
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                </svg>
-              </Link>
-            </div>
+          <div className="proc-method__header">
+            <div className="section-label section-label--light">The Method</div>
+            <h2 className="proc-method__headline">Other firms write tenders.<br />We engineer them.</h2>
+            <p className="proc-method__sub">A four-pillar system built on evaluator intelligence and evidence precision.</p>
           </div>
-
-          <div className="process-method__cards">
-            {METHOD.map((m) => (
-              <div key={m.num} className="method-card">
-                <span className="method-card__num">{m.num}</span>
-                <h3 className="method-card__title">{m.title}</h3>
-                <p className="method-card__desc">{m.desc}</p>
+          <div className="proc-method__grid">
+            {METHOD.map((m, i) => (
+              <div key={m.num} className="proc-mcard">
+                <div className="proc-mcard__icon">
+                  <span>{m.num}</span>
+                </div>
+                <h3 className="proc-mcard__title">{m.title}</h3>
+                <p className="proc-mcard__desc">{m.desc}</p>
+                {i < METHOD.length - 1 && (
+                  <div className="proc-mcard__arrow" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+          <div className="proc-method__cta">
+            <Link href="/contact" className="btn btn-white">Book a Free Consultation</Link>
           </div>
         </div>
       </section>

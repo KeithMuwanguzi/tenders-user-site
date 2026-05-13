@@ -158,10 +158,13 @@ export default function AboutPage() {
       <article className="ab-page">
         {SECTIONS.map((s) => (
           <section key={s.num} className="ab-section">
-            <div className="ab-num">
-              {s.num}<br />{s.label}
+            <div className="ab-num-col">
+              <div className="ab-num">
+                <span className="ab-num__number">{s.num}</span>
+                {s.label}
+              </div>
             </div>
-            <div>
+            <div className="ab-content-col">
               <h2>{s.heading}</h2>
               {s.content}
             </div>

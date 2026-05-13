@@ -8,19 +8,19 @@ const SLIDES = [
     eyebrow: 'Strategic Partnership',
     headline: 'Tender Retainer',
     quote: 'Dedicated tender support with priority access. Your pipeline, our capacity.',
-    href: '/contact',
+    href: '/services/tender-retainer',
   },
   {
     eyebrow: 'Complete Solution',
     headline: 'Full Tender Writing',
     quote: 'End-to-end tender writing. Specification analysis to submission-ready document.',
-    href: '/contact',
+    href: '/services/bid-writing',
   },
   {
     eyebrow: 'Quick Assessment',
     headline: 'Tender Review',
     quote: 'Independent scoring against evaluator mark schemes. Know where you stand before you submit.',
-    href: '/contact',
+    href: '/services/pre-submission-review',
   },
 ]
 

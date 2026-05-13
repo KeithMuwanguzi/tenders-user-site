@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import HeroSlider from '@/components/HeroSlider'
+import { fetchReviews } from '@/lib/sheets'
 
 /* ── Data ── */
 const serviceCards = [
@@ -31,43 +32,52 @@ const contractWins = [
     care: 'Domiciliary Care',
     framework: 'Live at Home 2025 Framework',
     img: '/Page Content HTML Files/assets/feedback/c2-01.png',
+    slug: 'choices-healthcare-essex-live-at-home',
   },
   {
     council: 'Southend-on-Sea City Council',
     care: "Children's Services",
     framework: "Children's Residential and Accommodation Framework",
     img: '/Page Content HTML Files/assets/feedback/c3-1.png',
+    slug: 'choices-healthcare-southend-childrens-framework',
   },
   {
     council: 'Bedford Borough Council',
     care: 'Supported Living',
     framework: 'Supported Living and Community Based Support Services Framework',
     img: '/Page Content HTML Files/assets/feedback/c4-1.png',
+    slug: 'havilah-care-bedford-supported-living',
   },
   {
     council: 'Dorset Council',
     care: 'Multiple Lots',
     framework: 'Care, Support, Housing and Community Safety Framework',
     img: '/Page Content HTML Files/assets/feedback/c6-1.png',
+    slug: 'inspire-care-outreach-dorset-open-framework',
   },
 ]
 
 const portals = [
-  'Find a Tender',
-  'Contracts Finder',
-  'ProContract',
-  'Delta eSourcing',
-  'Due North',
-  'NEPO Open',
-  'Bravo Solutions',
-  'Proactis',
-  'NHS SBS',
-  'YPO Marketplace',
-  'Crown Commercial Service',
-  'Intend',
-  'Atamis',
-  'HealthTrust Europe',
-  'NHS Supply Chain',
+  { name: 'Find a Tender', logo: '/images/portals/find-a-tender.png' },
+  { name: 'Contracts Finder', logo: '/images/portals/contracts-finder.png' },
+  { name: 'ProContract', logo: '/images/portals/procontract.png' },
+  { name: 'Due North', logo: '/images/portals/due-north.png' },
+  { name: 'NEPO', logo: '/images/portals/nepo.png' },
+  { name: 'Proactis', logo: '/images/portals/proactis.png' },
+  { name: 'NHS SBS', logo: '/images/portals/nhs-sbs.png' },
+  { name: 'YPO', logo: '/images/portals/ypo.png' },
+  { name: 'Crown Commercial Service', logo: '/images/portals/ccs.png' },
+  { name: 'InTend', logo: '/images/portals/intend.png' },
+  { name: 'Atamis', logo: '/images/portals/atamis.png' },
+  { name: 'HealthTrust Europe', logo: '/images/portals/healthtrust.png' },
+  { name: 'NHS Supply Chain', logo: '/images/portals/nhssc.png' },
+  { name: 'Bloom', logo: '/images/portals/bloom.png' },
+  { name: 'Jaggaer', logo: '/images/portals/jaggaer.png' },
+  { name: 'Digital Marketplace', logo: '/images/portals/digital-marketplace.png' },
+  { name: 'LPP', logo: '/images/portals/lpp.png' },
+  { name: 'Sell2Wales', logo: '/images/portals/sell2wales.png' },
+  { name: 'Public Contracts Scotland', logo: '/images/portals/pcs.png' },
+  { name: 'eTendersNI', logo: '/images/portals/etendersni.png' },
 ]
 
 const WP = 'https://tenderlab.co.uk/wp-content/uploads/elementor/thumbs'
@@ -139,44 +149,6 @@ const methodologySteps = [
   },
 ]
 
-const testimonials = [
-  {
-    name: 'James Mitchell',
-    role: 'Operations Director, Compass Housing and Support · Supported Living, London',
-    quote:
-      'TenderLab transformed our bid writing process. Within 6 months of working with them, we had won three major council contracts worth £4.2M annually.',
-  },
-  {
-    name: 'Sarah Mitchell',
-    role: 'Managing Director, CarePlus Community · Domiciliary Care',
-    quote:
-      'We were struggling to compete against national chains. TenderLab helped us position our local expertise and community relationships as genuine competitive advantages. We now win 8 out of 10 tenders we submit.',
-  },
-  {
-    name: 'Rebecca Carter',
-    role: "Director, Rainbow Children's Services · Children's Services",
-    quote:
-      "As a new entrant to children's services, we had no track record. TenderLab built our evidence bank from scratch and prepared us brilliantly for council presentations. We won our first tender and haven't looked back.",
-  },
-  {
-    name: 'Peter Morrison',
-    role: 'CEO, Premier Care Solutions · Domiciliary Care',
-    quote:
-      "Our previous tenders weren't scoring well. TenderLab completely restructured how we present our evidence and outcomes. Our scores jumped from 6.8 to 9.2.",
-  },
-  {
-    name: 'David Kingston',
-    role: 'Director, Pathways Reablement · Specialist Services',
-    quote:
-      "We lost our NHS contract and needed to quickly establish ourselves across local authorities. TenderLab's strategic approach helped us secure five new contracts in six months.",
-  },
-  {
-    name: 'Lisa Harrison',
-    role: 'Commissioning Manager, Horizon Housing · Supported Living',
-    quote:
-      'What impressed us most was the strategic thinking. It is not just about writing pretty words. TenderLab helped us understand what councils really want to see and how to demonstrate our unique value.',
-  },
-]
 
 const faqs = [
   {
@@ -243,7 +215,8 @@ function Stars() {
 }
 
 /* ── Page ── */
-export default function HomePage() {
+export default async function HomePage() {
+  const reviews = await fetchReviews()
   const portalsDuplicated = [...portals, ...portals]
 
   return (
@@ -257,7 +230,10 @@ export default function HomePage() {
         <div className="marquee-track">
           <div className="marquee-inner">
             {portalsDuplicated.map((p, i) => (
-              <div key={i} className="marquee-item">{p}</div>
+              <div key={i} className="marquee-item" title={p.name}>
+                <Image src={p.logo} alt={p.name} width={48} height={48} style={{ objectFit: 'contain' }} />
+                <span className="marquee-item__label">{p.name}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -273,7 +249,7 @@ export default function HomePage() {
           </div>
           <div className="wins__grid">
             {contractWins.map((w) => (
-              <div key={w.council} className="win-card">
+              <Link key={w.council} href={`/case-studies/${w.slug}`} className="win-card">
                 <div className="win-card__photo">
                   <Image
                     src={w.img}
@@ -288,7 +264,7 @@ export default function HomePage() {
                   <h3 className="win-card__council">{w.council}</h3>
                   <p className="win-card__framework">{w.framework}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <div className="wins__cta">
@@ -471,13 +447,13 @@ export default function HomePage() {
             <p>We help care providers turn average bids into winning submissions.</p>
           </div>
           <div className="testimonials__grid">
-            {testimonials.map((t) => (
+            {reviews.map((t) => (
               <div key={t.name} className="testimonial-card">
                 <Stars />
-                <p className="testimonial-card__quote">{t.quote}</p>
+                <p className="testimonial-card__quote">&ldquo;{t.quote}&rdquo;</p>
                 <div className="testimonial-card__author">
                   <div className="testimonial-card__name">{t.name}</div>
-                  <div className="testimonial-card__role">{t.role}</div>
+                  {t.role && <div className="testimonial-card__role">{t.role}</div>}
                 </div>
               </div>
             ))}

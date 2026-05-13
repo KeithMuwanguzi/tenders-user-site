@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Care Settings | TenderLab — Every Commissioning Route',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 type SettingCard = { title: string; desc: string; slug: string }
-type Category = { num: string; label: string; desc: string; color: string; cards: SettingCard[] }
+type Category = { num: string; label: string; desc: string; color: string; image: string; cards: SettingCard[] }
 
 const CATEGORIES: Category[] = [
   {
@@ -16,6 +17,7 @@ const CATEGORIES: Category[] = [
     label: 'Adult Social Care',
     desc: 'Care delivered to adults with assessed needs across home, community and accommodation-based services.',
     color: '#B02727',
+    image: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&q=80',
     cards: [
       { title: 'Domiciliary Care',         slug: 'domiciliary-care',         desc: 'Personal care and practical support delivered to people in their own homes through scheduled visits.' },
       { title: 'Live-In Care',              slug: 'live-in-care',             desc: 'Continuous support delivered by a carer living in the service user\'s home for extended periods.' },
@@ -36,6 +38,7 @@ const CATEGORIES: Category[] = [
     label: "Children's Services",
     desc: 'Statutory and commissioned services for children, young people and care leavers.',
     color: '#2E5E8C',
+    image: 'https://images.unsplash.com/photo-1540479859555-17af45c78602?w=800&q=80',
     cards: [
       { title: "Children's Residential Care",       slug: 'childrens-residential-care',  desc: 'Ofsted-registered residential placements for children and young people unable to live at home.' },
       { title: 'Supported Accommodation (16-17 / 16+)', slug: 'supported-accommodation', desc: 'Ofsted-registered supported accommodation for 16 and 17 year olds, with semi-independent and independent options.' },
@@ -50,6 +53,7 @@ const CATEGORIES: Category[] = [
     label: 'Housing and Support',
     desc: 'Housing-led services where the support function is contracted alongside or independent of accommodation.',
     color: '#0A6E5A',
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
     cards: [
       { title: 'Housing Related Support', slug: 'housing-related-support', desc: 'Floating support delivered to people in their own tenancies to sustain housing and prevent homelessness.' },
       { title: 'Temporary Accommodation', slug: 'temporary-accommodation', desc: 'Short-term accommodation for people in housing crisis, including families and single adults.' },
@@ -62,6 +66,7 @@ const CATEGORIES: Category[] = [
     label: 'Health and Clinical Services',
     desc: 'NHS-commissioned and joint-commissioned health services delivered in community, home or rehabilitation settings.',
     color: '#5B3A8B',
+    image: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=800&q=80',
     cards: [
       { title: 'Community Health Services',       slug: 'community-health-services',         desc: 'Community-based clinical and nursing services delivered outside hospital settings.' },
       { title: 'Continuing Healthcare (CHC)',     slug: 'continuing-healthcare',             desc: 'Care commissioned by NHS ICBs for adults with primary health needs that meet CHC eligibility.' },
@@ -86,10 +91,10 @@ export default function CareSettingsPage() {
       <section className="cs-index-hero">
         <div className="container cs-index-hero__inner">
           <div className="cs-index-hero__kicker">Care Settings · UK Health and Social Care</div>
-          <h1>Every commissioning route, every service model.</h1>
+          <h1>Every commissioning route,<br />every service model.</h1>
           <p className="cs-index-hero__lede">Adult Social Care · Children&apos;s Services · Housing and Support · Health and Clinical Services</p>
           <p className="cs-index-hero__sub">
-            Twenty-eight specialised tender-writing pages mapped to how commissioners actually procure. Specialist cohorts (Mental Health, Learning Disability, Autism, Substance Misuse, Physical Disabilities, Older People, Forensic) appear as overlays across the categories below.
+            Twenty-eight specialised tender-writing pages mapped to how commissioners actually procure.
           </p>
         </div>
       </section>
@@ -110,10 +115,21 @@ export default function CareSettingsPage() {
           {CATEGORIES.map((cat) => (
             <div key={cat.num} className="cs-cat-block">
               <div className="cs-cat-header" style={{ '--cat-c': cat.color } as React.CSSProperties}>
-                <div className="cs-cat-num">{cat.num}</div>
-                <div>
+                <div className="cs-cat-header__img">
+                  <Image
+                    src={cat.image}
+                    alt={cat.label}
+                    fill
+                    sizes="200px"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div className="cs-cat-header__img-overlay" />
+                  <span className="cs-cat-header__img-num">{cat.num}</span>
+                </div>
+                <div className="cs-cat-header__text">
                   <h2>{cat.label}</h2>
                   <p>{cat.desc}</p>
+                  <span className="cs-cat-header__count">{cat.cards.length} settings</span>
                 </div>
               </div>
               <div className="cs-cat-grid">
@@ -125,10 +141,12 @@ export default function CareSettingsPage() {
                     style={{ '--card-c': cat.color } as React.CSSProperties}
                   >
                     <div className="setting-card__accent" />
-                    <div className="setting-card__tag">{cat.label}</div>
                     <h3>{card.title}</h3>
                     <p>{card.desc}</p>
-                    <div className="setting-card__cta">View setting →</div>
+                    <div className="setting-card__cta">
+                      View setting
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
                   </Link>
                 ))}
               </div>

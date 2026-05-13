@@ -1,20 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Link from 'next/link'
+import type { RootState, AppDispatch } from '@/store'
+import { fetchTenders, setCategory, setSource, setPage, clearCache } from '@/store/tendersSlice'
 
-interface Tender {
-  id: string
-  title: string
-  description: string
-  publishedDate: string
-  deadline: string | null
-  value: string | null
-  location: string | null
-  organisation: string | null
-  status: string
-  url: string
-}
+const SOURCES = [
+  { label: 'All Sources', value: 'all' },
+  { label: 'Contracts Finder', value: 'cf' },
+  { label: 'Find a Tender', value: 'ft' },
+]
 
 const ITEMS_PER_PAGE = 10
 
@@ -31,34 +27,23 @@ const CATEGORIES = [
 ]
 
 export default function LiveTendersPage() {
-  const [tenders, setTenders] = useState<Tender[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [category, setCategory] = useState('')
-  const [page, setPage] = useState(1)
+  const dispatch = useDispatch<AppDispatch>()
+  const { items: tenders, loading, error, category, source, page, lastFetchKey } = useSelector(
+    (state: RootState) => state.tenders
+  )
+
+  const currentKey = `${category}||${source}`
 
   useEffect(() => {
-    setLoading(true)
-    setError(null)
-    setPage(1)
+    if (lastFetchKey !== currentKey) {
+      dispatch(fetchTenders({ category, source }))
+    }
+  }, [dispatch, category, source, lastFetchKey, currentKey])
 
-    const searchTerm = category || 'health social care'
-    const apiUrl = `/api/tenders?q=${encodeURIComponent(searchTerm)}`
-
-    fetch(apiUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch tenders')
-        return res.json()
-      })
-      .then((data) => {
-        setTenders(data.tenders || [])
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err.message)
-        setLoading(false)
-      })
-  }, [category])
+  const handleRefetch = useCallback(() => {
+    dispatch(clearCache())
+    dispatch(fetchTenders({ category, source }))
+  }, [dispatch, category, source])
 
   const formatDate = (dateStr: string) => {
     try {
@@ -85,8 +70,8 @@ export default function LiveTendersPage() {
           <div className="section-label">Procurement Opportunities</div>
           <h1>Live Tenders</h1>
           <p className="page-hero__desc">
-            Active health and social care procurement opportunities from Contracts Finder. 
-            Updated in real time from the UK Government&apos;s official tender publication service.
+            Active health and social care procurement opportunities from Contracts Finder and Find a Tender. 
+            Updated in real time from the UK Government&apos;s official tender publication services.
           </p>
         </div>
       </section>
@@ -94,12 +79,34 @@ export default function LiveTendersPage() {
       {/* Filters */}
       <section className="tenders-filters">
         <div className="container">
+          <div className="tenders-filters__row">
+            <div className="tenders-filters__sources">
+              {SOURCES.map((s) => (
+                <button
+                  key={s.value}
+                  className={`tenders-filters__source-btn${source === s.value ? ' tenders-filters__source-btn--active' : ''}`}
+                  onClick={() => dispatch(setSource(s.value))}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            <button
+              className="tenders-filters__refetch"
+              onClick={handleRefetch}
+              disabled={loading}
+              title="Refresh tenders from source portals"
+            >
+              <svg className={loading ? 'tenders-filters__refetch-spin' : ''} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+              Refresh
+            </button>
+          </div>
           <div className="tenders-filters__bar">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 className={`tenders-filters__btn${category === cat.value ? ' tenders-filters__btn--active' : ''}`}
-                onClick={() => { setCategory(cat.value); setPage(1) }}
+                onClick={() => dispatch(setCategory(cat.value))}
               >
                 {cat.label}
               </button>
@@ -114,14 +121,14 @@ export default function LiveTendersPage() {
           {loading && (
             <div className="tenders-list__loading">
               <div className="tenders-list__spinner" />
-              <p>Fetching live opportunities from Contracts Finder…</p>
+              <p>Fetching live opportunities from Contracts Finder &amp; Find a Tender…</p>
             </div>
           )}
 
           {error && (
             <div className="tenders-list__error">
               <p>Unable to load tenders at the moment. Please try again later.</p>
-              <button className="btn btn-primary" onClick={() => setPage(page)}>Retry</button>
+              <button className="btn btn-primary" onClick={handleRefetch}>Retry</button>
             </div>
           )}
 
@@ -142,6 +149,9 @@ export default function LiveTendersPage() {
                   return (
                     <article key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`} className="tender-card">
                       <div className="tender-card__header">
+                        <span className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}>
+                          {tender.source}
+                        </span>
                         <span className="tender-card__status">{tender.status}</span>
                         {urgency && (
                           <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
@@ -186,9 +196,12 @@ export default function LiveTendersPage() {
                         )}
                       </div>
                       <div className="tender-card__actions">
-                        <a href={tender.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                          View on Contracts Finder
-                        </a>
+                        <Link
+                          href={`/tenders/${encodeURIComponent(tender.id)}?source=${tender.source === 'Find a Tender' ? 'ft' : 'cf'}`}
+                          className="btn btn-primary"
+                        >
+                          View Details
+                        </Link>
                         <Link href="/contact" className="btn btn-ghost">
                           Get Help Bidding
                         </Link>
@@ -203,7 +216,7 @@ export default function LiveTendersPage() {
                 <button
                   className="btn btn-ghost"
                   disabled={page <= 1}
-                  onClick={() => { setPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
+                  onClick={() => { dispatch(setPage(Math.max(1, page - 1))); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
                 >
                   ← Previous
                 </button>
@@ -213,7 +226,7 @@ export default function LiveTendersPage() {
                 <button
                   className="btn btn-ghost"
                   disabled={page >= Math.ceil(tenders.length / ITEMS_PER_PAGE)}
-                  onClick={() => { setPage((p) => p + 1); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
+                  onClick={() => { dispatch(setPage(page + 1)); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
                 >
                   Next →
                 </button>

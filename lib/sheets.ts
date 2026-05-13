@@ -68,6 +68,41 @@ export async function fetchBlogs(): Promise<BlogPost[]> {
   })
 }
 
+/* ── Reviews Sheet ── */
+
+const REVIEWS_SHEET_URL =
+  'https://docs.google.com/spreadsheets/d/1zRSWG6NPbWsfqOGticiTX0OlXaT35d3eEEx5oQFCMeA/gviz/tq?tqx=out:csv'
+
+export type Review = {
+  name: string
+  role: string
+  quote: string
+  rating: number
+}
+
+export async function fetchReviews(): Promise<Review[]> {
+  const res = await fetch(REVIEWS_SHEET_URL, { cache: 'no-store' })
+  if (!res.ok) throw new Error(`Reviews sheet fetch failed: ${res.status}`)
+  const text = await res.text()
+  const lines = text.trim().split(/\r?\n/).filter(Boolean)
+  if (lines.length < 2) return []
+
+  const headers = parseRow(lines[0]).map(h =>
+    h.toLowerCase().replace(/\s+/g, '_')
+  )
+
+  return lines.slice(1).map(line => {
+    const vals = parseRow(line)
+    const row = Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']))
+    return {
+      name: row.name ?? '',
+      role: row.role ?? '',
+      quote: row.quote ?? '',
+      rating: parseInt(row.rating ?? '5', 10) || 5,
+    }
+  })
+}
+
 export function categoryColor(cat: string): string {
   switch (cat) {
     case 'Live Tender Analysis': return '#D4382C'

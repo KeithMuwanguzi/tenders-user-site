@@ -1,57 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { fetchReviews } from '@/lib/sheets'
 
 export const metadata: Metadata = {
   title: 'Client Reviews | TenderLab — Real Results from Real Clients',
   description:
     'See what health and social care providers say about working with TenderLab. Real testimonials, real results.',
 }
-
-const TESTIMONIALS = [
-  {
-    quote: 'TenderLab transformed our bid writing process. Within 6 months of working with them, we had won three major council contracts worth £4.2M annually. Their rubric-first approach made the difference.',
-    author: 'James Mitchell',
-    role: 'Operations Director',
-    org: 'Compass Housing and Support',
-    sector: 'Supported Living, London',
-  },
-  {
-    quote: 'We were struggling to compete against national chains. TenderLab helped us position our local expertise and community relationships as genuine competitive advantages. We now win 8 out of 10 tenders we submit.',
-    author: 'Sarah Mitchell',
-    role: 'Managing Director',
-    org: 'CarePlus Community',
-    sector: 'Domiciliary Care, South East',
-  },
-  {
-    quote: "What impressed us most was the strategic thinking. TenderLab didn't just write — they helped us understand what councils genuinely want to see and how to demonstrate our unique value in every section.",
-    author: 'Lisa Harrison',
-    role: 'Commissioning Manager',
-    org: 'Horizon Housing',
-    sector: 'Supported Living, Midlands',
-  },
-  {
-    quote: "Our previous tenders weren't scoring well. TenderLab completely restructured how we present our evidence and outcomes. Our scores jumped from 6.8 to 9.2 on the very next submission.",
-    author: 'Peter Morrison',
-    role: 'CEO',
-    org: 'Premier Care Solutions',
-    sector: 'Domiciliary Care, North West',
-  },
-  {
-    quote: "We had been losing the same framework lot for three years. After a Lost Bid Debrief with TenderLab, we understood exactly why. We fixed it, retendered, and won. The analysis was forensic.",
-    author: 'Rachel Okafor',
-    role: 'Business Development Director',
-    org: 'Sunrise Care Group',
-    sector: "Children's Services, Yorkshire",
-  },
-  {
-    quote: "TenderLab's retainer service is genuinely transformative. Having a team that knows our organisation inside out and is ready to move when an opportunity appears has changed how we approach growth entirely.",
-    author: 'Mark Hennessey',
-    role: 'Managing Director',
-    org: 'Clearview Support Services',
-    sector: 'Supported Living & Residential, Wales',
-  },
-]
 
 const STATS = [
   { num: '92%', label: 'Win Rate' },
@@ -60,7 +16,8 @@ const STATS = [
   { num: '£50M+', label: 'Contract Value Won' },
 ]
 
-export default function ReviewsPage() {
+export default async function ReviewsPage() {
+  const reviews = await fetchReviews()
   return (
     <main>
 
@@ -113,14 +70,13 @@ export default function ReviewsPage() {
           </div>
 
           <div className="reviews-grid">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.author} className="svcs-testimonial-card">
-                <div className="svcs-testimonial-card__stars">★★★★★</div>
+            {reviews.map((t) => (
+              <div key={t.name} className="svcs-testimonial-card">
+                <div className="svcs-testimonial-card__stars">{'★'.repeat(t.rating)}</div>
                 <blockquote className="svcs-testimonial-card__quote">&ldquo;{t.quote}&rdquo;</blockquote>
                 <footer className="svcs-testimonial-card__footer">
-                  <strong className="svcs-testimonial-card__name">{t.author}</strong>
-                  <span>{t.role}, {t.org}</span>
-                  <span className="svcs-testimonial-card__sector">{t.sector}</span>
+                  <strong className="svcs-testimonial-card__name">{t.name}</strong>
+                  {t.role && <span>{t.role}</span>}
                 </footer>
                 <span className="svcs-testimonial-card__mark" aria-hidden="true">&rdquo;</span>
               </div>
