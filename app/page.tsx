@@ -177,7 +177,7 @@ const blogPosts = [
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/tender-writing-courses-uk-5-options-compared',
-    img: 'https://images.unsplash.com/photo-1531538606174-e1ac68e4e9d0?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80',
   },
   {
     title: 'Tender Writing Software vs Human Bid Writers: 2026 Comparison',
