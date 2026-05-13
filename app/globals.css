@@ -106,12 +106,9 @@ p { max-width: 72ch; line-height: 1.65; }
   text-decoration: none;
 }
 .top-bar__social:hover { color: #ffffff; background: rgba(255,255,255,0.1); }
-@media (max-width: 768px) {
-  .top-bar { height: auto; }
-  .top-bar__inner { justify-content: center; gap: 12px; padding: 6px 0; }
-  .top-bar__contact { gap: 12px; }
-  .top-bar__link span { display: none; }
-  .top-bar__socials { display: none; }
+@media (max-width: 1024px) {
+  .top-bar { display: none !important; }
+  .nav { position: static !important; top: auto !important; }
 }
 
 /* â”€â”€â”€ Layout â”€â”€â”€ */
