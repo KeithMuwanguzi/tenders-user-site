@@ -15,6 +15,40 @@ interface Tender {
   source: 'Contracts Finder' | 'Find a Tender'
 }
 
+/* ─── Healthcare sector relevance filter ─── */
+const HEALTH_KEYWORDS = [
+  'care', 'health', 'nhs', 'domiciliary', 'nursing', 'residential care',
+  'supported living', 'reablement', 'social care', 'mental health',
+  'clinical', 'hospital', 'palliative', 'dementia', 'rehabilitation',
+  'fostering', 'children\'s home', 'children home', 'looked after',
+  'safeguarding', 'homecare', 'home care', 'wellbeing', 'well-being',
+  'cqc', 'ofsted', 'continuing healthcare', 'chc', 'substance misuse',
+  'learning disabilities', 'autism', 'extra care', 'end of life',
+  'housing support', 'refuge', 'homelessness', 'day care', 'respite',
+  'short breaks', 'outreach', 'community health', 'therapy', 'counselling',
+  'occupational therapy', 'physiotherapy', 'pharmacy', 'gp ', 'primary care',
+  'ambulance', 'patient', 'medical', 'healthcare', 'public health',
+  'discharge', 'complex care', 'personal care', 'live-in care',
+  'supported accommodation', 'icb', 'integrated care',
+]
+
+const EXCLUDE_KEYWORDS = [
+  'construction', 'highway', 'roads', 'bridges', 'steel reinforcement',
+  'concrete', 'demolition', 'excavation', 'scaffolding', 'paving',
+  'asphalt', 'drainage', 'sewage', 'water treatment', 'waste collection',
+  'recycling', 'catering', 'cleaning service', 'landscaping', 'grounds maintenance',
+  'electrical installation', 'plumbing', 'hvac', 'lift maintenance',
+  'software development', 'it infrastructure', 'fleet management',
+  'vehicle', 'printing', 'stationery', 'furniture supply',
+  'soil wall', 'viaduct', 'railway', 'rail infrastructure',
+]
+
+function isHealthcareRelevant(tender: Tender): boolean {
+  const text = `${tender.title} ${tender.description}`.toLowerCase()
+  if (EXCLUDE_KEYWORDS.some((kw) => text.includes(kw))) return false
+  return HEALTH_KEYWORDS.some((kw) => text.includes(kw))
+}
+
 /* ================================================================
    1. CONTRACTS FINDER — V2 POST search_notices (stage = "Open")
    ================================================================ */
@@ -53,7 +87,7 @@ async function fetchContractsFinder(keyword: string): Promise<Tender[]> {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(body),
-    next: { revalidate: 300 },
+    cache: 'no-store',
   })
 
   if (!res.ok) throw new Error(`Contracts Finder V2 ${res.status}`)
@@ -119,7 +153,7 @@ async function fetchFindATender(keyword: string): Promise<Tender[]> {
 
   const res = await fetch(url.toString(), {
     headers: { Accept: 'application/json' },
-    next: { revalidate: 300 },
+    cache: 'no-store',
   })
 
   if (!res.ok) throw new Error(`Find a Tender OCDS ${res.status}`)
@@ -211,6 +245,7 @@ export async function GET(request: NextRequest) {
     const results = await Promise.all(fetches)
     const tenders = results
       .flat()
+      .filter(isHealthcareRelevant)
       .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
 
     return NextResponse.json({ tenders, page, total: tenders.length })

@@ -325,12 +325,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's framework approved", 'Local authority contracts', 'Verified award letters', 'SEND panel evidence'],
     galleryImages: [
-      { src: '/images/case-studies/choices_southend-1.png', caption: 'Award confirmation — Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/choices_southend-2.png', caption: 'Lot 2D score breakdown',                              tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_southend-3.png', caption: 'Lot 2E score breakdown',                              tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_southend-4.png', caption: 'Lot 2F score breakdown',                              tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_southend-5.png', caption: 'Framework terms and conditions',                      tag: 'Framework terms' },
-      { src: '/images/case-studies/choices_southend-6.png', caption: 'Compliance and standstill notice',                    tag: 'Compliance' },
+      { src: '/Page Content HTML Files/assets/feedback/c3-1.png', caption: 'Award confirmation — Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
+      { src: '/Page Content HTML Files/assets/feedback/c3-2.png', caption: 'Lot 2D score breakdown',                              tag: 'Score breakdown' },
+      { src: '/Page Content HTML Files/assets/feedback/c3-3.png', caption: 'Lot 2E score breakdown',                              tag: 'Score breakdown' },
+      { src: '/Page Content HTML Files/assets/feedback/c3-4.png', caption: 'Lot 2F score breakdown',                              tag: 'Score breakdown' },
+      { src: '/Page Content HTML Files/assets/feedback/c3-5.png', caption: 'Framework terms and conditions',                      tag: 'Framework terms' },
+      { src: '/Page Content HTML Files/assets/feedback/c3-6.png', caption: 'Compliance and standstill notice',                    tag: 'Compliance' },
     ],
     gallerySource: "Source: Southend-on-Sea City Council Children's Residential and Accommodation Framework award notice, reference DN762527, PCR 2015.",
     sections: [
