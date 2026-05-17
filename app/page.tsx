@@ -220,7 +220,19 @@ export default async function HomePage() {
   return (
     <main>
       {/* ─── HERO ─── */}
-      <HeroSlider />
+      <HeroSlider>
+        <div className="hero__bg">
+          <Image
+            src="/images/business-people-video-call-meeting.jpg"
+            alt="Senior consultants reviewing a tender strategy document"
+            fill
+            priority
+            quality={60}
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: '60% 30%' }}
+          />
+        </div>
+      </HeroSlider>
 
       {/* ─── PORTALS ─── */}
       <section className="portals">

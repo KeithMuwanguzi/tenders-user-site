@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState, useEffect, useRef, useCallback } from 'react'
 
 const SLIDES = [
@@ -34,7 +33,7 @@ const STATS = [
 const SLIDE_MS = 5800
 const EXIT_MS = 480
 
-export default function HeroSlider() {
+export default function HeroSlider({ children }: { children?: React.ReactNode }) {
   const [idx, setIdx] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
   const nextRef = useRef(0)
@@ -69,19 +68,8 @@ export default function HeroSlider() {
 
   return (
     <section className="hero">
-      {/* ── Background ── */}
-      <div className="hero__bg">
-        <Image
-          src="/images/business-people-video-call-meeting.jpg"
-          alt="Senior consultants reviewing a tender strategy document"
-          fill
-          priority
-          fetchPriority="high"
-          quality={60}
-          sizes="100vw"
-          style={{ objectFit: 'cover', objectPosition: '60% 30%' }}
-        />
-      </div>
+      {/* ── Background (server-rendered for LCP) ── */}
+      {children}
       <div className="hero__overlay" />
 
       {/* ── Slide content ── */}
