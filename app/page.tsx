@@ -85,19 +85,19 @@ const services = [
     title: 'Tender Review',
     desc: 'Independent evaluation against scoring criteria to identify strengths, gaps, and winning potential.',
     href: '/services#tender-review',
-    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=480&q=70&auto=format',
   },
   {
     title: 'Full Tender Writing',
     desc: 'End-to-end tender writing service from requirement analysis to submission-ready documentation.',
     href: '/services#bid-writing',
-    img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=480&q=70&auto=format',
   },
   {
     title: 'Tender Retainer',
     desc: 'Ongoing expert support with priority access to manage and scale your tender pipeline.',
     href: '/services#retainer',
-    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=480&q=70&auto=format',
   },
 ]
 
@@ -177,21 +177,21 @@ const blogPosts = [
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/tender-writing-courses-uk-5-options-compared',
-    img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=480&q=70&auto=format',
   },
   {
     title: 'Tender Writing Software vs Human Bid Writers: 2026 Comparison',
     category: 'Commissioning Trends',
     date: '22 Apr 2026',
     slug: '/tender-writing-software-vs-human-bid-writers-2026-comparison',
-    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=480&q=70&auto=format',
   },
   {
     title: "Free Tender Writing Training: A Beginner's Guide",
     category: 'Bid Strategy',
     date: '22 Apr 2026',
     slug: '/free-tender-writing-training-a-beginners-guide',
-    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
+    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=480&q=70&auto=format',
   },
 ]
 
