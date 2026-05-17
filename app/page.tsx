@@ -338,7 +338,6 @@ export default async function HomePage() {
                 alt="Senior consultants reviewing a tender strategy document"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                priority
                 style={{ objectFit: 'cover', objectPosition: 'center' }}
               />
             </div>
@@ -364,7 +363,6 @@ export default async function HomePage() {
                     fill
                     sizes="(max-width: 768px) 100vw, 409px"
                     style={{ objectFit: 'cover' }}
-                    unoptimized
                   />
                 </div>
                 <div className="svc-card__body">

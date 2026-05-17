@@ -97,8 +97,8 @@ export default function HeroSlider() {
             <p className="hero__eyebrow">{slide.eyebrow}</p>
             <h1 className="hero__headline">{slide.headline}</h1>
             <p className="hero__quote">{slide.quote}</p>
-            <Link href={slide.href} className="hero__pill-cta" aria-label={`Learn more about ${slide.headline}`}>
-              Learn More
+            <Link href={slide.href} className="hero__pill-cta">
+              Explore {slide.headline}
               <span className="hero__pill-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M0 6h22M18 1l5 5-5 5" />
