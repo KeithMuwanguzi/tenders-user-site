@@ -46,7 +46,7 @@ export type CaseStudyDetail = {
 
 export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
 
-  'havilah-care-bedford-supported-living': {
+  'bedford-supported-living-framework': {
     verdict: 'One of 44 successful providers from 154 submissions. Full marks on both selection case studies, excellent on partnerships.',
     entryAnchor: { startedWith: 'No place, sub-30% acceptance rate framework', result: '1 of 44 from 154, three lots awarded', context: 'Bedford BC, PCR 2015' },
     startingStrip: 'Owner-led growing provider. Sub-30 percent acceptance rate framework. Case study sub-points implied rather than evidenced.',
@@ -108,12 +108,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: 'The provider had no place on Bedford\'s supported living framework and no route to Council referrals for Standard or Complex packages. 110 of 154 applicants were rejected. The sub-point case study structure had not yet been applied, the social value commitments tab had not been quantified, and coproduction language was generalised rather than role-specific.',
     afterText: 'The provider sits among the 44 successful providers from 154 submissions, with both Standard and Complex accepted on Lot 1 and Community Based Support accepted on Lot 2. Documented evaluation feedback identifies excellent partnerships and a clean improvement plan for the next refresh.',
-    relatedSlugs: ['choices-healthcare-essex-live-at-home', 'nelson-ocean-central-bedfordshire-supported-living', 'rosecare-bradford-mental-health-supported-living'],
+    relatedSlugs: ['essex-domiciliary-framework-2025', 'central-bedfordshire-supported-living', 'bradford-mental-health-provider-list'],
     closerLead: 'Bring your next tender.',
     closerSub: 'One of 44 from 154. Full marks on the gateway, an excellent on partnerships, and a clean improvement plan for the next refresh.',
   },
 
-  'choices-healthcare-essex-live-at-home': {
+  'essex-domiciliary-framework-2025': {
     verdict: 'Tier 2 places secured across five priority Essex districts in a single window. Standstill cleared without challenge.',
     entryAnchor: { startedWith: 'Tier 1 not achievable, no FW footprint', result: '5 of 5 Tier 2 lots awarded', context: 'Essex CC, Procurement Act 2023' },
     startingStrip: 'Tier 1 not achievable at close. Digital systems active operationally but unpacked for evaluator review.',
@@ -178,12 +178,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: 'The provider had no live framework presence in the five priority Essex districts and a limited inbound referral pipeline within Essex County Council commissioning. Tier 1 entry was not achievable due to the in-area CQC rating profile at close.',
     afterText: 'The provider holds Tier 2 framework places across Basildon, Braintree, Castle Point, Colchester and Rochford, with direct access to Council referral routes within the framework. The backbone evidence pack sits inside the organisation for future refresh windows.',
-    relatedSlugs: ['livingstone-healthcare-essex-live-at-home', 'inspire-care-outreach-dorset-open-framework', 'havilah-care-bedford-supported-living'],
+    relatedSlugs: ['essex-live-at-home-tier-2-framework', 'dorset-care-support-open-framework', 'bedford-supported-living-framework'],
     closerLead: 'Bring your next tender.',
     closerSub: 'Five Tier 2 lots from a standing start. Zero Essex footprint to full multi-district framework access in a single window.',
   },
 
-  'inspire-care-outreach-dorset-open-framework': {
+  'dorset-care-support-open-framework': {
     verdict: 'Five-lot Open Framework win on first application, with cohort-specific evidence packaged across each lot.',
     entryAnchor: { startedWith: 'Generic answers across five cohort lots', result: '5 of 5 lots awarded, first application', context: 'Dorset Council Open Framework' },
     startingStrip: 'Single set of generic answers stretched across five distinct cohort lots. Live-in cover bundled into domiciliary content.',
@@ -238,12 +238,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: 'The provider was not approved on Dorset Council\'s Open Framework and had no structured route to bid for Call-Off Opportunities, leaving it dependent on direct private placements within the Dorset footprint.',
     afterText: 'The provider is approved on five lots covering home care, live-in care, learning disability, autism, mental health and bespoke specialist support, and is eligible for Call-Off Opportunity invitations over the framework lifetime.',
-    relatedSlugs: ['choices-healthcare-essex-live-at-home', 'livingstone-healthcare-essex-live-at-home', 'alicelyn-sheffield-overnight-short-breaks'],
+    relatedSlugs: ['essex-domiciliary-framework-2025', 'essex-live-at-home-tier-2-framework', 'sheffield-dps-overnight-short-breaks'],
     closerLead: 'Bring your next tender.',
     closerSub: 'Five lots, first application. Cohort-specific evidence that opened access to every Dorset call-off for five service areas.',
   },
 
-  'rosecare-bradford-mental-health-supported-living': {
+  'bradford-mental-health-provider-list': {
     verdict: 'Both lots awarded with six of eight technical responses scoring full marks on a binary 0–2 rubric.',
     entryAnchor: { startedWith: 'Mid-band drift on a 0–2 rubric', result: '6 of 8 at full marks, both lots awarded', context: 'Bradford Council, set pricing schedule' },
     startingStrip: 'Quality answers written for an unwritten 0–5 gradient. Coproduction referenced rather than demonstrated.',
@@ -303,12 +303,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: 'The provider was not on Bradford Council\'s Mental Health Supported Living Provider List and had no structured route to receive Council placements at the Council\'s set pricing schedule.',
     afterText: 'The provider sits on Lots 1 and 2 with the provider list operational from 27 January 2025, six of eight responses at full marks, with documented improvement points for Q3 and Q8 built into the next bid cycle.',
-    relatedSlugs: ['alicelyn-sheffield-overnight-short-breaks', 'havilah-care-bedford-supported-living', 'choices-healthcare-southend-childrens-framework'],
+    relatedSlugs: ['sheffield-dps-overnight-short-breaks', 'bedford-supported-living-framework', 'southend-childrens-residential-framework'],
     closerLead: 'Bring your next tender.',
     closerSub: '6 of 8 at full marks on a binary rubric. Both lots awarded, placements live from day one.',
   },
 
-  'choices-healthcare-southend-childrens-framework': {
+  'southend-childrens-residential-framework': {
     verdict: "Three sub-lot wins on a children's services framework with full marks on monitoring outcomes and evaluation.",
     entryAnchor: { startedWith: "Adult-derived bid practice on a children's panel", result: 'Awarded Lot 2 D, E and F (18+)', context: 'Southend-on-Sea CC, PCR 2015' },
     startingStrip: "Adult social care provider stretching into 18+ children's services. Adult-derived case examples and superseded policy citations.",
@@ -370,12 +370,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: "The provider had no formal place on the Southend-on-Sea Children's Residential and Accommodation Framework. The default register of the bid material was adult social care, while the panel was reading children's services.",
     afterText: 'The provider holds three sub-lot positions on a 3-year framework with a 2-year extension option, with documented evaluator feedback identifying strengths in monitoring at 5/5, transition at 4/5 and social value at 4/5.',
-    relatedSlugs: ['in-home-carers-hertfordshire-children-young-people', 'pcas-childrens-services-procurement', 'havilah-care-bedford-supported-living'],
+    relatedSlugs: ['hertfordshire-cyp-homecare-framework', 'childrens-services-direct-contract', 'bedford-supported-living-framework'],
     closerLead: 'Bring your next tender.',
     closerSub: "Three sub-lots on a children's framework. Q5 Monitoring at 5/5. A 3-year framework with extension option secured in a single window.",
   },
 
-  'livingstone-healthcare-essex-live-at-home': {
+  'essex-live-at-home-tier-2-framework': {
     verdict: 'Five Tier 2 lots secured after a procedural Tier 1 miss, with a documented Tier 1 path for the next refresh.',
     entryAnchor: { startedWith: 'Procedural Q9 miss, Tier 1 lost', result: '5 Tier 2 lots, Tier 1 path locked', context: 'Essex CC, Procurement Act 2023' },
     startingStrip: 'Q9 Video evidence missing at first close. Clarification window passed without response. Tier 1 lost on procedural grounds.',
@@ -440,12 +440,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: 'The provider had no live framework presence in Basildon, Brentwood, Chelmsford, Epping Forest or Harlow. Q9 Video evidence had not been submitted in window, the clarification non-response had forced a Tier 2 outcome, and the digital systems contracts had not been packaged.',
     afterText: 'The provider holds a five-district framework footprint under Tier 2 with direct call-off access, and a documented Tier 1 improvement plan with Q9 evidence, digital systems contract proof and refreshed branch coordinates ready for the next refresh window.',
-    relatedSlugs: ['choices-healthcare-essex-live-at-home', 'inspire-care-outreach-dorset-open-framework', 'alicelyn-sheffield-overnight-short-breaks'],
+    relatedSlugs: ['essex-domiciliary-framework-2025', 'dorset-care-support-open-framework', 'sheffield-dps-overnight-short-breaks'],
     closerLead: 'Bring your next tender.',
     closerSub: 'Five districts secured despite a procedural miss. Tier 1 path built and locked before the current window closed.',
   },
 
-  'in-home-carers-hertfordshire-children-young-people': {
+  'hertfordshire-cyp-homecare-framework': {
     verdict: 'Both lots awarded by SEND Commissioning, secured in a single standstill window without challenge.',
     entryAnchor: { startedWith: 'Adult-derived language on a SEND panel', result: 'Both lots awarded by SEND Commissioning', context: 'Hertfordshire CC, SEND Commissioning' },
     startingStrip: 'Adult-derived homecare narrative applied to a children and young people SEND framework.',
@@ -503,12 +503,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: "The provider had no place on Hertfordshire County Council's children and young people homecare framework and no structured route to receive SEND Commissioning referrals across the county.",
     afterText: "Both lots are awarded. The provider operates as an approved supplier on Hertfordshire's children and young people homecare framework, with SEND-aligned method statements as the basis for all future call-offs.",
-    relatedSlugs: ['choices-healthcare-southend-childrens-framework', 'pcas-childrens-services-procurement', 'inspire-care-outreach-dorset-open-framework'],
+    relatedSlugs: ['southend-childrens-residential-framework', 'childrens-services-direct-contract', 'dorset-care-support-open-framework'],
     closerLead: 'Bring your next tender.',
     closerSub: 'Both SEND lots secured. Adult homecare expertise translated into a children\'s framework without misrepresenting the cohort.',
   },
 
-  'nelson-ocean-central-bedfordshire-supported-living': {
+  'central-bedfordshire-supported-living': {
     verdict: 'Lot 1 secured on a multi-cohort supported living procurement with variable day hours led on the front foot.',
     entryAnchor: { startedWith: 'Variable day hours buried in staffing', result: 'Lot 1 awarded, 4 + 2 year contract', context: 'Central Bedfordshire CC, MEAT scoring' },
     startingStrip: 'Generic supported living narrative insufficient for MEAT-weighted cohort scoring.',
@@ -564,12 +564,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: "The provider was not on Central Bedfordshire Council's commissioned supported living contract and had no structured route to receive Council referrals across LD, MH, autism and physical disability cohorts within the variable day hours setting.",
     afterText: 'The provider holds Lot 1 Standard with Variable Day Hours for 4 years (+ 2-year extension) from 1 April 2025, with direct referral access across four major cohort groups. Variable day hours is now a front-of-response capability statement rather than a staffing footnote.',
-    relatedSlugs: ['havilah-care-bedford-supported-living', 'alicelyn-sheffield-overnight-short-breaks', 'rosecare-bradford-mental-health-supported-living'],
+    relatedSlugs: ['bedford-supported-living-framework', 'sheffield-dps-overnight-short-breaks', 'bradford-mental-health-provider-list'],
     closerLead: 'Bring your next tender.',
     closerSub: 'Lot 1 secured on a 4+2 year contract. Variable day hours moved from a staffing footnote to the opening capability statement.',
   },
 
-  'pcas-childrens-services-procurement': {
+  'childrens-services-direct-contract': {
     verdict: "Position awarded on a children's services procurement, strongest response on staff recruitment at 4 of 5.",
     entryAnchor: { startedWith: "Adult-derived defaults on a children's panel", result: 'Position awarded, Q2 at 4/5', context: "Local Authority Children's Services" },
     startingStrip: "Adult social care defaults bleeding into children's services answers. One-page profile lacking pictures and child voice.",
@@ -627,12 +627,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: "The provider had no structured route to deliver care packages for the local authority's children and young people, and there was no documented score profile against the Council's published evaluation criteria.",
     afterText: 'The provider holds a position on the procurement with a documented score profile across six competencies, a 4/5 result on recruitment, and clear improvement points captured directly from evaluator feedback for the next bid cycle.',
-    relatedSlugs: ['in-home-carers-hertfordshire-children-young-people', 'choices-healthcare-southend-childrens-framework', 'rosecare-bradford-mental-health-supported-living'],
+    relatedSlugs: ['hertfordshire-cyp-homecare-framework', 'southend-childrens-residential-framework', 'bradford-mental-health-provider-list'],
     closerLead: 'Bring your next tender.',
     closerSub: "Position secured. Q2 Recruitment at 4/5. Every improvement point documented and built for the next children's services cycle.",
   },
 
-  'alicelyn-sheffield-overnight-short-breaks': {
+  'sheffield-dps-overnight-short-breaks': {
     verdict: "Place secured on Sheffield's Adults with Disabilities DPS at the first window. Standstill cleared without challenge.",
     entryAnchor: { startedWith: 'No prior DPS place, no internal bid lead', result: 'Awarded Lot 3 Overnight Short Breaks', context: 'Sheffield CC DPS, PCR 2015 Reg 87' },
     startingStrip: 'No prior place on the Sheffield DPS. Operationally strong, procurement-thin. No internal bid lead.',
@@ -688,7 +688,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     },
     beforeText: "The provider had no place on Sheffield's Adults with Disabilities DPS and no structured route to bid for Council overnight short breaks call-offs. The underlying overnight delivery was strong, but the procurement narrative was thin.",
     afterText: 'The provider holds a confirmed place on the DPS for Lot 3 and is eligible to receive every overnight short breaks call-off in Sheffield over the framework lifetime. The weighting register, overnight staffing matrix and five-beat case-example library sit inside the organisation as reusable bid infrastructure.',
-    relatedSlugs: ['rosecare-bradford-mental-health-supported-living', 'havilah-care-bedford-supported-living', 'nelson-ocean-central-bedfordshire-supported-living'],
+    relatedSlugs: ['bradford-mental-health-provider-list', 'bedford-supported-living-framework', 'central-bedfordshire-supported-living'],
     closerLead: 'Bring your next tender.',
     closerSub: 'DPS place secured at the first window. Overnight operational strength translated into procurement evidence. Reusable bid infrastructure built for every future Sheffield call-off.',
   },

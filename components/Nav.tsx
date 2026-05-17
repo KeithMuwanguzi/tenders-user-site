@@ -215,6 +215,7 @@ export default function Nav() {
                           className="nav__chevron-btn"
                           aria-expanded={isOpen}
                           aria-haspopup="true"
+                          aria-label={`${item.label} submenu`}
                           onClick={() => isOpen ? setOpenMenu(null) : openDropdown(item.label)}
                         >
                           <ChevronDown className={`nav__chevron${isOpen ? ' nav__chevron--up' : ''}`} />
@@ -259,7 +260,8 @@ export default function Nav() {
           return (
             <div key={item.label}
               className={`nav__mega${isOpen ? ' nav__mega--open' : ''}`}
-              role="menu"
+              role="region"
+              aria-label={`${item.label} menu`}
               onMouseEnter={() => openDropdown(item.label)}
               onMouseLeave={scheduleClose}
             >
@@ -274,10 +276,10 @@ export default function Nav() {
                         >
                           {col.label}
                         </div>
-                        <ul className="nav__mega-list" role="list">
+                        <ul className="nav__mega-list">
                           {col.children?.map((link) => (
                             <li key={link.href}>
-                              <Link href={link.href} role="menuitem"
+                              <Link href={link.href}
                                 className="nav__mega-link" onClick={closeAll}>
                                 {link.label}
                               </Link>

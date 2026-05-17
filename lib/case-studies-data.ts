@@ -17,7 +17,7 @@ export type CaseStudy = {
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
-    slug: 'havilah-care-bedford-supported-living',
+    slug: 'bedford-supported-living-framework',
     provider: 'Havilah Care',
     title: 'Bedford Supported Living and Community Based Support Framework 2025',
     council: 'Bedford Borough Council',
@@ -33,7 +33,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c4-1.png',
   },
   {
-    slug: 'choices-healthcare-essex-live-at-home',
+    slug: 'essex-domiciliary-framework-2025',
     provider: 'Choices Healthcare',
     title: 'Essex Live at Home Domiciliary Framework 2025 — Five Tier 2 Lots',
     council: 'Essex County Council',
@@ -49,7 +49,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c2-01.png',
   },
   {
-    slug: 'inspire-care-outreach-dorset-open-framework',
+    slug: 'dorset-care-support-open-framework',
     provider: 'Inspire Care Outreach',
     title: 'Dorset Care, Support, Housing and Community Safety Open Framework 2024 — Five Lots',
     council: 'Dorset Council',
@@ -65,7 +65,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c6-1.png',
   },
   {
-    slug: 'rosecare-bradford-mental-health-supported-living',
+    slug: 'bradford-mental-health-provider-list',
     provider: 'Rosecare',
     title: 'Bradford Mental Health Supported Living Provider List 2025',
     council: 'Bradford Council',
@@ -81,7 +81,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c8-1.png',
   },
   {
-    slug: 'choices-healthcare-southend-childrens-framework',
+    slug: 'southend-childrens-residential-framework',
     provider: 'Choices Healthcare',
     title: "Southend-on-Sea Children's Residential and Accommodation Framework 2025–2028",
     council: 'Southend-on-Sea City Council',
@@ -97,7 +97,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c3-1.png',
   },
   {
-    slug: 'livingstone-healthcare-essex-live-at-home',
+    slug: 'essex-live-at-home-tier-2-framework',
     provider: 'Livingstone Healthcare',
     title: 'Essex Live at Home Domiciliary Framework 2025 — Five Tier 2 Lots, Documented Tier 1 Path',
     council: 'Essex County Council',
@@ -113,7 +113,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c7-01.png',
   },
   {
-    slug: 'in-home-carers-hertfordshire-children-young-people',
+    slug: 'hertfordshire-cyp-homecare-framework',
     provider: 'In-Home Carers',
     title: 'Hertfordshire Children and Young People with Disabilities Homecare Framework',
     council: 'Hertfordshire County Council',
@@ -129,7 +129,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c5-1.png',
   },
   {
-    slug: 'nelson-ocean-central-bedfordshire-supported-living',
+    slug: 'central-bedfordshire-supported-living',
     provider: 'Nelson Ocean',
     title: 'Central Bedfordshire Supported Living Direct Contract',
     council: 'Central Bedfordshire Council',
@@ -145,7 +145,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c9-1.png',
   },
   {
-    slug: 'pcas-childrens-services-procurement',
+    slug: 'childrens-services-direct-contract',
     provider: 'PCAS',
     title: "Local Authority Children's Services Direct Contract",
     council: "Local Authority Children's Services",
@@ -161,7 +161,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     image: '/Page Content HTML Files/assets/feedback/c10-1.png',
   },
   {
-    slug: 'alicelyn-sheffield-overnight-short-breaks',
+    slug: 'sheffield-dps-overnight-short-breaks',
     provider: 'Alicelyn',
     title: 'Sheffield Adults with Disabilities DPS, Lot 3 Overnight Short Breaks 2025',
     council: 'Sheffield City Council',

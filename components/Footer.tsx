@@ -19,7 +19,7 @@ export default function Footer() {
             <p className="footer__tagline">
               Specialist tender writing and bid consultancy exclusively for UK health and social care providers.
             </p>
-            <a href="tel:01707240393" className="footer__contact-item">
+            <a href="tel:+441707240393" className="footer__contact-item">
               <svg viewBox="0 0 512 512"><path d="M493.4 24.6l-104-24c-11.3-2.6-22.9 3.3-27.5 13.9l-48 112c-4.2 9.8-1.4 21.3 6.9 28l60.6 49.6c-36 76.7-98.9 140.5-177.2 177.2l-49.6-60.6c-6.8-8.3-18.2-11.1-28-6.9l-112 48C3.9 366.5-2 378.1.6 389.4l24 104C27.1 504.2 36.7 512 48 512c256.1 0 464-207.5 464-464 0-11.2-7.7-20.9-18.6-23.4z"/></svg>
               01707 240393
             </a>
@@ -34,7 +34,7 @@ export default function Footer() {
           </div>
 
           <div className="footer__col">
-            <h4>Navigation</h4>
+            <p className="footer__col-head">Navigation</p>
             <ul>
               <li><Link href="/services">Services</Link></li>
               <li><Link href="/process">Our Process</Link></li>
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
 
           <div className="footer__col">
-            <h4>Services</h4>
+            <p className="footer__col-head">Services</p>
             <ul>
               <li><Link href="/services#bid-writing">Bid Writing</Link></li>
               <li><Link href="/services#tender-review">Tender Review</Link></li>
@@ -58,7 +58,7 @@ export default function Footer() {
           </div>
 
           <div className="footer__col">
-            <h4>Resources</h4>
+            <p className="footer__col-head">Resources</p>
             <ul>
               <li><Link href="/case-studies">Case Studies</Link></li>
               <li><Link href="/blog">Articles</Link></li>

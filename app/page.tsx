@@ -32,28 +32,28 @@ const contractWins = [
     care: 'Domiciliary Care',
     framework: 'Live at Home 2025 Framework',
     img: '/Page Content HTML Files/assets/feedback/c2-01.png',
-    slug: 'choices-healthcare-essex-live-at-home',
+    slug: 'essex-domiciliary-framework-2025',
   },
   {
     council: 'Southend-on-Sea City Council',
     care: "Children's Services",
     framework: "Children's Residential and Accommodation Framework",
     img: '/Page Content HTML Files/assets/feedback/c3-1.png',
-    slug: 'choices-healthcare-southend-childrens-framework',
+    slug: 'southend-childrens-residential-framework',
   },
   {
     council: 'Bedford Borough Council',
     care: 'Supported Living',
     framework: 'Supported Living and Community Based Support Services Framework',
     img: '/Page Content HTML Files/assets/feedback/c4-1.png',
-    slug: 'havilah-care-bedford-supported-living',
+    slug: 'bedford-supported-living-framework',
   },
   {
     council: 'Dorset Council',
     care: 'Multiple Lots',
     framework: 'Care, Support, Housing and Community Safety Framework',
     img: '/Page Content HTML Files/assets/feedback/c6-1.png',
-    slug: 'inspire-care-outreach-dorset-open-framework',
+    slug: 'dorset-care-support-open-framework',
   },
 ]
 
@@ -253,6 +253,7 @@ export default async function HomePage() {
                     src={w.img}
                     alt={`Award letter: ${w.council} – ${w.framework}`}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 304px"
                     style={{ objectFit: 'cover', objectPosition: 'center top' }}
                   />
                   <div className="win-card__photo-badge">Won</div>
@@ -334,8 +335,10 @@ export default async function HomePage() {
             <div className="about-snippet__image">
               <Image
                 src="/images/business-people-video-call-meeting.jpg"
-                alt="TenderLab specialists collaborating on a tender strategy"
+                alt="Senior consultants reviewing a tender strategy document"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
                 style={{ objectFit: 'cover', objectPosition: 'center' }}
               />
             </div>
@@ -355,8 +358,14 @@ export default async function HomePage() {
             {services.map((svc) => (
               <div key={svc.title} className="svc-card">
                 <div className="svc-card__visual">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={svc.img} alt={svc.title} />
+                  <Image
+                    src={svc.img}
+                    alt={svc.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 409px"
+                    style={{ objectFit: 'cover' }}
+                    unoptimized
+                  />
                 </div>
                 <div className="svc-card__body">
                   <h3 className="svc-card__title">{svc.title}</h3>

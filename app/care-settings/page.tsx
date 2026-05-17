@@ -40,13 +40,13 @@ export default function CareSettingsPage() {
             <p>Seven specialist cohorts run across every care setting we write for. Each cohort carries its own evidence base, regulatory framework, and outcomes set.</p>
           </div>
           <div className="tl-cohorts-pills" role="list">
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#mental-health">Mental Health</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#learning-disabilities">Learning Disabilities</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#autism">Autism</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#substance-misuse">Substance Misuse</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#physical-disabilities">Physical Disabilities</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#older-people">Older People</Link>
-            <Link className="tl-cohort-pill" role="listitem" href="/care-settings#forensic-high-risk">Forensic / High Risk</Link>
+            <span className="tl-cohort-pill" role="listitem">Mental Health</span>
+            <span className="tl-cohort-pill" role="listitem">Learning Disabilities</span>
+            <span className="tl-cohort-pill" role="listitem">Autism</span>
+            <span className="tl-cohort-pill" role="listitem">Substance Misuse</span>
+            <span className="tl-cohort-pill" role="listitem">Physical Disabilities</span>
+            <span className="tl-cohort-pill" role="listitem">Older People</span>
+            <span className="tl-cohort-pill" role="listitem">Forensic / High Risk</span>
           </div>
         </div>
       </section>
@@ -183,16 +183,16 @@ export default function CareSettingsPage() {
               <li><Link href="/care-settings/supported-living">Supported Living</Link></li>
               <li><Link href="/care-settings/residential-care">Residential Care</Link></li>
               <li><Link href="/care-settings/nursing-care">Nursing Care</Link></li>
-              <li><Link href="/care-settings/reablement">Reablement</Link></li>
-              <li><Link href="/care-settings/day-care">Day Care</Link></li>
+              <li><Link href="/care-settings/reablement-services">Reablement</Link></li>
+              <li><Link href="/care-settings/day-services">Day Care</Link></li>
               <li><Link href="/care-settings/live-in-care">Live-in Care</Link></li>
               <li><Link href="/care-settings/extra-care-housing">Extra Care Housing</Link></li>
-              <li><Link href="/care-settings/outreach-support">Outreach Support</Link></li>
+              <li><Link href="/care-settings/outreach-community-support">Outreach Support</Link></li>
               <li><Link href="/care-settings/complex-care">Complex Care</Link></li>
-              <li><Link href="/care-settings/dementia-care">Dementia Care</Link></li>
-              <li><Link href="/care-settings/end-of-life-care">End of Life Care</Link></li>
+              <li><Link href="/care-settings/end-of-life-and-palliative-care">Dementia &amp; End of Life Care</Link></li>
+              <li><Link href="/care-settings/shared-lives">Shared Lives</Link></li>
             </ul>
-            <Link className="tl-step-link" href="/care-settings/adult-social-care">Explore Adult Social Care settings &rarr;</Link>
+            <Link className="tl-step-link" href="/care-settings/health-social-care">Explore Adult Social Care settings &rarr;</Link>
           </div>
         </article>
 
@@ -205,12 +205,12 @@ export default function CareSettingsPage() {
             <p>Written for independent providers tendering into local authority frameworks, regional commissioning hubs, and DfE-funded supported accommodation lots.</p>
             <div className="tl-callout"><span className="tl-counter" data-target="6">0</span><span className="tl-lab">settings covered</span></div>
             <ul className="tl-chips">
-              <li><Link href="/care-settings/childrens-residential">Children&apos;s Residential</Link></li>
-              <li><Link href="/care-settings/supported-accommodation-16-25">Supported Accom. 16-25</Link></li>
-              <li><Link href="/care-settings/fostering">Fostering</Link></li>
-              <li><Link href="/care-settings/short-breaks">Short Breaks</Link></li>
-              <li><Link href="/care-settings/family-support">Family Support</Link></li>
-              <li><Link href="/care-settings/send-services">SEND Services</Link></li>
+              <li><Link href="/care-settings/childrens-residential-care">Children&apos;s Residential</Link></li>
+              <li><Link href="/care-settings/supported-accommodation">Supported Accom. 16-25</Link></li>
+              <li><Link href="/care-settings/fostering-services">Fostering</Link></li>
+              <li><Link href="/care-settings/childrens-short-breaks">Short Breaks</Link></li>
+              <li><Link href="/care-settings/family-support-and-outreach">Family Support</Link></li>
+              <li><Link href="/care-settings/leaving-care-services">Leaving Care</Link></li>
             </ul>
             <Link className="tl-step-link" href="/care-settings/childrens-services">Explore Children&apos;s Services settings &rarr;</Link>
           </div>
@@ -410,12 +410,12 @@ export default function CareSettingsPage() {
             <p>Used by housing associations, registered providers, and specialist support providers tendering into county and unitary commissioning routes.</p>
             <div className="tl-callout"><span className="tl-counter" data-target="4">0</span><span className="tl-lab">settings covered</span></div>
             <ul className="tl-chips">
-              <li><Link href="/care-settings/homelessness-services">Homelessness Services</Link></li>
-              <li><Link href="/care-settings/refuge-domestic-abuse">Refuge &amp; Domestic Abuse</Link></li>
+              <li><Link href="/care-settings/emergency-accommodation">Emergency Accommodation</Link></li>
+              <li><Link href="/care-settings/housing-related-support">Housing Related Support</Link></li>
               <li><Link href="/care-settings/housing-support">Housing Support</Link></li>
-              <li><Link href="/care-settings/move-on-accommodation">Move-on Accommodation</Link></li>
+              <li><Link href="/care-settings/supported-housing">Supported Housing</Link></li>
             </ul>
-            <Link className="tl-step-link" href="/care-settings/housing-and-support">Explore Housing and Support settings &rarr;</Link>
+            <Link className="tl-step-link" href="/care-settings/housing-related-support">Explore Housing and Support settings &rarr;</Link>
           </div>
         </article>
 
@@ -428,14 +428,14 @@ export default function CareSettingsPage() {
             <p><strong>Healthcare procurement bid writing</strong>, <strong>NHS bid writing services</strong>, and <strong>contract bid writing healthcare</strong> are delivered under the same scoring-led discipline that runs across every category.</p>
             <div className="tl-callout"><span className="tl-counter" data-target="6">0</span><span className="tl-lab">settings covered</span></div>
             <ul className="tl-chips">
-              <li><Link href="/care-settings/nhs-community-services">NHS Community Services</Link></li>
+              <li><Link href="/care-settings/community-health-services">NHS Community Services</Link></li>
               <li><Link href="/care-settings/continuing-healthcare">Continuing Healthcare (CHC)</Link></li>
-              <li><Link href="/care-settings/hospital-discharge">Hospital Discharge</Link></li>
+              <li><Link href="/care-settings/hospital-discharge-services">Hospital Discharge</Link></li>
               <li><Link href="/care-settings/mental-health-services">Mental Health Services</Link></li>
-              <li><Link href="/care-settings/substance-misuse">Substance Misuse</Link></li>
-              <li><Link href="/care-settings/rehabilitation">Rehabilitation</Link></li>
+              <li><Link href="/care-settings/substance-misuse-services">Substance Misuse</Link></li>
+              <li><Link href="/care-settings/rehabilitation-services">Rehabilitation</Link></li>
             </ul>
-            <Link className="tl-step-link" href="/care-settings/health-and-clinical-services">Explore Health and Clinical Services settings &rarr;</Link>
+            <Link className="tl-step-link" href="/care-settings/health-social-care">Explore Health and Clinical Services settings &rarr;</Link>
           </div>
           <div className="tl-center"><span className="tl-dot" aria-hidden="true" /></div>
           <div className="tl-col tl-col-right">
