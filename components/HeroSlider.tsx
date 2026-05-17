@@ -76,6 +76,8 @@ export default function HeroSlider() {
           alt="Senior consultants reviewing a tender strategy document"
           fill
           priority
+          fetchPriority="high"
+          quality={60}
           sizes="100vw"
           style={{ objectFit: 'cover', objectPosition: '60% 30%' }}
         />

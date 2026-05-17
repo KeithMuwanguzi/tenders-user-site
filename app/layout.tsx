@@ -26,6 +26,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          imageSrcSet="/_next/image?url=%2Fimages%2Fbusiness-people-video-call-meeting.jpg&w=640&q=60 640w, /_next/image?url=%2Fimages%2Fbusiness-people-video-call-meeting.jpg&w=750&q=60 750w, /_next/image?url=%2Fimages%2Fbusiness-people-video-call-meeting.jpg&w=1080&q=60 1080w, /_next/image?url=%2Fimages%2Fbusiness-people-video-call-meeting.jpg&w=1920&q=60 1920w"
+          imageSizes="100vw"
+          fetchPriority="high"
+        />
+      </head>
       <body>
         <ReduxProvider>
           <TopBar />
