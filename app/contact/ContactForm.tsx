@@ -21,8 +21,12 @@ const HOW_OPTIONS = [
   'Other',
 ]
 
+const API_URL = 'https://tenderlab-admin-api.onrender.com'
+
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({
     name: '', org: '', email: '', phone: '',
     serviceType: '', deadline: '', authority: '',
@@ -33,36 +37,52 @@ export default function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => setForm(prev => ({ ...prev, [k]: e.target.value }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(
-      `Tender Enquiry — ${form.org || form.name}`
-    )
-    const body = encodeURIComponent(
-      [
-        `Name: ${form.name}`,
-        `Organisation: ${form.org}`,
-        `Email: ${form.email}`,
-        `Phone: ${form.phone}`,
+    setSubmitting(true)
+    setError('')
+
+    const payload = {
+      name: form.name,
+      email: form.email,
+      phone: form.phone || null,
+      company: form.org || null,
+      subject: `Tender Enquiry — ${form.serviceType || 'General'}`,
+      message: [
+        form.message,
+        '',
+        `---`,
         `Service type: ${form.serviceType}`,
         `Submission deadline: ${form.deadline}`,
         `Commissioning authority: ${form.authority}`,
         `How they found TenderLab: ${form.howFound}`,
-        ``,
-        `About the tender:`,
-        form.message,
-      ].join('\n')
-    )
-    window.location.href = `mailto:info@tenderlab.co.uk?subject=${subject}&body=${body}`
-    setSubmitted(true)
+      ].filter(Boolean).join('\n'),
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/api/inquiries/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.detail || 'Something went wrong. Please try again.')
+      }
+      setSubmitted(true)
+    } catch (err: any) {
+      setError(err.message || 'Network error. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (submitted) {
     return (
       <div className="cf-sent">
         <div className="cf-sent__icon" aria-hidden="true">✓</div>
-        <h3>Enquiry sent</h3>
-        <p>Your email client should have opened. If it didn&apos;t, email us directly at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
+        <h3>Enquiry received</h3>
+        <p>Thank you — we&apos;ll review your enquiry and respond within one working day. You can also reach us at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
       </div>
     )
   }
@@ -134,8 +154,12 @@ export default function ContactForm() {
           value={form.message} onChange={set('message')} />
       </div>
 
-      <button type="submit" className="cf-submit">
-        Send enquiry →
+      {error && (
+        <p className="cf-error">{error}</p>
+      )}
+
+      <button type="submit" className="cf-submit" disabled={submitting}>
+        {submitting ? 'Sending…' : 'Send enquiry →'}
       </button>
     </form>
   )
