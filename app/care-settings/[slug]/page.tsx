@@ -1,9 +1,18 @@
 import { readFile, readdir } from 'fs/promises'
 import path from 'path'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
+import Script from 'next/script'
 import type { Metadata } from 'next'
+import {
+  canonicalUrl,
+  defaultOpenGraph,
+  defaultTwitter,
+  serviceSchema,
+  faqSchema,
+  breadcrumbSchema,
+  defaultFaq,
+  BRAND,
+} from '@/lib/seo'
 
 const HTML_DIR = path.join(
   process.cwd(),
@@ -50,18 +59,6 @@ async function getHtml(slug: string): Promise<string | null> {
   }
 }
 
-function extractTag(html: string, open: string): string {
-  const si = html.indexOf(open)
-  if (si === -1) return ''
-  const bodyStart = html.indexOf('>', si) + 1
-  /* Find the matching closing tag — handle 1 level of nesting */
-  const tagName = open.match(/<(\w+)/)?.[1] ?? 'div'
-  const closeTag = `</${tagName}>`
-  const ei = html.indexOf(closeTag, bodyStart)
-  if (ei === -1) return ''
-  return html.slice(bodyStart, ei)
-}
-
 function stripTags(s: string) {
   return s.replace(/<[^>]+>/g, '').trim()
 }
@@ -82,7 +79,11 @@ function articleHtml(raw: string): string {
   if (start === -1 || end === -1) return ''
   let block = raw.slice(start, end + '</article>'.length)
 
-  /* Rewrite relative HTML links → Next.js routes */
+  // Strip the article's own H1 so the page renders exactly one H1
+  // (the hero H1 stays the single page-level heading).
+  block = block.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, '')
+
+  // Rewrite relative HTML links to Next.js routes
   block = block
     .replace(/href="index\.html"/g, 'href="/care-settings"')
     .replace(/href="\.\.\/care-settings\//g, 'href="/care-settings/')
@@ -90,6 +91,10 @@ function articleHtml(raw: string): string {
     .replace(/href="\.\.\/about\.html"/g, 'href="/about"')
     .replace(/href="\.\.\/index\.html"/g, 'href="/"')
     .replace(/href="\.\.\/([^"]+)\.html"/g, 'href="/$1"')
+
+  // Repair any double-encoded apostrophes that crept in from the HTML files
+  // (for example "Children&amp;#x27;s" should render as "Children's").
+  block = block.replace(/&amp;#x27;/g, '&#x27;')
 
   return block
 }
@@ -113,9 +118,29 @@ export async function generateMetadata({
   const { slug } = await params
   const raw = await getHtml(slug)
   if (!raw) return {}
+
+  const baseTitle = titleText(raw) || 'Care Setting Tender Writing'
+  const fullTitle = `${baseTitle} | TenderLab`
+  const description =
+    metaContent(raw, 'description') ||
+    `${baseTitle.toLowerCase()} bid writing with 92% win rate. Evaluator-trained writers for UK care providers.`
+  const heroImage = SETTING_IMAGES[slug]
+  const pathname = `/care-settings/${slug}`
+
   return {
-    title: `${titleText(raw)} | TenderLab`,
-    description: metaContent(raw, 'description'),
+    title: fullTitle,
+    description,
+    alternates: { canonical: pathname },
+    openGraph: {
+      ...defaultOpenGraph({
+        title: fullTitle,
+        description,
+        path: pathname,
+        type: 'website',
+        image: heroImage,
+      }),
+    },
+    twitter: defaultTwitter({ title: fullTitle, description, image: heroImage }),
   }
 }
 
@@ -131,20 +156,53 @@ export default async function CareSettingPage({
   const article = articleHtml(raw)
   const heroImage = SETTING_IMAGES[slug]
   const pageTitle = titleText(raw)
+  const description = metaContent(raw, 'description')
+  const pathname = `/care-settings/${slug}`
+
+  // Per-page schema. Organization + WebSite are emitted sitewide via layout.
+  const ldService = serviceSchema({
+    name: `${pageTitle} Tender Writing`,
+    description:
+      description ||
+      `Specialist bid writing for ${pageTitle.toLowerCase()} providers. ${BRAND.winRate} win rate across ${BRAND.submissions} UK care contracts.`,
+    path: pathname,
+    serviceType: 'Tender Writing',
+  })
+
+  const ldFaq = faqSchema(defaultFaq)
+
+  const ldBreadcrumb = breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Care Settings', path: '/care-settings' },
+    { name: pageTitle, path: pathname },
+  ])
 
   return (
     <main className="care-setting-page">
+      <Script
+        id={`ld-care-${slug}-service`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldService) }}
+      />
+      <Script
+        id={`ld-care-${slug}-faq`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
+      />
+      <Script
+        id={`ld-care-${slug}-breadcrumb`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }}
+      />
+
       {heroImage && (
         <section className="cs-detail-hero">
           <div className="cs-detail-hero__bg">
-            <Image
-              src={heroImage}
-              alt={pageTitle}
-              fill
-              priority
-              sizes="100vw"
-              style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
-            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={heroImage} alt={pageTitle} />
           </div>
           <div className="cs-detail-hero__overlay" />
           <div className="container" style={{ position: 'relative', zIndex: 2 }}>
@@ -152,8 +210,13 @@ export default async function CareSettingPage({
           </div>
         </section>
       )}
-      <div dangerouslySetInnerHTML={{ __html: article }} />
-      <div style={{ height: 40 }} />
+
+      {article && (
+        <div
+          className="care-setting-content"
+          dangerouslySetInnerHTML={{ __html: article }}
+        />
+      )}
     </main>
   )
 }
