@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { CASE_STUDY_DETAILS } from '@/lib/case-studies-detail'
 import GalleryGrid from './GalleryGrid'
+import Script from 'next/script'
+import { defaultOpenGraph, defaultTwitter, articleSchema, breadcrumbSchema } from '@/lib/seo'
 
 export function generateStaticParams() {
   return CASE_STUDIES.map(cs => ({ slug: cs.slug }))
@@ -13,11 +15,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const cs = CASE_STUDIES.find(c => c.slug === slug)
   if (!cs) return {}
+  const fullTitle = `${cs.title} | TenderLab Case Studies`
+  const description = `TenderLab case study: ${cs.transformation}. ${cs.council}. Verified award letter.`
+  const pathname = `/case-studies/${slug}`
   return {
-    title: `${cs.title} | TenderLab Case Studies`,
-    description: `TenderLab case study: ${cs.transformation} — ${cs.council}. Verified award letter.`,
+    title: fullTitle,
+    description,
+    alternates: { canonical: pathname },
+    openGraph: defaultOpenGraph({ title: fullTitle, description, path: pathname, type: 'article' }),
+    twitter: defaultTwitter({ title: fullTitle, description }),
   }
 }
+
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -31,6 +40,24 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
   return (
     <main>
+      <Script id={`ld-cs-${slug}-article`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: cs.title,
+        description: `TenderLab case study: ${cs.transformation}. ${cs.council}. Verified award letter.`,
+        url: `https://www.tenderlab.co.uk/case-studies/${slug}`,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tenderlab.co.uk/case-studies/${slug}` },
+        author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
+        publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+        articleSection: cs.categoryLabel,
+        inLanguage: 'en-GB',
+      }) }} />
+      <Script id={`ld-cs-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Case Studies', path: '/case-studies' },
+        { name: cs.title, path: `/case-studies/${slug}` },
+      ])) }} />
+
 
       {/* ── Hero ── */}
       <section className="csd-hero" style={{ '--case-accent': cs.accentColor } as React.CSSProperties}>
