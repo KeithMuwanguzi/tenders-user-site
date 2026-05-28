@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { fetchBlogs, categoryColor } from '@/lib/sheets'
+import Script from 'next/script'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,14 +14,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const posts = await fetchBlogs()
   const post = posts.find(p => p.slug === slug)
   if (!post) return { title: 'Post Not Found | TenderLab' }
+  const pathname = `/blog/${slug}`
   return {
     title: `${post.title} | TenderLab`,
     description: post.excerpt,
+    alternates: { canonical: pathname },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: `https://www.tenderlab.co.uk${pathname}`,
+      type: 'article',
       images: post.imageUrl ? [{ url: post.imageUrl }] : [],
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: post.imageUrl ? [post.imageUrl] : [],
+    },
+  }
+
   }
 }
 
@@ -34,6 +47,30 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className="blog-post">
+      <Script id={`ld-blog-${slug}-article`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.excerpt,
+        url: `https://www.tenderlab.co.uk/blog/${slug}`,
+        mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tenderlab.co.uk/blog/${slug}` },
+        image: post.imageUrl ? [post.imageUrl] : undefined,
+        author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
+        publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+        articleSection: post.category,
+        keywords: post.tags.join(', '),
+        inLanguage: 'en-GB',
+      }) }} />
+      <Script id={`ld-blog-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.tenderlab.co.uk' },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.tenderlab.co.uk/blog' },
+          { '@type': 'ListItem', position: 3, name: post.category, item: `https://www.tenderlab.co.uk/blog/${slug}` },
+        ],
+      }) }} />
+
 
       {/* Hero */}
       <section className="blog-post__hero">
