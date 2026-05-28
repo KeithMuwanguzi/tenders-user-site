@@ -516,7 +516,7 @@ export default async function HomePage() {
           </div>
           <div className="blog-section__grid">
             {blogPosts.map((post) => (
-              <Link href={post.slug} key={post.slug} className="blog-card">
+              <Link href={`/blog/${post.slug}`} key={post.slug} className="blog-card">
                 <div className="blog-card__img">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={post.img} alt={post.title} />
