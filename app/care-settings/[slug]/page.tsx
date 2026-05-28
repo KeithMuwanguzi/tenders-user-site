@@ -74,7 +74,10 @@ function titleText(html: string): string {
 }
 
 function articleHtml(raw: string): string {
-  const start = raw.indexOf('<article class="tlp"')
+  // Support both 'tlp' (original template) and 'cs-page' (newer comprehensive
+  // template with 17 sections per care setting).
+  let start = raw.indexOf('<article class="tlp"')
+  if (start === -1) start = raw.indexOf('<article class="cs-page"')
   const end = raw.indexOf('</article>', start)
   if (start === -1 || end === -1) return ''
   let block = raw.slice(start, end + '</article>'.length)
