@@ -35,7 +35,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'essex-domiciliary-framework-2025',
     provider: 'Choices Healthcare',
-    title: 'Essex Live at Home Domiciliary Framework 2025 — Five Tier 2 Lots',
+    title: 'Essex Live at Home Domiciliary Framework 2025 : Five Tier 2 Lots',
     council: 'Essex County Council',
     contractType: 'Framework',
     category: 'domiciliary',
@@ -51,7 +51,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'dorset-care-support-open-framework',
     provider: 'Inspire Care Outreach',
-    title: 'Dorset Care, Support, Housing and Community Safety Open Framework 2024 — Five Lots',
+    title: 'Dorset Care, Support, Housing and Community Safety Open Framework 2024 : Five Lots',
     council: 'Dorset Council',
     contractType: 'Open Framework',
     category: 'multi-service',
@@ -99,7 +99,7 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: 'essex-live-at-home-tier-2-framework',
     provider: 'Livingstone Healthcare',
-    title: 'Essex Live at Home Domiciliary Framework 2025 — Five Tier 2 Lots, Documented Tier 1 Path',
+    title: 'Essex Live at Home Domiciliary Framework 2025 : Five Tier 2 Lots, Documented Tier 1 Path',
     council: 'Essex County Council',
     contractType: 'Framework',
     category: 'domiciliary',
