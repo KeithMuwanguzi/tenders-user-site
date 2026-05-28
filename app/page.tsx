@@ -2,6 +2,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HeroSlider from '@/components/HeroSlider'
 import { fetchReviews } from '@/lib/sheets'
+import type { Metadata } from 'next'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
+
+export const metadata: Metadata = {
+  title: { absolute: 'Tender Writing Services for UK Care Providers | TenderLab' },
+  description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers. Companies House 17184263.',
+  alternates: { canonical: '/' },
+  openGraph: defaultOpenGraph({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers.', path: '/' }),
+  twitter: defaultTwitter({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions.' }),
+}
 
 /* ── Data ── */
 const serviceCards = [
