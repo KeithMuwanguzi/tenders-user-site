@@ -61,6 +61,17 @@ const CONTACT_DETAILS = [
     label: '128 City Road, London, EC1V 2NX',
     href: 'https://maps.google.com/?q=128+City+Road+London+EC1V+2NX',
   },
+  {
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="M3 10h18" />
+        <path d="M9 16h6" />
+      </svg>
+    ),
+    label: 'Company number 17184263',
+    href: 'https://find-and-update.company-information.service.gov.uk/company/17184263',
+  },
 ]
 
 export default function ContactPage() {
