@@ -1,11 +1,23 @@
 import type { Metadata } from 'next'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import ContactForm from './ContactForm'
 import FaqAccordion from './FaqAccordion'
+
 
 export const metadata: Metadata = {
   title: 'Contact | TenderLab - Send an Enquiry',
   description:
-    'Send your tender enquiry to TenderLab. We read the specification, identify the scoring structure, and tell you whether the win is realistic — within one working day.',
+    'Send your tender enquiry to TenderLab. We read the specification, identify the scoring structure, and tell you whether the win is realistic within one working day. 92% win rate.',
+  alternates: { canonical: '/contact' },
+  openGraph: defaultOpenGraph({
+    title: 'Contact | TenderLab - Send an Enquiry',
+    description: 'Send your tender enquiry to TenderLab. We read the specification, identify the scoring structure, and tell you whether the win is realistic within one working day. 92% win rate.',
+    path: '/contact',
+  }),
+  twitter: defaultTwitter({
+    title: 'Contact | TenderLab - Send an Enquiry',
+    description: 'Send your tender enquiry to TenderLab. We read the specification, identify the scoring structure, and tell you whether the win is realistic within one working day. 92% win rate.',
+  }),
 }
 
 const STEPS = [
