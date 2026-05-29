@@ -21,7 +21,11 @@ const HOW_OPTIONS = [
   'Other',
 ]
 
-const API_URL = 'https://tenderlab-admin-api.onrender.com'
+// Posts to a same-origin Next.js server route which:
+//   1) emails info@tenderlab.co.uk via Gmail SMTP (always-on channel)
+//   2) forwards to the portal API with retries (handles cold-start)
+// See app/api/inquiries/route.ts
+const INQUIRY_ENDPOINT = '/api/inquiries'
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
@@ -42,36 +46,22 @@ export default function ContactForm() {
     setSubmitting(true)
     setError('')
 
-    const payload = {
-      name: form.name,
-      email: form.email,
-      phone: form.phone || null,
-      company: form.org || null,
-      subject: `Tender Enquiry — ${form.serviceType || 'General'}`,
-      message: [
-        form.message,
-        '',
-        `---`,
-        `Service type: ${form.serviceType}`,
-        `Submission deadline: ${form.deadline}`,
-        `Commissioning authority: ${form.authority}`,
-        `How they found TenderLab: ${form.howFound}`,
-      ].filter(Boolean).join('\n'),
-    }
-
     try {
-      const res = await fetch(`${API_URL}/api/inquiries/`, {
+      const res = await fetch(INQUIRY_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(form),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.detail || 'Something went wrong. Please try again.')
+        throw new Error(
+          data.error || data.detail || 'Something went wrong. Please try again.'
+        )
       }
       setSubmitted(true)
-    } catch (err: any) {
-      setError(err.message || 'Network error. Please try again.')
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Network error. Please try again.'
+      setError(message)
     } finally {
       setSubmitting(false)
     }
