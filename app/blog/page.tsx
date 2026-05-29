@@ -8,12 +8,12 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'UK Care Tender Writing Blog and Insights | TenderLab',
   description:
-    'Live tender analysis, bid strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
+    'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
   alternates: { canonical: 'https://www.tenderlab.co.uk/blog' },
   openGraph: {
     title: 'UK Care Tender Writing Blog and Insights | TenderLab',
     description:
-      'Live tender analysis, bid strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
+      'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
     url: 'https://www.tenderlab.co.uk/blog',
     type: 'website',
   },
@@ -56,7 +56,7 @@ export default async function BlogPage() {
           '@id': 'https://www.tenderlab.co.uk/blog#blog',
           name: 'TenderLab Blog: UK Care Tender Writing Insights',
           url: 'https://www.tenderlab.co.uk/blog',
-          description: 'Live tender analysis, bid strategy, and commissioning trends for UK health and social care providers.',
+          description: 'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers.',
           isPartOf: { '@id': 'https://www.tenderlab.co.uk/#website' },
           publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
         }) }}
@@ -79,7 +79,7 @@ export default async function BlogPage() {
       <section className="blog-hero">
         <div className="container blog-hero__inner">
           <div className="blog-hero__kicker">Insights · Analysis · Strategy</div>
-          <h1>UK care tender writing insights and live tender analysis</h1>
+          <h1>UK care tender writing and bid writing insights, live tender analysis</h1>
           <p className="blog-hero__sub">
             Live tender analysis, bid strategy, and commissioning trends across UK health and social care. Written by evaluator-trained bid writers with a 92% win rate across 200+ submissions.
           </p>
