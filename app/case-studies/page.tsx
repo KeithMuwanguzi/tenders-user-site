@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Tender Writing Case Studies for UK Care Providers | TenderLab',
-    description: 'Real UK care tender wins. 92% win rate, 200+ submissions, verified award letters.',
+    description: 'Real UK care contract wins. 92% win rate, 200+ submissions, verified award letters.',
   },
 }
 
@@ -92,7 +92,7 @@ export default function CaseStudiesPage() {
                 Verified outcomes
               </p>
               <h1 className="cs-hero__headline">
-                From no prior experience to awarded UK care contracts.
+                From no prior experience to awarded UK care contract wins.
               </h1>
               <p className="cs-hero__sub">
                 Each case study follows a provider from entry barrier to award letter.
