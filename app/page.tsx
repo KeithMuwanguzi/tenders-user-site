@@ -7,7 +7,7 @@ import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: { absolute: 'Tender Writing Services for UK Care Providers | TenderLab' },
-  description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers. Companies House 17184263.',
+  description: 'Specialist tender writing and bid writing services for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers. Companies House 17184263.',
   alternates: { canonical: '/' },
   openGraph: defaultOpenGraph({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers.', path: '/' }),
   twitter: defaultTwitter({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions.' }),
@@ -326,7 +326,7 @@ export default async function HomePage() {
                 Winning Contracts with Evidence-Led Precision.
               </h2>
               <p className="about-snippet__desc">
-                TenderLab is a specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement.
+                TenderLab is a specialist tender writing and bid writing services consultancy operating exclusively within UK health and social care procurement.
               </p>
               <div className="about-snippet__features">
                 <div className="feature-item">
