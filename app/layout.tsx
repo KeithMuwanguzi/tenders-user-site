@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: 'TenderLab | Specialist Health & Social Care Bid Writing',
-    template: '%s | TenderLab',
+    template: '%s',
   },
   description: BRAND.description,
   applicationName: SITE_NAME,
