@@ -1,11 +1,23 @@
 import type { Metadata } from 'next'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import Link from 'next/link'
 import Image from 'next/image'
+
 
 export const metadata: Metadata = {
   title: 'Our Process | TenderLab - How We Win Tenders',
   description:
-    'Six disciplined steps from Discovery Call to Submission-Ready document. See exactly how TenderLab engineers winning tender responses.',
+    'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
+  alternates: { canonical: '/process' },
+  openGraph: defaultOpenGraph({
+    title: 'Our Process | TenderLab - How We Win Tenders',
+    description: 'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
+    path: '/process',
+  }),
+  twitter: defaultTwitter({
+    title: 'Our Process | TenderLab - How We Win Tenders',
+    description: 'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
+  }),
 }
 
 const STEPS = [
