@@ -1,6 +1,4 @@
 import type { MetadataRoute } from 'next'
-import { readdir } from 'fs/promises'
-import path from 'path'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { SERVICES_DATA } from '@/lib/services-data'
 import { fetchBlogs } from '@/lib/sheets'
@@ -8,21 +6,53 @@ import { fetchBlogs } from '@/lib/sheets'
 const BASE = 'https://www.tenderlab.co.uk'
 
 // Revalidate the sitemap every hour so newly-added blog posts (sourced from
-// Google Sheets at request time) and newly-added care setting HTML files
-// (auto-discovered from /public) get listed promptly.
+// Google Sheets at request time) get listed promptly.
 export const revalidate = 3600
 
-async function getCareSettingSlugs(): Promise<string[]> {
-  try {
-    const dir = path.join(process.cwd(), 'public/Page Content HTML Files/care-settings')
-    const files = await readdir(dir)
-    return files
-      .filter((f) => f.endsWith('.html') && f !== 'index.html')
-      .map((f) => f.replace(/\.html$/, ''))
-  } catch {
-    return []
-  }
-}
+// Hardcoded list of care setting slugs. Mirrors every HTML file under
+// public/Page Content HTML Files/care-settings/ minus index.html.
+// Hardcoded (rather than read via fs.readdir) because Vercel serverless does
+// not expose the public folder file tree at sitemap render time, which is why
+// these URLs were previously absent from the sitemap.
+const CARE_SETTING_SLUGS: string[] = [
+  'autism-services',
+  'care-home-accommodation',
+  'childrens-residential-care',
+  'childrens-services',
+  'childrens-short-breaks',
+  'community-health-services',
+  'complex-care',
+  'complex-care-and-continuing-healthcare',
+  'continuing-healthcare',
+  'crisis-rapid-response',
+  'day-services',
+  'domiciliary-care',
+  'emergency-accommodation',
+  'end-of-life-and-palliative-care',
+  'extra-care-housing',
+  'family-support-and-outreach',
+  'fostering-services',
+  'health-services',
+  'hospital-discharge-services',
+  'housing-related-support',
+  'housing-support',
+  'learning-disability-services',
+  'leaving-care-services',
+  'live-in-care',
+  'mental-health-services',
+  'nursing-care',
+  'outreach-community-support',
+  'reablement-services',
+  'rehabilitation-services',
+  'residential-care',
+  'shared-lives',
+  'short-breaks-and-respite',
+  'substance-misuse-services',
+  'supported-accommodation',
+  'supported-housing',
+  'supported-living',
+  'temporary-accommodation',
+]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
@@ -50,8 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }))
 
-  const careSettingSlugs = await getCareSettingSlugs()
-  const careSettings: MetadataRoute.Sitemap = careSettingSlugs.map((slug) => ({
+  const careSettings: MetadataRoute.Sitemap = CARE_SETTING_SLUGS.map((slug) => ({
     url: `${BASE}/care-settings/${slug}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
@@ -65,11 +94,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }))
 
+  // Blog posts from the Google Sheet CMS. Deduplicate on slug in case the
+  // Sheet has duplicate rows (we have seen this happen during manual data entry).
   let blog: MetadataRoute.Sitemap = []
   try {
     const posts = await fetchBlogs()
+    const seen = new Set<string>()
     blog = posts
-      .filter((p) => p.slug)
+      .filter((p) => {
+        if (!p.slug) return false
+        if (seen.has(p.slug)) return false
+        seen.add(p.slug)
+        return true
+      })
       .map((p) => ({
         url: `${BASE}/blog/${p.slug}`,
         lastModified: now,
@@ -77,7 +114,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       }))
   } catch {
-    // If the sheet fetch fails at build time we still emit the rest of the sitemap.
     blog = []
   }
 
