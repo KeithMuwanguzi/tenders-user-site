@@ -1,268 +1,113 @@
-'use client'
+import type { Metadata } from 'next'
+import Script from 'next/script'
+import {
+  SITE_URL,
+  SITE_LEGAL_NAME,
+  COMPANY_NUMBER,
+  defaultOpenGraph,
+  defaultTwitter,
+  breadcrumbSchema,
+  faqSchema,
+} from '@/lib/seo'
+import ScoreClient from './ScoreClient'
 
-import { useState, useRef } from 'react'
-
-const SECTORS = [
-  'Domiciliary Care',
-  'Supported Living',
-  'Residential Care',
-  'Nursing Care',
-  'Children\'s Services',
-  'Mental Health',
-  'Housing Support',
-  'Community Health',
-  'Learning Disabilities',
-  'Extra Care',
-  'Reablement',
-  'Other',
-]
-
-const WORD_LIMIT = 5000
-
-function wordCount(text: string) {
-  return text.trim() ? text.trim().split(/\s+/).length : 0
+export const metadata: Metadata = {
+  title: 'Score My Tender Response - Free Evaluator-Grade Review | TenderLab',
+  description:
+    'Free evaluator-grade scoring of your UK health and social care tender response. Submit your draft, get a 4-point review against the published criteria within 48 hours. No obligation. 92% win rate across 200+ submissions.',
+  keywords: [
+    'score my tender response',
+    'free tender review',
+    'tender response evaluation',
+    'bid scoring',
+    'pre-submission review',
+    'UK care tender review',
+    'free bid assessment',
+    'tender writing services',
+    'bid writing services',
+  ],
+  alternates: { canonical: '/score-my-response' },
+  openGraph: defaultOpenGraph({
+    title: 'Score My Tender Response - Free Evaluator Review | TenderLab',
+    description:
+      'Free evaluator-grade scoring of your UK care tender response within 48 hours. 92% win rate.',
+    path: '/score-my-response',
+  }),
+  twitter: defaultTwitter({
+    title: 'Score My Tender Response - Free Evaluator Review',
+    description: 'Free evaluator-grade scoring within 48 hours. UK care tenders.',
+  }),
+  robots: { index: true, follow: true },
 }
 
+const FAQ = [
+  {
+    question: 'How does the free scoring work?',
+    answer:
+      'Send your tender response, the published scoring criteria, and the original question. Within 48 hours we return a written review covering: where the response would score on each criterion, what is missing against the printed evaluation framework, the specific paragraphs that need rewriting, and the marks at stake on each gap.',
+  },
+  {
+    question: 'Is this genuinely free?',
+    answer:
+      'Yes. The scoring review is free. No obligation to proceed. If you decide you want help fixing the gaps we identify, we quote a Pre-Submission Review or Bid Writing engagement separately.',
+  },
+  {
+    question: 'What do you do with my draft?',
+    answer:
+      'We review it, score it, and return our notes. We do not share it, store it beyond the engagement, or reuse content. Treated as confidential under our standard NDA terms. ' +
+      SITE_LEGAL_NAME +
+      ', Companies House ' +
+      COMPANY_NUMBER +
+      '.',
+  },
+  {
+    question: 'How long does the review take?',
+    answer:
+      'Standard turnaround is 48 hours. If you need faster (24 hours or same-day) tell us when you submit and we will confirm capacity.',
+  },
+  {
+    question: 'What sectors do you cover?',
+    answer:
+      'UK health and social care: domiciliary care, supported living, residential care, nursing care, children services, mental health, learning disability, autism, substance misuse, continuing healthcare, hospital discharge, reablement, day services, community health, housing-related support.',
+  },
+]
+
 export default function ScoreMyResponsePage() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [organisation, setOrganisation] = useState('')
-  const [sector, setSector] = useState('')
-  const [tenderName, setTenderName] = useState('')
-  const [specification, setSpecification] = useState('')
-  const [question, setQuestion] = useState('')
-  const [response, setResponse] = useState('')
-  const [specFile, setSpecFile] = useState<File | null>(null)
-  const [questionFile, setQuestionFile] = useState<File | null>(null)
-  const [responseFile, setResponseFile] = useState<File | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-
-  const specFileRef = useRef<HTMLInputElement>(null)
-  const questionFileRef = useRef<HTMLInputElement>(null)
-  const responseFileRef = useRef<HTMLInputElement>(null)
-
-  const responseWords = wordCount(response)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!response && !responseFile) return
-    setSubmitting(true)
-    // Simulate submission — replace with actual API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setSubmitted(true)
-    setSubmitting(false)
-  }
-
-  if (submitted) {
-    return (
-      <>
-        <section className="smr-hero">
-          <div className="container">
-            <h1>Score My Response</h1>
-            <p>Your response has been submitted for scoring.</p>
-          </div>
-        </section>
-        <section className="smr-form-section">
-          <div className="container">
-            <div className="smr-success">
-              <div className="smr-success__icon">✓</div>
-              <h2>Submission Received</h2>
-              <p>Our scoring engine is analysing your response against ten evaluator-tested criteria. You&apos;ll receive your results at <strong>{email}</strong> shortly.</p>
-              <button className="btn btn-primary" onClick={() => { setSubmitted(false); setResponse(''); setSpecification(''); setQuestion('') }}>
-                Score Another Response
-              </button>
-            </div>
-          </div>
-        </section>
-      </>
-    )
+  const serviceLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Free Tender Response Scoring',
+    name: 'Score My Tender Response',
+    description:
+      'Free evaluator-grade scoring of UK health and social care tender responses. 48-hour turnaround. 92% win rate across 200+ submissions.',
+    provider: { '@id': SITE_URL + '/#organization' },
+    areaServed: { '@type': 'Country', name: 'United Kingdom' },
+    url: SITE_URL + '/score-my-response',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
   }
 
   return (
     <>
-      {/* Dark header */}
-      <section className="smr-hero">
-        <div className="container">
-          <h1>Score My Response</h1>
-          <p>
-            Submit your tender response below. Our scoring engine grades it confidentially against ten 
-            evaluator-tested criteria. Optional: include the specification and the question for context-aware 
-            scoring. <strong>No login. No payment. No obligation.</strong>
-          </p>
-        </div>
-      </section>
+      <Script id="ld-score-service" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
+      <Script id="ld-score-breadcrumb" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Score My Response', path: '/score-my-response' },
+      ])) }} />
+      <Script id="ld-score-faq" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(FAQ)) }} />
 
-      {/* Form */}
-      <section className="smr-form-section">
-        <div className="container">
-          <form className="smr-form" onSubmit={handleSubmit}>
-            {/* Row: Name + Email */}
-            <div className="smr-form__row">
-              <div className="smr-form__field">
-                <label htmlFor="smr-name">Your name</label>
-                <input
-                  id="smr-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div className="smr-form__field">
-                <label htmlFor="smr-email">Email</label>
-                <input
-                  id="smr-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
+      <ScoreClient />
 
-            {/* Row: Organisation + Sector */}
-            <div className="smr-form__row">
-              <div className="smr-form__field">
-                <label htmlFor="smr-org">Organisation</label>
-                <input
-                  id="smr-org"
-                  type="text"
-                  value={organisation}
-                  onChange={(e) => setOrganisation(e.target.value)}
-                />
-              </div>
-              <div className="smr-form__field">
-                <label htmlFor="smr-sector">Sector</label>
-                <select
-                  id="smr-sector"
-                  value={sector}
-                  onChange={(e) => setSector(e.target.value)}
-                >
-                  <option value="">Select</option>
-                  {SECTORS.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Tender name */}
-            <div className="smr-form__field">
-              <label htmlFor="smr-tender"><em>Tender name (optional)</em></label>
-              <input
-                id="smr-tender"
-                type="text"
-                placeholder="e.g. Birmingham Supported Living Framework 2026"
-                value={tenderName}
-                onChange={(e) => setTenderName(e.target.value)}
-              />
-            </div>
-
-            {/* Specification */}
-            <div className="smr-form__card">
-              <div className="smr-form__card-header">
-                <h3>Specification <span className="smr-form__optional">OPTIONAL</span></h3>
-                <span className="smr-form__wc">{wordCount(specification)} words</span>
-              </div>
-              <p className="smr-form__card-desc">
-                Paste the relevant specification section, or drop a file anywhere on this card. Improves scoring accuracy on context-sensitive criteria.
-              </p>
-              <textarea
-                placeholder="Paste the specification text here..."
-                value={specification}
-                onChange={(e) => setSpecification(e.target.value)}
-                rows={5}
-              />
-              <div className="smr-form__attach">
-                <button type="button" onClick={() => specFileRef.current?.click()}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
-                  Attach a file (PDF, DOCX, TXT)
-                </button>
-                {specFile && <span className="smr-form__filename">{specFile.name}</span>}
-                <input
-                  ref={specFileRef}
-                  type="file"
-                  accept=".pdf,.docx,.txt"
-                  hidden
-                  onChange={(e) => setSpecFile(e.target.files?.[0] || null)}
-                />
-              </div>
-            </div>
-
-            {/* Question being answered */}
-            <div className="smr-form__card">
-              <div className="smr-form__card-header">
-                <h3>Question being answered <span className="smr-form__optional">OPTIONAL</span></h3>
-                <span className="smr-form__wc">{wordCount(question)} words</span>
-              </div>
-              <p className="smr-form__card-desc">
-                Paste the exact question text, or drop a file. Improves scoring accuracy on adherence and operational alignment.
-              </p>
-              <textarea
-                placeholder="Paste the question text here..."
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                rows={4}
-              />
-              <div className="smr-form__attach">
-                <button type="button" onClick={() => questionFileRef.current?.click()}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
-                  Attach a file (PDF, DOCX, TXT)
-                </button>
-                {questionFile && <span className="smr-form__filename">{questionFile.name}</span>}
-                <input
-                  ref={questionFileRef}
-                  type="file"
-                  accept=".pdf,.docx,.txt"
-                  hidden
-                  onChange={(e) => setQuestionFile(e.target.files?.[0] || null)}
-                />
-              </div>
-            </div>
-
-            {/* Your response — REQUIRED */}
-            <div className="smr-form__card smr-form__card--required">
-              <div className="smr-form__card-header">
-                <h3>Your response <span className="smr-form__required">REQUIRED</span></h3>
-                <span className="smr-form__wc">{responseWords} / {WORD_LIMIT.toLocaleString()} words</span>
-              </div>
-              <p className="smr-form__card-desc">
-                Paste the full tender response you want graded, or drop a file. {WORD_LIMIT.toLocaleString()} word cap.
-              </p>
-              <textarea
-                placeholder="Paste your tender response here..."
-                value={response}
-                onChange={(e) => {
-                  const text = e.target.value
-                  if (wordCount(text) <= WORD_LIMIT) setResponse(text)
-                }}
-                rows={10}
-                required={!responseFile}
-              />
-              <div className="smr-form__attach">
-                <button type="button" onClick={() => responseFileRef.current?.click()}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
-                  Attach a file (PDF, DOCX, TXT)
-                </button>
-                {responseFile && <span className="smr-form__filename">{responseFile.name}</span>}
-                <input
-                  ref={responseFileRef}
-                  type="file"
-                  accept=".pdf,.docx,.txt"
-                  hidden
-                  onChange={(e) => setResponseFile(e.target.files?.[0] || null)}
-                />
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              className="smr-form__submit"
-              disabled={submitting || (!response && !responseFile)}
-            >
-              {submitting ? 'Scoring…' : 'Run the Scoring Engine'}
-            </button>
-          </form>
+      <section className="hub-faq" style={{ background: '#F7F8FA', padding: '3rem 0' }}>
+        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0B1F3A', margin: '0 0 1.5rem' }}>Frequently asked questions</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {FAQ.map((item, i) => (
+              <details key={i} style={{ background: '#fff', border: '1px solid #E0E4E8', borderRadius: 8, padding: '1rem 1.25rem' }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#0B1F3A' }}>{item.question}</summary>
+                <p style={{ margin: '0.75rem 0 0', color: '#3A4A5C', lineHeight: 1.7 }}>{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
     </>
