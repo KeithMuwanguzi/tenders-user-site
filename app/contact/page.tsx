@@ -3,7 +3,7 @@ import ContactForm from './ContactForm'
 import FaqAccordion from './FaqAccordion'
 
 export const metadata: Metadata = {
-  title: 'Contact | TenderLab — Send an Enquiry',
+  title: 'Contact | TenderLab - Send an Enquiry',
   description:
     'Send your tender enquiry to TenderLab. We read the specification, identify the scoring structure, and tell you whether the win is realistic — within one working day.',
 }
