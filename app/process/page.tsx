@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Our Process | TenderLab — How We Win Tenders',
+  title: 'Our Process | TenderLab - How We Win Tenders',
   description:
     'Six disciplined steps from Discovery Call to Submission-Ready document. See exactly how TenderLab engineers winning tender responses.',
 }
