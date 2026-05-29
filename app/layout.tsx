@@ -54,6 +54,9 @@ export const metadata: Metadata = {
     icon: '/images/Logo/tenderlab-logo-transparent.png',
     apple: '/images/Logo/tenderlab-logo-transparent.png',
   },
+  verification: {
+    google: 'UMLHV4HxkfIfzeul48d9nBZSMaKfFDo8TNbQAfhj_qc',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_GB',
