@@ -1,12 +1,24 @@
 import type { Metadata } from 'next'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import Link from 'next/link'
 import Image from 'next/image'
 import { fetchReviews } from '@/lib/sheets'
 
+
 export const metadata: Metadata = {
   title: 'Client Reviews | TenderLab - Real Results from Real Clients',
   description:
-    'See what health and social care providers say about working with TenderLab. Real testimonials, real results.',
+    'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+  alternates: { canonical: '/reviews' },
+  openGraph: defaultOpenGraph({
+    title: 'Client Reviews | TenderLab - Real Results from Real Clients',
+    description: 'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+    path: '/reviews',
+  }),
+  twitter: defaultTwitter({
+    title: 'Client Reviews | TenderLab - Real Results from Real Clients',
+    description: 'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+  }),
 }
 
 const STATS = [
