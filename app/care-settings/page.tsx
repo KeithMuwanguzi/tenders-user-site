@@ -3,10 +3,62 @@ import Link from 'next/link'
 import TimelineScroll from '@/components/TimelineScroll'
 
 export const metadata: Metadata = {
-  title: 'Care Sector Tender Writing | Domiciliary, Supported Living, NHS | TenderLab',
+  title: 'Care Sector Tender Writing UK | NHS & LA Bid Writing | TenderLab',
   description:
-    'Specialist tender writing across 28 care settings. Domiciliary care, supported living, NHS, children\'s services, and residential care bid writing.',
+    'Specialist tender writing across 28 UK care settings: domiciliary care, supported living, NHS, children\'s services, and residential care. 92% win rate across 200+ submissions.',
+  alternates: { canonical: 'https://www.tenderlab.co.uk/care-settings' },
+  openGraph: {
+    title: 'Care Sector Tender Writing UK | NHS & LA Bid Writing | TenderLab',
+    description:
+      'Specialist tender writing across 28 UK care settings. 92% win rate across 200+ submissions.',
+    url: 'https://www.tenderlab.co.uk/care-settings',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Care Sector Tender Writing UK | TenderLab',
+    description: 'Specialist tender writing across 28 UK care settings. 92% win rate, 200+ submissions.',
+  },
 }
+
+const CARE_SETTINGS_INDEX = [
+  { slug: 'domiciliary-care', name: 'Domiciliary Care' },
+  { slug: 'supported-living', name: 'Supported Living' },
+  { slug: 'residential-care', name: 'Residential Care' },
+  { slug: 'nursing-care', name: 'Nursing Care' },
+  { slug: 'reablement-services', name: 'Reablement Services' },
+  { slug: 'live-in-care', name: 'Live-in Care' },
+  { slug: 'extra-care-housing', name: 'Extra Care Housing' },
+  { slug: 'day-services', name: 'Day Services' },
+  { slug: 'complex-care', name: 'Complex Care' },
+  { slug: 'end-of-life-and-palliative-care', name: 'End of Life and Palliative Care' },
+  { slug: 'shared-lives', name: 'Shared Lives' },
+  { slug: 'outreach-community-support', name: 'Outreach and Community Support' },
+  { slug: 'childrens-residential-care', name: "Children's Residential Care" },
+  { slug: 'supported-accommodation', name: 'Supported Accommodation 16-25' },
+  { slug: 'fostering-services', name: 'Fostering Services' },
+  { slug: 'childrens-short-breaks', name: "Children's Short Breaks" },
+  { slug: 'family-support-and-outreach', name: 'Family Support and Outreach' },
+  { slug: 'leaving-care-services', name: 'Leaving Care Services' },
+  { slug: 'emergency-accommodation', name: 'Emergency Accommodation' },
+  { slug: 'housing-related-support', name: 'Housing Related Support' },
+  { slug: 'housing-support', name: 'Housing Support' },
+  { slug: 'supported-housing', name: 'Supported Housing' },
+  { slug: 'community-health-services', name: 'NHS Community Services' },
+  { slug: 'continuing-healthcare', name: 'Continuing Healthcare (CHC)' },
+  { slug: 'hospital-discharge-services', name: 'Hospital Discharge Services' },
+  { slug: 'mental-health-services', name: 'Mental Health Services' },
+  { slug: 'substance-misuse-services', name: 'Substance Misuse Services' },
+  { slug: 'rehabilitation-services', name: 'Rehabilitation Services' },
+]
+
+const CARE_SETTINGS_FAQS = [
+  { q: 'Which care sector settings do you write tenders for?', a: 'Twenty-eight care settings across four categories: Adult Social Care (12 settings including domiciliary, supported living, residential, nursing), Children\'s Services (6 settings including children\'s residential and supported accommodation 16-25), Housing and Support (4 settings including housing-related support), and Health and Clinical Services (6 settings including NHS community, CHC, hospital discharge).' },
+  { q: 'Do you handle CQC-registered, Ofsted-regulated and non-regulated services?', a: 'Yes. CQC framing for adult social care and NHS-commissioned community health. Ofsted framing for children\'s residential and 16-17 LAC supported accommodation under the Supported Accommodation (England) Regulations 2023. Non-regulated framing for housing-related support and 18+ care leavers, with adult safeguarding under Care Act 2014.' },
+  { q: 'Can you bid for sectors outside UK health and social care?', a: 'No. TenderLab writes exclusively for UK care sector procurements. The regulator-correct framing, statutory references, and evaluator psychology are sector-specific, and our 92% win rate depends on that depth.' },
+  { q: 'How do you handle bids across multiple care settings?', a: 'Multi-lot framework bids are coordinated by a single lead writer with sector specialists drafting each lot in parallel. Cross-lot consistency on company evidence, statutory references and case examples is enforced through our pre-submission review.' },
+  { q: 'What is the difference between CQC and Ofsted for care providers?', a: 'CQC regulates adult social care providers in England under the Health and Social Care Act 2008. Ofsted regulates children\'s social care including children\'s homes (Children\'s Homes Regulations 2015) and supported accommodation for 16-17 year-olds (Supported Accommodation Regulations 2023). Mixing the two in a single bid is an automatic mark down.' },
+]
 
 const STEPS = [
   { id: 'adult-social-care', label: '01 Adult Social Care' },
@@ -18,6 +70,41 @@ const STEPS = [
 export default function CareSettingsPage() {
   return (
     <div className="tl-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          '@id': 'https://www.tenderlab.co.uk/care-settings#collection',
+          name: 'Care Sector Tender Writing across 28 UK Care Settings',
+          url: 'https://www.tenderlab.co.uk/care-settings',
+          isPartOf: { '@id': 'https://www.tenderlab.co.uk/#website' },
+          about: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: CARE_SETTINGS_INDEX.length,
+            itemListElement: CARE_SETTINGS_INDEX.map((cs, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              name: cs.name,
+              url: `https://www.tenderlab.co.uk/care-settings/${cs.slug}`,
+            })),
+          },
+        }) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          '@id': 'https://www.tenderlab.co.uk/care-settings#faq',
+          mainEntity: CARE_SETTINGS_FAQS.map(f => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        }) }}
+      />
       {/* Hero */}
       <section className="tl-hero" aria-labelledby="hero-title">
         <div className="tl-hero-glow" aria-hidden="true" />
@@ -540,6 +627,19 @@ export default function CareSettingsPage() {
 
       </main>
 
+      {/* FAQ */}
+      <section aria-labelledby="care-settings-faq-title" style={{ padding: '4rem 0', background: '#FAFAF5' }}>
+        <div className="container" style={{ maxWidth: '880px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <h2 id="care-settings-faq-title" style={{ marginBottom: '1.5rem' }}>Care settings: frequently asked questions</h2>
+          {CARE_SETTINGS_FAQS.map(f => (
+            <details key={f.q} style={{ borderBottom: '1px solid #e5e5e5', padding: '1rem 0' }}>
+              <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '1.05rem' }}>{f.q}</summary>
+              <p style={{ marginTop: '0.75rem', lineHeight: 1.6 }}>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* Closing CTA */}
       <section className="tl-closer">
         <div className="tl-eye">Get Started</div>
@@ -549,6 +649,9 @@ export default function CareSettingsPage() {
           <Link className="tl-btn-white" href="/contact">Book a Free Consultation</Link>
           <Link className="tl-alt" href="/services">View All Services</Link>
         </div>
+        <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', opacity: 0.7 }}>
+          TenderLab Ltd · Companies House 17184263 · 92% win rate across 200+ UK care sector submissions. See our <Link href="/case-studies">case studies</Link> and <Link href="/blog">tender writing insights</Link>. References: <a href="https://www.cqc.org.uk/" target="_blank" rel="noopener noreferrer">Care Quality Commission</a>, <a href="https://www.gov.uk/government/organisations/ofsted" target="_blank" rel="noopener noreferrer">Ofsted</a>.
+        </p>
       </section>
 
       <TimelineScroll steps={STEPS} />
