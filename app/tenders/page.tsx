@@ -1,250 +1,153 @@
-'use client'
-
-import { useEffect, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import type { RootState, AppDispatch } from '@/store'
-import { fetchTenders, setCategory, setSource, setPage, clearCache } from '@/store/tendersSlice'
+import Script from 'next/script'
+import {
+  SITE_URL,
+  SITE_LEGAL_NAME,
+  COMPANY_NUMBER,
+  BRAND,
+  defaultOpenGraph,
+  defaultTwitter,
+  breadcrumbSchema,
+  faqSchema,
+} from '@/lib/seo'
+import TendersClient from './TendersClient'
 
-const SOURCES = [
-  { label: 'All Sources', value: 'all' },
-  { label: 'Contracts Finder', value: 'cf' },
-  { label: 'Find a Tender', value: 'ft' },
+export const metadata: Metadata = {
+  title: 'Live UK Health and Social Care Tenders | Contracts Finder + Find a Tender',
+  description:
+    'Active UK health and social care tender opportunities from Contracts Finder and Find a Tender. Domiciliary care, supported living, residential care, children services, mental health, nursing care, housing support. 92% win rate across 200+ submissions.',
+  keywords: [
+    'live tenders',
+    'UK care tenders',
+    'health and social care tenders',
+    'Contracts Finder',
+    'Find a Tender',
+    'domiciliary care tenders UK',
+    'supported living tenders',
+    'residential care tenders',
+    'children services tenders',
+    'mental health tenders',
+    'nursing care tenders',
+    'housing support tenders',
+    'tender writing services',
+    'bid writing services',
+  ],
+  alternates: { canonical: '/tenders' },
+  openGraph: defaultOpenGraph({
+    title: 'Live UK Health and Social Care Tenders | TenderLab',
+    description:
+      'Active UK care procurement opportunities from Contracts Finder and Find a Tender. 92% win rate across 200+ submissions.',
+    path: '/tenders',
+  }),
+  twitter: defaultTwitter({
+    title: 'Live UK Health and Social Care Tenders | TenderLab',
+    description:
+      'Active UK care procurement opportunities from Contracts Finder and Find a Tender.',
+  }),
+  robots: { index: true, follow: true },
+}
+
+const FAQ = [
+  {
+    question: 'Where do these tenders come from?',
+    answer:
+      'Every tender on this page originates from Contracts Finder or Find a Tender, the two official UK Government tender publication services. We pull notices regularly, filter by care-sector criteria, and surface active health and social care opportunities for UK providers.',
+  },
+  {
+    question: 'How often is the list updated?',
+    answer:
+      'Source feeds refresh continuously from gov.uk. New notices appear here as they are published and our team triages relevance to UK health and social care providers.',
+  },
+  {
+    question: 'What counts as a UK health and social care tender?',
+    answer:
+      'Domiciliary care, supported living, residential care, nursing care, extra care housing, children services, fostering, leaving care, supported accommodation, mental health, learning disability, autism, substance misuse, continuing healthcare, end of life and palliative, hospital discharge, reablement, day services, community health, and housing-related support.',
+  },
+  {
+    question: 'Are these the only live tenders in the market?',
+    answer:
+      'No. Some procurements are advertised on private commissioner portals (Atamis, Pro-Contract, In-Tend, Delta) rather than Contracts Finder or Find a Tender. If you are tracking a specific commissioner, ask us about adding their portal to our pipeline monitoring.',
+  },
+  {
+    question: 'Can TenderLab write the response for a tender on this page?',
+    answer:
+      'Yes. We write specification-mirrored method statements with named operational evidence and a 72-hour pre-submission review built in. 92% win rate across 200+ UK care submissions. Companies House ' + COMPANY_NUMBER + '. Book a free 30-minute consultation to discuss any tender on this list.',
+  },
+  {
+    question: 'What is the difference between Contracts Finder and Find a Tender?',
+    answer:
+      'Contracts Finder publishes UK procurement opportunities above approximately 12,000 GBP for central government and 30,000 GBP for sub-central authorities. Find a Tender publishes higher-value opportunities above the UK procurement regulations threshold. Both are official UK Government services and we monitor them in parallel.',
+  },
 ]
 
-const ITEMS_PER_PAGE = 10
-
-const CATEGORIES = [
-  { label: 'All', value: '' },
-  { label: 'Domiciliary Care', value: 'domiciliary care' },
-  { label: 'Supported Living', value: 'supported living' },
-  { label: 'Residential Care', value: 'residential care' },
-  { label: 'Children\'s Services', value: 'children services care' },
-  { label: 'Mental Health', value: 'mental health care services' },
-  { label: 'Nursing Care', value: 'nursing care services' },
-  { label: 'Housing Support', value: 'housing support services' },
-  { label: 'Community Health', value: 'community health services' },
-]
-
-export default function LiveTendersPage() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { items: tenders, loading, error, category, source, page, lastFetchKey } = useSelector(
-    (state: RootState) => state.tenders
-  )
-
-  const currentKey = `${category}||${source}`
-
-  useEffect(() => {
-    if (lastFetchKey !== currentKey) {
-      dispatch(fetchTenders({ category, source }))
-    }
-  }, [dispatch, category, source, lastFetchKey, currentKey])
-
-  const handleRefetch = useCallback(() => {
-    dispatch(clearCache())
-    dispatch(fetchTenders({ category, source }))
-  }, [dispatch, category, source])
-
-  const formatDate = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'short', year: 'numeric',
-      })
-    } catch { return dateStr }
-  }
-
-  const daysUntilDeadline = (deadline: string | null) => {
-    if (!deadline) return null
-    const diff = Math.ceil((new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-    if (diff < 0) return 'Closed'
-    if (diff === 0) return 'Today'
-    if (diff === 1) return '1 day left'
-    return `${diff} days left`
+export default function TendersPage() {
+  const collectionLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Live UK Health and Social Care Tenders',
+    description:
+      'Active UK health and social care tender opportunities from Contracts Finder and Find a Tender.',
+    url: SITE_URL + '/tenders',
+    isPartOf: { '@id': SITE_URL + '/#website' },
+    publisher: { '@id': SITE_URL + '/#organization' },
+    inLanguage: 'en-GB',
   }
 
   return (
     <>
-      {/* Page hero */}
+      <Script id="ld-tenders-collection" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
+      <Script id="ld-tenders-breadcrumb" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Live Tenders', path: '/tenders' },
+      ])) }} />
+      <Script id="ld-tenders-faq" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(FAQ)) }} />
+
       <section className="page-hero">
         <div className="container">
           <div className="section-label">Procurement Opportunities</div>
-          <h1>Live Tenders</h1>
+          <h1>Live UK Health and Social Care Tenders</h1>
           <p className="page-hero__desc">
-            Active health and social care procurement opportunities from Contracts Finder and Find a Tender. 
-            Updated in real time from the UK Government&apos;s official tender publication services.
+            Active opportunities from Contracts Finder and Find a Tender, the two official UK Government tender publication services. Triaged for UK health and social care providers. {BRAND.winRate} win rate across {BRAND.submissions} submissions.
           </p>
         </div>
       </section>
 
-      {/* Filters */}
-      <section className="tenders-filters">
-        <div className="container">
-          <div className="tenders-filters__row">
-            <div className="tenders-filters__sources">
-              {SOURCES.map((s) => (
-                <button
-                  key={s.value}
-                  className={`tenders-filters__source-btn${source === s.value ? ' tenders-filters__source-btn--active' : ''}`}
-                  onClick={() => dispatch(setSource(s.value))}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-            <button
-              className="tenders-filters__refetch"
-              onClick={handleRefetch}
-              disabled={loading}
-              title="Refresh tenders from source portals"
-            >
-              <svg className={loading ? 'tenders-filters__refetch-spin' : ''} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-              Refresh
-            </button>
-          </div>
-          <div className="tenders-filters__bar">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                className={`tenders-filters__btn${category === cat.value ? ' tenders-filters__btn--active' : ''}`}
-                onClick={() => dispatch(setCategory(cat.value))}
-              >
-                {cat.label}
-              </button>
+      <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
+        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
+          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: '0 0 1rem' }}>
+            This page lists active UK health and social care procurement opportunities. Every notice originates from Contracts Finder or Find a Tender. We filter for care-sector relevance across domiciliary care, supported living, residential care, nursing care, extra care housing, children services, fostering, supported accommodation, mental health, learning disability, autism, substance misuse, continuing healthcare, hospital discharge, reablement, day services, community health, and housing-related support.
+          </p>
+          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: 0 }}>
+            Bidding for any tender on this list? <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead" style={{ color: '#C8102E', fontWeight: 600 }}>Book a free 30-minute consultation</Link>. {BRAND.winRate} win rate across {BRAND.submissions} UK care submissions. {SITE_LEGAL_NAME}, Companies House {COMPANY_NUMBER}.
+          </p>
+        </div>
+      </section>
+
+      <TendersClient />
+
+      <section className="hub-faq" style={{ background: '#F7F8FA', padding: '3rem 0' }}>
+        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0B1F3A', margin: '0 0 1.5rem' }}>Frequently asked questions</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {FAQ.map((item, i) => (
+              <details key={i} style={{ background: '#fff', border: '1px solid #E0E4E8', borderRadius: 8, padding: '1rem 1.25rem' }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#0B1F3A' }}>{item.question}</summary>
+                <p style={{ margin: '0.75rem 0 0', color: '#3A4A5C', lineHeight: 1.7 }}>{item.answer}</p>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Tenders list */}
-      <section className="tenders-list">
-        <div className="container">
-          {loading && (
-            <div className="tenders-list__loading">
-              <div className="tenders-list__spinner" />
-              <p>Fetching live opportunities from Contracts Finder &amp; Find a Tender…</p>
-            </div>
-          )}
-
-          {error && (
-            <div className="tenders-list__error">
-              <p>Unable to load tenders at the moment. Please try again later.</p>
-              <button className="btn btn-primary" onClick={handleRefetch}>Retry</button>
-            </div>
-          )}
-
-          {!loading && !error && tenders.length === 0 && (
-            <div className="tenders-list__empty">
-              <p>No active tenders found for this category. Try a different filter or check back soon.</p>
-            </div>
-          )}
-
-          {!loading && !error && tenders.length > 0 && (
-            <>
-              <div className="tenders-list__count">
-                Showing {((page - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(page * ITEMS_PER_PAGE, tenders.length)} of {tenders.length} opportunities
-              </div>
-              <div className="tenders-list__grid">
-                {tenders.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((tender, idx) => {
-                  const urgency = daysUntilDeadline(tender.deadline)
-                  return (
-                    <article key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`} className="tender-card">
-                      <div className="tender-card__header">
-                        <span className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}>
-                          {tender.source}
-                        </span>
-                        <span className="tender-card__status">{tender.status}</span>
-                        {urgency && (
-                          <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
-                            {urgency}
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="tender-card__title">{tender.title}</h3>
-                      <p className="tender-card__desc">
-                        {tender.description.length > 200
-                          ? tender.description.slice(0, 200) + '…'
-                          : tender.description}
-                      </p>
-                      <div className="tender-card__meta">
-                        {tender.organisation && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Authority</span>
-                            <span>{tender.organisation}</span>
-                          </div>
-                        )}
-                        {tender.location && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Location</span>
-                            <span>{tender.location}</span>
-                          </div>
-                        )}
-                        {tender.value && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Value</span>
-                            <span>{tender.value}</span>
-                          </div>
-                        )}
-                        <div className="tender-card__meta-item">
-                          <span className="tender-card__meta-label">Published</span>
-                          <span>{formatDate(tender.publishedDate)}</span>
-                        </div>
-                        {tender.deadline && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Deadline</span>
-                            <span>{formatDate(tender.deadline)}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="tender-card__actions">
-                        <Link
-                          href={`/tenders/${encodeURIComponent(tender.id)}?source=${tender.source === 'Find a Tender' ? 'ft' : 'cf'}`}
-                          className="btn btn-primary"
-                        >
-                          View Details
-                        </Link>
-                        <Link href="/contact" className="btn btn-ghost">
-                          Get Help Bidding
-                        </Link>
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
-
-              {/* Pagination */}
-              <div className="tenders-list__pagination">
-                <button
-                  className="btn btn-ghost"
-                  disabled={page <= 1}
-                  onClick={() => { dispatch(setPage(Math.max(1, page - 1))); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
-                >
-                  ← Previous
-                </button>
-                <span className="tenders-list__page">
-                  Page {page} of {Math.ceil(tenders.length / ITEMS_PER_PAGE)}
-                </span>
-                <button
-                  className="btn btn-ghost"
-                  disabled={page >= Math.ceil(tenders.length / ITEMS_PER_PAGE)}
-                  onClick={() => { dispatch(setPage(page + 1)); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
-                >
-                  Next →
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* CTA */}
       <section className="cta-banner">
         <div className="container">
           <div className="cta-banner__inner">
-            <h2>Need Help Winning a Tender?</h2>
-            <p>Our evaluator-trained writers have a 92% win rate across 200+ health and social care submissions.</p>
+            <h2>Need help winning a tender?</h2>
+            <p>Our evaluator-trained writers deliver a 92% win rate across 200+ health and social care submissions. {SITE_LEGAL_NAME}. Companies House {COMPANY_NUMBER}.</p>
             <div className="cta-banner__actions">
               <Link href="/score-my-response" className="btn btn-white">Score My Response</Link>
-              <Link href="/contact" className="btn btn-outline-white">Get in Touch</Link>
+              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead" className="btn btn-outline-white">Get in touch</Link>
             </div>
           </div>
         </div>

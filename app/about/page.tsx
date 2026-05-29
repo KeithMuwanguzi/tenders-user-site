@@ -27,7 +27,7 @@ export default function AboutPage() {
       <section className="tl-hero" aria-labelledby="hero-title">
         <div className="tl-hero-glow" aria-hidden="true" />
         <div className="tl-hero-inner">
-          <h1 id="hero-title" className="tl-hero-title">About TenderLab &mdash; Specialist Tender Writing Consultants</h1>
+          <h1 id="hero-title" className="tl-hero-title">About TenderLab: Specialist Tender Writing Consultants</h1>
           <p className="tl-hero-sub">
             TenderLab is a team of specialist <strong>tender writing consultants</strong> and <strong>bid writing consultants</strong> working exclusively across UK health and social care. We structure submissions to meet the exact criteria used by local authorities and commissioning bodies to score, rank, and award contracts.
           </p>

@@ -7,6 +7,7 @@ export type BlogPost = {
   category: string
   tags: string[]
   excerpt: string
+  body: string
   imageUrl: string
   imageSource: string
   imageCredit: string
@@ -61,6 +62,7 @@ export async function fetchBlogs(): Promise<BlogPost[]> {
       category: row.category ?? '',
       tags: (row.tags ?? '').split(',').map((t: string) => t.trim()).filter(Boolean),
       excerpt: row.excerpt ?? '',
+      body: row.body ?? '',
       imageUrl: row.image_url ?? '',
       imageSource: row.image_source ?? '',
       imageCredit: row.image_credit ?? '',

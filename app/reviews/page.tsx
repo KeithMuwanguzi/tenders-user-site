@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { fetchReviews } from '@/lib/sheets'
 
 export const metadata: Metadata = {
-  title: 'Client Reviews | TenderLab — Real Results from Real Clients',
+  title: 'Client Reviews | TenderLab - Real Results from Real Clients',
   description:
     'See what health and social care providers say about working with TenderLab. Real testimonials, real results.',
 }
