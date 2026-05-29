@@ -5,8 +5,30 @@ import TimelineScroll from '@/components/TimelineScroll'
 export const metadata: Metadata = {
   title: 'Tender Writing and Bid Review Services | TenderLab',
   description:
-    'Full tender writing services, bid review, and strategic retainer support for UK health and social care providers. Framework bid writing, PQQ and ITT specialists.',
+    'Specialist tender writing services for UK health and social care providers. Framework, PQQ and ITT bid writing with a 92% win rate across 200+ submissions.',
+  alternates: { canonical: 'https://www.tenderlab.co.uk/services' },
+  openGraph: {
+    title: 'Tender Writing and Bid Review Services | TenderLab',
+    description:
+      'Specialist tender writing services for UK health and social care providers. Framework, PQQ and ITT bid writing with a 92% win rate across 200+ submissions.',
+    url: 'https://www.tenderlab.co.uk/services',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tender Writing and Bid Review Services | TenderLab',
+    description:
+      'Specialist tender writing services for UK health and social care providers. 92% win rate, 200+ submissions.',
+  },
 }
+
+const SERVICES_FAQS = [
+  { q: 'What sectors do you write tenders for?', a: "UK health and social care exclusively. Adult social care, children's services, NHS-commissioned community health, housing-related support, supported accommodation and continuing healthcare. We do not write outside the care sector." },
+  { q: 'What is your win rate on care sector tenders?', a: '92% across 200+ submissions. The biggest single lift is our 72-hour pre-submission review by an evaluator-perspective writer who has not drafted the bid.' },
+  { q: 'How much do your services cost?', a: 'Bid writing from £3,000 per submission depending on scope. Pre-Submission Review from £950. Tender Retainer from £4,500 per month. Free 30-minute consultation to scope before any engagement.' },
+  { q: 'Can you work to short deadlines?', a: 'Yes, where the brief allows. Our Pre-Submission Review runs 72 hours before deadline. Full bid writing engagements need a 10 working day minimum on a standard 3-question method statement framework.' },
+  { q: 'Do you offer training as well as writing?', a: 'Yes. Our Bid Team Coaching runs 1-to-1 or small-group sessions with your in-house writer, structured around CQC, Ofsted, Care Act 2014 Section 42 and MCA 5 principles.' },
+]
 
 const STEPS = [
   { id: 'bid-writing', label: '01 Bid Writing' },
@@ -22,6 +44,45 @@ const STEPS = [
 export default function ServicesPage() {
   return (
     <div className="tl-page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          '@id': 'https://www.tenderlab.co.uk/services#collection',
+          name: 'Tender Writing and Bid Review Services',
+          url: 'https://www.tenderlab.co.uk/services',
+          isPartOf: { '@id': 'https://www.tenderlab.co.uk/#website' },
+          about: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: 8,
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Bid Writing', url: 'https://www.tenderlab.co.uk/services/bid-writing' },
+              { '@type': 'ListItem', position: 2, name: 'Pre-Submission Review', url: 'https://www.tenderlab.co.uk/services/pre-submission-review' },
+              { '@type': 'ListItem', position: 3, name: 'Lost Bid Debrief', url: 'https://www.tenderlab.co.uk/services/lost-bid-debrief' },
+              { '@type': 'ListItem', position: 4, name: 'Tender Readiness Audit', url: 'https://www.tenderlab.co.uk/services/tender-readiness-audit' },
+              { '@type': 'ListItem', position: 5, name: 'Bid Team Coaching', url: 'https://www.tenderlab.co.uk/services/bid-team-coaching' },
+              { '@type': 'ListItem', position: 6, name: 'Pipeline Tracking', url: 'https://www.tenderlab.co.uk/services/pipeline-tracking' },
+              { '@type': 'ListItem', position: 7, name: 'Mobilisation Support', url: 'https://www.tenderlab.co.uk/services/mobilisation-support' },
+              { '@type': 'ListItem', position: 8, name: 'Tender Retainer', url: 'https://www.tenderlab.co.uk/services/tender-retainer' },
+            ],
+          },
+        }) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          '@id': 'https://www.tenderlab.co.uk/services#faq',
+          mainEntity: SERVICES_FAQS.map(f => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        }) }}
+      />
       {/* Hero */}
       <section className="tl-hero" aria-labelledby="hero-title">
         <div className="tl-hero-glow" aria-hidden="true" />
@@ -492,11 +553,27 @@ export default function ServicesPage() {
 
       </main>
 
+      {/* FAQ */}
+      <section aria-labelledby="services-faq-title" style={{ padding: '4rem 0', background: '#FAFAF5' }}>
+        <div className="container" style={{ maxWidth: '880px', margin: '0 auto', padding: '0 1.5rem' }}>
+          <h2 id="services-faq-title" style={{ marginBottom: '1.5rem' }}>Frequently asked questions about our tender writing services</h2>
+          {SERVICES_FAQS.map(f => (
+            <details key={f.q} style={{ borderBottom: '1px solid #e5e5e5', padding: '1rem 0' }}>
+              <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '1.05rem' }}>{f.q}</summary>
+              <p style={{ marginTop: '0.75rem', lineHeight: 1.6 }}>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* Closing CTA */}
       <section className="tl-closer">
-        <h2>Eight services. One outcome &mdash; winning contracts.</h2>
-        <p>Tell us where you are in the cycle and we will pick the right service.</p>
+        <h2>Eight services. One outcome: winning contracts.</h2>
+        <p>92% win rate across 200+ UK care sector submissions. Tell us where you are in the cycle and we will pick the right service.</p>
         <Link className="tl-btn-white" href="/contact">Book a Free Consultation</Link>
+        <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', opacity: 0.7 }}>
+          TenderLab Ltd · Companies House 17184263 · See our <Link href="/case-studies">case studies</Link> and read the latest <Link href="/blog">tender writing insights</Link>. Reference: <a href="https://www.gov.uk/government/collections/procurement-policy-procurement-policy-notes" target="_blank" rel="noopener noreferrer">gov.uk procurement policy notes</a>.
+        </p>
       </section>
 
       <TimelineScroll steps={STEPS} />
