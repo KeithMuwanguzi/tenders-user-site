@@ -33,6 +33,21 @@ const STATS = [
 const SLIDE_MS = 5800
 const EXIT_MS = 480
 
+// Visually-hidden style for the page H1. Renders normally for screen readers
+// and search engine crawlers but is invisible on screen so the existing hero
+// visual design is unchanged.
+const SR_ONLY: React.CSSProperties = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  padding: 0,
+  margin: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0,0,0,0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+}
+
 export default function HeroSlider({ children }: { children?: React.ReactNode }) {
   const [idx, setIdx] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
@@ -68,11 +83,17 @@ export default function HeroSlider({ children }: { children?: React.ReactNode })
 
   return (
     <section className="hero">
-      {/* ── Background (server-rendered for LCP) ── */}
+      {/* Page H1 for SEO. Visually hidden so the existing hero visual design
+          stays untouched while Google and screen readers see the proper page heading. */}
+      <h1 style={SR_ONLY}>
+        Tender Writing Services for UK Health and Social Care
+      </h1>
+
+      {/* Background (server-rendered for LCP) */}
       {children}
       <div className="hero__overlay" />
 
-      {/* ── Slide content ── */}
+      {/* Slide content */}
       <div className="hero__body">
         <div className="container">
 
@@ -85,7 +106,7 @@ export default function HeroSlider({ children }: { children?: React.ReactNode })
             className={`hero__content${isExiting ? ' is-exiting' : ''}`}
           >
             <p className="hero__eyebrow">{slide.eyebrow}</p>
-            <h1 className="hero__headline">{slide.headline}</h1>
+            <h2 className="hero__headline">{slide.headline}</h2>
             <p className="hero__quote">{slide.quote}</p>
             <Link href={slide.href} className="hero__pill-cta">
               Explore {slide.headline}
@@ -97,7 +118,7 @@ export default function HeroSlider({ children }: { children?: React.ReactNode })
             </Link>
           </div>
 
-          {/* ── Progress indicators ── */}
+          {/* Progress indicators */}
           <div className="hero__indicators" role="tablist" aria-label="Slide navigation">
             {SLIDES.map((s, i) => (
               <button
@@ -122,7 +143,7 @@ export default function HeroSlider({ children }: { children?: React.ReactNode })
         </div>
       </div>
 
-      {/* ── Stats shelf ── */}
+      {/* Stats shelf */}
       <div className="hero__stats-shelf">
         <div className="container">
           <div className="hero__stats-grid">
