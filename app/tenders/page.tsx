@@ -113,6 +113,8 @@ export default function TendersPage() {
         </div>
       </section>
 
+      <TendersClient />
+
       <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
         <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
           <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: '0 0 1rem' }}>
@@ -123,8 +125,6 @@ export default function TendersPage() {
           </p>
         </div>
       </section>
-
-      <TendersClient />
 
       <section className="hub-faq" style={{ background: '#F7F8FA', padding: '3rem 0' }}>
         <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>

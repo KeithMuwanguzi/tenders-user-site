@@ -54,10 +54,15 @@ export async function GET(request: NextRequest) {
   try {
     const res = await fetch(upstream.toString(), {
       headers: { Accept: 'application/json' },
-      // Cache for 60s on Vercel — published list is admin-curated and
-      // rarely changes. The portal admin can hit "Refresh" on their side
-      // for an immediate update.
-      next: { revalidate: 60 },
+      // No upstream cache — Vercel keys its fetch cache by URL, which
+      // means the "All sources" URL and the "?source=cf" URL end up in
+      // separate cache slots. If the All-sources URL was ever fetched
+      // when the published list was empty, that empty response would
+      // get pinned for the cache lifetime and "All sources" would keep
+      // showing an empty list while the per-source filters happily
+      // return the new tender. Better to always go to source — the
+      // upstream is reading a small sheet, it's quick.
+      cache: 'no-store',
     })
 
     if (!res.ok) {
