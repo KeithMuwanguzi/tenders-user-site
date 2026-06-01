@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-/* ─── Unified Tender type returned to the client ─── */
+/* ================================================================
+   Live Tenders — proxy to the portal's curated list
+   ================================================================
+   Tenders are now editorially curated in the admin portal. The portal
+   FastAPI exposes `GET /api/tenders/published`, which reads the
+   "PublishedTenders" tab of the linked Google Sheet and returns the
+   subset an admin has chosen to surface here.
+   This route just forwards `q` / `source` filters and shapes the JSON
+   the way `tendersSlice` expects (`{ tenders, page, total }`).
+   ================================================================ */
+
 interface Tender {
   id: string
   title: string
@@ -15,245 +25,62 @@ interface Tender {
   source: 'Contracts Finder' | 'Find a Tender'
 }
 
-/* ─── Healthcare sector relevance filter ─── */
-const HEALTH_KEYWORDS = [
-  'care', 'health', 'nhs', 'domiciliary', 'nursing', 'residential care',
-  'supported living', 'reablement', 'social care', 'mental health',
-  'clinical', 'hospital', 'palliative', 'dementia', 'rehabilitation',
-  'fostering', 'children\'s home', 'children home', 'looked after',
-  'safeguarding', 'homecare', 'home care', 'wellbeing', 'well-being',
-  'cqc', 'ofsted', 'continuing healthcare', 'chc', 'substance misuse',
-  'learning disabilities', 'autism', 'extra care', 'end of life',
-  'housing support', 'refuge', 'homelessness', 'day care', 'respite',
-  'short breaks', 'outreach', 'community health', 'therapy', 'counselling',
-  'occupational therapy', 'physiotherapy', 'pharmacy', 'gp ', 'primary care',
-  'ambulance', 'patient', 'medical', 'healthcare', 'public health',
-  'discharge', 'complex care', 'personal care', 'live-in care',
-  'supported accommodation', 'icb', 'integrated care',
-]
+const PORTAL_API_URL =
+  process.env.PORTAL_API_URL ||
+  process.env.NEXT_PUBLIC_PORTAL_API_URL ||
+  'https://tenderlab-admin-api.onrender.com'
 
-const EXCLUDE_KEYWORDS = [
-  'construction', 'highway', 'roads', 'bridges', 'steel reinforcement',
-  'concrete', 'demolition', 'excavation', 'scaffolding', 'paving',
-  'asphalt', 'drainage', 'sewage', 'water treatment', 'waste collection',
-  'recycling', 'catering', 'cleaning service', 'landscaping', 'grounds maintenance',
-  'electrical installation', 'plumbing', 'hvac', 'lift maintenance',
-  'software development', 'it infrastructure', 'fleet management',
-  'vehicle', 'printing', 'stationery', 'furniture supply',
-  'soil wall', 'viaduct', 'railway', 'rail infrastructure',
-]
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+// Render's free tier can take 30s to wake up. 60s gives us headroom.
+export const maxDuration = 60
 
-function isHealthcareRelevant(tender: Tender): boolean {
-  const text = `${tender.title} ${tender.description}`.toLowerCase()
-  if (EXCLUDE_KEYWORDS.some((kw) => text.includes(kw))) return false
-  return HEALTH_KEYWORDS.some((kw) => text.includes(kw))
-}
-
-/* ================================================================
-   1. CONTRACTS FINDER — V2 POST search_notices (stage = "Open")
-   ================================================================ */
-const CF_SEARCH = 'https://www.contractsfinder.service.gov.uk/api/rest/2/search_notices/json'
-
-async function fetchContractsFinder(keyword: string): Promise<Tender[]> {
-  const body = {
-    searchCriteria: {
-      keyword,
-      statuses: ['Open'],      // Image 2: "Opportunity" = Open
-      types: null,
-      regions: null,
-      postcode: null,
-      radius: 0,
-      valueFrom: null,
-      valueTo: null,
-      publishedFrom: null,
-      publishedTo: null,
-      deadlineFrom: null,
-      deadlineTo: null,
-      approachMarketFrom: null,
-      approachMarketTo: null,
-      awardedFrom: null,
-      awardedTo: null,
-      isSubcontract: null,
-      suitableForSme: null,
-      suitableForVco: null,
-      awardedToSme: null,
-      awardedToVcse: null,
-      cpvCodes: null,
-    },
-    size: 100,
-  }
-
-  const res = await fetch(CF_SEARCH, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(body),
-    cache: 'no-store',
-  })
-
-  if (!res.ok) throw new Error(`Contracts Finder V2 ${res.status}`)
-
-  const data = await res.json()
-  const hits: CFHit[] = data.noticeList || []
-
-  return hits.map((h) => {
-    const n = h.item
-    return {
-      id: n.id || Math.random().toString(36),
-      title: n.title || 'Untitled opportunity',
-      description: n.description || '',
-      publishedDate: n.publishedDate || '',
-      deadline: n.deadlineDate || null,
-      value: fmtCFValue(n.valueLow, n.valueHigh),
-      location: n.regionText || n.region || null,
-      organisation: n.organisationName || null,
-      status: n.noticeStatus === 'Awarded' ? 'Awarded' : 'Open',
-      url: `https://www.contractsfinder.service.gov.uk/Notice/${n.id}`,
-      source: 'Contracts Finder' as const,
-    }
-  })
-}
-
-function fmtCFValue(low: number | null | undefined, high: number | null | undefined): string | null {
-  const v = high ?? low
-  if (!v) return null
-  if (v >= 1_000_000) return `£${(v / 1_000_000).toFixed(1)}m`
-  if (v >= 1_000) return `£${(v / 1_000).toFixed(0)}k`
-  return `£${v.toLocaleString()}`
-}
-
-interface CFNotice {
-  id?: string
-  title?: string
-  description?: string
-  publishedDate?: string
-  deadlineDate?: string
-  valueLow?: number
-  valueHigh?: number
-  region?: string
-  regionText?: string
-  organisationName?: string
-  noticeStatus?: string
-  noticeType?: string
-}
-interface CFHit { score: number; item: CFNotice }
-
-/* ================================================================
-   2. FIND A TENDER — OCDS release packages (last 14 days,
-      filtered to tender.status = "active" → Open / Tender stage)
-   ================================================================ */
-const FT_OCDS = 'https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages'
-
-async function fetchFindATender(keyword: string): Promise<Tender[]> {
-  const now = new Date()
-  const from = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
-
-  const url = new URL(FT_OCDS)
-  url.searchParams.set('updatedFrom', from.toISOString())
-  url.searchParams.set('updatedTo', now.toISOString())
-
-  const res = await fetch(url.toString(), {
-    headers: { Accept: 'application/json' },
-    cache: 'no-store',
-  })
-
-  if (!res.ok) throw new Error(`Find a Tender OCDS ${res.status}`)
-
-  const data = await res.json()
-  const releases: FTRelease[] = data.releases || []
-
-  const kw = keyword.toLowerCase().split(/\s+/)
-
-  return releases
-    .filter((r) => {
-      // Image 1: "Open opportunities only" + "Tender" stage
-      const status = r.tender?.status?.toLowerCase()
-      if (status !== 'active') return false
-      // Keyword filter (title or description)
-      const text = `${r.tender?.title ?? ''} ${r.tender?.description ?? ''}`.toLowerCase()
-      return kw.some((w) => text.includes(w))
-    })
-    .slice(0, 50)
-    .map((r) => {
-      const t = r.tender!
-      const noticeId = r.id?.match(/(\d{6}-\d{4})/)?.[1]
-      return {
-        id: r.ocid || r.id || Math.random().toString(36),
-        title: t.title || 'Untitled opportunity',
-        description: t.description || '',
-        publishedDate: r.date || '',
-        deadline: t.tenderPeriod?.endDate || null,
-        value: fmtOCDSValue(t.value),
-        location: t.items?.[0]?.deliveryAddresses?.[0]?.region || null,
-        organisation: r.buyer?.name || null,
-        status: 'Open',
-        url: noticeId
-          ? `https://www.find-tender.service.gov.uk/Notice/${noticeId}`
-          : `https://www.find-tender.service.gov.uk/Search/Results`,
-        source: 'Find a Tender' as const,
-      }
-    })
-}
-
-function fmtOCDSValue(value: { amount?: number; currency?: string } | null | undefined): string | null {
-  if (!value?.amount) return null
-  const a = value.amount
-  if (a >= 1_000_000) return `£${(a / 1_000_000).toFixed(1)}m`
-  if (a >= 1_000) return `£${(a / 1_000).toFixed(0)}k`
-  return `£${a.toLocaleString()}`
-}
-
-interface FTRelease {
-  ocid?: string
-  id?: string
-  date?: string
-  tender?: {
-    title?: string
-    description?: string
-    status?: string
-    value?: { amount?: number; currency?: string }
-    tenderPeriod?: { endDate?: string }
-    items?: Array<{ deliveryAddresses?: Array<{ region?: string }> }>
-  }
-  buyer?: { name?: string }
-}
-
-/* ================================================================
-   3. COMBINED API HANDLER
-   ================================================================ */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const query = searchParams.get('q') || 'health social care'
-  const sourceFilter = searchParams.get('source') || 'all' // all | cf | ft
+  const query = searchParams.get('q') || ''
+  const sourceFilter = searchParams.get('source') || 'all'
   const page = parseInt(searchParams.get('page') || '1', 10)
 
+  const upstream = new URL(`${PORTAL_API_URL}/api/tenders/published`)
+  // The portal already restricts to healthcare-relevant tenders the admin
+  // chose to publish, so we only forward category + source as a refining
+  // search. An empty `q` returns everything in the published list.
+  if (query) upstream.searchParams.set('q', query)
+  if (sourceFilter && sourceFilter !== 'all')
+    upstream.searchParams.set('source', sourceFilter)
+  upstream.searchParams.set('active_only', 'true')
+  upstream.searchParams.set('limit', '500')
+
   try {
-    const fetches: Promise<Tender[]>[] = []
+    const res = await fetch(upstream.toString(), {
+      headers: { Accept: 'application/json' },
+      // Cache for 60s on Vercel — published list is admin-curated and
+      // rarely changes. The portal admin can hit "Refresh" on their side
+      // for an immediate update.
+      next: { revalidate: 60 },
+    })
 
-    if (sourceFilter === 'all' || sourceFilter === 'cf') {
-      fetches.push(fetchContractsFinder(query).catch((e) => {
-        console.error('Contracts Finder error:', e)
-        return [] as Tender[]
-      }))
+    if (!res.ok) {
+      console.error(
+        `[tenders] portal returned ${res.status}: ${await res.text().catch(() => '')}`,
+      )
+      return NextResponse.json(
+        { error: 'Failed to fetch tenders', tenders: [] as Tender[] },
+        { status: 502 },
+      )
     }
-    if (sourceFilter === 'all' || sourceFilter === 'ft') {
-      fetches.push(fetchFindATender(query).catch((e) => {
-        console.error('Find a Tender error:', e)
-        return [] as Tender[]
-      }))
-    }
 
-    const results = await Promise.all(fetches)
-    const tenders = results
-      .flat()
-      .filter(isHealthcareRelevant)
-      .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
-
-    return NextResponse.json({ tenders, page, total: tenders.length })
+    const tenders = (await res.json()) as Tender[]
+    return NextResponse.json({
+      tenders,
+      page,
+      total: tenders.length,
+    })
   } catch (error) {
-    console.error('Tenders API error:', error)
+    console.error('[tenders] proxy error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch tenders', tenders: [] },
-      { status: 502 }
+      { error: 'Failed to fetch tenders', tenders: [] as Tender[] },
+      { status: 502 },
     )
   }
 }

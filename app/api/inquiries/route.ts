@@ -79,9 +79,20 @@ function buildPortalInquiry(data: InquiryPayload): PortalInquiry {
 }
 
 function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
-  const subject = `New TenderLab Enquiry — ${data.serviceType || 'General'}${
-    data.org ? ` — ${data.org}` : ''
-  }`
+  // Spam filters dislike "New …" subjects and repeated brand keywords.
+  // A short, person-first subject reads like real correspondence.
+  const subject = data.org
+    ? `Enquiry from ${data.name} — ${data.org}`
+    : `Enquiry from ${data.name}`
+
+  // Hidden preheader: the bit Gmail/Outlook show next to the subject in the
+  // inbox list. Setting one explicitly looks more like real mail.
+  const preheaderBits = [
+    data.serviceType,
+    data.org,
+    (data.message || '').trim().split('\n')[0],
+  ].filter(Boolean)
+  const preheader = preheaderBits.join(' · ').slice(0, 120) || 'Website enquiry'
 
   const rows: Array<[string, string]> = [
     ['Name', data.name],
@@ -91,19 +102,21 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
     ['Service type', data.serviceType || '—'],
     ['Submission deadline', data.deadline || '—'],
     ['Commissioning authority', data.authority || '—'],
-    ['How they found TenderLab', data.howFound || '—'],
+    ['How they found us', data.howFound || '—'],
   ]
 
   const text = [
-    'A new enquiry has been received via tenderlab.co.uk',
-    '',
-    ...rows.map(([k, v]) => `${k.padEnd(26)}: ${v}`),
-    '',
-    'Message:',
-    '--------',
+    `Hi team,`,
+    ``,
+    `${data.name}${data.org ? ` from ${data.org}` : ''} has sent an enquiry through the website.`,
+    ``,
+    ...rows.map(([k, v]) => `${k.padEnd(24)}: ${v}`),
+    ``,
+    `Message:`,
     (data.message || '(no message)').trim(),
-    '',
-    `Open the portal: ${PORTAL_ADMIN_URL}/enquiries`,
+    ``,
+    `Reply directly to this email — it goes straight to ${data.email}.`,
+    `Or open the inquiry in the portal: ${PORTAL_ADMIN_URL}/enquiries`,
   ].join('\n')
 
   const escape = (s: string) =>
@@ -128,12 +141,17 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
   const html = `<!doctype html>
 <html>
   <body style="margin:0;padding:24px;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#111827;">
+    <div style="display:none;font-size:1px;color:#f9fafb;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">${escape(
+      preheader,
+    )}</div>
     <div style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
-      <div style="padding:20px 24px;border-bottom:1px solid #f3f4f6;background:#fef2f2;">
-        <p style="margin:0;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#991b1b;font-weight:600;">New website enquiry</p>
-        <h1 style="margin:6px 0 0;font-size:18px;color:#111827;">${escape(
-          portal.subject,
-        )}</h1>
+      <div style="padding:20px 24px;border-bottom:1px solid #f3f4f6;">
+        <p style="margin:0;font-size:13px;color:#374151;">Hi team,</p>
+        <p style="margin:6px 0 0;font-size:14px;color:#111827;">
+          <strong>${escape(data.name)}</strong>${
+            data.org ? ` from <strong>${escape(data.org)}</strong>` : ''
+          } has sent an enquiry through the website.
+        </p>
       </div>
       <div style="padding:20px 24px;">
         <table style="border-collapse:collapse;width:100%;">${tableRows}</table>
@@ -143,21 +161,14 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
             (data.message || '(no message)').trim(),
           )}</p>
         </div>
-        <div style="margin-top:24px;">
-          <a href="${PORTAL_ADMIN_URL}/enquiries"
-             style="display:inline-block;padding:9px 16px;background:#111827;color:#fff;font-size:13px;font-weight:500;border-radius:6px;text-decoration:none;">
-             Open in portal →
-          </a>
-          <a href="mailto:${escape(data.email)}?subject=Re: ${escape(
-            portal.subject,
-          )}"
-             style="display:inline-block;padding:9px 16px;margin-left:6px;background:#fff;color:#111827;font-size:13px;font-weight:500;border:1px solid #e5e7eb;border-radius:6px;text-decoration:none;">
-             Reply by email
-          </a>
-        </div>
-      </div>
-      <div style="padding:14px 24px;background:#f9fafb;border-top:1px solid #f3f4f6;">
-        <p style="margin:0;font-size:11px;color:#9ca3af;">Sent automatically by tenderlab.co.uk</p>
+        <p style="margin:20px 0 0;font-size:13px;color:#6b7280;">
+          Reply directly to this email — it goes straight to <a href="mailto:${escape(
+            data.email,
+          )}" style="color:#374151;">${escape(data.email)}</a>.
+        </p>
+        <p style="margin:8px 0 0;font-size:13px;color:#6b7280;">
+          Or <a href="${PORTAL_ADMIN_URL}/enquiries" style="color:#374151;">open the enquiry in the portal</a>.
+        </p>
       </div>
     </div>
   </body>
@@ -187,10 +198,20 @@ async function sendInquiryEmail(
     await transporter.sendMail({
       from: `"${SMTP_FROM_NAME}" <${SMTP_USER}>`,
       to: INQUIRY_TO,
-      replyTo: data.email,
+      replyTo: `"${data.name}" <${data.email}>`,
+      sender: SMTP_USER,
       subject,
       text,
       html,
+      // Headers that mark this as a one-shot transactional notification
+      // — helps Gmail / Outlook classify it as legitimate mail rather
+      // than bulk marketing.
+      headers: {
+        'Auto-Submitted': 'auto-generated',
+        'X-Auto-Response-Suppress': 'All',
+        'X-Mailer': 'TenderLab Website',
+        'X-Entity-Ref-ID': `tenderlab-enquiry-${Date.now()}`,
+      },
     })
     return { ok: true }
   } catch (err) {
