@@ -71,6 +71,7 @@ export default function Footer() {
 
         <div className="footer__bottom">
           <span>© {new Date().getFullYear()} TenderLab. All rights reserved.</span>
+          <span className="footer__company-number">Company number 17184263 (registered in England and Wales)</span>
           <div className="footer__legal">
             <Link href="/privacy-policy">Privacy Policy</Link>
             <Link href="/terms">Terms of Service</Link>

@@ -1,11 +1,23 @@
 import type { Metadata } from 'next'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import Link from 'next/link'
 import TimelineScroll from '@/components/TimelineScroll'
+
 
 export const metadata: Metadata = {
   title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
   description:
-    'TenderLab is a team of specialist tender writing consultants and bid writing consultants working exclusively across UK health and social care. We structure submissions to meet the exact criteria used by local authorities and commissioning bodies to score, rank, and award contracts.',
+    'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+  alternates: { canonical: '/about' },
+  openGraph: defaultOpenGraph({
+    title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
+    description: 'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+    path: '/about',
+  }),
+  twitter: defaultTwitter({
+    title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
+    description: 'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+  }),
 }
 
 const STEPS = [
@@ -27,7 +39,7 @@ export default function AboutPage() {
       <section className="tl-hero" aria-labelledby="hero-title">
         <div className="tl-hero-glow" aria-hidden="true" />
         <div className="tl-hero-inner">
-          <h1 id="hero-title" className="tl-hero-title">About TenderLab &mdash; Specialist Tender Writing Consultants</h1>
+          <h1 id="hero-title" className="tl-hero-title">About TenderLab: Specialist Tender Writing Consultants</h1>
           <p className="tl-hero-sub">
             TenderLab is a team of specialist <strong>tender writing consultants</strong> and <strong>bid writing consultants</strong> working exclusively across UK health and social care. We structure submissions to meet the exact criteria used by local authorities and commissioning bodies to score, rank, and award contracts.
           </p>
