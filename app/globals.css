@@ -7233,3 +7233,90 @@ html { scroll-behavior: smooth; scroll-padding-top: 130px; }
   .he-content-col { font-size: 15.5px; }
   .he-content-col h2 { font-size: 1.45rem; }
 }
+/* ==============================================================
+   DIRECTION B - Editorial cream paper register
+   Append to app/globals.css
+   Sets the Bain / FT / Economist body-paper feel: warm off-white
+   page background, white rail cards with thin borders, deeper
+   editorial typography in the centre column.
+   ============================================================== */
+
+/* ---- Cream paper page background --------------------------------
+   Affects every page where no other background is set. The TopBar
+   (red), Nav (white) and Footer (navy) have their own backgrounds
+   and remain unchanged. Hero sections, CTA banners and other
+   blocks with explicit backgrounds also remain as-is. */
+body { background: #FAF8F2; }
+
+/* The Hybrid E wrap is transparent so the cream shows through. */
+.he-wrap { background: transparent; }
+
+/* ---- Light rail widget reinforcement ----------------------------
+   The light variant of .he-widget (now the default) is already
+   defined upstream. We layer a thin softer shadow and a slightly
+   warmer hover tint so the cards read as a paper-on-paper editorial
+   block rather than a flat utility component. */
+.he-widget:not(.he-widget--dark) {
+  box-shadow: 0 1px 2px rgba(11, 31, 58, 0.03);
+}
+.he-widget:not(.he-widget--dark) .he-tender-item {
+  padding-left: 18px;
+  padding-right: 18px;
+  margin-left: -18px;
+  margin-right: -18px;
+  transition: background-color 0.18s ease;
+}
+.he-widget:not(.he-widget--dark) .he-tender-item:hover {
+  background-color: #FBF6EE;
+}
+.he-widget:not(.he-widget--dark) .he-tender-item:focus-visible {
+  outline: 2px solid rgba(230, 57, 70, 0.4);
+  outline-offset: -2px;
+}
+
+/* ---- Consultation CTA card on cream -----------------------------
+   The card sits on the cream page bg, so flip it to white with a
+   red accent border to keep it visible without competing with the
+   widget cards above it. */
+.he-cta-card {
+  background: #fff;
+  color: var(--he-ink, #1F2D3D);
+  border: 1px solid var(--he-red, #E63946);
+  border-radius: 8px;
+}
+.he-cta-card__ttl {
+  color: var(--he-navy, #0B1F3A);
+}
+.he-cta-card p {
+  color: var(--he-ink-2, #4A4A4A);
+}
+.he-cta-card__btn {
+  background: var(--he-red-deep, #B72A38);
+  color: #fff;
+}
+
+/* ---- Centre column polish for cream paper -----------------------
+   The serif headings already exist from the earlier append. Here
+   we deepen the body type spacing for the editorial feel. */
+.he-content-col p {
+  margin: 0 0 1.2rem;
+}
+.he-content-col p:first-of-type {
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: var(--he-navy, #0B1F3A);
+}
+.he-content-col h2:first-of-type {
+  margin-top: 1.2rem;
+}
+
+/* ---- Sidebar TOC tweak for cream --------------------------------
+   The TOC label gains a red accent so the eye lands on it first. */
+.he-toc__label {
+  color: var(--he-red-dark, #B72A38);
+}
+
+/* ---- Mobile + tablet --------------------------------------------
+   On mobile the rail is hidden, but the cream page bg still shows.
+   No further changes needed - the existing responsive rules from
+   the base CSS handle the column collapse. */
