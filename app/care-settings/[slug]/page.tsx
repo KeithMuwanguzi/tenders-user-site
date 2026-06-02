@@ -145,13 +145,37 @@ function extractMetaDescription(html: string, fallback: string): string {
  * .sticky-cta bottom strip (replaced by the rail ConsultationCTA).
  */
 function cleanEmbeddedChrome(html: string): string {
-  return html
-    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, '')
-    .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, '')
-    .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<div\s+class="sticky-cta"[\s\S]*?<\/div>\s*<\/div>?/gi, '')
+  return (
+    html
+      .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, '')
+      .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, '')
+      .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<div\s+class="sticky-cta"[\s\S]*?<\/div>\s*<\/div>?/gi, '')
+      /* Rewrite legacy WordPress-style relative links from when the
+         HTML files were standalone pages. These were 404ing on the
+         React routes because the routing scheme is different now.
+         The patterns below cover every relative link pattern present
+         in the source files. */
+      .replace(/href="index\.html"/gi, 'href="/care-settings"')
+      .replace(/href="\.\.\/index\.html"/gi, 'href="/"')
+      .replace(/href="\.\.\/care-settings\/index\.html"/gi, 'href="/care-settings"')
+      .replace(/href="\.\.\/case-studies\/index\.html"/gi, 'href="/case-studies"')
+      .replace(/href="\.\.\/services\/index\.html"/gi, 'href="/services"')
+      .replace(/href="\.\.\/blog\/index\.html"/gi, 'href="/blog"')
+      .replace(/href="\.\.\/about\.html"/gi, 'href="/about"')
+      .replace(/href="\.\.\/contact\.html"/gi, 'href="/contact"')
+      .replace(/href="\.\.\/care-settings\/([^"]+?)\.html"/gi, 'href="/care-settings/$1"')
+      .replace(/href="\.\.\/case-studies\/([^"]+?)\.html"/gi, 'href="/case-studies/$1"')
+      .replace(/href="\.\.\/services\/([^"]+?)\.html"/gi, 'href="/services/$1"')
+      .replace(/href="\.\.\/blog\/([^"]+?)\.html"/gi, 'href="/blog/$1"')
+      /* Trailing-slash variant of the canonical URL pattern. */
+      .replace(
+        /href="https:\/\/www\.tenderlab\.co\.uk\/care-settings\/([^"\/]+)\/"/gi,
+        'href="/care-settings/$1"'
+      )
+  )
 }
 
 /**
