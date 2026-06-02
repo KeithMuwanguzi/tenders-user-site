@@ -118,7 +118,7 @@ export default async function CareSettingPage({ params }: Props) {
 
   return (
     <main>
-      <Script id={`ld-cs-${slug}-service`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema({ name: title, description, url: canonicalUrl(`/care-settings/${slug}`) })) }} />
+      <Script id={`ld-cs-${slug}-service`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema({ name: title, description, path: `/care-settings/${slug}` })) }} />
       <Script id={`ld-cs-${slug}-faq`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(defaultFaq)) }} />
       <Script id={`ld-cs-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
         { name: 'Home', path: '/' },
