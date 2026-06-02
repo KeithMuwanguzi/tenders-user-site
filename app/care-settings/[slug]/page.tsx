@@ -13,6 +13,14 @@ import {
   defaultFaq,
   BRAND,
 } from '@/lib/seo'
+import HybridE from '@/components/HybridE'
+import { type TOCItem } from '@/components/TOC'
+import { getCohortTag } from '@/lib/care-settings-relations'
+import LiveTendersWidget from '@/components/rail/LiveTendersWidget'
+import RelatedCareSettingsWidget from '@/components/rail/RelatedCareSettingsWidget'
+import RelatedCaseStudyWidget from '@/components/rail/RelatedCaseStudyWidget'
+import ConsultationCTA from '@/components/rail/ConsultationCTA'
+import NewsletterWidget from '@/components/rail/NewsletterWidget'
 
 const HTML_DIR = path.join(
   process.cwd(),
@@ -48,187 +56,173 @@ const SETTING_IMAGES: Record<string, string> = {
   'rehabilitation-services': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80',
   'end-of-life-and-palliative-care': 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1200&q=80',
   'hospital-discharge-services': 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1200&q=80',
-  'autism-services': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&q=80',
-  'care-home-accommodation': 'https://images.unsplash.com/photo-1551192232-c2b9b9b3b2cc?w=1200&q=80',
-  'childrens-services': 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
-  'complex-care-and-continuing-healthcare': 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
-  'health-services': 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=1200&q=80',
-  'housing-support': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80',
-  'learning-disability-services': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&q=80',
-  'mental-health-services': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1200&q=80',
-  'substance-misuse-services': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
 }
 
-async function getHtml(slug: string): Promise<string | null> {
-  const fp = path.join(HTML_DIR, `${slug}.html`)
-  try {
-    return await readFile(fp, 'utf-8')
-  } catch {
-    return null
-  }
-}
-
-function stripTags(s: string) {
-  return s.replace(/<[^>]+>/g, '').trim()
-}
-
-function metaContent(html: string, name: string): string {
-  const m = html.match(new RegExp(`<meta name="${name}" content="([^"]+)"`))
-  return m ? m[1] : ''
-}
-
-function titleText(html: string): string {
-  const m = html.match(/<title>([^<]+)<\/title>/)
-  return m ? m[1].split('|')[0].trim() : ''
-}
-
-function articleHtml(raw: string): string {
-  // Support both 'tlp' (original template) and 'cs-page' (newer comprehensive
-  // template with 17 sections per care setting).
-  let start = raw.indexOf('<article class="tlp"')
-  if (start === -1) start = raw.indexOf('<article class="cs-page"')
-  const end = raw.indexOf('</article>', start)
-  if (start === -1 || end === -1) return ''
-  let block = raw.slice(start, end + '</article>'.length)
-
-  // Strip the article's own H1 so the page renders exactly one H1
-  // (the hero H1 stays the single page-level heading).
-  block = block.replace(/<h1\b[^>]*>[\s\S]*?<\/h1>/i, '')
-
-  // Rewrite relative HTML links to Next.js routes
-  block = block
-    .replace(/href="index\.html"/g, 'href="/care-settings"')
-    .replace(/href="\.\.\/care-settings\//g, 'href="/care-settings/')
-    .replace(/href="\.\.\/services\//g, 'href="/services/')
-    .replace(/href="\.\.\/about\.html"/g, 'href="/about"')
-    .replace(/href="\.\.\/index\.html"/g, 'href="/"')
-    .replace(/href="\.\.\/([^"]+)\.html"/g, 'href="/$1"')
-
-  // Repair any double-encoded apostrophes that crept in from the HTML files
-  // (for example "Children&amp;#x27;s" should render as "Children's").
-  block = block.replace(/&amp;#x27;/g, '&#x27;')
-
-  return block
-}
+type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
   try {
     const files = await readdir(HTML_DIR)
     return files
-      .filter((f) => f.endsWith('.html') && f !== 'index.html')
-      .map((f) => ({ slug: f.replace('.html', '') }))
+      .filter(f => f.endsWith('.html') && f !== 'index.html')
+      .map(f => ({ slug: f.replace(/\.html$/, '') }))
   } catch {
     return []
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const raw = await getHtml(slug)
-  if (!raw) return {}
-
-  const baseTitle = titleText(raw) || 'Care Setting Tender Writing'
-  const fullTitle = `${baseTitle} | TenderLab`
-  const description =
-    metaContent(raw, 'description') ||
-    `${baseTitle.toLowerCase()} bid writing with 92% win rate. Evaluator-trained writers for UK care providers.`
-  const heroImage = SETTING_IMAGES[slug]
-  const pathname = `/care-settings/${slug}`
-
-  return {
-    title: fullTitle,
-    description,
-    alternates: { canonical: pathname },
-    openGraph: {
-      ...defaultOpenGraph({
-        title: fullTitle,
-        description,
-        path: pathname,
-        type: 'website',
-        image: heroImage,
-      }),
-    },
-    twitter: defaultTwitter({ title: fullTitle, description, image: heroImage }),
+async function getPageHtml(slug: string): Promise<string | null> {
+  try {
+    const file = path.join(HTML_DIR, `${slug}.html`)
+    return await readFile(file, 'utf8')
+  } catch {
+    return null
   }
 }
 
-export default async function CareSettingPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+function extractTitle(html: string, slug: string): string {
+  const t = html.match(/<title>([^<]+)<\/title>/i)
+  if (t) return t[1].replace(/\s*\|\s*TenderLab.*$/i, '').trim()
+  const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)
+  if (h1) return h1[1].replace(/<[^>]+>/g, '').trim()
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+}
+
+function extractMetaDescription(html: string, fallback: string): string {
+  const m = html.match(/<meta name="description" content="([^"]+)"/i)
+  return m ? m[1] : fallback
+}
+
+/**
+ * Pull the <article> or <main> body from the static HTML file and parse out
+ * the section structure for Hybrid E:
+ *  - extract each <section class="cs-block"> (or fallback to h2 boundaries)
+ *  - rewrite the section header into the editorial-serif pattern
+ *    (eyebrow + serif title + rule) with an id we can target from the TOC
+ *  - return the rewritten HTML plus the TOC item list
+ */
+function buildSectionedBodyAndTOC(html: string): { html: string; toc: TOCItem[] } {
+  // Grab the inner of the article/main if present, else the whole body fragment.
+  let body = html
+  const article = html.match(/<article[\s\S]*?>([\s\S]*?)<\/article>/i)
+  if (article) body = article[1]
+  else {
+    const main = html.match(/<main[\s\S]*?>([\s\S]*?)<\/main>/i)
+    if (main) body = main[1]
+  }
+
+  // Strip any <h1> from the body since the page H1 lives outside the wrapper.
+  body = body.replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, '')
+
+  const toc: TOCItem[] = []
+
+  // Rewrite "<h2><span class="num">Section NN</span>Title</h2>" patterns into
+  // the Hybrid E editorial-serif header.
+  const rewritten = body.replace(
+    /<h2[^>]*>\s*<span[^>]*class="num"[^>]*>\s*Section\s*(\d+)\s*<\/span>\s*([\s\S]*?)<\/h2>/gi,
+    (_match, n: string, titleHtml: string) => {
+      const num = String(n).padStart(2, '0')
+      const anchor = `sec-${num}`
+      const label = String(titleHtml).replace(/<[^>]+>/g, '').trim()
+      toc.push({ label, num, anchor })
+      return [
+        `<div class="he-section" id="${anchor}">`,
+        `  <span class="he-section__eyebrow">Section ${num} · ${label}</span>`,
+        `  <h2 class="he-section__title">${label}</h2>`,
+        `  <hr class="he-section__rule" />`,
+        `<div class="he-section__body">`,
+      ].join('\n')
+    }
+  )
+
+  // Close each .he-section before the next one opens, and at the end.
+  // Naive closer: split on the opening tag we inserted and re-join with closers.
+  const parts = rewritten.split('<div class="he-section" id="')
+  let closedHtml = parts[0]
+  for (let i = 1; i < parts.length; i++) {
+    if (i > 1) closedHtml += '</div></div>' // close prev body + prev section
+    closedHtml += '<div class="he-section" id="' + parts[i]
+  }
+  if (parts.length > 1) closedHtml += '</div></div>' // close the final section
+
+  return { html: closedHtml, toc }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const raw = await getHtml(slug)
-  if (!raw) notFound()
-
-  const article = articleHtml(raw)
-  const heroImage = SETTING_IMAGES[slug]
-  const pageTitle = titleText(raw)
-  const description = metaContent(raw, 'description')
+  const html = await getPageHtml(slug)
+  if (!html) return { title: 'Care Setting Not Found | TenderLab' }
+  const title = extractTitle(html, slug)
+  const description = extractMetaDescription(
+    html,
+    `Specialist ${title.toLowerCase()} tender writing for UK care providers. 92% win rate across 200+ submissions.`
+  )
   const pathname = `/care-settings/${slug}`
+  const fullTitle = `${title} | TenderLab`
+  return {
+    title: fullTitle,
+    description,
+    alternates: { canonical: canonicalUrl(pathname) },
+    openGraph: defaultOpenGraph({ title: fullTitle, description, path: pathname }),
+    twitter: defaultTwitter({ title: fullTitle, description }),
+  }
+}
 
-  // Per-page schema. Organization + WebSite are emitted sitewide via layout.
-  const ldService = serviceSchema({
-    name: `${pageTitle} Tender Writing`,
-    description:
-      description ||
-      `Specialist bid writing for ${pageTitle.toLowerCase()} providers. ${BRAND.winRate} win rate across ${BRAND.submissions} UK care contracts.`,
-    path: pathname,
-    serviceType: 'Tender Writing',
-  })
+export default async function CareSettingPage({ params }: Props) {
+  const { slug } = await params
+  const html = await getPageHtml(slug)
+  if (!html) notFound()
 
-  const ldFaq = faqSchema(defaultFaq)
+  const title = extractTitle(html, slug)
+  const description = extractMetaDescription(
+    html,
+    `Specialist ${title.toLowerCase()} tender writing for UK care providers.`
+  )
+  const heroImg = SETTING_IMAGES[slug] || 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80'
+  const cohort = getCohortTag(slug)
 
-  const ldBreadcrumb = breadcrumbSchema([
-    { name: 'Home', path: '/' },
-    { name: 'Care Settings', path: '/care-settings' },
-    { name: pageTitle, path: pathname },
-  ])
+  const { html: bodyHtml, toc } = buildSectionedBodyAndTOC(html)
 
   return (
-    <main className="care-setting-page">
-      <Script
-        id={`ld-care-${slug}-service`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldService) }}
-      />
-      <Script
-        id={`ld-care-${slug}-faq`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
-      />
-      <Script
-        id={`ld-care-${slug}-breadcrumb`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }}
-      />
+    <main>
+      <Script id={`ld-cs-${slug}-service`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema({ name: title, description, url: canonicalUrl(`/care-settings/${slug}`) })) }} />
+      <Script id={`ld-cs-${slug}-faq`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(defaultFaq)) }} />
+      <Script id={`ld-cs-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+        { name: 'Home', path: '/' },
+        { name: 'Care Settings', path: '/care-settings' },
+        { name: title, path: `/care-settings/${slug}` },
+      ])) }} />
 
-      {heroImage && (
-        <section className="cs-detail-hero">
-          <div className="cs-detail-hero__bg">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={heroImage} alt={pageTitle} />
-          </div>
-          <div className="cs-detail-hero__overlay" />
-          <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-            <h1 className="cs-detail-hero__title">{pageTitle}</h1>
-          </div>
-        </section>
-      )}
+      <section className="cs-hero" style={{ backgroundImage: `linear-gradient(180deg, rgba(11,31,58,0.45) 0%, rgba(11,31,58,0.85) 100%), url(${heroImg})` }}>
+        <div className="container">
+          <nav className="cs-crumb" aria-label="Breadcrumb">
+            <a href="/care-settings">Care Settings</a>
+            <span> / </span>
+            <span>{title}</span>
+          </nav>
+          <h1 className="cs-title">{title}</h1>
+          <p className="cs-strap">{description}</p>
+        </div>
+      </section>
 
-      {article && (
-        <div
-          className="care-setting-content"
-          dangerouslySetInnerHTML={{ __html: article }}
-        />
-      )}
+      <HybridE
+        tocItems={toc}
+        rail={
+          <div className="he-rail">
+            <LiveTendersWidget cohort={cohort} variant="dark" title={`Live tenders · ${title}`} />
+            <RelatedCareSettingsWidget currentSlug={slug} />
+            <RelatedCaseStudyWidget cohort={cohort} />
+            <ConsultationCTA
+              title={`${title} tender on the horizon?`}
+              body="Free 20-minute call to scope your bid."
+              ref={`care-${slug}`}
+            />
+            <NewsletterWidget />
+          </div>
+        }
+      >
+        <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+      </HybridE>
     </main>
   )
 }
