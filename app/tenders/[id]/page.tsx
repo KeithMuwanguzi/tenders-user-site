@@ -1,8 +1,28 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useParams, useSearchParams } from 'next/navigation'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Script from 'next/script'
+import {
+  SITE_URL,
+  SITE_LEGAL_NAME,
+  COMPANY_NUMBER,
+  BRAND,
+  defaultOpenGraph,
+  defaultTwitter,
+  breadcrumbSchema,
+} from '@/lib/seo'
+
+/* ================================================================
+   Tender Detail Page — Server Component, SSR
+   ================================================================
+   Fetches tender data on the server so Googlebot sees the real
+   title, description, body and canonical on first crawl.
+   Inlines the gov.uk fetchers so the page does not depend on an
+   internal API round-trip. Mirrors the data shape in
+   app/api/tenders/[id]/route.ts.
+   ================================================================ */
+
+export const revalidate = 1800 // 30 minutes
 
 interface TenderDetail {
   id: string
@@ -27,86 +47,249 @@ interface TenderDetail {
   documents: { title: string; url: string }[]
 }
 
-export default function TenderDetailPage() {
-  const params = useParams()
-  const searchParams = useSearchParams()
-  const id = params.id as string
-  const source = searchParams.get('source') || 'cf'
+function fmtValue(low: number | null | undefined, high: number | null | undefined): string | null {
+  const v = high ?? low
+  if (!v) return null
+  if (v >= 1_000_000) return `£${(v / 1_000_000).toFixed(1)}m`
+  if (v >= 1_000) return `£${(v / 1_000).toFixed(0)}k`
+  return `£${v.toLocaleString()}`
+}
 
-  const [tender, setTender] = useState<TenderDetail | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+function fmtSingle(v: number): string | null {
+  if (!v) return null
+  if (v >= 1_000_000) return `£${(v / 1_000_000).toFixed(1)}m`
+  if (v >= 1_000) return `£${(v / 1_000).toFixed(0)}k`
+  return `£${v.toLocaleString()}`
+}
 
-  useEffect(() => {
-    if (!id) return
-    setLoading(true)
-    fetch(`/api/tenders/${encodeURIComponent(id)}?source=${source}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Tender not found')
-        return res.json()
-      })
-      .then((data) => {
-        setTender(data.tender)
-        setLoading(false)
-      })
-      .catch((err) => {
-        setError(err.message)
-        setLoading(false)
-      })
-  }, [id, source])
+function fmtOCDS(value: { amount?: number; currency?: string } | null | undefined): string | null {
+  if (!value?.amount) return null
+  const a = value.amount
+  if (a >= 1_000_000) return `£${(a / 1_000_000).toFixed(1)}m`
+  if (a >= 1_000) return `£${(a / 1_000).toFixed(0)}k`
+  return `£${a.toLocaleString()}`
+}
 
-  const formatDate = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'long', year: 'numeric',
-      })
-    } catch { return dateStr }
+async function fetchCFNotice(id: string): Promise<TenderDetail | null> {
+  const url = `https://www.contractsfinder.service.gov.uk/api/rest/2/get_published_notice/json/${id}`
+  try {
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 1800 },
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const n = data?.notice
+    if (!n) return null
+    return {
+      id: n.id || id,
+      title: n.title || 'Untitled opportunity',
+      description: n.description || n.summary || '',
+      publishedDate: n.publishedDate || '',
+      deadline: n.deadlineDate || null,
+      value: fmtValue(n.valueLow, n.valueHigh),
+      location: n.regionText || n.region || null,
+      organisation: n.organisationName || null,
+      status: n.noticeStatus === 'Awarded' ? 'Awarded' : n.noticeStatus || 'Open',
+      source: 'Contracts Finder',
+      externalUrl: `https://www.contractsfinder.service.gov.uk/Notice/${id}`,
+      noticeType: n.noticeType || null,
+      cpvDescription: n.cpvDescription || n.cpvDescriptionExpanded || null,
+      sector: n.sector || null,
+      awardedDate: n.awardedDate || null,
+      awardedValue: n.awardedValue ? fmtSingle(n.awardedValue) : null,
+      awardedSupplier: n.awardedSupplier || null,
+      contactName: n.contactName || null,
+      contactEmail: n.contactEmail || null,
+      documents: (n.documents || []).map((d: { title?: string; url?: string }) => ({
+        title: d.title || 'Document',
+        url: d.url || '',
+      })),
+    }
+  } catch {
+    return null
   }
+}
 
-  const daysUntilDeadline = (deadline: string | null) => {
-    if (!deadline) return null
+async function fetchFTNotice(id: string): Promise<TenderDetail | null> {
+  const url = `https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/${id}`
+  try {
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 1800 },
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const releases = data?.releases
+    if (!releases?.length) return null
+    const r = releases[0]
+    const t = r.tender || {}
+    return {
+      id: r.ocid || r.id || id,
+      title: t.title || 'Untitled opportunity',
+      description: t.description || '',
+      publishedDate: r.date || '',
+      deadline: t.tenderPeriod?.endDate || null,
+      value: fmtOCDS(t.value),
+      location: t.items?.[0]?.deliveryAddresses?.[0]?.region || null,
+      organisation: r.buyer?.name || null,
+      status: t.status === 'active' ? 'Open' : t.status || 'Unknown',
+      source: 'Find a Tender',
+      externalUrl: `https://www.find-tender.service.gov.uk/Notice/${id}`,
+      noticeType: r.tag?.[0] || null,
+      cpvDescription: t.items?.[0]?.classification?.description || null,
+      sector: null,
+      awardedDate: null,
+      awardedValue: null,
+      awardedSupplier: null,
+      contactName: r.buyer?.contactPoint?.name || null,
+      contactEmail: r.buyer?.contactPoint?.email || null,
+      documents: (t.documents || []).map((d: { title?: string; url?: string }) => ({
+        title: d.title || 'Document',
+        url: d.url || '',
+      })),
+    }
+  } catch {
+    return null
+  }
+}
+
+async function getTender(id: string, source: string): Promise<TenderDetail | null> {
+  if (source === 'ft') return fetchFTNotice(id)
+  return fetchCFNotice(id)
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return ''
+  try {
+    return new Date(dateStr).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  } catch {
+    return dateStr
+  }
+}
+
+function daysUntilDeadline(deadline: string | null): string | null {
+  if (!deadline) return null
+  try {
     const diff = Math.ceil((new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     if (diff < 0) return 'Closed'
     if (diff === 0) return 'Closes today'
     if (diff === 1) return '1 day remaining'
     return `${diff} days remaining`
+  } catch {
+    return null
+  }
+}
+
+function truncate(text: string, n: number): string {
+  if (!text) return ''
+  const clean = text.replace(/\s+/g, ' ').trim()
+  if (clean.length <= n) return clean
+  return clean.slice(0, n).replace(/\s+\S*$/, '') + '...'
+}
+
+type Props = {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ source?: string }>
+}
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const { id } = await params
+  const { source } = await searchParams
+  const src = source || 'cf'
+  const tender = await getTender(id, src)
+
+  if (!tender) {
+    return {
+      title: 'Tender Not Found | TenderLab',
+      description: 'This procurement opportunity may have been removed or is no longer available.',
+      robots: { index: false, follow: true },
+    }
   }
 
-  if (loading) {
-    return (
-      <main>
-        <section className="tender-detail">
-          <div className="container">
-            <div className="tenders-list__loading">
-              <div className="tenders-list__spinner" />
-              <p>Loading tender details…</p>
-            </div>
-          </div>
-        </section>
-      </main>
-    )
-  }
+  const description = truncate(tender.description, 155)
+  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}?source=${src}`
+  const isOpen =
+    /open/i.test(tender.status) ||
+    /active/i.test(tender.status) ||
+    tender.status === 'Future'
 
-  if (error || !tender) {
-    return (
-      <main>
-        <section className="tender-detail">
-          <div className="container">
-            <div className="tender-detail__error">
-              <h2>Tender Not Found</h2>
-              <p>This opportunity may have been removed or is no longer available.</p>
-              <Link href="/tenders" className="btn btn-primary">Back to Live Tenders</Link>
-            </div>
-          </div>
-        </section>
-      </main>
-    )
+  const title = `${tender.title} | Live UK Tender | TenderLab`
+
+  return {
+    title,
+    description: description || `${tender.title}. ${tender.source} notice from ${tender.organisation || 'a UK public sector body'}. Bid writing support from TenderLab.`,
+    alternates: { canonical },
+    openGraph: defaultOpenGraph({ title, description, path: `/tenders/${encodeURIComponent(id)}?source=${src}` }),
+    twitter: defaultTwitter({ title, description }),
+    robots: isOpen
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
+  }
+}
+
+export default async function TenderDetailPage({ params, searchParams }: Props) {
+  const { id } = await params
+  const { source } = await searchParams
+  const src = source || 'cf'
+  const tender = await getTender(id, src)
+
+  if (!tender) {
+    notFound()
   }
 
   const urgency = daysUntilDeadline(tender.deadline)
+  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}?source=${src}`
+
+  // JSON-LD: GovernmentService (primary intent) + BreadcrumbList
+  const govSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'GovernmentService',
+    name: tender.title,
+    description: tender.description || tender.title,
+    serviceType: 'Public sector procurement opportunity',
+    serviceOperator: tender.organisation
+      ? { '@type': 'GovernmentOrganization', name: tender.organisation }
+      : undefined,
+    areaServed: tender.location || 'United Kingdom',
+    url: canonical,
+    audience: {
+      '@type': 'Audience',
+      audienceType: 'UK Health and Social Care Providers',
+    },
+    provider: { '@id': `${SITE_URL}/#organization` },
+  }
 
   return (
     <main>
+      <Script
+        id={`ld-tender-${tender.id}-service`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(govSchema) }}
+      />
+      <Script
+        id={`ld-tender-${tender.id}-breadcrumb`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Live Tenders', path: '/tenders' },
+              {
+                name: tender.title,
+                path: `/tenders/${encodeURIComponent(id)}?source=${src}`,
+              },
+            ])
+          ),
+        }}
+      />
+
       {/* Breadcrumb + back link */}
       <section className="tender-detail__nav">
         <div className="container">
@@ -156,7 +339,7 @@ export default function TenderDetailPage() {
                 </div>
               )}
 
-              {tender.documents.length > 0 && (
+              {tender.documents && tender.documents.length > 0 && (
                 <div className="tender-detail__section">
                   <h2>Documents</h2>
                   <ul className="tender-detail__docs">
@@ -195,6 +378,34 @@ export default function TenderDetailPage() {
                   </div>
                 </div>
               )}
+
+              <div className="tender-detail__section">
+                <h2>How TenderLab can help with this opportunity</h2>
+                <p>
+                  TenderLab is a specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. Our evaluator-trained writers deliver a {BRAND.winRate} win rate across {BRAND.submissions} submissions. {SITE_LEGAL_NAME} (Companies House {COMPANY_NUMBER}).
+                </p>
+                <p>
+                  We can help you respond to <strong>{tender.title}</strong> with a specification-mirrored method statement, named operational evidence, and a 72-hour pre-submission review built in.
+                </p>
+                <div className="tender-detail__inline-cta">
+                  <Link
+                    href={`/contact?utm_source=tender_detail&utm_medium=inline&utm_campaign=lead&tender=${encodeURIComponent(tender.title.slice(0, 60))}`}
+                    className="btn btn-primary"
+                  >
+                    Get a free 30-minute consultation
+                  </Link>
+                  <Link href="/score-my-response" className="btn btn-ghost">
+                    Score My Response
+                  </Link>
+                </div>
+              </div>
+
+              <div className="tender-detail__source-note">
+                <p>
+                  This notice was published on {tender.source}. The official record is available at{' '}
+                  <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">{tender.externalUrl}</a>.
+                </p>
+              </div>
             </div>
 
             {/* Sidebar */}
@@ -267,7 +478,7 @@ export default function TenderDetailPage() {
 
               <div className="tender-detail__cta-card">
                 <h3>Need Help Bidding?</h3>
-                <p>Our evaluator-trained writers have a 92% win rate across 200+ health and social care submissions.</p>
+                <p>Our evaluator-trained writers have a {BRAND.winRate} win rate across {BRAND.submissions} health and social care submissions.</p>
                 <Link href="/contact" className="btn btn-primary">Get Help With This Tender</Link>
                 <Link href="/score-my-response" className="btn btn-ghost">Score My Response</Link>
               </div>
