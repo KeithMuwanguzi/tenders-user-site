@@ -19,6 +19,20 @@ export const BRAND = {
     'Specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. 92% win rate across 200+ local authority and NHS submissions.',
 }
 
+// Verified off-domain profiles. Single source of truth for the Organization
+// sameAs array (machine-readable entity graph signal) and any visible
+// off-domain link list in the UI. Add new profiles here as the trust stack
+// rollout claims them. Mirror this list in references/external-profiles-and-citations.md
+// in the tenderlab-company-profile skill.
+export const EXTERNAL_PROFILES = {
+  companiesHouse: 'https://find-and-update.company-information.service.gov.uk/company/17184263',
+  googleBusinessProfile: 'https://g.page/r/CarBdrVY3WO4EBM/review',
+  trustpilot: 'https://uk.trustpilot.com/review/tenderlab.co.uk',
+  linkedin: 'https://www.linkedin.com/company/tenderlabuk/',
+  facebook: 'https://www.facebook.com/tenderlabuk',
+  instagram: 'https://www.instagram.com/tenderlabuk/',
+}
+
 export function canonicalUrl(path: string): string {
   const p = path.startsWith('/') ? path : `/${path}`
   return `${SITE_URL}${p}`.replace(/\/+$/, '') || SITE_URL
@@ -63,6 +77,9 @@ export function defaultTwitter(args: {
 }
 
 // Sitewide Organization schema. Referenced by @id from other schema blocks.
+// sameAs ties this Organization entity to its verified off-domain profiles,
+// telling Google's knowledge graph that the same business owns these six URLs.
+// This is what produces the consolidated brand panel for "TenderLab" searches.
 export const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
@@ -107,6 +124,14 @@ export const organizationSchema = {
       areaServed: 'GB',
       availableLanguage: ['English'],
     },
+  ],
+  sameAs: [
+    EXTERNAL_PROFILES.companiesHouse,
+    EXTERNAL_PROFILES.googleBusinessProfile,
+    EXTERNAL_PROFILES.trustpilot,
+    EXTERNAL_PROFILES.linkedin,
+    EXTERNAL_PROFILES.facebook,
+    EXTERNAL_PROFILES.instagram,
   ],
 }
 
@@ -233,6 +258,6 @@ export const defaultFaq = [
   {
     question: 'How much do your services cost?',
     answer:
-      'Bid writing from \u00a33,000 per submission depending on scope. Pre-Submission Review from \u00a3950. Tender Retainer from \u00a34,500 per month. Free 30-minute consultation to scope before any engagement. TenderLab Ltd, Companies House 17184263.',
+      'Bid writing from £3,000 per submission depending on scope. Pre-Submission Review from £950. Tender Retainer from £4,500 per month. Free 30-minute consultation to scope before any engagement. TenderLab Ltd, Companies House 17184263.',
   },
 ]
