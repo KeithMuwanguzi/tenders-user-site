@@ -4,10 +4,34 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { fetchBlogs, categoryColor } from '@/lib/sheets'
 import Script from 'next/script'
+import HybridE from '@/components/HybridE'
+import { type TOCItem } from '@/components/TOC'
+import RelatedInsightsWidget from '@/components/rail/RelatedInsightsWidget'
+import RelatedCaseStudyWidget from '@/components/rail/RelatedCaseStudyWidget'
+import ConsultationCTA from '@/components/rail/ConsultationCTA'
+import NewsletterWidget from '@/components/rail/NewsletterWidget'
 
 export const dynamic = 'force-dynamic'
 
 type Props = { params: Promise<{ slug: string }> }
+
+/**
+ * Extracts H2 headings from rendered markdown so we can build the TOC
+ * AND inject anchor ids so the TOC links can scroll to them.
+ */
+function extractTOCAndAnchorize(html: string): { html: string; toc: TOCItem[] } {
+  const toc: TOCItem[] = []
+  let counter = 0
+  const out = html.replace(/<h2>(.*?)<\/h2>/g, (_match, inner) => {
+    counter += 1
+    const num = String(counter).padStart(2, '0')
+    const anchor = `sec-${num}`
+    const label = String(inner).replace(/<[^>]+>/g, '').trim()
+    toc.push({ label, num, anchor })
+    return `<h2 id="${anchor}" class="he-section__title">${inner}</h2>`
+  })
+  return { html: out, toc }
+}
 
 function renderMarkdown(md: string): string {
   if (!md) return ''
@@ -20,16 +44,10 @@ function renderMarkdown(md: string): string {
   const closeList = () => {
     if (inList) {
       out.push(listType === 'ol' ? '</ol>' : '</ul>')
-      inList = false
-      listType = null
+      inList = false; listType = null
     }
   }
-  const closePara = () => {
-    if (inPara) {
-      out.push('</p>')
-      inPara = false
-    }
-  }
+  const closePara = () => { if (inPara) { out.push('</p>'); inPara = false } }
   const inline = (s: string) => {
     let t = esc(s)
     t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, txt, url) => {
@@ -44,71 +62,28 @@ function renderMarkdown(md: string): string {
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i]
     const l = raw.trim()
-    if (!l) {
-      closeList()
-      closePara()
-      continue
-    }
+    if (!l) { closeList(); closePara(); continue }
     const h3 = l.match(/^###\s+(.+)/)
     const h2 = l.match(/^##\s+(.+)/)
     const h1 = l.match(/^#\s+(.+)/)
-    if (h3) {
-      closeList()
-      closePara()
-      out.push(`<h3>${inline(h3[1])}</h3>`)
-      continue
-    }
-    if (h2) {
-      closeList()
-      closePara()
-      out.push(`<h2>${inline(h2[1])}</h2>`)
-      continue
-    }
-    if (h1) {
-      closeList()
-      closePara()
-      out.push(`<h2>${inline(h1[1])}</h2>`)
-      continue
-    }
+    if (h3) { closeList(); closePara(); out.push(`<h3>${inline(h3[1])}</h3>`); continue }
+    if (h2) { closeList(); closePara(); out.push(`<h2>${inline(h2[1])}</h2>`); continue }
+    if (h1) { closeList(); closePara(); out.push(`<h2>${inline(h1[1])}</h2>`); continue }
     if (/^[-*]\s+/.test(l)) {
       closePara()
-      if (!inList || listType !== 'ul') {
-        closeList()
-        out.push('<ul>')
-        inList = true
-        listType = 'ul'
-      }
-      out.push(`<li>${inline(l.replace(/^[-*]\s+/, ''))}</li>`)
-      continue
+      if (!inList || listType !== 'ul') { closeList(); out.push('<ul>'); inList = true; listType = 'ul' }
+      out.push(`<li>${inline(l.replace(/^[-*]\s+/, ''))}</li>`); continue
     }
     if (/^\d+\.\s+/.test(l)) {
       closePara()
-      if (!inList || listType !== 'ol') {
-        closeList()
-        out.push('<ol>')
-        inList = true
-        listType = 'ol'
-      }
-      out.push(`<li>${inline(l.replace(/^\d+\.\s+/, ''))}</li>`)
-      continue
+      if (!inList || listType !== 'ol') { closeList(); out.push('<ol>'); inList = true; listType = 'ol' }
+      out.push(`<li>${inline(l.replace(/^\d+\.\s+/, ''))}</li>`); continue
     }
-    if (/^>\s+/.test(l)) {
-      closeList()
-      closePara()
-      out.push(`<blockquote>${inline(l.replace(/^>\s+/, ''))}</blockquote>`)
-      continue
-    }
-    if (!inPara) {
-      closeList()
-      out.push('<p>')
-      inPara = true
-    } else {
-      out.push(' ')
-    }
+    if (/^>\s+/.test(l)) { closeList(); closePara(); out.push(`<blockquote>${inline(l.replace(/^>\s+/, ''))}</blockquote>`); continue }
+    if (!inPara) { closeList(); out.push('<p>'); inPara = true } else { out.push(' ') }
     out.push(inline(l))
   }
-  closeList()
-  closePara()
+  closeList(); closePara()
   return out.join('\n')
 }
 
@@ -145,6 +120,9 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound()
 
   const color = categoryColor(post.category)
+  const rawHtml = renderMarkdown(post.body || '')
+  const { html, toc } = extractTOCAndAnchorize(rawHtml)
+  const cohort = post.tags[0] || post.category
 
   return (
     <main className="blog-post">
@@ -159,16 +137,9 @@ export default async function BlogPostPage({ params }: Props) {
             headline: post.title,
             description: post.excerpt,
             url: `https://www.tenderlab.co.uk/blog/${slug}`,
-            mainEntityOfPage: {
-              '@type': 'WebPage',
-              '@id': `https://www.tenderlab.co.uk/blog/${slug}`,
-            },
+            mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tenderlab.co.uk/blog/${slug}` },
             image: post.imageUrl ? [post.imageUrl] : undefined,
-            author: {
-              '@type': 'Organization',
-              name: 'TenderLab',
-              url: 'https://www.tenderlab.co.uk',
-            },
+            author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
             publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
             articleSection: post.category,
             keywords: post.tags.join(', '),
@@ -187,12 +158,7 @@ export default async function BlogPostPage({ params }: Props) {
             itemListElement: [
               { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.tenderlab.co.uk' },
               { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://www.tenderlab.co.uk/blog' },
-              {
-                '@type': 'ListItem',
-                position: 3,
-                name: post.category,
-                item: `https://www.tenderlab.co.uk/blog/${slug}`,
-              },
+              { '@type': 'ListItem', position: 3, name: post.category, item: `https://www.tenderlab.co.uk/blog/${slug}` },
             ],
           }),
         }}
@@ -232,45 +198,41 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       )}
 
-      <div className="blog-post__body-wrap">
-        <div className="container">
-          <div className="blog-post__body">
-            {post.tags.length > 0 && (
-              <div className="blog-post__tags">
-                {post.tags.map((tag) => (
-                  <span key={tag} className="blog-post__tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <div className="blog-post__content">
-              {post.body ? (
-                <div
-                  className="blog-post__body-md"
-                  dangerouslySetInnerHTML={{ __html: renderMarkdown(post.body) }}
-                />
-              ) : (
-                <p className="blog-post__excerpt">{post.excerpt}</p>
-              )}
-              <div className="blog-post__divider" />
-              <p className="blog-post__note">
-                For full analysis, specification breakdowns, and tender-specific insights, speak to TenderLab directly.
-              </p>
-            </div>
-
-            <div className="blog-post__actions">
-              <Link href="/contact" className="btn btn-primary">
-                Book a Free Consultation
-              </Link>
-              <Link href="/blog" className="btn btn-ghost">
-                Back to Blog
-              </Link>
-            </div>
+      <HybridE
+        tocItems={toc}
+        rail={
+          <div className="he-rail">
+            <RelatedInsightsWidget tagFilter={cohort} excludeSlug={slug} />
+            <RelatedCaseStudyWidget cohort={cohort} />
+            <ConsultationCTA ref={`blog-${slug}`} />
+            <NewsletterWidget />
           </div>
+        }
+      >
+        {post.tags.length > 0 && (
+          <div className="blog-post__tags">
+            {post.tags.map((tag) => (
+              <span key={tag} className="blog-post__tag">{tag}</span>
+            ))}
+          </div>
+        )}
+        {post.body ? (
+          <div
+            className="blog-post__body-md he-section__body"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        ) : (
+          <p className="blog-post__excerpt">{post.excerpt}</p>
+        )}
+        <div className="blog-post__actions">
+          <Link href="/contact" className="btn btn-primary">
+            Book a Free Consultation
+          </Link>
+          <Link href="/blog" className="btn btn-ghost">
+            Back to Blog
+          </Link>
         </div>
-      </div>
+      </HybridE>
     </main>
   )
 }
