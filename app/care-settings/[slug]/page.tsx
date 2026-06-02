@@ -16,6 +16,7 @@ import HybridE from '@/components/HybridE'
 import type { TOCItem } from '@/components/TOC'
 import LiveTendersWidget from '@/components/rail/LiveTendersWidget'
 import RelatedCareSettingsWidget from '@/components/rail/RelatedCareSettingsWidget'
+import RelatedCaseStudyWidget from '@/components/rail/RelatedCaseStudyWidget'
 import ConsultationCTA from '@/components/rail/ConsultationCTA'
 
 const HTML_DIR = path.join(
@@ -54,6 +55,46 @@ const SETTING_IMAGES: Record<string, string> = {
   'hospital-discharge-services': 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1200&q=80',
 }
 
+/* Map care setting slug to the case study cohort tag used in
+   lib/case-studies-data.ts. Cohorts in that file are:
+   supported-living, domiciliary, multi-service, mental-health,
+   childrens. Pick the closest match per care setting so the rail
+   surfaces a relevant case study rather than the first one. */
+const CASE_STUDY_COHORT: Record<string, string> = {
+  'domiciliary-care': 'domiciliary',
+  'live-in-care': 'domiciliary',
+  'residential-care': 'multi-service',
+  'nursing-care': 'multi-service',
+  'supported-living': 'supported-living',
+  'extra-care-housing': 'supported-living',
+  'childrens-residential-care': 'childrens',
+  'supported-accommodation': 'childrens',
+  'fostering-services': 'childrens',
+  'leaving-care-services': 'childrens',
+  'childrens-short-breaks': 'childrens',
+  'family-support-and-outreach': 'childrens',
+  'mental-health-services': 'mental-health',
+  'autism-services': 'multi-service',
+  'learning-disability-services': 'supported-living',
+  'complex-care': 'multi-service',
+  'continuing-healthcare': 'multi-service',
+  'end-of-life-and-palliative-care': 'multi-service',
+  'rehabilitation-services': 'multi-service',
+  'reablement-services': 'domiciliary',
+  'hospital-discharge-services': 'multi-service',
+  'day-services': 'multi-service',
+  'shared-lives': 'multi-service',
+  'short-breaks-and-respite': 'childrens',
+  'outreach-community-support': 'multi-service',
+  'crisis-rapid-response': 'mental-health',
+  'substance-misuse-services': 'mental-health',
+  'community-health-services': 'multi-service',
+  'housing-related-support': 'supported-living',
+  'temporary-accommodation': 'supported-living',
+  'emergency-accommodation': 'supported-living',
+  'supported-housing': 'supported-living',
+}
+
 type Props = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
@@ -90,16 +131,18 @@ function extractMetaDescription(html: string, fallback: string): string {
 }
 
 /**
- * Strip embedded site chrome from the legacy HTML files. Each file in
- * public/Page Content HTML Files/care-settings/ was written as a
- * standalone page with its own <nav>, <header>, <footer> and <style>
- * blocks. When those get dumped into the React shell via
- * dangerouslySetInnerHTML we end up with a duplicate logo, a duplicate
- * navigation row, a duplicate footer and conflicting styles. This
- * function removes those blocks before we render so the page shows the
- * site chrome (TopBar + Nav + Footer from React) exactly once.
+ * Strip embedded site chrome from the legacy HTML files. Each file
+ * in public/Page Content HTML Files/care-settings/ was written as a
+ * standalone page with its own <nav>, <header>, <footer> and
+ * <style> blocks. When those get dumped into the React shell via
+ * dangerouslySetInnerHTML we end up with a duplicate logo, a
+ * duplicate navigation row, a duplicate footer and conflicting
+ * styles. This function removes those blocks before we render so
+ * the page shows the site chrome (TopBar + Nav + Footer from React)
+ * exactly once.
  *
- * Also strips inline <script> blocks for safety.
+ * Also strips inline <script> blocks for safety and the legacy
+ * .sticky-cta bottom strip (replaced by the rail ConsultationCTA).
  */
 function cleanEmbeddedChrome(html: string): string {
   return html
@@ -108,26 +151,17 @@ function cleanEmbeddedChrome(html: string): string {
     .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
     .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
-    /* The legacy bottom sticky CTA strip was injected by the original
-       HTML files and is now redundant with the rail's ConsultationCTA.
-       The CSS hide rule also catches this, but stripping the markup
-       outright keeps the source clean. */
     .replace(/<div\s+class="sticky-cta"[\s\S]*?<\/div>\s*<\/div>?/gi, '')
 }
 
 /**
- * Walk the HTML string, find every <h2>, inject an id if missing, and
- * collect a TOCItem list. Returns the augmented HTML and the TOC items
- * so HybridE can render the sticky table of contents.
- *
- * Numbering rule. Care setting HTML files label their H2s as "Section 01
- * Title", "Section 02 Title", and so on. We extract that printed number
- * (which may skip values - one file goes 01-10 then 12) so the TOC matches
- * what the reader sees on the page. If no "Section NN" prefix is present
- * we fall back to a sequential counter.
- *
- * Non-mutating to existing ids: if the H2 already has an id, that id is
- * reused as the TOC anchor.
+ * Walk the HTML string, find every <h2>, inject an id if missing,
+ * and collect a TOCItem list. Numbering rule: care setting HTML
+ * files label their H2s as "Section 01 Title", "Section 02 Title".
+ * Extract that printed number so the TOC matches the page even
+ * when the file skips a number (extra-care-housing goes 01-10 then
+ * 12). Falls back to a sequential counter if no "Section NN"
+ * prefix is present.
  */
 function buildTocAndContent(html: string): {
   tocItems: TOCItem[]
@@ -143,13 +177,10 @@ function buildTocAndContent(html: string): {
       const existingIdMatch = rawAttrs.match(/\sid="([^"]+)"/i)
       const rawText = inner.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 
-      // Skip empty headings (TOC would render an empty row).
       if (!rawText) {
         return `<h2${rawAttrs}>${inner}</h2>`
       }
 
-      // Try to read the printed section number from the H2 text itself.
-      // Matches "Section 12 Where this applies" and similar phrasings.
       const sectionMatch = rawText.match(
         /^section\s+(\d+)\s*[:.\-–—]?\s*(.+)$/i
       )
@@ -164,9 +195,7 @@ function buildTocAndContent(html: string): {
         label = rawText
       }
 
-      const anchor = existingIdMatch
-        ? existingIdMatch[1]
-        : `sec-${num}`
+      const anchor = existingIdMatch ? existingIdMatch[1] : `sec-${num}`
 
       tocItems.push({ label, num, anchor })
 
@@ -214,17 +243,19 @@ export default async function CareSettingPage({ params }: Props) {
   const cleanedHtml = cleanEmbeddedChrome(html)
   const { tocItems, processedHtml } = buildTocAndContent(cleanedHtml)
 
-  // SETTING_IMAGES is currently informational; we may use it for a future
-  // hero swap. Reference it once so eslint does not warn about unused vars.
   const _heroImage = SETTING_IMAGES[slug]
+  const caseStudyCohort = CASE_STUDY_COHORT[slug]
 
-  // Right rail recipe for care setting pages:
-  //   1. Live Tenders (cohort filter = slug; API returns top 3 active)
-  //   2. Related Care Settings (cohort-adjacent siblings)
-  //   3. Consultation CTA (with attribution to the slug)
+  /* Right rail recipe for care setting pages:
+       1. Live Tenders (strict cohort filter; widget hides itself when no match)
+       2. Related Case Study (matched by case-study cohort)
+       3. Related Care Settings (cohort-adjacent siblings)
+       4. Consultation CTA (attribution to slug)
+  */
   const rail = (
     <>
-      <LiveTendersWidget cohort={slug} limit={3} />
+      <LiveTendersWidget cohort={slug} limit={3} variant="dark" />
+      <RelatedCaseStudyWidget cohort={caseStudyCohort} />
       <RelatedCareSettingsWidget currentSlug={slug} />
       <ConsultationCTA
         title="Bidding in this setting?"
