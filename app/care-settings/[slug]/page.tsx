@@ -13,14 +13,6 @@ import {
   defaultFaq,
   BRAND,
 } from '@/lib/seo'
-import HybridE from '@/components/HybridE'
-import { type TOCItem } from '@/components/TOC'
-import { getCohortTag } from '@/lib/care-settings-relations'
-import LiveTendersWidget from '@/components/rail/LiveTendersWidget'
-import RelatedCareSettingsWidget from '@/components/rail/RelatedCareSettingsWidget'
-import RelatedCaseStudyWidget from '@/components/rail/RelatedCaseStudyWidget'
-import ConsultationCTA from '@/components/rail/ConsultationCTA'
-import NewsletterWidget from '@/components/rail/NewsletterWidget'
 
 const HTML_DIR = path.join(
   process.cwd(),
@@ -93,61 +85,6 @@ function extractMetaDescription(html: string, fallback: string): string {
   return m ? m[1] : fallback
 }
 
-/**
- * Pull the <article> or <main> body from the static HTML file and parse out
- * the section structure for Hybrid E:
- *  - extract each <section class="cs-block"> (or fallback to h2 boundaries)
- *  - rewrite the section header into the editorial-serif pattern
- *    (eyebrow + serif title + rule) with an id we can target from the TOC
- *  - return the rewritten HTML plus the TOC item list
- */
-function buildSectionedBodyAndTOC(html: string): { html: string; toc: TOCItem[] } {
-  // Grab the inner of the article/main if present, else the whole body fragment.
-  let body = html
-  const article = html.match(/<article[\s\S]*?>([\s\S]*?)<\/article>/i)
-  if (article) body = article[1]
-  else {
-    const main = html.match(/<main[\s\S]*?>([\s\S]*?)<\/main>/i)
-    if (main) body = main[1]
-  }
-
-  // Strip any <h1> from the body since the page H1 lives outside the wrapper.
-  body = body.replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, '')
-
-  const toc: TOCItem[] = []
-
-  // Rewrite "<h2><span class="num">Section NN</span>Title</h2>" patterns into
-  // the Hybrid E editorial-serif header.
-  const rewritten = body.replace(
-    /<h2[^>]*>\s*<span[^>]*class="num"[^>]*>\s*Section\s*(\d+)\s*<\/span>\s*([\s\S]*?)<\/h2>/gi,
-    (_match, n: string, titleHtml: string) => {
-      const num = String(n).padStart(2, '0')
-      const anchor = `sec-${num}`
-      const label = String(titleHtml).replace(/<[^>]+>/g, '').trim()
-      toc.push({ label, num, anchor })
-      return [
-        `<div class="he-section" id="${anchor}">`,
-        `  <span class="he-section__eyebrow">Section ${num} · ${label}</span>`,
-        `  <h2 class="he-section__title">${label}</h2>`,
-        `  <hr class="he-section__rule" />`,
-        `<div class="he-section__body">`,
-      ].join('\n')
-    }
-  )
-
-  // Close each .he-section before the next one opens, and at the end.
-  // Naive closer: split on the opening tag we inserted and re-join with closers.
-  const parts = rewritten.split('<div class="he-section" id="')
-  let closedHtml = parts[0]
-  for (let i = 1; i < parts.length; i++) {
-    if (i > 1) closedHtml += '</div></div>' // close prev body + prev section
-    closedHtml += '<div class="he-section" id="' + parts[i]
-  }
-  if (parts.length > 1) closedHtml += '</div></div>' // close the final section
-
-  return { html: closedHtml, toc }
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const html = await getPageHtml(slug)
@@ -178,10 +115,6 @@ export default async function CareSettingPage({ params }: Props) {
     html,
     `Specialist ${title.toLowerCase()} tender writing for UK care providers.`
   )
-  const heroImg = SETTING_IMAGES[slug] || 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80'
-  const cohort = getCohortTag(slug)
-
-  const { html: bodyHtml, toc } = buildSectionedBodyAndTOC(html)
 
   return (
     <main>
@@ -193,36 +126,7 @@ export default async function CareSettingPage({ params }: Props) {
         { name: title, path: `/care-settings/${slug}` },
       ])) }} />
 
-      <section className="cs-hero" style={{ backgroundImage: `linear-gradient(180deg, rgba(11,31,58,0.45) 0%, rgba(11,31,58,0.85) 100%), url(${heroImg})` }}>
-        <div className="container">
-          <nav className="cs-crumb" aria-label="Breadcrumb">
-            <a href="/care-settings">Care Settings</a>
-            <span> / </span>
-            <span>{title}</span>
-          </nav>
-          <h1 className="cs-title">{title}</h1>
-          <p className="cs-strap">{description}</p>
-        </div>
-      </section>
-
-      <HybridE
-        tocItems={toc}
-        rail={
-          <div className="he-rail">
-            <LiveTendersWidget cohort={cohort} variant="dark" title={`Live tenders · ${title}`} />
-            <RelatedCareSettingsWidget currentSlug={slug} />
-            <RelatedCaseStudyWidget cohort={cohort} />
-            <ConsultationCTA
-              title={`${title} tender on the horizon?`}
-              body="Free 20-minute call to scope your bid."
-              ref={`care-${slug}`}
-            />
-            <NewsletterWidget />
-          </div>
-        }
-      >
-        <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
-      </HybridE>
+      <div dangerouslySetInnerHTML={{ __html: html }} />
     </main>
   )
 }
