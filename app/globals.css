@@ -7016,3 +7016,68 @@ section.cs-block ul li::marker {
   font-size: 12px; color: var(--he-red-bright);
   margin-top: 8px;
 }
+/* ==============================================================
+   HYBRID E HOTFIX (append) - 2 June 2026, post-Step-13 feedback
+   Append to app/globals.css
+   ============================================================== */
+
+/* ---- Header clearance ------------------------------------------
+   The fixed TopBar (34px) + Nav strip (~74px) overlap the page
+   content. Push the Hybrid E grid down by 130px so the H1 and TOC
+   start below the fixed header. */
+.he-wrap { padding-top: 130px; }
+
+/* ---- Sticky TOC and rail columns -------------------------------
+   The TOC and the rail should pin to the viewport when scrolling.
+   They release at the bottom of the grid container. The top offset
+   matches the fixed header height + a small breathing buffer. */
+.he-toc-col {
+  position: sticky;
+  top: 130px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+.he-rail-col {
+  position: sticky;
+  top: 130px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+/* ---- Smooth scroll + anchor offset -----------------------------
+   When a TOC link is clicked or the page scrolls to a section
+   anchor, land the heading just below the fixed header rather
+   than hidden behind it. */
+html { scroll-behavior: smooth; scroll-padding-top: 130px; }
+.he-content-col h2[id] { scroll-margin-top: 130px; }
+.he-content-col h3[id] { scroll-margin-top: 130px; }
+
+/* ---- Hide the legacy bottom CTA banner -------------------------
+   The care setting HTML files include a fixed-position
+   .sticky-cta strip ("Starting from no prior experienceâ€¦") that
+   was added before the Hybrid E rollout. The new rail's
+   Consultation CTA replaces it, so this banner is now redundant
+   and obscures the bottom of the page. */
+.sticky-cta { display: none !important; }
+
+/* ---- Mobile and tablet adjustments -----------------------------
+   On narrow viewports the fixed header is shorter (the TopBar
+   hides at < 1024px and the Nav becomes more compact). Reduce
+   the top padding so the page does not look over-padded on
+   phones, and keep the scroll offsets in sync. */
+@media (max-width: 1100px) {
+  .he-wrap { padding-top: 100px; }
+  .he-toc-col,
+  .he-rail-col { top: 100px; max-height: calc(100vh - 120px); }
+  html { scroll-padding-top: 100px; }
+  .he-content-col h2[id],
+  .he-content-col h3[id] { scroll-margin-top: 100px; }
+}
+@media (max-width: 760px) {
+  .he-wrap { padding-top: 80px; }
+  html { scroll-padding-top: 80px; }
+  .he-content-col h2[id],
+  .he-content-col h3[id] { scroll-margin-top: 80px; }
+  /* TOC and rail already hidden by base .he-toc-col / .he-rail-col
+     display rules at < 760px; no extra mobile reset needed here. */
+}
