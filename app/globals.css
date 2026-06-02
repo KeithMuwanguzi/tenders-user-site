@@ -7320,3 +7320,304 @@ body { background: #FAF8F2; }
    On mobile the rail is hidden, but the cream page bg still shows.
    No further changes needed - the existing responsive rules from
    the base CSS handle the column collapse. */
+/* ==============================================================
+   HYBRID E - body template typography
+   Append to app/globals.css
+   Targets the legacy HTML class names baked into the care setting
+   HTML files (.tlp, .crumbs, .cat-tag, .lede, .pos, .cohort-bar,
+   .label, .tag, .cs-block, .num, .transform-strip, .row, .from,
+   .arrow, .to, .cta-block, .lead, .sub) so the rendered page
+   matches the Hybrid E mockup the user approved.
+   ============================================================== */
+
+/* ---- Article container reset ----------------------------------- */
+.he-content-col .tlp {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--he-ink, #1F2D3D);
+}
+
+/* ---- Breadcrumb ------------------------------------------------- */
+.he-content-col .crumbs {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--he-ink-3, #6B7280);
+  margin: 0 0 14px;
+}
+.he-content-col .crumbs a {
+  color: var(--he-ink-3, #6B7280);
+  text-decoration: none;
+}
+.he-content-col .crumbs a:hover {
+  color: var(--he-red-dark, #B72A38);
+}
+
+/* ---- Category tag (Adult Social Care pill) --------------------- */
+.he-content-col .cat-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 18px;
+}
+.he-content-col .cat-tag .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: inline-block;
+}
+
+/* ---- H1 in editorial serif ------------------------------------- */
+.he-content-col h1 {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 2.8rem;
+  line-height: 1.06;
+  font-weight: 700;
+  color: var(--he-navy, #0B1F3A);
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+}
+@media (max-width: 760px) {
+  .he-content-col h1 { font-size: 2.2rem; }
+}
+
+/* ---- Lede (italic serif kicker) -------------------------------- */
+.he-content-col .lede,
+.he-content-col .lead {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.32rem;
+  line-height: 1.42;
+  color: var(--he-red-dark, #B72A38);
+  margin: 0 0 22px;
+}
+
+/* ---- Positioning line ------------------------------------------ */
+.he-content-col .pos {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--he-ink-2, #4A5568);
+  margin: 0 0 22px;
+}
+
+/* ---- Cohort coverage box --------------------------------------- */
+.he-content-col .cohort-bar {
+  background: #fff;
+  border-left: 4px solid var(--he-red, #E63946);
+  padding: 14px 18px;
+  margin: 22px 0 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  border-radius: 0 6px 6px 0;
+  box-shadow: 0 1px 2px rgba(11, 31, 58, 0.04);
+}
+.he-content-col .cohort-bar .label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--he-ink-2, #4A5568);
+  margin-right: 6px;
+}
+.he-content-col .cohort-bar .tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: 14px;
+  background: #FAF8F2;
+  border: 1px solid var(--he-line, #E5E0D5);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--he-navy, #0B1F3A);
+}
+
+/* ---- Section blocks (.cs-block) -------------------------------- */
+.he-content-col .cs-block {
+  margin: 32px 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--he-line, #E5E0D5);
+}
+.he-content-col .cs-block:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 28px;
+}
+
+/* ---- H2 with .num eyebrow inline ------------------------------- */
+.he-content-col h2 {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 1.85rem;
+  line-height: 1.18;
+  font-weight: 700;
+  color: var(--he-navy, #0B1F3A);
+  margin: 0 0 16px;
+  padding-left: 14px;
+  border-left: 4px solid var(--he-red, #E63946);
+}
+.he-content-col h2 .num {
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--he-red-dark, #B72A38);
+  margin-bottom: 6px;
+}
+.he-content-col h3 {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--he-navy, #0B1F3A);
+  margin: 24px 0 10px;
+  letter-spacing: 0.01em;
+}
+
+/* ---- Body paragraphs ------------------------------------------- */
+.he-content-col p {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: var(--he-ink, #1F2D3D);
+  margin: 0 0 16px;
+}
+.he-content-col ul,
+.he-content-col ol {
+  margin: 0 0 18px 1.5rem;
+  padding: 0;
+}
+.he-content-col li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+.he-content-col a {
+  color: var(--he-red-dark, #B72A38);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.he-content-col a:hover {
+  color: var(--he-navy, #0B1F3A);
+}
+
+/* ---- Transform strip (from -> to outcome) ---------------------- */
+.he-content-col .transform-strip {
+  background: var(--he-navy, #0B1F3A);
+  color: #fff;
+  padding: 28px 32px;
+  border-radius: 8px;
+  margin: 36px 0;
+}
+.he-content-col .transform-strip h3 {
+  color: #fff;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin: 0 0 18px;
+}
+.he-content-col .transform-strip .row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.he-content-col .transform-strip .row:last-child {
+  border-bottom: none;
+}
+.he-content-col .transform-strip .from {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  text-align: left;
+}
+.he-content-col .transform-strip .arrow {
+  color: var(--he-red-bright, #F24B4B);
+  font-weight: 700;
+  font-size: 18px;
+}
+.he-content-col .transform-strip .to {
+  font-size: 14.5px;
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+}
+@media (max-width: 600px) {
+  .he-content-col .transform-strip .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .he-content-col .transform-strip .arrow {
+    text-align: center;
+  }
+}
+
+/* ---- CTA block at bottom of article ---------------------------- */
+.he-content-col .cta-block {
+  background: #fff;
+  border: 1px solid var(--he-red, #E63946);
+  border-radius: 8px;
+  padding: 28px;
+  margin: 36px 0;
+  text-align: center;
+}
+.he-content-col .cta-block .lead {
+  display: block;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: normal;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--he-navy, #0B1F3A);
+  margin-bottom: 8px;
+}
+.he-content-col .cta-block .sub {
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14.5px;
+  color: var(--he-ink-2, #4A5568);
+  margin-bottom: 18px;
+}
+.he-content-col .cta-block .btn,
+.he-content-col .btn {
+  display: inline-block;
+  background: var(--he-red-deep, #B02727);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+.he-content-col .cta-block .btn:hover,
+.he-content-col .btn:hover {
+  background: var(--he-red-dark, #B72A38);
+  color: #fff;
+}
+
+/* ---- Mobile ---------------------------------------------------- */
+@media (max-width: 760px) {
+  .he-content-col h2 { font-size: 1.5rem; padding-left: 12px; }
+  .he-content-col .lede,
+  .he-content-col .lead { font-size: 1.18rem; }
+  .he-content-col .cohort-bar { padding: 12px 14px; }
+  .he-content-col .cohort-bar .tag { font-size: 12px; padding: 4px 10px; }
+}
