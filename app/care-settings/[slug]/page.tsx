@@ -90,33 +90,57 @@ function extractMetaDescription(html: string, fallback: string): string {
 }
 
 /**
- * Walk the HTML string, find every <h2>, inject an id="sec-NN" if missing,
- * and collect a TOCItem list. Returns the augmented HTML and the TOC items
+ * Walk the HTML string, find every <h2>, inject an id if missing, and
+ * collect a TOCItem list. Returns the augmented HTML and the TOC items
  * so HybridE can render the sticky table of contents.
  *
- * Non-mutating to whatever was already there: if an H2 already has an id,
- * the original id is reused for the TOC item.
+ * Numbering rule. Care setting HTML files label their H2s as "Section 01
+ * Title", "Section 02 Title", and so on. We extract that printed number
+ * (which may skip values - one file goes 01-10 then 12) so the TOC matches
+ * what the reader sees on the page. If no "Section NN" prefix is present
+ * we fall back to a sequential counter.
+ *
+ * Non-mutating to existing ids: if the H2 already has an id, that id is
+ * reused as the TOC anchor.
  */
 function buildTocAndContent(html: string): {
   tocItems: TOCItem[]
   processedHtml: string
 } {
   const tocItems: TOCItem[] = []
-  let counter = 0
+  let fallbackCounter = 0
 
   const processedHtml = html.replace(
     /<h2([^>]*)>([\s\S]*?)<\/h2>/gi,
     (_match, rawAttrs: string, inner: string) => {
-      counter++
-      const num = String(counter).padStart(2, '0')
+      fallbackCounter++
       const existingIdMatch = rawAttrs.match(/\sid="([^"]+)"/i)
-      const anchor = existingIdMatch ? existingIdMatch[1] : `sec-${num}`
-      const label = inner.replace(/<[^>]+>/g, '').trim()
+      const rawText = inner.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 
       // Skip empty headings (TOC would render an empty row).
-      if (!label) {
+      if (!rawText) {
         return `<h2${rawAttrs}>${inner}</h2>`
       }
+
+      // Try to read the printed section number from the H2 text itself.
+      // Matches "Section 12 Where this applies" and similar phrasings.
+      const sectionMatch = rawText.match(
+        /^section\s+(\d+)\s*[:.\-–—]?\s*(.+)$/i
+      )
+
+      let num: string
+      let label: string
+      if (sectionMatch) {
+        num = sectionMatch[1].padStart(2, '0')
+        label = sectionMatch[2].trim()
+      } else {
+        num = String(fallbackCounter).padStart(2, '0')
+        label = rawText
+      }
+
+      const anchor = existingIdMatch
+        ? existingIdMatch[1]
+        : `sec-${num}`
 
       tocItems.push({ label, num, anchor })
 
