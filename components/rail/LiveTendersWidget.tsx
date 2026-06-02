@@ -2,12 +2,16 @@ import Link from 'next/link'
 
 /* ============================================================
    LiveTendersWidget - rail widget showing 3 live tenders.
-   Updated 2 June 2026 to match the actual /api/tenders response
-   shape (organisation/title/deadline/source/value), not the
-   speculative shape from yesterday's first draft.
-   Auto-refreshes via Next.js ISR: revalidate every 600 seconds
-   (10 minutes). A new tender added to Notion appears here within
-   10 minutes without a redeploy.
+   2 June 2026 round-3 update:
+   - Default variant back to 'dark' (navy panel on cream paper -
+     editorial FT/Economist register; fixes the invisible white
+     text on white background bug from round 2).
+   - Real cohort filtering: maps the care-setting slug to a set
+     of category keywords and filters tenders by matching the
+     API `category` field. Falls back to top tenders when no
+     matches so the widget always renders something.
+   - Auto-refreshes via Next.js ISR: revalidate every 600 seconds
+     (10 minutes). New tenders in Notion appear within 10 minutes.
    ============================================================ */
 
 export type LiveTender = {
@@ -16,18 +20,20 @@ export type LiveTender = {
   organisation: string | null
   deadline: string | null
   value: string | null
+  category: string | null
   source: 'Contracts Finder' | 'Find a Tender'
 }
 
 type Props = {
-  /** Cohort filter for the API call (e.g. 'domiciliary', 'extra-care-housing').
-      Currently the API ignores this filter and returns all published tenders;
-      we pass it forward so the widget is forward-compatible when the API
-      gains cohort filtering. */
+  /** Cohort filter - typically the care setting slug like
+      'extra-care-housing' or 'domiciliary-care'. The widget maps
+      this to category keywords and filters tenders whose API
+      `category` field matches any keyword. */
   cohort?: string
   /** Maximum tenders to show. Default 3. */
   limit?: number
-  /** Pass `dark` variant for high-visual-weight sections. */
+  /** 'dark' (default) is the navy editorial panel.
+      'light' uses the white-on-cream card style. */
   variant?: 'light' | 'dark'
   /** Optional widget title override. */
   title?: string
@@ -39,27 +45,94 @@ interface ApiTender {
   organisation?: string | null
   deadline?: string | null
   value?: string | null
+  category?: string | null
   source?: string
 }
 
-async function fetchLiveTenders(cohort?: string, limit = 3): Promise<LiveTender[]> {
+/* Slug to category-keyword map. When a care setting page passes
+   its slug as the cohort prop, we match the tender's API
+   `category` field against any of the keywords (case-insensitive,
+   substring). Add new mappings as new care setting slugs ship.
+   Each value must be a non-empty array; otherwise the slug falls
+   through to the "no match" path and shows top tenders. */
+const COHORT_KEYWORDS: Record<string, string[]> = {
+  'domiciliary-care': ['domiciliary', 'home care'],
+  'live-in-care': ['live-in', 'live in', 'domiciliary'],
+  'residential-care': ['residential', 'care home'],
+  'nursing-care': ['nursing'],
+  'supported-living': ['supported living'],
+  'extra-care-housing': ['extra care', 'supported living', 'housing'],
+  'day-services': ['day service', 'day care'],
+  'reablement-services': ['reablement', 'intermediate care'],
+  'short-breaks-and-respite': ['short break', 'respite'],
+  'shared-lives': ['shared lives'],
+  'outreach-community-support': ['outreach', 'community support'],
+  'crisis-rapid-response': ['crisis', 'rapid response'],
+  'childrens-residential-care': ['children', 'children services', 'residential'],
+  'supported-accommodation': ['supported accommodation', 'children', 'leaving care'],
+  'fostering-services': ['fostering'],
+  'leaving-care-services': ['leaving care', 'care leaver'],
+  'childrens-short-breaks': ['children', 'short break'],
+  'family-support-and-outreach': ['family support', 'outreach', 'children'],
+  'housing-related-support': ['housing', 'housing related'],
+  'temporary-accommodation': ['temporary accommodation', 'homeless'],
+  'emergency-accommodation': ['emergency accommodation', 'homeless'],
+  'supported-housing': ['supported housing', 'housing'],
+  'community-health-services': ['community health'],
+  'continuing-healthcare': ['continuing healthcare', 'chc'],
+  'complex-care': ['complex care', 'complex needs'],
+  'rehabilitation-services': ['rehabilitation', 'rehab'],
+  'end-of-life-and-palliative-care': ['palliative', 'end of life', 'hospice'],
+  'hospital-discharge-services': ['hospital discharge', 'discharge to assess'],
+  'autism-services': ['autism', 'autistic'],
+  'learning-disability-services': ['learning disability', 'learning disabilities'],
+  'mental-health-services': ['mental health', 'mental wellbeing'],
+  'substance-misuse-services': ['substance misuse', 'drug', 'alcohol'],
+}
+
+async function fetchLiveTenders(
+  cohort: string | undefined,
+  limit: number
+): Promise<LiveTender[]> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.tenderlab.co.uk'
   const url = new URL('/api/tenders', base)
-  if (cohort) url.searchParams.set('cohort', cohort)
-  url.searchParams.set('limit', String(limit))
+  // Fetch a larger pool so we have material to filter from.
+  url.searchParams.set('limit', '100')
   try {
     const res = await fetch(url.toString(), { next: { revalidate: 600 } })
     if (!res.ok) return []
     const data = (await res.json()) as { tenders?: ApiTender[] }
     if (!Array.isArray(data?.tenders)) return []
-    return data.tenders.slice(0, limit).map((t): LiveTender => ({
+    const all = data.tenders.map((t): LiveTender => ({
       id: t.id ?? '',
       title: t.title ?? 'Untitled tender',
       organisation: t.organisation ?? null,
       deadline: t.deadline ?? null,
       value: t.value ?? null,
+      category: t.category ?? null,
       source: t.source === 'Find a Tender' ? 'Find a Tender' : 'Contracts Finder',
     })).filter(t => t.id)
+
+    // No cohort - return top N.
+    if (!cohort) return all.slice(0, limit)
+
+    const keywords = COHORT_KEYWORDS[cohort] ?? []
+    if (!keywords.length) return all.slice(0, limit)
+
+    const matchCategory = (cat: string | null): boolean => {
+      if (!cat) return false
+      const lc = cat.toLowerCase()
+      return keywords.some(k => lc.includes(k))
+    }
+
+    const matched = all.filter(t => matchCategory(t.category))
+    if (matched.length >= limit) return matched.slice(0, limit)
+
+    // Top up with non-matching tenders to fill the slot rather
+    // than show an empty rail.
+    const used = new Set(matched.map(t => t.id))
+    const rest = all.filter(t => !used.has(t.id))
+    return [...matched, ...rest].slice(0, limit)
   } catch {
     return []
   }
@@ -80,10 +153,10 @@ function shortenTitle(t: string, max = 80): string {
 export default async function LiveTendersWidget({
   cohort,
   limit = 3,
-  // Direction B: default to 'light' so the rail widget reads as a
-  // paper card on the cream page background. Pages that want the
-  // older dark tile can opt in by passing variant="dark".
-  variant = 'light',
+  // Default variant back to dark for the editorial register and
+  // to ensure tender text is always readable (the light variant
+  // had a colour contrast bug from a previous round).
+  variant = 'dark',
   title,
 }: Props) {
   const tenders = await fetchLiveTenders(cohort, limit)
