@@ -485,8 +485,27 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
-          <div className="testimonials__more">
+          <div className="testimonials__more" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
             <Link href="/reviews" className="btn btn-ghost">Read More Reviews</Link>
+            <a
+              href="https://g.page/r/CarBdrVY3WO4EBM/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost"
+              aria-label="Read our reviews on Google"
+            >
+              <span style={{ color: '#FFD166', letterSpacing: 1, marginRight: 6 }} aria-hidden="true">★★★★★</span>
+              See reviews on Google
+            </a>
+            <a
+              href="https://uk.trustpilot.com/review/tenderlab.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost"
+              aria-label="Find us on Trustpilot"
+            >
+              Find us on Trustpilot
+            </a>
           </div>
         </div>
       </section>
