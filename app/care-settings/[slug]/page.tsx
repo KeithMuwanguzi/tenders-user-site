@@ -11,8 +11,12 @@ import {
   faqSchema,
   breadcrumbSchema,
   defaultFaq,
-  BRAND,
 } from '@/lib/seo'
+import HybridE from '@/components/HybridE'
+import type { TOCItem } from '@/components/TOC'
+import LiveTendersWidget from '@/components/rail/LiveTendersWidget'
+import RelatedCareSettingsWidget from '@/components/rail/RelatedCareSettingsWidget'
+import ConsultationCTA from '@/components/rail/ConsultationCTA'
 
 const HTML_DIR = path.join(
   process.cwd(),
@@ -85,6 +89,47 @@ function extractMetaDescription(html: string, fallback: string): string {
   return m ? m[1] : fallback
 }
 
+/**
+ * Walk the HTML string, find every <h2>, inject an id="sec-NN" if missing,
+ * and collect a TOCItem list. Returns the augmented HTML and the TOC items
+ * so HybridE can render the sticky table of contents.
+ *
+ * Non-mutating to whatever was already there: if an H2 already has an id,
+ * the original id is reused for the TOC item.
+ */
+function buildTocAndContent(html: string): {
+  tocItems: TOCItem[]
+  processedHtml: string
+} {
+  const tocItems: TOCItem[] = []
+  let counter = 0
+
+  const processedHtml = html.replace(
+    /<h2([^>]*)>([\s\S]*?)<\/h2>/gi,
+    (_match, rawAttrs: string, inner: string) => {
+      counter++
+      const num = String(counter).padStart(2, '0')
+      const existingIdMatch = rawAttrs.match(/\sid="([^"]+)"/i)
+      const anchor = existingIdMatch ? existingIdMatch[1] : `sec-${num}`
+      const label = inner.replace(/<[^>]+>/g, '').trim()
+
+      // Skip empty headings (TOC would render an empty row).
+      if (!label) {
+        return `<h2${rawAttrs}>${inner}</h2>`
+      }
+
+      tocItems.push({ label, num, anchor })
+
+      if (existingIdMatch) {
+        return `<h2${rawAttrs}>${inner}</h2>`
+      }
+      return `<h2${rawAttrs} id="${anchor}">${inner}</h2>`
+    }
+  )
+
+  return { tocItems, processedHtml }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const html = await getPageHtml(slug)
@@ -116,17 +161,68 @@ export default async function CareSettingPage({ params }: Props) {
     `Specialist ${title.toLowerCase()} tender writing for UK care providers.`
   )
 
+  const { tocItems, processedHtml } = buildTocAndContent(html)
+
+  // SETTING_IMAGES is currently informational; we may use it for a future
+  // hero swap. Reference it once so eslint does not warn about unused vars.
+  const _heroImage = SETTING_IMAGES[slug]
+
+  // Right rail recipe for care setting pages:
+  //   1. Live Tenders (cohort filter = slug; API returns top 3 active)
+  //   2. Related Care Settings (cohort-adjacent siblings)
+  //   3. Consultation CTA (with attribution to the slug)
+  const rail = (
+    <>
+      <LiveTendersWidget cohort={slug} limit={3} />
+      <RelatedCareSettingsWidget currentSlug={slug} />
+      <ConsultationCTA
+        title="Bidding in this setting?"
+        body="Free 20-minute call to scope your bid. 92% win rate across 200+ submissions."
+        ref={`care-setting:${slug}`}
+      />
+    </>
+  )
+
   return (
     <main>
-      <Script id={`ld-cs-${slug}-service`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema({ name: title, description, path: `/care-settings/${slug}` })) }} />
-      <Script id={`ld-cs-${slug}-faq`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(defaultFaq)) }} />
-      <Script id={`ld-cs-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Care Settings', path: '/care-settings' },
-        { name: title, path: `/care-settings/${slug}` },
-      ])) }} />
+      <Script
+        id={`ld-cs-${slug}-service`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            serviceSchema({
+              name: title,
+              description,
+              path: `/care-settings/${slug}`,
+            })
+          ),
+        }}
+      />
+      <Script
+        id={`ld-cs-${slug}-faq`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(defaultFaq)) }}
+      />
+      <Script
+        id={`ld-cs-${slug}-breadcrumb`}
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Care Settings', path: '/care-settings' },
+              { name: title, path: `/care-settings/${slug}` },
+            ])
+          ),
+        }}
+      />
 
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <HybridE tocItems={tocItems} rail={rail}>
+        <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+      </HybridE>
     </main>
   )
 }
