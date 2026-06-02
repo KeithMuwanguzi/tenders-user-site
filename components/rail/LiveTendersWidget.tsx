@@ -125,14 +125,10 @@ async function fetchLiveTenders(
       return keywords.some(k => lc.includes(k))
     }
 
-    const matched = all.filter(t => matchCategory(t.category))
-    if (matched.length >= limit) return matched.slice(0, limit)
-
-    // Top up with non-matching tenders to fill the slot rather
-    // than show an empty rail.
-    const used = new Set(matched.map(t => t.id))
-    const rest = all.filter(t => !used.has(t.id))
-    return [...matched, ...rest].slice(0, limit)
+    // Strict cohort match. We do NOT top up with unrelated tenders;
+    // the widget hides itself entirely when no matching tender
+    // exists. Relevance over presence, per Derrick's brief.
+    return all.filter(t => matchCategory(t.category)).slice(0, limit)
   } catch {
     return []
   }
