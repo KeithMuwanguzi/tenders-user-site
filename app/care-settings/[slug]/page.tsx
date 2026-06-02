@@ -178,7 +178,7 @@ export default async function CareSettingPage({ params }: Props) {
       <ConsultationCTA
         title="Bidding in this setting?"
         body="Free 20-minute call to scope your bid. 92% win rate across 200+ submissions."
-        ref={`care-setting:${slug}`}
+        attribution={`care-setting:${slug}`}
       />
     </>
   )
