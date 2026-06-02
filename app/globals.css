@@ -7081,3 +7081,155 @@ html { scroll-behavior: smooth; scroll-padding-top: 130px; }
   /* TOC and rail already hidden by base .he-toc-col / .he-rail-col
      display rules at < 760px; no extra mobile reset needed here. */
 }
+/* ==============================================================
+   HYBRID E - tender card separation + content polish
+   Append to app/globals.css
+   Round 2 of post-Step-13 feedback
+   ============================================================== */
+
+/* ---- Live tender card separation -------------------------------
+   Each tender in the right rail is now a card-like block with
+   visible borders, padding, and a hover state so it is clear which
+   one the cursor is on. */
+.he-widget__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 0;
+}
+.he-tender-item {
+  display: block;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+  cursor: pointer;
+}
+.he-tender-item:last-child {
+  border-bottom: none;
+}
+.he-tender-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+.he-tender-item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: -3px;
+}
+.he-tender-item__meta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 4px;
+}
+.he-tender-item__name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.32;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.he-tender-item__deadline {
+  font-size: 12px;
+  font-weight: 500;
+  color: #FFD166;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Related Care Settings link rows ----------------------------
+   The rail's RelatedCareSettings widget uses .he-rel-link rows.
+   Same visual treatment: separators, hover, clear targets. */
+.he-rel-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(11, 31, 58, 0.08);
+  color: var(--he-navy, #0B1F3A);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+.he-rel-link:last-child {
+  border-bottom: none;
+}
+.he-rel-link:hover {
+  background-color: rgba(230, 57, 70, 0.06);
+  color: #B72A38;
+}
+.he-rel-link__arrow {
+  font-weight: 700;
+  opacity: 0.55;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.he-rel-link:hover .he-rel-link__arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* ---- Content column typography ---------------------------------
+   The HTML files no longer carry their own <style> block (we strip
+   it server-side), so the centre column now inherits site typography
+   plus these editorial refinements. */
+.he-content-col {
+  font-family: var(--font-inter, 'Inter'), system-ui, sans-serif;
+  font-size: 16.5px;
+  line-height: 1.72;
+  color: #1F2D3D;
+}
+.he-content-col h2 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.65rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #0B1F3A;
+  margin: 2.4rem 0 1rem;
+}
+.he-content-col h3 {
+  font-family: var(--font-inter, 'Inter'), system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0B1F3A;
+  margin: 1.6rem 0 0.6rem;
+  letter-spacing: 0.01em;
+}
+.he-content-col p {
+  margin: 0 0 1.1rem;
+}
+.he-content-col ul,
+.he-content-col ol {
+  margin: 0 0 1.2rem 1.5rem;
+  padding: 0;
+}
+.he-content-col li {
+  margin-bottom: 0.4rem;
+}
+.he-content-col a {
+  color: #B72A38;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.he-content-col a:hover {
+  color: #0B1F3A;
+}
+
+/* ---- Widget heading ---------------------------------------------
+   Make the rail widget heads visually distinct from the body so the
+   "Live tenders / Related care settings / Bidding in this setting"
+   labels read as section starts. */
+.he-widget__head h3 {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ---- Mobile + tablet refinements -------------------------------- */
+@media (max-width: 760px) {
+  .he-content-col { font-size: 15.5px; }
+  .he-content-col h2 { font-size: 1.45rem; }
+}
