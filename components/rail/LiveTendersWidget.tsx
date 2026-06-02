@@ -80,7 +80,10 @@ function shortenTitle(t: string, max = 80): string {
 export default async function LiveTendersWidget({
   cohort,
   limit = 3,
-  variant = 'dark',
+  // Direction B: default to 'light' so the rail widget reads as a
+  // paper card on the cream page background. Pages that want the
+  // older dark tile can opt in by passing variant="dark".
+  variant = 'light',
   title,
 }: Props) {
   const tenders = await fetchLiveTenders(cohort, limit)
