@@ -90,6 +90,32 @@ function extractMetaDescription(html: string, fallback: string): string {
 }
 
 /**
+ * Strip embedded site chrome from the legacy HTML files. Each file in
+ * public/Page Content HTML Files/care-settings/ was written as a
+ * standalone page with its own <nav>, <header>, <footer> and <style>
+ * blocks. When those get dumped into the React shell via
+ * dangerouslySetInnerHTML we end up with a duplicate logo, a duplicate
+ * navigation row, a duplicate footer and conflicting styles. This
+ * function removes those blocks before we render so the page shows the
+ * site chrome (TopBar + Nav + Footer from React) exactly once.
+ *
+ * Also strips inline <script> blocks for safety.
+ */
+function cleanEmbeddedChrome(html: string): string {
+  return html
+    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, '')
+    .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, '')
+    .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+    /* The legacy bottom sticky CTA strip was injected by the original
+       HTML files and is now redundant with the rail's ConsultationCTA.
+       The CSS hide rule also catches this, but stripping the markup
+       outright keeps the source clean. */
+    .replace(/<div\s+class="sticky-cta"[\s\S]*?<\/div>\s*<\/div>?/gi, '')
+}
+
+/**
  * Walk the HTML string, find every <h2>, inject an id if missing, and
  * collect a TOCItem list. Returns the augmented HTML and the TOC items
  * so HybridE can render the sticky table of contents.
@@ -185,7 +211,8 @@ export default async function CareSettingPage({ params }: Props) {
     `Specialist ${title.toLowerCase()} tender writing for UK care providers.`
   )
 
-  const { tocItems, processedHtml } = buildTocAndContent(html)
+  const cleanedHtml = cleanEmbeddedChrome(html)
+  const { tocItems, processedHtml } = buildTocAndContent(cleanedHtml)
 
   // SETTING_IMAGES is currently informational; we may use it for a future
   // hero swap. Reference it once so eslint does not warn about unused vars.
