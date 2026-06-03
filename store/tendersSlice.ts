@@ -12,6 +12,8 @@ export interface Tender {
   status: string
   url: string
   source: 'Contracts Finder' | 'Find a Tender'
+  /** Set when published from the admin portal with a category tag. */
+  category?: string | null
 }
 
 interface TendersState {
@@ -36,9 +38,9 @@ const initialState: TendersState = {
 
 export const fetchTenders = createAsyncThunk(
   'tenders/fetch',
-  async ({ category, source }: { category: string; source: string }) => {
-    const searchTerm = category || 'health social care'
-    const res = await fetch(`/api/tenders?q=${encodeURIComponent(searchTerm)}&source=${source}`)
+  async ({ source }: { source: string }) => {
+    const params = new URLSearchParams({ source })
+    const res = await fetch(`/api/tenders?${params.toString()}`)
     if (!res.ok) throw new Error('Failed to fetch tenders')
     const data = await res.json()
     return data.tenders as Tender[]
@@ -73,7 +75,7 @@ const tendersSlice = createSlice({
       .addCase(fetchTenders.fulfilled, (state, action) => {
         state.items = action.payload
         state.loading = false
-        state.lastFetchKey = `${state.category}||${state.source}`
+        state.lastFetchKey = state.source
       })
       .addCase(fetchTenders.rejected, (state, action) => {
         state.loading = false

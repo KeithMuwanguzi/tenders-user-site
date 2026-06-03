@@ -1,77 +1,176 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Link from 'next/link'
 import type { RootState, AppDispatch } from '@/store'
 import { fetchTenders, setCategory, setSource, setPage, clearCache } from '@/store/tendersSlice'
+import {
+  ALL_CARE_CATEGORY,
+  CARE_CATEGORY_GROUPS,
+  filterTendersByCareCategory,
+  getCareCategoryById,
+} from '@/lib/tender-categories'
 
 const SOURCES = [
-  { label: 'All Sources', value: 'all' },
+  { label: 'All sources', value: 'all' },
   { label: 'Contracts Finder', value: 'cf' },
   { label: 'Find a Tender', value: 'ft' },
-]
+] as const
 
 const ITEMS_PER_PAGE = 10
 
-const CATEGORIES = [
-  { label: 'All', value: '' },
-  { label: 'Domiciliary Care', value: 'domiciliary care' },
-  { label: 'Supported Living', value: 'supported living' },
-  { label: 'Residential Care', value: 'residential care' },
-  { label: 'Children\'s Services', value: 'children services care' },
-  { label: 'Mental Health', value: 'mental health care services' },
-  { label: 'Nursing Care', value: 'nursing care services' },
-  { label: 'Housing Support', value: 'housing support services' },
-  { label: 'Community Health', value: 'community health services' },
-]
-
 export default function TendersClient() {
   const dispatch = useDispatch<AppDispatch>()
-  const { items: tenders, loading, error, category, source, page, lastFetchKey } = useSelector(
-    (state: RootState) => state.tenders
-  )
+  const { items: allTenders, loading, error, category, source, page, lastFetchKey } =
+    useSelector((state: RootState) => state.tenders)
 
-  const currentKey = `${category}||${source}`
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   useEffect(() => {
-    if (lastFetchKey !== currentKey) {
-      dispatch(fetchTenders({ category, source }))
+    if (lastFetchKey !== source) {
+      dispatch(fetchTenders({ source }))
     }
-  }, [dispatch, category, source, lastFetchKey, currentKey])
+  }, [dispatch, source, lastFetchKey])
+
+  const filteredTenders = useMemo(
+    () => filterTendersByCareCategory(allTenders, category),
+    [allTenders, category],
+  )
+
+  const activeCategoryLabel =
+    getCareCategoryById(category)?.label ?? ALL_CARE_CATEGORY.label
 
   const handleRefetch = useCallback(() => {
     dispatch(clearCache())
-    dispatch(fetchTenders({ category, source }))
-  }, [dispatch, category, source])
+    dispatch(fetchTenders({ source }))
+  }, [dispatch, source])
+
+  const handleCategorySelect = (id: string) => {
+    dispatch(setCategory(id))
+    setMobileFiltersOpen(false)
+  }
 
   const formatDate = (dateStr: string) => {
     try {
       return new Date(dateStr).toLocaleDateString('en-GB', {
-        day: 'numeric', month: 'short', year: 'numeric',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
       })
-    } catch { return dateStr }
+    } catch {
+      return dateStr
+    }
   }
 
   const daysUntilDeadline = (deadline: string | null) => {
     if (!deadline) return null
-    const diff = Math.ceil((new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    const diff = Math.ceil(
+      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+    )
     if (diff < 0) return 'Closed'
     if (diff === 0) return 'Today'
     if (diff === 1) return '1 day left'
     return `${diff} days left`
   }
 
+  const totalPages = Math.max(1, Math.ceil(filteredTenders.length / ITEMS_PER_PAGE))
+  const pageTenders = filteredTenders.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE,
+  )
+
+  const sidebarFilters = (
+    <nav className="tenders-sidebar__nav" aria-label="Filter by care setting">
+      <button
+        type="button"
+        className={`tenders-sidebar__item${category === '' ? ' tenders-sidebar__item--active' : ''}`}
+        onClick={() => handleCategorySelect('')}
+      >
+        {ALL_CARE_CATEGORY.label}
+        {!loading && category === '' && (
+          <span className="tenders-sidebar__count">{allTenders.length}</span>
+        )}
+      </button>
+
+      {CARE_CATEGORY_GROUPS.map((group) => (
+        <div key={group.title} className="tenders-sidebar__group">
+          <p className="tenders-sidebar__group-title">{group.title}</p>
+          <ul className="tenders-sidebar__list">
+            {group.categories.map((cat) => {
+              const count = filterTendersByCareCategory(allTenders, cat.id).length
+              return (
+                <li key={cat.id}>
+                  <button
+                    type="button"
+                    className={`tenders-sidebar__item${category === cat.id ? ' tenders-sidebar__item--active' : ''}`}
+                    onClick={() => handleCategorySelect(cat.id)}
+                  >
+                    <span className="tenders-sidebar__item-label">{cat.label}</span>
+                    {!loading && count > 0 && (
+                      <span className="tenders-sidebar__count">{count}</span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  )
+
   return (
-    <>
-      <section className="tenders-filters">
-        <div className="container">
-          <div className="tenders-filters__row">
-            <div className="tenders-filters__sources">
+    <section className="tenders-layout">
+      <div className="container tenders-layout__container">
+        {/* Mobile: compact filter trigger */}
+        <div className="tenders-layout__mobile-bar">
+          <button
+            type="button"
+            className="tenders-layout__mobile-filter-btn"
+            onClick={() => setMobileFiltersOpen((o) => !o)}
+            aria-expanded={mobileFiltersOpen}
+            aria-controls="tenders-care-filters"
+          >
+            <span className="tenders-layout__mobile-filter-label">Care setting</span>
+            <span className="tenders-layout__mobile-filter-value">{activeCategoryLabel}</span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          {mobileFiltersOpen && (
+            <div id="tenders-care-filters" className="tenders-layout__mobile-panel">
+              {sidebarFilters}
+            </div>
+          )}
+        </div>
+
+        <aside className="tenders-sidebar" aria-label="Care setting filters">
+          <div className="tenders-sidebar__inner">
+            <h2 className="tenders-sidebar__heading">Care setting</h2>
+            <p className="tenders-sidebar__hint">
+              Filter published opportunities by type of service.
+            </p>
+            {sidebarFilters}
+          </div>
+        </aside>
+
+        <div className="tenders-main">
+          <div className="tenders-main__toolbar">
+            <div className="tenders-main__sources" role="group" aria-label="Data source">
               {SOURCES.map((s) => (
                 <button
                   key={s.value}
-                  className={`tenders-filters__source-btn${source === s.value ? ' tenders-filters__source-btn--active' : ''}`}
+                  type="button"
+                  className={`tenders-main__source-btn${source === s.value ? ' tenders-main__source-btn--active' : ''}`}
                   onClick={() => dispatch(setSource(s.value))}
                 >
                   {s.label}
@@ -79,68 +178,102 @@ export default function TendersClient() {
               ))}
             </div>
             <button
-              className="tenders-filters__refetch"
+              type="button"
+              className="tenders-main__refetch"
               onClick={handleRefetch}
               disabled={loading}
-              title="Refresh tenders from source portals"
+              title="Refresh list"
             >
-              <svg className={loading ? 'tenders-filters__refetch-spin' : ''} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+              <svg
+                className={loading ? 'tenders-filters__refetch-spin' : ''}
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M21 2v6h-6" />
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M3 22v-6h6" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+              </svg>
               Refresh
             </button>
           </div>
-          <div className="tenders-filters__bar">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                className={`tenders-filters__btn${category === cat.value ? ' tenders-filters__btn--active' : ''}`}
-                onClick={() => dispatch(setCategory(cat.value))}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="tenders-list">
-        <div className="container">
           {loading && (
             <div className="tenders-list__loading">
               <div className="tenders-list__spinner" />
-              <p>Fetching live opportunities from Contracts Finder and Find a Tender...</p>
+              <p>Loading live opportunities…</p>
             </div>
           )}
 
           {error && (
             <div className="tenders-list__error">
               <p>Unable to load tenders at the moment. Please try again later.</p>
-              <button className="btn btn-primary" onClick={handleRefetch}>Retry</button>
+              <button type="button" className="btn btn-primary" onClick={handleRefetch}>
+                Retry
+              </button>
             </div>
           )}
 
-          {!loading && !error && tenders.length === 0 && (
+          {!loading && !error && filteredTenders.length === 0 && (
             <div className="tenders-list__empty">
-              <p>No active tenders found for this category. Try a different filter or check back soon.</p>
+              <p>
+                {category
+                  ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
+                  : 'No active tenders published yet. Check back soon.'}
+              </p>
+              {category && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => handleCategorySelect('')}
+                >
+                  Show all care settings
+                </button>
+              )}
             </div>
           )}
 
-          {!loading && !error && tenders.length > 0 && (
+          {!loading && !error && filteredTenders.length > 0 && (
             <>
               <div className="tenders-list__count">
-                Showing {((page - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(page * ITEMS_PER_PAGE, tenders.length)} of {tenders.length} opportunities
+                {category ? (
+                  <>
+                    <span className="tenders-list__count-filter">{activeCategoryLabel}</span>
+                    {' · '}
+                  </>
+                ) : null}
+                Showing {(page - 1) * ITEMS_PER_PAGE + 1}–
+                {Math.min(page * ITEMS_PER_PAGE, filteredTenders.length)} of{' '}
+                {filteredTenders.length}{' '}
+                {filteredTenders.length === 1 ? 'opportunity' : 'opportunities'}
               </div>
+
               <div className="tenders-list__grid">
-                {tenders.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((tender, idx) => {
+                {pageTenders.map((tender, idx) => {
                   const urgency = daysUntilDeadline(tender.deadline)
                   return (
-                    <article key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`} className="tender-card">
+                    <article
+                      key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`}
+                      className="tender-card"
+                    >
                       <div className="tender-card__header">
-                        <span className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}>
+                        <span
+                          className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}
+                        >
                           {tender.source}
                         </span>
                         <span className="tender-card__status">{tender.status}</span>
                         {urgency && (
-                          <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
+                          <span
+                            className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}
+                          >
                             {urgency}
                           </span>
                         )}
@@ -148,7 +281,7 @@ export default function TendersClient() {
                       <h3 className="tender-card__title">{tender.title}</h3>
                       <p className="tender-card__desc">
                         {tender.description.length > 200
-                          ? tender.description.slice(0, 200) + '...'
+                          ? tender.description.slice(0, 200) + '…'
                           : tender.description}
                       </p>
                       <div className="tender-card__meta">
@@ -186,9 +319,12 @@ export default function TendersClient() {
                           href={`/tenders/${encodeURIComponent(tender.id)}?source=${tender.source === 'Find a Tender' ? 'ft' : 'cf'}`}
                           className="btn btn-primary"
                         >
-                          View Details
+                          View details
                         </Link>
-                        <Link href="/contact?utm_source=tenders&utm_medium=card&utm_campaign=lead" className="btn btn-ghost">
+                        <Link
+                          href="/contact?utm_source=tenders&utm_medium=card&utm_campaign=lead"
+                          className="btn btn-ghost"
+                        >
                           Need help with this bid?
                         </Link>
                       </div>
@@ -197,29 +333,39 @@ export default function TendersClient() {
                 })}
               </div>
 
-              <div className="tenders-list__pagination">
-                <button
-                  className="btn btn-ghost"
-                  disabled={page <= 1}
-                  onClick={() => { dispatch(setPage(Math.max(1, page - 1))); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
-                >
-                  Previous
-                </button>
-                <span className="tenders-list__page">
-                  Page {page} of {Math.ceil(tenders.length / ITEMS_PER_PAGE)}
-                </span>
-                <button
-                  className="btn btn-ghost"
-                  disabled={page >= Math.ceil(tenders.length / ITEMS_PER_PAGE)}
-                  onClick={() => { dispatch(setPage(page + 1)); window.scrollTo({ top: 300, behavior: 'smooth' }) }}
-                >
-                  Next
-                </button>
-              </div>
+              {totalPages > 1 && (
+                <div className="tenders-list__pagination">
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={page <= 1}
+                    onClick={() => {
+                      dispatch(setPage(Math.max(1, page - 1)))
+                      window.scrollTo({ top: 280, behavior: 'smooth' })
+                    }}
+                  >
+                    Previous
+                  </button>
+                  <span className="tenders-list__page">
+                    Page {page} of {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={page >= totalPages}
+                    onClick={() => {
+                      dispatch(setPage(page + 1))
+                      window.scrollTo({ top: 280, behavior: 'smooth' })
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }
