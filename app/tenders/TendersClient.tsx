@@ -22,7 +22,7 @@ const ITEMS_PER_PAGE = 10
 
 export default function TendersClient() {
   const dispatch = useDispatch<AppDispatch>()
-  const { items: allTenders, loading, error, category, source, page, lastFetchKey } =
+  const { items: allTenders, loading, error, category, source, page, lastFetchKey, newCount } =
     useSelector((state: RootState) => state.tenders)
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -177,6 +177,11 @@ export default function TendersClient() {
                 </button>
               ))}
             </div>
+            {newCount > 0 && !loading && (
+              <span className="tenders-main__new-pill" aria-live="polite">
+                {newCount} new since last refresh
+              </span>
+            )}
             <button
               type="button"
               className="tenders-main__refetch"
@@ -249,6 +254,9 @@ export default function TendersClient() {
                     {' · '}
                   </>
                 ) : null}
+                Newest first
+                {newCount > 0 ? ` · ${newCount} new since your last refresh` : ''}
+                {' · '}
                 Showing {(page - 1) * ITEMS_PER_PAGE + 1}–
                 {Math.min(page * ITEMS_PER_PAGE, filteredTenders.length)} of{' '}
                 {filteredTenders.length}{' '}
@@ -261,7 +269,7 @@ export default function TendersClient() {
                   return (
                     <article
                       key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`}
-                      className="tender-card"
+                      className={`tender-card${tender.isNew ? ' tender-card--new' : ''}`}
                     >
                       <div className="tender-card__header">
                         <span
@@ -269,6 +277,9 @@ export default function TendersClient() {
                         >
                           {tender.source}
                         </span>
+                        {tender.isNew && (
+                          <span className="tender-card__new">New</span>
+                        )}
                         <span className="tender-card__status">{tender.status}</span>
                         {urgency && (
                           <span

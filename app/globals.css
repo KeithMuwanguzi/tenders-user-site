@@ -5671,6 +5671,15 @@ section.cs-block ul li::marker {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.tenders-main__new-pill {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--heritage-red);
+  background: rgba(200, 16, 46, 0.08);
+  border: 1px solid rgba(200, 16, 46, 0.2);
+  padding: 6px 12px;
+  border-radius: 100px;
+}
 
 .tenders-layout__mobile-bar {
   display: none;
@@ -5731,6 +5740,20 @@ section.cs-block ul li::marker {
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .tender-card:hover { border-color: var(--heritage-red); box-shadow: 0 4px 16px rgba(212,56,44,0.06); }
+.tender-card--new {
+  border-color: rgba(200, 16, 46, 0.35);
+  box-shadow: 0 2px 12px rgba(200, 16, 46, 0.08);
+}
+.tender-card__new {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  background: var(--heritage-red);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
 .tender-card__header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
 .tender-card__source {
   font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
