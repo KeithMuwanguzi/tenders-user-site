@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { fetchBlogs, categoryColor, type BlogPost } from '@/lib/sheets'
+import { fetchBlogs, categoryColor, type BlogPost } from '@/lib/blogs'
 
 type Props = {
   /** Optional tag filter to surface cohort-relevant posts first. */

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HeroSlider from '@/components/HeroSlider'
 import { fetchReviews } from '@/lib/sheets'
+import { fetchBlogs, formatBlogDate } from '@/lib/blogs'
 import type { Metadata } from 'next'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
@@ -181,30 +182,6 @@ const faqs = [
   },
 ]
 
-const blogPosts = [
-  {
-    title: 'Tender Writing Courses UK: 5 Options Compared',
-    category: 'Bid Strategy',
-    date: '22 Apr 2026',
-    slug: '/tender-writing-courses-uk-5-options-compared',
-    img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=480&q=70&auto=format',
-  },
-  {
-    title: 'Tender Writing Software vs Human Bid Writers: 2026 Comparison',
-    category: 'Commissioning Trends',
-    date: '22 Apr 2026',
-    slug: '/tender-writing-software-vs-human-bid-writers-2026-comparison',
-    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=480&q=70&auto=format',
-  },
-  {
-    title: "Free Tender Writing Training: A Beginner's Guide",
-    category: 'Bid Strategy',
-    date: '22 Apr 2026',
-    slug: '/free-tender-writing-training-a-beginners-guide',
-    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=480&q=70&auto=format',
-  },
-]
-
 /* ── SVG helpers ── */
 function StarIcon({ size = 14 }: { size?: number }) {
   return (
@@ -224,7 +201,8 @@ function Stars() {
 
 /* ── Page ── */
 export default async function HomePage() {
-  const reviews = await fetchReviews()
+  const [reviews, blogPosts] = await Promise.all([fetchReviews(), fetchBlogs()])
+  const homeBlogPosts = blogPosts.slice(0, 3)
   const portalsDuplicated = [...portals, ...portals]
 
   return (
@@ -544,22 +522,31 @@ export default async function HomePage() {
             <p>Expert advice, industry trends, and actionable strategies for your business.</p>
           </div>
           <div className="blog-section__grid">
-            {blogPosts.map((post) => (
-              <Link href={`/blog/${post.slug}`} key={post.slug} className="blog-card">
-                <div className="blog-card__img">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.img} alt={post.title} />
-                </div>
-                <div className="blog-card__body">
-                  <div className="blog-card__meta">
-                    <span className="blog-card__date">{post.date}</span>
-                    <span className="blog-card__category">{post.category}</span>
+            {homeBlogPosts.length === 0 ? (
+              <p className="text-[13px] text-gray-500 col-span-full">New articles coming soon.</p>
+            ) : (
+              homeBlogPosts.map((post) => (
+                <Link href={`/blog/${post.slug}`} key={post.slug} className="blog-card">
+                  <div className="blog-card__img">
+                    {post.imageUrl ? (
+                      <Image src={post.imageUrl} alt={post.title} width={480} height={270} />
+                    ) : (
+                      <div className="blog-card__img-placeholder" aria-hidden />
+                    )}
                   </div>
-                  <h3 className="blog-card__title">{post.title}</h3>
-                  <span className="blog-card__link">Learn more</span>
-                </div>
-              </Link>
-            ))}
+                  <div className="blog-card__body">
+                    <div className="blog-card__meta">
+                      {post.publishedAt && (
+                        <span className="blog-card__date">{formatBlogDate(post.publishedAt)}</span>
+                      )}
+                      <span className="blog-card__category">{post.category}</span>
+                    </div>
+                    <h3 className="blog-card__title">{post.title}</h3>
+                    <span className="blog-card__link">Learn more</span>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
           <div className="blog-section__more">
             <Link href="/blog" className="btn btn-ghost">View All Articles</Link>

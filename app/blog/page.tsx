@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
-import { fetchBlogs, categoryColor } from '@/lib/sheets'
+import { fetchBlogs, formatBlogDate } from '@/lib/blogs'
+import BlogCard from '@/components/blog/BlogCard'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,154 +13,133 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'UK Care Tender Writing Blog and Insights | TenderLab',
     description:
-      'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
+      'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers.',
     url: 'https://www.tenderlab.co.uk/blog',
     type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'UK Care Tender Writing Blog and Insights | TenderLab',
-    description: 'Live tender analysis and bid strategy for UK care providers. 92% win rate, 200+ submissions.',
   },
 }
 
 const FAQS = [
   {
     q: 'How often does the TenderLab blog publish?',
-    a: 'We publish 2 to 3 posts per week across two formats: Live Tender Analysis (a named UK procurement, scoring breakdown, bid strategy) and Sector Insights (statutory changes, evaluator patterns, sector trends). Top-traffic posts are refreshed quarterly.',
+    a: 'We publish 2 to 3 posts per week across Live Tender Analysis and Sector Insights. Top-traffic posts are refreshed quarterly.',
   },
   {
     q: 'What is a Live Tender Analysis post?',
-    a: 'A breakdown of a currently live UK public sector care tender: the cohort, the statutory context, the scoring battlegrounds, the common pitfalls, and the win-rate playbook drawn from 200+ submissions. Published within 7 days of the tender going live and archived the day after the deadline closes.',
+    a: 'A breakdown of a currently live UK public sector care tender: cohort, statutory context, scoring battlegrounds, and win-rate playbook from 200+ submissions.',
   },
   {
     q: 'Are these posts written by a human?',
-    a: 'Yes. Every TenderLab post is written by an evaluator-trained bid writer with care sector specialism. AI is used internally as a research assistant during first-draft research; the regulator-correct framing, statutory references, and case examples are always human-written and human-verified.',
+    a: 'Yes. Every post is written by an evaluator-trained bid writer. AI assists research only; framing and references are human-verified.',
   },
   {
     q: 'Can I get email alerts when a new post goes live?',
-    a: 'Yes. The TenderLab Insights newsletter goes out monthly with the most useful posts of the past 30 days, plus subscriber-only Live Tender Analysis briefings. Subscribe from any post footer.',
+    a: 'Yes. Subscribe from any post footer for monthly insights and subscriber-only briefings.',
   },
 ]
 
 export default async function BlogPage() {
   const posts = await fetchBlogs()
+  const [featured, ...rest] = posts
+  const categories = [...new Set(posts.map((p) => p.category).filter(Boolean))]
 
   return (
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Blog',
-          '@id': 'https://www.tenderlab.co.uk/blog#blog',
-          name: 'TenderLab Blog: UK Care Tender Writing Insights',
-          url: 'https://www.tenderlab.co.uk/blog',
-          description: 'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers.',
-          isPartOf: { '@id': 'https://www.tenderlab.co.uk/#website' },
-          publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
-        }) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          '@id': 'https://www.tenderlab.co.uk/blog#faq',
-          mainEntity: FAQS.map(f => ({
-            '@type': 'Question',
-            name: f.q,
-            acceptedAnswer: { '@type': 'Answer', text: f.a },
-          })),
-        }) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Blog',
+            '@id': 'https://www.tenderlab.co.uk/blog#blog',
+            name: 'TenderLab Blog: UK Care Tender Writing Insights',
+            url: 'https://www.tenderlab.co.uk/blog',
+            publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+          }),
+        }}
       />
 
-      {/* Hero */}
       <section className="blog-hero">
         <div className="container blog-hero__inner">
           <div className="blog-hero__kicker">Insights · Analysis · Strategy</div>
-          <h1>UK care tender writing and bid writing insights, live tender analysis</h1>
+          <h1>UK care tender writing and bid writing insights</h1>
           <p className="blog-hero__sub">
-            Live tender analysis, bid strategy, and commissioning trends across UK health and social care. Written by evaluator-trained bid writers with a 92% win rate across 200+ submissions.
+            Live tender analysis, bid strategy, and commissioning trends. Written by evaluator-trained bid writers — 92% win rate across 200+ submissions.
           </p>
         </div>
       </section>
 
-      {/* Grid */}
       <section className="blog-listing">
         <div className="container">
           {posts.length === 0 ? (
-            <p className="blog-empty">No posts available right now. Check back soon.</p>
+            <p className="blog-empty">No posts published yet. Check back soon.</p>
           ) : (
-            <div className="blog-grid">
-              {posts.map(post => (
-                <article key={post.slug} className="blog-card">
-                  {post.imageUrl && (
-                    <Link href={`/blog/${post.slug}`} className="blog-card__img-link" tabIndex={-1} aria-hidden="true">
-                      <div className="blog-card__img-wrap">
-                        <Image
-                          src={post.imageUrl}
-                          alt={post.title}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="blog-card__img"
-                        />
-                      </div>
-                    </Link>
-                  )}
-                  <div className="blog-card__body">
-                    <span
-                      className="blog-card__cat"
-                      style={{ background: categoryColor(post.category) }}
-                    >
-                      {post.category}
+            <>
+              {featured && (
+                <div className="blog-featured">
+                  <p className="blog-block-label">Latest</p>
+                  <BlogCard
+                    post={featured}
+                    variant="featured"
+                    dateLabel={formatBlogDate(featured.publishedAt)}
+                  />
+                </div>
+              )}
+
+              {categories.length > 0 && (
+                <div className="blog-topics" aria-label="Topics">
+                  {categories.map((cat) => (
+                    <span key={cat} className="blog-topics__pill">
+                      {cat}
                     </span>
-                    <h2 className="blog-card__title">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                    </h2>
-                    <p className="blog-card__excerpt">{post.excerpt}</p>
-                    <Link href={`/blog/${post.slug}`} className="blog-card__cta">
-                      Read more →
-                    </Link>
+                  ))}
+                </div>
+              )}
+
+              {rest.length > 0 && (
+                <div className="blog-block">
+                  <p className="blog-block-label">All articles</p>
+                  <div className="blog-grid">
+                    {rest.map((post) => (
+                      <BlogCard
+                        key={post.slug}
+                        post={post}
+                        dateLabel={formatBlogDate(post.publishedAt)}
+                      />
+                    ))}
                   </div>
-                </article>
-              ))}
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
-      {/* FAQ */}
-      <section aria-labelledby="blog-faq-title" style={{ padding: '4rem 0', background: '#FAFAF5' }}>
-        <div className="container" style={{ maxWidth: '880px' }}>
-          <h2 id="blog-faq-title" style={{ marginBottom: '1.5rem' }}>Blog: frequently asked questions</h2>
-          {FAQS.map(f => (
-            <details key={f.q} style={{ borderBottom: '1px solid #e5e5e5', padding: '1rem 0' }}>
-              <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '1.05rem' }}>{f.q}</summary>
-              <p style={{ marginTop: '0.75rem', lineHeight: 1.6 }}>{f.a}</p>
+      <section aria-labelledby="blog-faq-title" className="blog-faq">
+        <div className="container blog-faq__inner">
+          <h2 id="blog-faq-title">Blog: frequently asked questions</h2>
+          {FAQS.map((f) => (
+            <details key={f.q} className="blog-faq__item">
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
             </details>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
       <section className="services-cta">
         <div className="container">
           <p className="section-label">Work With TenderLab</p>
           <h2 className="services-cta__headline">Ready to win more tenders?</h2>
           <p className="services-cta__sub">
-            Speak to TenderLab about your next procurement and get a free consultation. 92% win rate across 200+ UK care sector submissions.
+            Speak to TenderLab about your next procurement. 92% win rate across 200+ UK care sector submissions.
           </p>
           <div className="services-cta__actions">
             <Link href="/contact" className="btn btn-white">Book a Free Consultation</Link>
             <Link href="/services" className="btn btn-outline-white">View All Services</Link>
           </div>
-          <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', opacity: 0.7, color: '#fff' }}>
-            TenderLab Ltd · Companies House 17184263 · See our <Link href="/case-studies" style={{ color: 'inherit', textDecoration: 'underline' }}>case studies</Link>. Reference: <a href="https://www.gov.uk/government/collections/procurement-policy-procurement-policy-notes" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>gov.uk procurement policy notes</a>.
-          </p>
         </div>
       </section>
-
     </main>
   )
 }
