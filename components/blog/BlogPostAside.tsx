@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { categoryColor, formatBlogDate, type BlogCardPost } from '@/lib/blogs'
+import { categoryColor, type BlogPost } from '@/lib/blogs'
 
 type Props = {
-  related: BlogCardPost[]
+  related: BlogPost[]
   currentSlug: string
 }
 
