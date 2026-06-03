@@ -3953,6 +3953,12 @@ section.cs-block ul li::marker {
   border-radius: 99px; background: var(--light-grey);
   border: 1px solid var(--border); color: var(--slate);
 }
+.blog-v2-article__prose-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0 24px;
+}
 .blog-v2-article__prose { font-size: 1.02rem; line-height: 1.75; color: #333; }
 .blog-v2-article__prose h2 {
   font-size: 1.4rem; margin: 2rem 0 0.75rem; color: var(--midnight-ink);

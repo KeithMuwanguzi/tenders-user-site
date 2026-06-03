@@ -9,6 +9,7 @@ type Props = {
   variant?: 'default' | 'featured'
   dateLabel?: string
   onOpen: (slug: string) => void
+  onPrefetch?: (slug: string) => void
 }
 
 export default function BlogCard({
@@ -16,6 +17,7 @@ export default function BlogCard({
   variant = 'default',
   dateLabel,
   onOpen,
+  onPrefetch,
 }: Props) {
   const featured = variant === 'featured'
 
@@ -23,7 +25,14 @@ export default function BlogCard({
 
   return (
     <article className={`blog-v2-card blog-v2-card--${variant}`}>
-      <button type="button" className="blog-v2-card__hit" onClick={open} aria-label={`Read: ${post.title}`}>
+      <button
+        type="button"
+        className="blog-v2-card__hit"
+        onClick={open}
+        onMouseEnter={() => onPrefetch?.(post.slug)}
+        onFocus={() => onPrefetch?.(post.slug)}
+        aria-label={`Read: ${post.title}`}
+      >
         {post.imageUrl ? (
           <div className="blog-v2-card__media">
             <Image

@@ -12,9 +12,10 @@ type Props = {
   posts: BlogPost[]
   faqs: Faq[]
   onOpenPost: (slug: string) => void
+  onPrefetchPost?: (slug: string) => void
 }
 
-export default function BlogListingView({ posts, faqs, onOpenPost }: Props) {
+export default function BlogListingView({ posts, faqs, onOpenPost, onPrefetchPost }: Props) {
   const [category, setCategory] = useState<string>('all')
 
   const categories = useMemo(() => {
@@ -81,6 +82,7 @@ export default function BlogListingView({ posts, faqs, onOpenPost }: Props) {
                     variant="featured"
                     dateLabel={formatBlogDate(featured.publishedAt)}
                     onOpen={onOpenPost}
+                    onPrefetch={onPrefetchPost}
                   />
                 </div>
               )}
@@ -95,6 +97,7 @@ export default function BlogListingView({ posts, faqs, onOpenPost }: Props) {
                         post={post}
                         dateLabel={formatBlogDate(post.publishedAt)}
                         onOpen={onOpenPost}
+                        onPrefetch={onPrefetchPost}
                       />
                     ))}
                   </div>

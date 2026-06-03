@@ -11,11 +11,20 @@ import BlogCard from './BlogCard'
 type Props = {
   post: BlogPost
   posts: BlogPost[]
+  bodyLoading?: boolean
   onBack: () => void
   onOpenPost: (slug: string) => void
+  onPrefetchPost?: (slug: string) => void
 }
 
-export default function BlogDetailView({ post, posts, onBack, onOpenPost }: Props) {
+export default function BlogDetailView({
+  post,
+  posts,
+  bodyLoading = false,
+  onBack,
+  onOpenPost,
+  onPrefetchPost,
+}: Props) {
   const [progress, setProgress] = useState(0)
   const html = useMemo(() => renderMarkdownSafe(post.body || ''), [post.body])
   const color = categoryColor(post.category)
@@ -101,7 +110,14 @@ export default function BlogDetailView({ post, posts, onBack, onOpenPost }: Prop
           )}
 
           <div className="blog-v2-article__prose">
-            {post.body ? (
+            {bodyLoading ? (
+              <div className="blog-v2-article__prose-loading" aria-busy="true" aria-label="Loading article">
+                <div className="blog-v2-detail-loading__line blog-v2-detail-loading__line--lg" />
+                <div className="blog-v2-detail-loading__line" />
+                <div className="blog-v2-detail-loading__line" />
+                <div className="blog-v2-detail-loading__line blog-v2-detail-loading__line--short" />
+              </div>
+            ) : post.body ? (
               <div dangerouslySetInnerHTML={{ __html: html }} />
             ) : (
               <p>{post.excerpt}</p>
@@ -167,6 +183,7 @@ export default function BlogDetailView({ post, posts, onBack, onOpenPost }: Prop
                   post={r}
                   dateLabel={formatBlogDate(r.publishedAt)}
                   onOpen={onOpenPost}
+                  onPrefetch={onPrefetchPost}
                 />
               ))}
             </div>
