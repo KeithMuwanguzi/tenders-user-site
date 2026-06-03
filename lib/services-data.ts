@@ -20,26 +20,31 @@ export type ServiceData = {
 export const SERVICES_DATA: ServiceData[] = [
   {
     slug: 'bid-writing',
-    title: 'Bid Writing Services for UK Care Providers',
-    tagline: 'From specification to submission, structured to score.',
-    description: 'End-to-end tender writing for UK health and social care contracts.',
+    title: 'Bid Writing Services and Social Care Bid Writing Consultant',
+    tagline: 'Specialist social care bid writing consultant for UK health and social care tenders.',
+    description: 'End-to-end tender writing and specialist social care bid writing consultant services for UK health and social care providers. Specification to submission, structured to score 5 of 5.',
     heroImg: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80',
     paragraphs: [
       'Bid Writing is the end-to-end authoring of a tender response. From the moment the tender drops to the moment it lands on the commissioner\'s portal, every word, every method statement, every case example and every line of pricing narrative is built specifically for the procurement in front of us.',
       'The discipline that separates winning submissions from compliant ones is not vocabulary. It is structure. Commissioners score against published evaluation criteria with weighted questions, named subpoints, and minimum thresholds. The submissions that win are the submissions whose architecture mirrors that scoring sheet line for line. Each paragraph closes a scoring point. Each operational claim is anchored to a named system, a named role, a dated case example or a verifiable document. Generic narrative is removed. Marketing language is removed. Adjective clusters that say nothing are removed.',
       'Bid Writing is used when the team needs the response to read like the commissioner\'s own scoring framework rather than like the provider\'s own brochure. It is used when the contract sits at the boundary of current operational scope and the response has to carry the operational imagination required to stretch into it. It is used when the previous submission scored below threshold and the next one cannot.',
+      'As a specialist social care bid writing consultant, we work exclusively on UK health and social care tenders. The cohort, the regulator, the commissioner expectation, the statutory framework: every element of a social care bid is sector-specific. A generalist bid writer who covers construction one week and IT the next cannot match the depth a specialist brings. Across 200+ submissions our team has scored, the pattern is consistent. The answers that hit the 5-of-5 band on quality questions are written by people who have read the cohort\'s CQC scope, the Care Act 2014 reference, the Supported Accommodation (England) Regulations 2023, and the Mental Capacity Act\'s 5 statutory principles, and can frame the operational response to match. Generic bid writing cannot.',
+      'Our social care bid writing covers every UK care setting where commissioners run tenders: domiciliary care, supported living, residential care, nursing care, extra care housing, children\'s residential, supported accommodation, fostering services, leaving care services, complex care, continuing healthcare, rehabilitation services and end-of-life and palliative care. Each cohort has its own scoring weights, its own evaluator instincts and its own evidence patterns. The bid writer who knows them earns the score. Our consultant model means the same writers who score 200+ submissions a year stay engaged across your bid pipeline, so the answer library compounds rather than restarting at zero with every new procurement.',
     ],
     whenUsed: [
       'When the tender drops and there is no internal capacity to write it.',
       'When previous submissions have scored below threshold.',
       'When the contract sits on the boundary of current operational scope.',
       'When the team can deliver the service but cannot translate that into evaluator-grade evidence.',
+      'When a generalist bid writer has produced a response that is fluent but cohort-blind and statutory-vague.',
+      'When the procurement explicitly asks for specialist UK social care experience and a generic bid will fail at PQQ stage.',
     ],
     delivers: [
       'A fully written submission pack, specification-aligned and evaluator-ready.',
       'Every quality question answered to an Exceptional standard.',
       'Method statements, pricing narrative, mobilisation, case examples and supporting evidence.',
       'Final upload-ready format aligned to the commissioner\'s portal.',
+      'Specialist social care bid writing consultant judgement on cohort framing, statutory references and evaluator psychology.',
     ],
     howItWorks: [
       { step: 'Specification Extraction', desc: 'Strip the document to its scoring architecture. The commissioner\'s language becomes our language.' },
@@ -53,12 +58,14 @@ export const SERVICES_DATA: ServiceData[] = [
       'Missed scoring requirements buried in the specification.',
       'Inconsistent answers across questions.',
       'Generic narrative that fails on operational specificity.',
+      'Cohort-blind bids that mix adult and children\'s safeguarding terminology, miss the Mental Capacity Act\'s 5 statutory principles, or confuse CQC and Ofsted scope.',
     ],
     transforms: [
       { from: 'Incomplete draft', to: 'Evaluator-ready submission' },
       { from: 'Low-scoring answers', to: 'Exceptional-rated responses' },
       { from: 'Generic narrative', to: 'Specification-mapped, evidence-led' },
       { from: 'Disconnected questions', to: 'Unified narrative across the bid' },
+      { from: 'Generalist bid writing', to: 'Specialist social care bid writing consultant judgement' },
     ],
     tiers: [
       { name: 'Standard', desc: 'Single-service contracts under £1m annual value.' },
