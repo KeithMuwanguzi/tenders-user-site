@@ -1,62 +1,68 @@
-import Link from 'next/link'
+'use client'
+
 import Image from 'next/image'
 import { categoryColor } from '@/lib/blogs'
-
-export type BlogCardPost = {
-  slug: string
-  title: string
-  category: string
-  excerpt: string
-  imageUrl: string
-}
+import type { BlogPost } from '@/lib/blogs'
 
 type Props = {
-  post: BlogCardPost
+  post: Pick<BlogPost, 'slug' | 'title' | 'category' | 'excerpt' | 'imageUrl'>
   variant?: 'default' | 'featured'
   dateLabel?: string
+  onOpen: (slug: string) => void
 }
 
-export default function BlogCard({ post, variant = 'default', dateLabel }: Props) {
+export default function BlogCard({
+  post,
+  variant = 'default',
+  dateLabel,
+  onOpen,
+}: Props) {
   const featured = variant === 'featured'
 
+  const open = () => onOpen(post.slug)
+
   return (
-    <article className={`blog-card blog-card--${variant}`}>
-      {post.imageUrl && (
-        <Link
-          href={`/blog/${post.slug}`}
-          className="blog-card__img-link"
-          tabIndex={featured ? 0 : -1}
-          aria-hidden={!featured}
-        >
-          <div className="blog-card__img-wrap">
+    <article className={`blog-v2-card blog-v2-card--${variant}`}>
+      <button type="button" className="blog-v2-card__hit" onClick={open} aria-label={`Read: ${post.title}`}>
+        {post.imageUrl ? (
+          <div className="blog-v2-card__media">
             <Image
               src={post.imageUrl}
               alt=""
               fill
-              sizes={featured ? '(max-width: 1024px) 100vw, 55vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
-              className="blog-card__img"
+              sizes={
+                featured
+                  ? '(max-width: 1024px) 100vw, 55vw'
+                  : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+              }
+              className="blog-v2-card__img"
             />
+            <span className="blog-v2-card__media-shade" aria-hidden />
           </div>
-        </Link>
-      )}
-      <div className="blog-card__body">
-        <div className="blog-card__meta-row">
-          <span
-            className="blog-card__cat"
-            style={{ background: categoryColor(post.category) }}
-          >
-            {post.category}
+        ) : (
+          <div className="blog-v2-card__media blog-v2-card__media--placeholder" aria-hidden />
+        )}
+
+        <div className="blog-v2-card__body">
+          <div className="blog-v2-card__meta">
+            <span
+              className="blog-v2-card__cat"
+              style={{ background: categoryColor(post.category) }}
+            >
+              {post.category}
+            </span>
+            {dateLabel && <time className="blog-v2-card__date">{dateLabel}</time>}
+          </div>
+          <h2 className="blog-v2-card__title">{post.title}</h2>
+          {post.excerpt && <p className="blog-v2-card__excerpt">{post.excerpt}</p>}
+          <span className="blog-v2-card__cta">
+            Read article
+            <span className="blog-v2-card__cta-arrow" aria-hidden>
+              →
+            </span>
           </span>
-          {dateLabel && <time className="blog-card__date">{dateLabel}</time>}
         </div>
-        <h2 className="blog-card__title">
-          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-        </h2>
-        {post.excerpt && <p className="blog-card__excerpt">{post.excerpt}</p>}
-        <Link href={`/blog/${post.slug}`} className="blog-card__cta">
-          Read article →
-        </Link>
-      </div>
+      </button>
     </article>
   )
 }

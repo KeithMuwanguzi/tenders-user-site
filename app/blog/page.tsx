@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { fetchBlogs, formatBlogDate } from '@/lib/blogs'
-import BlogCard from '@/components/blog/BlogCard'
+import BlogExperience from '@/components/blog/BlogExperience'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,13 +36,9 @@ const FAQS = [
   },
 ]
 
-export default async function BlogPage() {
-  const posts = await fetchBlogs()
-  const [featured, ...rest] = posts
-  const categories = [...new Set(posts.map((p) => p.category).filter(Boolean))]
-
+export default function BlogPage() {
   return (
-    <main>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -58,88 +52,7 @@ export default async function BlogPage() {
           }),
         }}
       />
-
-      <section className="blog-hero">
-        <div className="container blog-hero__inner">
-          <div className="blog-hero__kicker">Insights · Analysis · Strategy</div>
-          <h1>UK care tender writing and bid writing insights</h1>
-          <p className="blog-hero__sub">
-            Live tender analysis, bid strategy, and commissioning trends. Written by evaluator-trained bid writers — 92% win rate across 200+ submissions.
-          </p>
-        </div>
-      </section>
-
-      <section className="blog-listing">
-        <div className="container">
-          {posts.length === 0 ? (
-            <p className="blog-empty">No posts published yet. Check back soon.</p>
-          ) : (
-            <>
-              {featured && (
-                <div className="blog-featured">
-                  <p className="blog-block-label">Latest</p>
-                  <BlogCard
-                    post={featured}
-                    variant="featured"
-                    dateLabel={formatBlogDate(featured.publishedAt)}
-                  />
-                </div>
-              )}
-
-              {categories.length > 0 && (
-                <div className="blog-topics" aria-label="Topics">
-                  {categories.map((cat) => (
-                    <span key={cat} className="blog-topics__pill">
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {rest.length > 0 && (
-                <div className="blog-block">
-                  <p className="blog-block-label">All articles</p>
-                  <div className="blog-grid">
-                    {rest.map((post) => (
-                      <BlogCard
-                        key={post.slug}
-                        post={post}
-                        dateLabel={formatBlogDate(post.publishedAt)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      <section aria-labelledby="blog-faq-title" className="blog-faq">
-        <div className="container blog-faq__inner">
-          <h2 id="blog-faq-title">Blog: frequently asked questions</h2>
-          {FAQS.map((f) => (
-            <details key={f.q} className="blog-faq__item">
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="services-cta">
-        <div className="container">
-          <p className="section-label">Work With TenderLab</p>
-          <h2 className="services-cta__headline">Ready to win more tenders?</h2>
-          <p className="services-cta__sub">
-            Speak to TenderLab about your next procurement. 92% win rate across 200+ UK care sector submissions.
-          </p>
-          <div className="services-cta__actions">
-            <Link href="/contact" className="btn btn-white">Book a Free Consultation</Link>
-            <Link href="/services" className="btn btn-outline-white">View All Services</Link>
-          </div>
-        </div>
-      </section>
-    </main>
+      <BlogExperience faqs={FAQS} />
+    </>
   )
 }

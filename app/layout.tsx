@@ -107,7 +107,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={inter.variable}>
+    <html lang="en-GB" className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Sitewide JSON-LD. Loaded as inline script so it ships in the
             server-rendered HTML and is crawlable on first byte. */}
@@ -140,7 +140,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ReduxProvider>
           <TopBar />
           <Nav />
