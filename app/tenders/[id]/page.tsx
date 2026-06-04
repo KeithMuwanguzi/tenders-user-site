@@ -16,141 +16,15 @@ import {
   mergeGovAndPublished,
   type TenderDetail,
 } from '@/lib/tender-detail-merge'
-import {
-  officialSourceLinkLabel,
-  sourceLabelFromParam,
-  type TenderSourceParam,
-} from '@/lib/tender-sources'
-
-/* ================================================================
-   Tender Detail Page — Server Component, SSR
-   ================================================================
-   Fetches tender data on the server so Googlebot sees the real
-   title, description, body and canonical on first crawl.
-   Inlines the gov.uk fetchers so the page does not depend on an
-   internal API round-trip. Mirrors the data shape in
-   app/api/tenders/[id]/route.ts.
-   ================================================================ */
+import { fetchGovTender } from '@/lib/gov-tender-fetch'
+import { officialSourceLinkLabel, type TenderSourceParam } from '@/lib/tender-sources'
 
 export const revalidate = 1800 // 30 minutes
 
-const EMPTY_CURATED = { category: null as string | null, curatedOnTenderLab: null as string | null }
-
-function fmtValue(low: number | null | undefined, high: number | null | undefined): string | null {
-  const v = high ?? low
-  if (!v) return null
-  if (v >= 1_000_000) return `£${(v / 1_000_000).toFixed(1)}m`
-  if (v >= 1_000) return `£${(v / 1_000).toFixed(0)}k`
-  return `£${v.toLocaleString()}`
-}
-
-function fmtSingle(v: number): string | null {
-  if (!v) return null
-  if (v >= 1_000_000) return `£${(v / 1_000_000).toFixed(1)}m`
-  if (v >= 1_000) return `£${(v / 1_000).toFixed(0)}k`
-  return `£${v.toLocaleString()}`
-}
-
-function fmtOCDS(value: { amount?: number; currency?: string } | null | undefined): string | null {
-  if (!value?.amount) return null
-  const a = value.amount
-  if (a >= 1_000_000) return `£${(a / 1_000_000).toFixed(1)}m`
-  if (a >= 1_000) return `£${(a / 1_000).toFixed(0)}k`
-  return `£${a.toLocaleString()}`
-}
-
-async function fetchCFNotice(id: string): Promise<TenderDetail | null> {
-  const url = `https://www.contractsfinder.service.gov.uk/api/rest/2/get_published_notice/json/${id}`
-  try {
-    const res = await fetch(url, {
-      headers: { Accept: 'application/json' },
-      next: { revalidate: 1800 },
-    })
-    if (!res.ok) return null
-    const data = await res.json()
-    const n = data?.notice
-    if (!n) return null
-    return {
-      id: n.id || id,
-      title: n.title || 'Untitled opportunity',
-      description: n.description || n.summary || '',
-      publishedDate: n.publishedDate || '',
-      deadline: n.deadlineDate || null,
-      value: fmtValue(n.valueLow, n.valueHigh),
-      location: n.regionText || n.region || null,
-      organisation: n.organisationName || null,
-      status: n.noticeStatus === 'Awarded' ? 'Awarded' : n.noticeStatus || 'Open',
-      source: 'Contracts Finder',
-      externalUrl: `https://www.contractsfinder.service.gov.uk/Notice/${id}`,
-      noticeType: n.noticeType || null,
-      cpvDescription: n.cpvDescription || n.cpvDescriptionExpanded || null,
-      sector: n.sector || null,
-      awardedDate: n.awardedDate || null,
-      awardedValue: n.awardedValue ? fmtSingle(n.awardedValue) : null,
-      awardedSupplier: n.awardedSupplier || null,
-      contactName: n.contactName || null,
-      contactEmail: n.contactEmail || null,
-      documents: (n.documents || []).map((d: { title?: string; url?: string }) => ({
-        title: d.title || 'Document',
-        url: d.url || '',
-      })),
-      ...EMPTY_CURATED,
-    }
-  } catch {
-    return null
-  }
-}
-
-async function fetchFTNotice(id: string): Promise<TenderDetail | null> {
-  const url = `https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/${id}`
-  try {
-    const res = await fetch(url, {
-      headers: { Accept: 'application/json' },
-      next: { revalidate: 1800 },
-    })
-    if (!res.ok) return null
-    const data = await res.json()
-    const releases = data?.releases
-    if (!releases?.length) return null
-    const r = releases[0]
-    const t = r.tender || {}
-    return {
-      id: r.ocid || r.id || id,
-      title: t.title || 'Untitled opportunity',
-      description: t.description || '',
-      publishedDate: r.date || '',
-      deadline: t.tenderPeriod?.endDate || null,
-      value: fmtOCDS(t.value),
-      location: t.items?.[0]?.deliveryAddresses?.[0]?.region || null,
-      organisation: r.buyer?.name || null,
-      status: t.status === 'active' ? 'Open' : t.status || 'Unknown',
-      source: 'Find a Tender',
-      externalUrl: `https://www.find-tender.service.gov.uk/Notice/${id}`,
-      noticeType: r.tag?.[0] || null,
-      cpvDescription: t.items?.[0]?.classification?.description || null,
-      sector: null,
-      awardedDate: null,
-      awardedValue: null,
-      awardedSupplier: null,
-      contactName: r.buyer?.contactPoint?.name || null,
-      contactEmail: r.buyer?.contactPoint?.email || null,
-      documents: (t.documents || []).map((d: { title?: string; url?: string }) => ({
-        title: d.title || 'Document',
-        url: d.url || '',
-      })),
-      ...EMPTY_CURATED,
-    }
-  } catch {
-    return null
-  }
-}
-
 async function getTender(id: string, source: string): Promise<TenderDetail | null> {
   const sourceParam: TenderSourceParam = source === 'ft' ? 'ft' : 'cf'
-  const [gov, published] = await Promise.all([
-    sourceParam === 'ft' ? fetchFTNotice(id) : fetchCFNotice(id),
-    fetchPublishedTenderById(id),
-  ])
+  const published = await fetchPublishedTenderById(id)
+  const gov = await fetchGovTender(id, sourceParam, published?.url)
   return mergeGovAndPublished(gov, published, id, sourceParam)
 }
 
@@ -206,7 +80,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     }
   }
 
-  const description = truncate(tender.description, 155)
+  const description = truncate(tender.fullDescription || tender.description, 155)
   const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}?source=${src}`
   const isOpen =
     /open/i.test(tender.status) ||
@@ -299,9 +173,6 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
       <section className="tender-detail__header">
         <div className="container">
           <div className="tender-detail__badges">
-            <span className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}>
-              {tender.source}
-            </span>
             <span className="tender-card__status">{tender.status}</span>
             {urgency && (
               <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
@@ -335,15 +206,37 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
           <div className="tender-detail__grid">
             {/* Main content */}
             <div className="tender-detail__main">
-              <div className="tender-detail__section">
-                <h2>Description</h2>
-                <p>{tender.description || 'No description provided.'}</p>
-              </div>
+              {tender.sections.length > 0 ? (
+                tender.sections.map((section) => (
+                  <div key={section.title} className="tender-detail__section">
+                    <h2>{section.title}</h2>
+                    {section.paragraphs.map((para, i) => (
+                      <p key={`${section.title}-${i}`}>{para}</p>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <div className="tender-detail__section">
+                  <h2>Description</h2>
+                  <p>{tender.fullDescription || tender.description || 'No description provided.'}</p>
+                </div>
+              )}
 
               {tender.cpvDescription && (
                 <div className="tender-detail__section">
                   <h2>CPV Classification</h2>
                   <p>{tender.cpvDescription}</p>
+                </div>
+              )}
+
+              {tender.submissionUrl && (
+                <div className="tender-detail__section">
+                  <h2>Submission portal</h2>
+                  <p>
+                    <a href={tender.submissionUrl} target="_blank" rel="noopener noreferrer">
+                      {tender.submissionUrl}
+                    </a>
+                  </p>
                 </div>
               )}
 
@@ -410,9 +303,9 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
 
               <div className="tender-detail__source-note">
                 <p>
-                  This notice was published on {tender.source}.{' '}
+                  Full statutory notice text and attachments are on the official record.{' '}
                   <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">
-                    Open the official record on {sourceLabelFromParam(src)} ↗
+                    Open official notice ↗
                   </a>
                 </p>
               </div>
@@ -447,10 +340,63 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                     </>
                   )}
 
+                  {tender.noticeIdentifier && (
+                    <>
+                      <dt>Notice ID</dt>
+                      <dd>{tender.noticeIdentifier}</dd>
+                    </>
+                  )}
+
+                  {tender.procurementIdentifier && (
+                    <>
+                      <dt>Procurement ID</dt>
+                      <dd className="tender-detail__mono">{tender.procurementIdentifier}</dd>
+                    </>
+                  )}
+
                   {tender.noticeType && (
                     <>
-                      <dt>Notice Type</dt>
+                      <dt>Notice type</dt>
                       <dd>{tender.noticeType}</dd>
+                    </>
+                  )}
+
+                  {tender.procedure && (
+                    <>
+                      <dt>Procedure</dt>
+                      <dd>{tender.procedure}</dd>
+                    </>
+                  )}
+
+                  {tender.legalBasis && (
+                    <>
+                      <dt>Legal basis</dt>
+                      <dd>{tender.legalBasis}</dd>
+                    </>
+                  )}
+
+                  {tender.buyerAddress && (
+                    <>
+                      <dt>Authority address</dt>
+                      <dd>{tender.buyerAddress}</dd>
+                    </>
+                  )}
+
+                  {tender.buyerWebsite && (
+                    <>
+                      <dt>Authority website</dt>
+                      <dd>
+                        <a href={tender.buyerWebsite} target="_blank" rel="noopener noreferrer">
+                          {tender.buyerWebsite}
+                        </a>
+                      </dd>
+                    </>
+                  )}
+
+                  {tender.regionCode && (
+                    <>
+                      <dt>Region code</dt>
+                      <dd>{tender.regionCode}</dd>
                     </>
                   )}
 
@@ -468,10 +414,10 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                     </>
                   )}
 
-                  <dt>Source</dt>
+                  <dt>Official record</dt>
                   <dd>
                     <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">
-                      {tender.source} ↗
+                      Open full notice ↗
                     </a>
                   </dd>
 

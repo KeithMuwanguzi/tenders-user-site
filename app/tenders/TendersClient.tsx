@@ -18,9 +18,9 @@ import {
 } from '@/lib/tender-sources'
 
 const SOURCES = [
-  { label: 'All sources', value: 'all' },
-  { label: 'Contracts Finder', value: 'cf' },
-  { label: 'Find a Tender', value: 'ft' },
+  { label: 'All notices', value: 'all' },
+  { label: 'Standard notices', value: 'cf' },
+  { label: 'Above-threshold notices', value: 'ft' },
 ] as const
 
 const ITEMS_PER_PAGE = 10
@@ -277,11 +277,6 @@ export default function TendersClient() {
                       className={`tender-card${tender.isNew ? ' tender-card--new' : ''}`}
                     >
                       <div className="tender-card__header">
-                        <span
-                          className={`tender-card__source${tender.source === 'Find a Tender' ? ' tender-card__source--ft' : ''}`}
-                        >
-                          {tender.source}
-                        </span>
                         {tender.isNew && (
                           <span className="tender-card__new">New</span>
                         )}

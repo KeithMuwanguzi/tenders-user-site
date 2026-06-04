@@ -1,3 +1,4 @@
+import type { GovTenderDetail, TenderDetailSection } from '@/lib/gov-tender-fetch'
 import type { PublishedTenderSnapshot } from '@/lib/published-tenders'
 import {
   officialNoticeUrl,
@@ -5,30 +6,7 @@ import {
   type TenderSourceParam,
 } from '@/lib/tender-sources'
 
-export type TenderDetail = {
-  id: string
-  title: string
-  description: string
-  publishedDate: string
-  deadline: string | null
-  value: string | null
-  location: string | null
-  organisation: string | null
-  status: string
-  source: 'Contracts Finder' | 'Find a Tender'
-  externalUrl: string
-  category: string | null
-  noticeType: string | null
-  cpvDescription: string | null
-  sector: string | null
-  awardedDate: string | null
-  awardedValue: string | null
-  awardedSupplier: string | null
-  contactName: string | null
-  contactEmail: string | null
-  documents: { title: string; url: string }[]
-  curatedOnTenderLab: string | null
-}
+export type TenderDetail = GovTenderDetail
 
 function pickLongerDescription(a: string, b: string): string {
   const left = (a || '').trim()
@@ -36,15 +14,39 @@ function pickLongerDescription(a: string, b: string): string {
   return right.length > left.length ? right : left
 }
 
+function mergeSections(
+  gov: TenderDetailSection[],
+  publishedText: string,
+): TenderDetailSection[] {
+  if (!publishedText.trim()) return gov
+  const pubParagraphs = publishedText
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 40)
+  if (!pubParagraphs.length) return gov
+  const existing = new Set(gov.flatMap((s) => s.paragraphs.map((p) => p.slice(0, 80).toLowerCase())))
+  const extra = pubParagraphs.filter((p) => !existing.has(p.slice(0, 80).toLowerCase()))
+  if (!extra.length) return gov
+  return [
+    ...gov,
+    { title: 'Curated summary', paragraphs: extra },
+  ]
+}
+
 export function snapshotToDetail(
   published: PublishedTenderSnapshot,
   sourceParam: TenderSourceParam,
 ): TenderDetail {
   const source = published.source || sourceLabelFromParam(sourceParam)
+  const desc = published.description || ''
   return {
     id: published.id,
     title: published.title || 'Untitled opportunity',
-    description: published.description || '',
+    description: desc,
+    fullDescription: desc,
+    sections: desc.trim()
+      ? [{ title: 'Opportunity overview', paragraphs: [desc.trim()] }]
+      : [],
     publishedDate: published.publishedDate || '',
     deadline: published.deadline,
     value: published.value,
@@ -53,16 +55,24 @@ export function snapshotToDetail(
     status: published.status || 'Open',
     source,
     externalUrl: officialNoticeUrl(published.id, source, published.url),
-    category: published.category ?? null,
+    noticeIdentifier: null,
+    procurementIdentifier: null,
     noticeType: null,
     cpvDescription: null,
     sector: null,
+    legalBasis: null,
+    procedure: null,
+    submissionUrl: published.url || null,
+    buyerAddress: null,
+    buyerWebsite: null,
+    regionCode: null,
     awardedDate: null,
     awardedValue: null,
     awardedSupplier: null,
     contactName: null,
     contactEmail: null,
     documents: [],
+    category: published.category ?? null,
     curatedOnTenderLab: published.published_at ?? null,
   }
 }
@@ -84,12 +94,19 @@ export function mergeGovAndPublished(
     published?.url || gov.externalUrl,
   )
 
-  const merged: TenderDetail = {
+  const publishedDesc = published?.description || ''
+  const description = pickLongerDescription(gov.description, publishedDesc)
+  const sections = mergeSections(gov.sections, publishedDesc)
+  const fullDescription = pickLongerDescription(gov.fullDescription, publishedDesc)
+
+  return {
     ...gov,
     id: gov.id || id,
     source,
     externalUrl,
-    description: pickLongerDescription(gov.description, published?.description || ''),
+    description,
+    fullDescription: fullDescription.length >= description.length ? fullDescription : description,
+    sections,
     title: gov.title || published?.title || 'Untitled opportunity',
     publishedDate: gov.publishedDate || published?.publishedDate || '',
     deadline: gov.deadline ?? published?.deadline ?? null,
@@ -100,6 +117,4 @@ export function mergeGovAndPublished(
     category: published?.category ?? gov.category ?? null,
     curatedOnTenderLab: published?.published_at ?? gov.curatedOnTenderLab ?? null,
   }
-
-  return merged
 }

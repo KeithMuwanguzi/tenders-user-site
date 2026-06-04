@@ -24,6 +24,7 @@ export function officialNoticeUrl(
   return `https://www.contractsfinder.service.gov.uk/Notice/${id}`
 }
 
-export function officialSourceLinkLabel(source: TenderSourceLabel | string): string {
-  return source === 'Find a Tender' ? 'View on Find a Tender' : 'View on Contracts Finder'
+/** Neutral label — platform names are not shown in the public UI. */
+export function officialSourceLinkLabel(_source?: TenderSourceLabel | string): string {
+  return 'View official notice'
 }
