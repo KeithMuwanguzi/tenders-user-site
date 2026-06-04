@@ -6423,6 +6423,19 @@ section.cs-block ul li::marker {
   color: var(--midnight-ink); line-height: 1.3; margin: 0 0 10px;
 }
 .tender-detail__org { font-size: 16px; color: var(--slate); margin: 0; }
+.tender-detail__header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+.tender-detail__source-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.tender-detail__source-btn-icon { font-size: 14px; line-height: 1; }
+.tender-card__source-link { white-space: nowrap; }
 .tender-detail__body { padding: 48px 0 80px; }
 .tender-detail__grid {
   display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: start;

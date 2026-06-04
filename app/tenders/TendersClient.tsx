@@ -11,6 +11,11 @@ import {
   filterTendersByCareCategory,
   getCareCategoryById,
 } from '@/lib/tender-categories'
+import {
+  officialNoticeUrl,
+  officialSourceLinkLabel,
+  sourceParamFromLabel,
+} from '@/lib/tender-sources'
 
 const SOURCES = [
   { label: 'All sources', value: 'all' },
@@ -327,11 +332,24 @@ export default function TendersClient() {
                       </div>
                       <div className="tender-card__actions">
                         <Link
-                          href={`/tenders/${encodeURIComponent(tender.id)}?source=${tender.source === 'Find a Tender' ? 'ft' : 'cf'}`}
+                          href={`/tenders/${encodeURIComponent(tender.id)}?source=${sourceParamFromLabel(tender.source)}`}
                           className="btn btn-primary"
                         >
                           View details
                         </Link>
+                        <a
+                          href={officialNoticeUrl(
+                            tender.id,
+                            tender.source,
+                            tender.url,
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-ghost tender-card__source-link"
+                        >
+                          {officialSourceLinkLabel(tender.source)}
+                          <span aria-hidden> ↗</span>
+                        </a>
                         <Link
                           href="/contact?utm_source=tenders&utm_medium=card&utm_campaign=lead"
                           className="btn btn-ghost"

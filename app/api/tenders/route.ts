@@ -40,6 +40,10 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get('q') || ''
   const sourceFilter = searchParams.get('source') || 'all'
   const page = parseInt(searchParams.get('page') || '1', 10)
+  const limit = Math.min(
+    500,
+    Math.max(1, parseInt(searchParams.get('limit') || '500', 10)),
+  )
 
   const upstream = new URL(`${PORTAL_API_URL}/api/tenders/published`)
   // The portal already restricts to healthcare-relevant tenders the admin
@@ -49,7 +53,7 @@ export async function GET(request: NextRequest) {
   if (sourceFilter && sourceFilter !== 'all')
     upstream.searchParams.set('source', sourceFilter)
   upstream.searchParams.set('active_only', 'true')
-  upstream.searchParams.set('limit', '500')
+  upstream.searchParams.set('limit', String(limit))
 
   try {
     const res = await fetch(upstream.toString(), {

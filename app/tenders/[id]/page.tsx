@@ -11,6 +11,16 @@ import {
   defaultTwitter,
   breadcrumbSchema,
 } from '@/lib/seo'
+import { fetchPublishedTenderById } from '@/lib/published-tenders'
+import {
+  mergeGovAndPublished,
+  type TenderDetail,
+} from '@/lib/tender-detail-merge'
+import {
+  officialSourceLinkLabel,
+  sourceLabelFromParam,
+  type TenderSourceParam,
+} from '@/lib/tender-sources'
 
 /* ================================================================
    Tender Detail Page — Server Component, SSR
@@ -24,28 +34,7 @@ import {
 
 export const revalidate = 1800 // 30 minutes
 
-interface TenderDetail {
-  id: string
-  title: string
-  description: string
-  publishedDate: string
-  deadline: string | null
-  value: string | null
-  location: string | null
-  organisation: string | null
-  status: string
-  source: 'Contracts Finder' | 'Find a Tender'
-  externalUrl: string
-  noticeType: string | null
-  cpvDescription: string | null
-  sector: string | null
-  awardedDate: string | null
-  awardedValue: string | null
-  awardedSupplier: string | null
-  contactName: string | null
-  contactEmail: string | null
-  documents: { title: string; url: string }[]
-}
+const EMPTY_CURATED = { category: null as string | null, curatedOnTenderLab: null as string | null }
 
 function fmtValue(low: number | null | undefined, high: number | null | undefined): string | null {
   const v = high ?? low
@@ -105,6 +94,7 @@ async function fetchCFNotice(id: string): Promise<TenderDetail | null> {
         title: d.title || 'Document',
         url: d.url || '',
       })),
+      ...EMPTY_CURATED,
     }
   } catch {
     return null
@@ -148,6 +138,7 @@ async function fetchFTNotice(id: string): Promise<TenderDetail | null> {
         title: d.title || 'Document',
         url: d.url || '',
       })),
+      ...EMPTY_CURATED,
     }
   } catch {
     return null
@@ -155,8 +146,12 @@ async function fetchFTNotice(id: string): Promise<TenderDetail | null> {
 }
 
 async function getTender(id: string, source: string): Promise<TenderDetail | null> {
-  if (source === 'ft') return fetchFTNotice(id)
-  return fetchCFNotice(id)
+  const sourceParam: TenderSourceParam = source === 'ft' ? 'ft' : 'cf'
+  const [gov, published] = await Promise.all([
+    sourceParam === 'ft' ? fetchFTNotice(id) : fetchCFNotice(id),
+    fetchPublishedTenderById(id),
+  ])
+  return mergeGovAndPublished(gov, published, id, sourceParam)
 }
 
 function formatDate(dateStr: string): string {
@@ -318,6 +313,19 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
           {tender.organisation && (
             <p className="tender-detail__org">{tender.organisation}</p>
           )}
+          <div className="tender-detail__header-actions">
+            <a
+              href={tender.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost tender-detail__source-btn"
+            >
+              {officialSourceLinkLabel(tender.source)}
+              <span className="tender-detail__source-btn-icon" aria-hidden>
+                ↗
+              </span>
+            </a>
+          </div>
         </div>
       </section>
 
@@ -402,8 +410,10 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
 
               <div className="tender-detail__source-note">
                 <p>
-                  This notice was published on {tender.source}. The official record is available at{' '}
-                  <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">{tender.externalUrl}</a>.
+                  This notice was published on {tender.source}.{' '}
+                  <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">
+                    Open the official record on {sourceLabelFromParam(src)} ↗
+                  </a>
                 </p>
               </div>
             </div>
@@ -451,8 +461,26 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                     </>
                   )}
 
+                  {tender.category && (
+                    <>
+                      <dt>Care setting</dt>
+                      <dd>{tender.category}</dd>
+                    </>
+                  )}
+
                   <dt>Source</dt>
-                  <dd>{tender.source}</dd>
+                  <dd>
+                    <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">
+                      {tender.source} ↗
+                    </a>
+                  </dd>
+
+                  {tender.curatedOnTenderLab && (
+                    <>
+                      <dt>On TenderLab</dt>
+                      <dd>{formatDate(tender.curatedOnTenderLab)}</dd>
+                    </>
+                  )}
                 </dl>
               </div>
 
