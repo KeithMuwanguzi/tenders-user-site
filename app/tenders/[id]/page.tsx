@@ -285,7 +285,7 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                 <p>
                   TenderLab is a specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. Our evaluator-trained writers deliver a {BRAND.winRate} win rate across {BRAND.submissions} submissions. {SITE_LEGAL_NAME} (Companies House {COMPANY_NUMBER}).
                 </p>
-                <p>
+                <p className="pb-6">
                   We can help you respond to <strong>{tender.title}</strong> with a specification-mirrored method statement, named operational evidence, and a 72-hour pre-submission review built in.
                 </p>
                 <div className="tender-detail__inline-cta">
