@@ -141,32 +141,46 @@ export default function TermsPage() {
 
               <section className="cs-block" id="sec-04">
                 <h2><span className="num">Section 04</span>Engagement formation</h2>
-                <p>Each engagement begins with a written engagement letter signed by both parties. The engagement letter sets out the scope of work, deliverables, timelines, named lead, fees, payment terms and any variation from these standard terms.</p>
-                <p>Where the engagement letter conflicts with these terms, the engagement letter prevails. Where the engagement letter is silent, these terms apply.</p>
-                <p>Changes to scope are documented in a written change order that records the new scope, the impact on timelines and any change in fees.</p>
+                <p>Each engagement follows a four-stage sequence. The contract is only formed when all of the stages below are complete.</p>
+                <p><strong>Stage 1: Proposal.</strong> We share a written proposal with the prospective client setting out the scope of work, deliverables, timelines, named lead and the total fee.</p>
+                <p><strong>Stage 2: Proposal acceptance.</strong> The client confirms acceptance of the proposal in writing (email confirmation is sufficient).</p>
+                <p><strong>Stage 3: Issue of three documents.</strong> On acceptance, we send three documents together: (i) a deposit invoice for 50% of the total fee, (ii) an onboarding form requesting the information we need to start work and (iii) a contract incorporating these terms.</p>
+                <p><strong>Stage 4: Three preconditions to commencement.</strong> We do not start work on any tender, bid or related deliverable until all three of the following preconditions are satisfied:</p>
+                <ul>
+                  <li><strong>(a)</strong> the deposit (first 50% of the total fee) has been paid and cleared in our bank account;</li>
+                  <li><strong>(b)</strong> the completed onboarding form has been returned to us; and</li>
+                  <li><strong>(c)</strong> the contract has been signed and returned to us.</li>
+                </ul>
+                <p>If any one of (a), (b) or (c) is outstanding, work does not begin. We will not commence drafting, evidence gathering, pre-submission review or any other deliverable until all three are in place. Where a tender deadline is at risk because a precondition is outstanding, we will tell you in writing and the risk of late or non-submission sits with you for so long as the precondition remains outstanding.</p>
+                <p>Where the contract conflicts with these terms, the contract prevails. Where the contract is silent, these terms apply. Changes to scope are documented in a written change order that records the new scope, the impact on timelines and any change in fees.</p>
               </section>
 
               <section className="cs-block" id="sec-05">
                 <h2><span className="num">Section 05</span>Fees and payment</h2>
-                <p>Fees are stated in your engagement letter. Unless agreed otherwise:</p>
+                <p>Fees are stated in the proposal and confirmed in the contract. The standard payment model is a 50/50 split.</p>
+                <p><strong>Deposit (first 50%).</strong> Invoiced on acceptance of the proposal alongside the onboarding form and contract. Payable before work commences. Work does not start until the deposit is paid and cleared in our bank account (see <a href="#sec-04">Section 04</a> stage 4).</p>
+                <p><strong>Balance (final 50%).</strong> Invoiced on delivery of the final draft to the client. Payable per the invoice terms.</p>
+                <p>Unless agreed otherwise in the contract:</p>
                 <ul>
                   <li>Invoices are payable within <strong>14 days</strong> of invoice date.</li>
-                  <li>For new clients and engagements above £4,000, we may require a <strong>50% deposit</strong> before work begins, with the balance on submission.</li>
-                  <li>For retainers, fees are billed monthly in advance.</li>
-                  <li>Late payments accrue statutory interest, fixed sum and reasonable recovery costs under the <a href="https://www.legislation.gov.uk/uksi/2013/395/contents" target="_blank" rel="noopener noreferrer">Late Payment of Commercial Debts Regulations 2013</a> amending the Late Payment of Commercial Debts (Interest) Act 1998.</li>
+                  <li>For retainers, fees are billed monthly in advance and the 50/50 split does not apply.</li>
+                  <li>Late payment is subject to the <a href="https://www.legislation.gov.uk/uksi/2013/395/contents" target="_blank" rel="noopener noreferrer">Late Payment of Commercial Debts Regulations 2013</a> amending the Late Payment of Commercial Debts (Interest) Act 1998. Statutory interest accrues at <strong>8% above the Bank of England base rate</strong>, alongside the statutory fixed-sum compensation for each qualifying invoice (£40 for debts under £1,000, £70 for debts £1,000 to £9,999.99, £100 for debts of £10,000 or more) and reasonable recovery costs.</li>
                   <li>Quoted fees exclude VAT. Where we are not VAT-registered we will say so; if our position changes we will indicate VAT separately on invoices.</li>
                   <li>Out-of-pocket expenses (portal fees, courier, regulator search fees) are charged at cost with receipts.</li>
                 </ul>
+                <p><strong>Title to work-in-progress.</strong> All drafts, content, working papers and other work-in-progress produced by us remain our property and copyright until the full fee (deposit plus balance) has been paid and cleared in our bank account. The submission-content licence in <a href="#sec-07">Section 07</a> transfers to you only on full payment.</p>
                 <p>We may suspend work on overdue accounts after providing 7 days' written notice. Suspension does not relieve you of the duty to pay for work performed.</p>
               </section>
 
               <section className="cs-block" id="sec-06">
                 <h2><span className="num">Section 06</span>Refund and cancellation policy</h2>
                 <p>Our services are sold to businesses for purposes related to their trade. Statutory consumer cancellation rights under the <a href="https://www.legislation.gov.uk/uksi/2013/3134/contents" target="_blank" rel="noopener noreferrer">Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013</a> do not apply because you are not contracting as a consumer.</p>
-                <p><strong>Cancellation before work begins.</strong> Cancel by written notice at any time before we have started work and we will refund any deposit paid in full within 14 days.</p>
-                <p><strong>Cancellation during a project.</strong> Cancel by written notice and we will stop work and invoice for time spent and expenses incurred to the cancellation date, including any work in progress. We will deliver to you all draft content produced to that date. Any prepaid balance above amounts due is refunded within 14 days.</p>
+                <p>Refunds are calculated against the 50/50 deposit-and-balance structure set out in <a href="#sec-05">Section 05</a>.</p>
+                <p><strong>Cancellation before work commences.</strong> If the client cancels before we have commenced work, the deposit is refundable less a <strong>£250</strong> administration fee. The fee covers proposal preparation, onboarding setup and contract issuance. Refund issued within 14 days of cancellation.</p>
+                <p><strong>Deposit non-refundable once we have allocated time.</strong> Once we have allocated time to your project (booked the writer or reviewer, started the onboarding briefing or opened the drafting workspace) the deposit is non-refundable. This protects the allocated capacity we will not be able to resell at short notice.</p>
+                <p><strong>Cancellation mid-engagement.</strong> If you cancel by written notice after work has commenced but before the final draft is shared, the deposit is treated as covering work already performed up to the cancellation date. Where the value of the work performed is less than the deposit paid, the unspent portion is refundable on a pro-rata basis at our discretion, calculated by reference to time recorded on the engagement at our standard hourly rate. We will deliver to you all draft content produced to the cancellation date.</p>
+                <p><strong>Balance.</strong> The balance is invoiced on delivery of the final draft. Once the final draft has been shared with you, fees for the balance are non-refundable, save where we have committed a material breach you have notified us of and we have failed to remedy under <a href="#sec-13">Section 13</a>.</p>
                 <p><strong>Cancellation of a retainer.</strong> Either party may cancel a monthly retainer by written notice with effect from the end of the next full calendar month. Retainer fees are not refunded for the notice period.</p>
-                <p><strong>Refund of completed work.</strong> Once a deliverable is signed off in writing, fees for that deliverable are non-refundable, save where we have committed a material breach you have notified us of and we have failed to remedy under <a href="#sec-13">Section 13</a>.</p>
                 <p><strong>Refund of tender outcomes.</strong> We do not refund fees on the basis that a bid was unsuccessful. Tender outcomes depend on factors outside our control. See <a href="#sec-10">Section 10</a>.</p>
                 <p><strong>Refund route.</strong> Refunds are made by bank transfer to the originating account within 14 days of the refund event.</p>
               </section>
