@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 
 /**
  * middleware.ts — SEO hygiene layer
@@ -7,18 +7,25 @@ import { NextRequest, NextResponse } from 'next/server'
  *
  * 1. Double-slash blog URLs  /blog//slug  -> 301 -> /blog/slug
  * 2. 410 Gone for the 109 phantom /blog/ slugs (fragment, sentence, doubled)
- * 3. /faq and /faq/ -> /services  (was wrongly going to homepage /)
+ * 3. /faq and /faq/ -> /services  (was wrongly redirecting to homepage /)
  */
 
-const PHANTOM_BLOG_SLUGS = new Set([
-  'named','first','second','third','instead','same-situation','related-content',
-  'remove-claims','for-some-questions','three-steps','a-weak-case-example',
-  'a-scoring-case-example','conclusion-and-next-steps','skip-ahead-to-uncover',
-  'our-safeguarding-lead','note-in-our-case-studies','note-in-our-experience',
-  'get-someone-else-to-do-it','compare-these-two-sentences','for-adult-social-care-cqc',
+// ─── Exact phantom slugs confirmed in Search Console 404 report ─────────────
+const PHANTOM_BLOG_SLUGS: ReadonlySet<string> = new Set([
+  // Type A – fragment/heading slugs accidentally registered as routes
+  'named', 'first', 'second', 'third', 'instead', 'same-situation',
+  'related-content', 'remove-claims', 'for-some-questions', 'three-steps',
+  'a-weak-case-example', 'a-scoring-case-example', 'conclusion-and-next-steps',
+  'skip-ahead-to-uncover', 'our-safeguarding-lead', 'note-in-our-case-studies',
+  'note-in-our-experience', 'get-someone-else-to-do-it',
+  'compare-these-two-sentences', 'for-adult-social-care-cqc',
+
+  // Type B – slug repeated with "blog" concatenated in the middle
   'the-5-tender-writing-skills-that-separate-winners-from-runners-upblogthe-5-tender-writing-skills-that-separate-winners-from-runners-up',
   'tender-writing-software-vs-human-bid-writers-2026-comparisonblogtender-writing-software-vs-human-bid-writers-2026-comparison',
   'tender-writing-courses-uk-5-options-comparedblogtender-writing-courses-uk-5-options-compared',
+
+  // Type C – full sentences from article body text slugified as route slugs
   'build-a-case-example-library-of-8-12-anonymised-examples-before-you-draft-question-1-each-example-follows-the-5-beat-structure-each-method-statement-pulls-from-this-library-where-contextually-appropriate',
   'statements-like-we-have-strong-safeguarding-processes-score-zero-on-evidence-statements-like-during-the-6-months-from-january-to-june-2025-we-completed-47-section-42-safeguarding-referrals-across-our-3-essex-services',
   'a-childrens-residential-bid-using-cqc-framing-or-an-adult-care-bid-using-ofsted-framing-tells-the-evaluator-the-team-has-not-understood-the-cohort-it-is-an-automatic-scoring-loss-on-any-question-that-touches-regulation',
@@ -83,34 +90,54 @@ const PHANTOM_BLOG_SLUGS = new Set([
   'what-is-a-tender-ready-programme',
 ])
 
-function isDoubledSlug(slug) { return slug.indexOf('blog', 20) !== -1 }
-function isSentenceSlug(slug) { return slug.length > 80 }
-function gone410() {
+/** Type B: slug has "blog" embedded after the 20th character (doubled path bug) */
+function isDoubledSlug(slug: string): boolean {
+  return slug.indexOf('blog', 20) !== -1
+}
+
+/** Type C: all real post slugs are < 80 chars; longer ones are sentence text */
+function isSentenceSlug(slug: string): boolean {
+  return slug.length > 80
+}
+
+function gone410(): NextResponse {
   return new NextResponse(null, {
     status: 410,
-    headers: { 'X-Robots-Tag': 'noindex', 'Cache-Control': 'public, max-age=86400, s-maxage=86400' },
+    headers: {
+      'X-Robots-Tag': 'noindex',
+      'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+    },
   })
 }
 
-export function middleware(request) {
+export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl
+
+  // 1. Fix double-slash /blog//slug -> /blog/slug (301)
   if (pathname.startsWith('/blog//')) {
     const url = request.nextUrl.clone()
     url.pathname = pathname.replace('/blog//', '/blog/')
     return NextResponse.redirect(url, { status: 301 })
   }
+
+  // 2. 410 Gone for phantom blog slugs
   if (pathname.startsWith('/blog/')) {
     const slug = pathname.slice('/blog/'.length)
     if (slug && (PHANTOM_BLOG_SLUGS.has(slug) || isDoubledSlug(slug) || isSentenceSlug(slug))) {
       return gone410()
     }
   }
+
+  // 3. /faq and /faq/ -> /services (corrects wrong homepage redirect in next.config.ts)
   if (pathname === '/faq' || pathname === '/faq/') {
     const url = request.nextUrl.clone()
     url.pathname = '/services'
     return NextResponse.redirect(url, { status: 301 })
   }
-  return undefined
+
+  return NextResponse.next()
 }
 
-export const config = { matcher: ['/blog/:path*', '/faq', '/faq/'] }
+export const config = {
+  matcher: ['/blog/:path*', '/faq', '/faq/'],
+  }
