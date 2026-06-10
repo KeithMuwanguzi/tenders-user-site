@@ -19,7 +19,7 @@ export type PublishedTenderSnapshot = {
 const PORTAL_API_URL =
   process.env.PORTAL_API_URL ||
   process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-  'https://tenderlab-admin-api.onrender.com'
+  'https://tenderlab-admin-api-quva.onrender.com'
 
 export async function fetchPublishedTenderById(
   id: string,

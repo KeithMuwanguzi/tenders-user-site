@@ -32,10 +32,22 @@ const SMTP_USER = process.env.SMTP_USER || ''
 const SMTP_PASS = process.env.SMTP_PASS || ''
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'TenderLab Website'
 const INQUIRY_TO = process.env.INQUIRY_TO || 'info@tenderlab.co.uk'
-const PORTAL_API_URL =
-  process.env.PORTAL_API_URL || 'https://tenderlab-admin-api.onrender.com'
+const DEFAULT_PORTAL_API_URL = 'https://tenderlab-admin-api-quva.onrender.com'
 const PORTAL_ADMIN_URL =
   process.env.PORTAL_ADMIN_URL || 'https://tenderlab-admin-portal.vercel.app'
+
+function resolvePortalApiUrl(): string {
+  const raw =
+    process.env.PORTAL_API_URL ||
+    process.env.NEXT_PUBLIC_PORTAL_API_URL ||
+    DEFAULT_PORTAL_API_URL
+  const url = raw.trim().replace(/\/$/, '')
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    console.error('[inquiries] invalid PORTAL_API_URL — falling back to default:', raw)
+    return DEFAULT_PORTAL_API_URL
+  }
+  return url
+}
 
 interface InquiryPayload {
   name: string
@@ -221,15 +233,56 @@ async function sendInquiryEmail(
   }
 }
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/** Ping the Render API so a cold start finishes before we POST the inquiry. */
+async function wakePortalApi(baseUrl: string): Promise<void> {
+  const healthUrl = `${baseUrl}/api/health`
+  const attempts = 4
+  for (let i = 0; i < attempts; i++) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 20000)
+    try {
+      const res = await fetch(healthUrl, {
+        method: 'GET',
+        signal: controller.signal,
+        cache: 'no-store',
+      })
+      clearTimeout(timeout)
+      if (res.ok) {
+        console.info('[inquiries] portal API awake')
+        return
+      }
+      console.warn(
+        `[inquiries] health check attempt ${i + 1}/${attempts} returned ${res.status}`,
+      )
+    } catch (err) {
+      clearTimeout(timeout)
+      const message = err instanceof Error ? err.message : String(err)
+      console.warn(
+        `[inquiries] health check attempt ${i + 1}/${attempts} failed:`,
+        message,
+      )
+    }
+    if (i < attempts - 1) {
+      await sleep(2000)
+    }
+  }
+}
+
 async function forwardToPortalApi(
   portal: PortalInquiry,
+  baseUrl: string,
 ): Promise<{ ok: boolean; status?: number; error?: string }> {
-  const url = `${PORTAL_API_URL.replace(/\/$/, '')}/api/inquiries/`
+  const url = `${baseUrl}/api/inquiries/`
 
-  // Two attempts: the first generously covers a Render free-tier cold start
-  // (~30s), the second handles a transient failure right after wake-up.
+  // After wakePortalApi(), the API should be hot — short retries cover
+  // transient sheet-store hiccups without burning the whole Vercel budget.
   const attempts: Array<{ timeoutMs: number; preDelayMs: number }> = [
-    { timeoutMs: 35000, preDelayMs: 0 },
+    { timeoutMs: 25000, preDelayMs: 0 },
+    { timeoutMs: 20000, preDelayMs: 1000 },
     { timeoutMs: 15000, preDelayMs: 1500 },
   ]
 
@@ -237,7 +290,7 @@ async function forwardToPortalApi(
   for (let i = 0; i < attempts.length; i++) {
     const { timeoutMs, preDelayMs } = attempts[i]
     if (preDelayMs > 0) {
-      await new Promise((r) => setTimeout(r, preDelayMs))
+      await sleep(preDelayMs)
     }
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), timeoutMs)
@@ -254,9 +307,12 @@ async function forwardToPortalApi(
       })
       clearTimeout(timeout)
       if (res.ok) return { ok: true, status: res.status }
-      lastError = `HTTP ${res.status}`
+
+      const body = await res.text().catch(() => '')
+      lastError = `HTTP ${res.status}${body ? `: ${body.slice(0, 300)}` : ''}`
       console.warn(
-        `[inquiries] forward attempt ${i + 1}/${attempts.length} returned ${res.status}`,
+        `[inquiries] forward attempt ${i + 1}/${attempts.length} failed:`,
+        lastError,
       )
     } catch (err) {
       clearTimeout(timeout)
@@ -305,16 +361,22 @@ export async function POST(request: NextRequest) {
   }
 
   const portal = buildPortalInquiry(body)
+  const portalApiUrl = resolvePortalApiUrl()
 
-  const [emailResult, forwardResult] = await Promise.all([
+  // Email is fast; wake the Render API in parallel so cold-start (~30s) does
+  // not eat into the inquiry POST timeout.
+  const [emailResult] = await Promise.all([
     sendInquiryEmail(body, portal),
-    forwardToPortalApi(portal),
+    wakePortalApi(portalApiUrl),
   ])
+
+  const forwardResult = await forwardToPortalApi(portal, portalApiUrl)
 
   if (!emailResult.ok && !forwardResult.ok) {
     console.error('[inquiries] BOTH channels failed', {
       email: emailResult.error,
       forward: forwardResult.error,
+      portalApiUrl,
       payload: { name, email, subject: portal.subject },
     })
     return NextResponse.json(
@@ -324,6 +386,14 @@ export async function POST(request: NextRequest) {
       },
       { status: 502 },
     )
+  }
+
+  if (emailResult.ok && !forwardResult.ok) {
+    console.error('[inquiries] email delivered but portal forward FAILED', {
+      forward: forwardResult.error,
+      portalApiUrl,
+      payload: { name, email, subject: portal.subject },
+    })
   }
 
   return NextResponse.json({
