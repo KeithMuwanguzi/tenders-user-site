@@ -48,6 +48,41 @@ const nextConfig: NextConfig = {
       { source: '/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027', destination: '/blog/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027-provider-qualification-analysis', permanent: true },
       { source: '/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027/', destination: '/blog/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027-provider-qualification-analysis', permanent: true },
 
+      // ── Migration recovery: legacy case-study URLs -> live case studies ──
+      // Added 18 June 2026. These old URLs were 404ing in Search Console (120
+      // not-found pages) after the late-May migration. Every destination below
+      // was verified live (HTTP 200). This is the fix for the ranking drop.
+      { source: '/choices-healthcare-essex-live-at-home', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
+      { source: '/choices-healthcare-essex-live-at-home.html', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
+      { source: '/livingstone-healthcare-essex-live-at-home', destination: '/case-studies/essex-live-at-home-tier-2-framework', permanent: true },
+      { source: '/livingstone-healthcare-essex-live-at-home.html', destination: '/case-studies/essex-live-at-home-tier-2-framework', permanent: true },
+      { source: '/inspire-care-outreach-dorset-open-framework', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
+      { source: '/inspire-care-outreach-dorset-open-framework.html', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
+      { source: '/choices-healthcare-southend-childrens-framework', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
+      { source: '/choices-healthcare-southend-childrens-framework.html', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
+      { source: '/havilah-care-bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
+      { source: '/havilah-care-bedford-supported-living.html', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
+      { source: '/nelson-ocean-central-bedfordshire-supported-living', destination: '/case-studies/central-bedfordshire-supported-living', permanent: true },
+      { source: '/nelson-ocean-central-bedfordshire-supported-living.html', destination: '/case-studies/central-bedfordshire-supported-living', permanent: true },
+      { source: '/rosecare-bradford-mental-health-supported-living', destination: '/case-studies/bradford-mental-health-provider-list', permanent: true },
+      { source: '/rosecare-bradford-mental-health-supported-living.html', destination: '/case-studies/bradford-mental-health-provider-list', permanent: true },
+      { source: '/alicelyn-sheffield-overnight-short-breaks', destination: '/case-studies/sheffield-dps-overnight-short-breaks', permanent: true },
+      { source: '/alicelyn-sheffield-overnight-short-breaks.html', destination: '/case-studies/sheffield-dps-overnight-short-breaks', permanent: true },
+      { source: '/in-home-carers-hertfordshire-children-young-people', destination: '/case-studies/hertfordshire-cyp-homecare-framework', permanent: true },
+      { source: '/in-home-carers-hertfordshire-children-young-people.html', destination: '/case-studies/hertfordshire-cyp-homecare-framework', permanent: true },
+      { source: '/pcas-childrens-services-procurement', destination: '/case-studies/childrens-services-direct-contract', permanent: true },
+      { source: '/pcas-childrens-services-procurement.html', destination: '/case-studies/childrens-services-direct-contract', permanent: true },
+
+      // ── Migration recovery: wrong /case-studies slugs -> correct slugs ──
+      { source: '/case-studies/bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
+      { source: '/case-studies/choices-healthcare-southend-childrens-framework', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
+      { source: '/case-studies/inspire-care-outreach-dorset-open-framework', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
+      { source: '/case-studies/choices-healthcare-essex-live-at-home', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
+      { source: '/case-studies/havilah-care-bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
+
+      // ── Migration recovery: removed blog post with no live equivalent ──
+      { source: '/blog/tender-response-format-a-template-that-wins-uk-council-contracts', destination: '/blog', permanent: true },
+
       // ── Non-www to www ────────────────────────────────────────────────
       // (Belt and braces — Vercel domain settings usually handle this)
       { source: '/:path*', has: [{ type: 'host', value: 'tenderlab.co.uk' }], destination: 'https://www.tenderlab.co.uk/:path*', permanent: true },
