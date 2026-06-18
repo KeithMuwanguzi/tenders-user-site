@@ -50,6 +50,11 @@ const CARE_SETTINGS_INDEX = [
   { slug: 'mental-health-services', name: 'Mental Health Services' },
   { slug: 'substance-misuse-services', name: 'Substance Misuse Services' },
   { slug: 'rehabilitation-services', name: 'Rehabilitation Services' },
+  { slug: 'learning-disability-services', name: 'Learning Disability Services' },
+  { slug: 'autism-services', name: 'Autism Services' },
+  { slug: 'crisis-rapid-response', name: 'Crisis and Rapid Response' },
+  { slug: 'short-breaks-and-respite', name: 'Short Breaks and Respite' },
+  { slug: 'temporary-accommodation', name: 'Temporary Accommodation' },
 ]
 
 const CARE_SETTINGS_FAQS = [
