@@ -168,6 +168,19 @@ function cleanEmbeddedChrome(html: string): string {
       .replace(/href="\.\.\/contact\.html"/gi, 'href="/contact"')
       .replace(/href="\.\.\/care-settings\/([^"]+?)\.html"/gi, 'href="/care-settings/$1"')
       .replace(/href="\.\.\/case-studies\/([^"]+?)\.html"/gi, 'href="/case-studies/$1"')
+      /* Legacy root-level case-study + services links (../provider.html) mapped
+         directly to current routes so they resolve without a redirect hop. */
+      .replaceAll('href="../choices-healthcare-essex-live-at-home.html"', 'href="/case-studies/essex-domiciliary-framework-2025"')
+      .replaceAll('href="../livingstone-healthcare-essex-live-at-home.html"', 'href="/case-studies/essex-live-at-home-tier-2-framework"')
+      .replaceAll('href="../inspire-care-outreach-dorset-open-framework.html"', 'href="/case-studies/dorset-care-support-open-framework"')
+      .replaceAll('href="../choices-healthcare-southend-childrens-framework.html"', 'href="/case-studies/southend-childrens-residential-framework"')
+      .replaceAll('href="../havilah-care-bedford-supported-living.html"', 'href="/case-studies/bedford-supported-living-framework"')
+      .replaceAll('href="../nelson-ocean-central-bedfordshire-supported-living.html"', 'href="/case-studies/central-bedfordshire-supported-living"')
+      .replaceAll('href="../rosecare-bradford-mental-health-supported-living.html"', 'href="/case-studies/bradford-mental-health-provider-list"')
+      .replaceAll('href="../alicelyn-sheffield-overnight-short-breaks.html"', 'href="/case-studies/sheffield-dps-overnight-short-breaks"')
+      .replaceAll('href="../in-home-carers-hertfordshire-children-young-people.html"', 'href="/case-studies/hertfordshire-cyp-homecare-framework"')
+      .replaceAll('href="../pcas-childrens-services-procurement.html"', 'href="/case-studies/childrens-services-direct-contract"')
+      .replaceAll('href="../services.html"', 'href="/services"')
       .replace(/href="\.\.\/services\/([^"]+?)\.html"/gi, 'href="/services/$1"')
       .replace(/href="\.\.\/blog\/([^"]+?)\.html"/gi, 'href="/blog/$1"')
       /* Trailing-slash variant of the canonical URL pattern. */
