@@ -59,6 +59,10 @@ export default function ContactForm() {
         )
       }
       setSubmitted(true)
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void }
+      if (typeof w.gtag === 'function') {
+        w.gtag('event', 'generate_lead', { method: 'contact_form', service_type: form.serviceType || 'unspecified' })
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Network error. Please try again.'
       setError(message)
