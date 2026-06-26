@@ -3,9 +3,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Health & Social Care Tenders | TenderLab',
-  description:
-    'Specialist tender writing for integrated health and social care contracts. TenderLab understands the commissioning landscape, compliance requirements, and what evaluators reward.',
+    title: 'Health and Social Care Tender Writers | 92% Win Rate | TenderLab',
+    description:
+          'Specialist health and social care tender writers with a 92% win rate. Expert bid writing for NHS and Local Authority frameworks, evaluated by care sector specialists.',
+    alternates: { canonical: 'https://www.tenderlab.co.uk/care-settings/health-social-care' },
 }
 
 const DELIVERS = [
@@ -56,7 +57,7 @@ export default function HealthSocialCarePage() {
           <p className="page-hero__breadcrumb">
             <Link href="/care-settings">Care Settings</Link> / Health &amp; Social Care
           </p>
-          <h1 className="page-hero__title">Health &amp; Social Care</h1>
+                                                  <h1 className="page-hero__title">Health and Social Care Tender Writers</h1>
           <p className="page-hero__sub">Winning integrated health and social care contracts requires more than good writing. It requires knowing exactly what commissioners measure.</p>
         </div>
       </section>
