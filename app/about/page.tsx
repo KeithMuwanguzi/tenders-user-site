@@ -5,18 +5,18 @@ import TimelineScroll from '@/components/TimelineScroll'
 
 
 export const metadata: Metadata = {
-  title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
+  title: 'About TenderLab | We Help Care Providers Win Contracts',
   description:
-    'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+    'TenderLab helps UK care providers win council and NHS contracts. Evaluator-trained writers, care sector only, 92% win rate across 200+ submissions.',
   alternates: { canonical: '/about' },
   openGraph: defaultOpenGraph({
-    title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
-    description: 'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+    title: 'About TenderLab | We Help Care Providers Win Contracts',
+    description: 'TenderLab helps UK care providers win council and NHS contracts. Evaluator-trained writers, care sector only, 92% win rate across 200+ submissions.',
     path: '/about',
   }),
   twitter: defaultTwitter({
-    title: 'About TenderLab | Specialist Tender Writing Consultants UK Health & Social Care',
-    description: 'TenderLab is a specialist tender writing and bid writing consultancy for UK health and social care providers. 92% win rate across 200+ submissions. Companies House 17184263.',
+    title: 'About TenderLab | We Help Care Providers Win Contracts',
+    description: 'TenderLab helps UK care providers win council and NHS contracts. Evaluator-trained writers, care sector only, 92% win rate across 200+ submissions.',
   }),
 }
 
@@ -39,7 +39,7 @@ export default function AboutPage() {
       <section className="tl-hero" aria-labelledby="hero-title">
         <div className="tl-hero-glow" aria-hidden="true" />
         <div className="tl-hero-inner">
-          <h1 id="hero-title" className="tl-hero-title">About TenderLab: Specialist Tender Writing Consultants</h1>
+          <h1 id="hero-title" className="tl-hero-title">The Team That Helps Care Providers Win Contracts</h1>
           <p className="tl-hero-sub">
             TenderLab is a team of specialist <strong>tender writing consultants</strong> and <strong>bid writing consultants</strong> working exclusively across UK health and social care. We structure submissions to meet the exact criteria used by local authorities and commissioning bodies to score, rank, and award contracts.
           </p>
