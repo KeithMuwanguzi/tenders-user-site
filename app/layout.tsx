@@ -53,8 +53,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   icons: {
-    icon: '/images/Logo/tenderlab-logo-transparent.png',
-    apple: '/images/Logo/tenderlab-logo-transparent.png',
+    icon: '/favicon.ico',
+   apple: '/apple-touch-icon.png',
   },
   verification: {
     google: 'UMLHV4HxkfIfzeul48d9nBZSMaKfFDo8TNbQAfhj_qc',
