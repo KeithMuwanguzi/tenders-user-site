@@ -3,20 +3,20 @@ import Link from 'next/link'
 import TimelineScroll from '@/components/TimelineScroll'
 
 export const metadata: Metadata = {
-  title: 'Tender Writing and Bid Writing Services for UK Care | TenderLab',
+  title: 'How We Help Care Providers Win Contracts | TenderLab',
   description:
-    'Specialist tender writing services for UK health and social care providers. Framework, PQQ and ITT bid writing with a 92% win rate across 200+ submissions.',
+    'Everything you need to win care contracts: framework and ITT bid writing, pre-submission review and lost-bid debriefs. 92% win rate across 200+ care submissions.',
   alternates: { canonical: 'https://www.tenderlab.co.uk/services' },
   openGraph: {
-    title: 'Tender Writing and Bid Writing Services for UK Care | TenderLab',
+    title: 'How We Help Care Providers Win Contracts | TenderLab',
     description:
-      'Specialist tender writing services for UK health and social care providers. Framework, PQQ and ITT bid writing with a 92% win rate across 200+ submissions.',
+      'Everything you need to win care contracts: framework and ITT bid writing, pre-submission review and lost-bid debriefs. 92% win rate across 200+ care submissions.',
     url: 'https://www.tenderlab.co.uk/services',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tender Writing and Bid Writing Services for UK Care | TenderLab',
+    title: 'How We Help Care Providers Win Contracts | TenderLab',
     description:
       'Specialist tender writing services for UK health and social care providers. 92% win rate, 200+ submissions.',
   },
@@ -88,7 +88,7 @@ export default function ServicesPage() {
         <div className="tl-hero-glow" aria-hidden="true" />
         <div className="tl-hero-inner">
           <div className="tl-hero-eye">Services &middot; UK Health and Social Care</div>
-          <h1 id="hero-title" className="tl-hero-title">Eight tender writing and bid writing services across the bidding lifecycle.</h1>
+          <h1 id="hero-title" className="tl-hero-title">How We Help Care Providers Win Council & NHS Contracts</h1>
           <p className="tl-hero-sub">From spec-to-submission writing through pre-submission review, lost-bid debrief and mobilisation, our <strong>tender writing services</strong> sit at every stage of the bidding cycle. Our <strong>bid writing consultants</strong> deliver <strong>bid and tender writing services</strong> structured around the published evaluation criteria used by NHS commissioners, integrated care boards, and local authorities.</p>
           <p className="tl-hero-sub tight">Each service is structured around when to use it, what you receive, and the outcome it delivers. No padding, no narrative.</p>
           <Link className="tl-btn-red" href="/contact">Book a Free Consultation</Link>
