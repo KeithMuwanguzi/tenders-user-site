@@ -7,11 +7,11 @@ import type { Metadata } from 'next'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Tender Writing Services for UK Care Providers | TenderLab' },
-  description: 'Specialist tender writing and bid writing services for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers. Companies House 17184263.',
+  title: { absolute: 'Win More Care Tenders & Council Contracts | TenderLab' },
+  description: 'Win council and NHS care contracts. We help UK care providers get on frameworks and win tenders, with a 92% win rate across 200+ submissions. Free consultation.',
   alternates: { canonical: '/' },
-  openGraph: defaultOpenGraph({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions. Evaluator-trained writers.', path: '/' }),
-  twitter: defaultTwitter({ title: 'Tender Writing Services for UK Care Providers | TenderLab', description: 'Specialist tender writing for UK health and social care. 92% win rate across 200+ submissions.' }),
+  openGraph: defaultOpenGraph({ title: 'Win More Care Tenders & Council Contracts | TenderLab', description: 'We help UK care providers win council and NHS contracts and get on frameworks. 92% win rate across 200+ submissions.', path: '/' }),
+  twitter: defaultTwitter({ title: 'Win More Care Tenders & Council Contracts | TenderLab', description: 'We help UK care providers win council and NHS contracts. 92% win rate across 200+ submissions.' }),
 }
 
 /* ── Data ── */
