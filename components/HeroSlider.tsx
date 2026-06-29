@@ -245,7 +245,7 @@ export default function HeroSlider(_props: { children?: React.ReactNode }) {
       {/* Page H1 for SEO. Visually hidden so design is unchanged but Google
           and screen readers see the proper page heading. */}
       <h1 className="tlh-sr">
-        Tender Writing Services for UK Health and Social Care
+        Win More Care Contracts: Tender & Bid Support for UK Care Providers
       </h1>
 
       {/* Background slides (CSS background-image so transitions are crisp). */}
