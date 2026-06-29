@@ -20,8 +20,8 @@ export type ServiceData = {
 export const SERVICES_DATA: ServiceData[] = [
   {
     slug: 'bid-writing',
-    title: 'Bid Writing Services and Social Care Bid Writing Consultant',
-    tagline: 'Specialist social care bid writing consultant for UK health and social care tenders.',
+    title: 'Win Your Next Care Tender: Done-For-You Bid Writing',
+    tagline: 'We write your council and NHS care bids to score top marks.',
     description: 'End-to-end tender writing and specialist social care bid writing consultant services for UK health and social care providers. Specification to submission, structured to score 5 of 5.',
     heroImg: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80',
     paragraphs: [
@@ -75,8 +75,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'pre-submission-review',
-    title: 'Pre-Submission Tender Review for Care Providers',
-    tagline: 'Know the score before the commissioner does.',
+    title: 'Stop Losing Care Tenders by a Few Marks: Pre-Submission Review',
+    tagline: 'Know your score before the commissioner does, and fix it in time.',
     description: 'Forensic scoring of a completed draft against the published evaluation criteria.',
     heroImg: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80',
     paragraphs: [
@@ -118,8 +118,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'lost-bid-debrief',
-    title: 'Lost Tender Debrief Service for Care Providers',
-    tagline: 'Convert losses into a compounding answer bank.',
+    title: 'Find Out Why You Lost the Care Tender, and Win the Next One',
+    tagline: 'Turn a lost bid into the evidence that wins the next one.',
     description: 'Structured post-loss analysis that turns a loss into reusable content.',
     heroImg: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80',
     paragraphs: [
@@ -159,8 +159,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'tender-readiness-audit',
-    title: 'Tender Readiness Audit for UK Care Providers',
-    tagline: 'Be ready before the opportunity arrives.',
+    title: 'Are You Ready to Win Council Care Contracts?',
+    tagline: "Know exactly what's missing before the tender drops.",
     description: 'Diagnostic for providers preparing to enter the tender market or to step up to larger frameworks.',
     heroImg: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80',
     paragraphs: [
@@ -201,8 +201,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'bid-team-coaching',
-    title: 'Bid Writing Team Coaching for Care Providers',
-    tagline: 'Build a tender function that delivers beyond the bid.',
+    title: 'Train Your Team to Win Care Tenders In-House',
+    tagline: 'Build an in-house team that wins care contracts.',
     description: 'In-house capability build for providers with an internal bid writer or bid team.',
     heroImg: 'https://images.unsplash.com/photo-1531538606174-e1ac68e4e9d0?w=1200&q=80',
     paragraphs: [
@@ -242,8 +242,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'pipeline-tracking',
-    title: 'Tender Pipeline Tracking for Care Providers',
-    tagline: 'See every opportunity before competitors do.',
+    title: 'Never Miss a Care Contract Opportunity Again',
+    tagline: 'Every relevant care tender, scored for fit, every Monday.',
     description: "Weekly feed of relevant opportunities scored against the provider's service scope, geography and capacity.",
     heroImg: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&q=80',
     paragraphs: [
@@ -284,8 +284,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'mobilisation-support',
-    title: 'Tender Mobilisation Support for Care Providers',
-    tagline: 'Ready for contract day one.',
+    title: 'You Won the Care Contract: Now Mobilise It Properly',
+    tagline: 'From award letter to live service, ready on day one.',
     description: 'Post-award delivery from contract award through to the first 90 days of live service.',
     heroImg: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',
     paragraphs: [
@@ -326,8 +326,8 @@ export const SERVICES_DATA: ServiceData[] = [
   },
   {
     slug: 'tender-retainer',
-    title: 'Tender Retainer Service for UK Care Providers',
-    tagline: 'Turn tendering into a growth function.',
+    title: 'Win Care Contracts Every Month: Tender Retainer',
+    tagline: 'Make winning care contracts a predictable growth engine.',
     description: 'Monthly engagement bundling Pipeline Tracking, two Pre-Submission Reviews and priority access to Bid Writing.',
     heroImg: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80',
     paragraphs: [
