@@ -16,7 +16,7 @@ export const BRAND = {
   clientSatisfaction: '98%',
   positioning: 'Evaluator-trained writers with care sector expertise.',
   description:
-    'Specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. 92% win rate across 200+ local authority and NHS submissions.',
+    'We help UK care providers win council and NHS contracts. Framework applications, tender bids and pre-submission reviews. 92% win rate across 200+ submissions.',
 }
 
 // Verified off-domain profiles. Single source of truth for the Organization
