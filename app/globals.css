@@ -6208,6 +6208,106 @@ section.cs-block ul li::marker {
 .tenders-main {
   min-width: 0;
 }
+.tenders-search {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  padding: 20px 20px 16px;
+  margin-bottom: 24px;
+}
+.tenders-search__head {
+  margin-bottom: 16px;
+}
+.tenders-search__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--midnight-ink);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+.tenders-search__hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--slate);
+}
+.tenders-search__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.tenders-search__field--keyword {
+  margin-bottom: 12px;
+}
+.tenders-search__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.tenders-search__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: #fff;
+  font-size: 14px;
+  color: var(--midnight-ink);
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tenders-search__input::placeholder {
+  color: #9aa3ad;
+}
+.tenders-search__input:focus {
+  border-color: var(--heritage-red);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.12);
+}
+.tenders-search__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.tenders-search__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.tenders-search__status {
+  margin: 0;
+  font-size: 12px;
+  color: var(--slate);
+  line-height: 1.4;
+}
+.tenders-search__clear {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--heritage-red);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.tenders-search__clear:hover {
+  color: var(--midnight-ink);
+}
+.tenders-list__empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
 .tenders-main__toolbar {
   display: flex;
   align-items: center;
@@ -6395,9 +6495,14 @@ section.cs-block ul li::marker {
     margin-bottom: 20px;
     padding-bottom: 16px;
   }
+  .tenders-search__grid {
+    grid-template-columns: 1fr;
+  }
 }
 @media (max-width: 768px) {
   .tenders-layout { padding: 28px 0 56px; }
+  .tenders-search { padding: 16px; margin-bottom: 20px; }
+  .tenders-search__footer { flex-wrap: wrap; }
   .tenders-main__sources { gap: 6px; }
   .tenders-main__source-btn { padding: 6px 14px; font-size: 12px; }
   .tenders-main__refetch { align-self: flex-start; }

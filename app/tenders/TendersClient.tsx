@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback, useMemo, useState } from 'react'
+import { useEffect, useCallback, useMemo, useState, useDeferredValue } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Link from 'next/link'
 import type { RootState, AppDispatch } from '@/store'
@@ -11,6 +11,12 @@ import {
   filterTendersByCareCategory,
   getCareCategoryById,
 } from '@/lib/tender-categories'
+import {
+  EMPTY_TENDER_SEARCH,
+  filterTendersBySearch,
+  hasActiveTenderSearch,
+  type TenderSearchFilters,
+} from '@/lib/tender-search'
 import {
   officialNoticeUrl,
   officialSourceLinkLabel,
@@ -31,6 +37,8 @@ export default function TendersClient() {
     useSelector((state: RootState) => state.tenders)
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [search, setSearch] = useState<TenderSearchFilters>(EMPTY_TENDER_SEARCH)
+  const deferredSearch = useDeferredValue(search)
 
   useEffect(() => {
     if (lastFetchKey !== source) {
@@ -38,10 +46,12 @@ export default function TendersClient() {
     }
   }, [dispatch, source, lastFetchKey])
 
-  const filteredTenders = useMemo(
-    () => filterTendersByCareCategory(allTenders, category),
-    [allTenders, category],
-  )
+  const filteredTenders = useMemo(() => {
+    const byCare = filterTendersByCareCategory(allTenders, category)
+    return filterTendersBySearch(byCare, deferredSearch)
+  }, [allTenders, category, deferredSearch])
+
+  const searchActive = hasActiveTenderSearch(deferredSearch)
 
   const activeCategoryLabel =
     getCareCategoryById(category)?.label ?? ALL_CARE_CATEGORY.label
@@ -54,6 +64,19 @@ export default function TendersClient() {
   const handleCategorySelect = (id: string) => {
     dispatch(setCategory(id))
     setMobileFiltersOpen(false)
+  }
+
+  const updateSearch = <K extends keyof TenderSearchFilters>(
+    key: K,
+    value: TenderSearchFilters[K],
+  ) => {
+    setSearch((prev) => ({ ...prev, [key]: value }))
+    dispatch(setPage(1))
+  }
+
+  const clearSearch = () => {
+    setSearch(EMPTY_TENDER_SEARCH)
+    dispatch(setPage(1))
   }
 
   const formatDate = (dateStr: string) => {
@@ -103,7 +126,10 @@ export default function TendersClient() {
           <p className="tenders-sidebar__group-title">{group.title}</p>
           <ul className="tenders-sidebar__list">
             {group.categories.map((cat) => {
-              const count = filterTendersByCareCategory(allTenders, cat.id).length
+              const count = filterTendersBySearch(
+                filterTendersByCareCategory(allTenders, cat.id),
+                deferredSearch,
+              ).length
               return (
                 <li key={cat.id}>
                   <button
@@ -128,7 +154,6 @@ export default function TendersClient() {
   return (
     <section className="tenders-layout">
       <div className="container tenders-layout__container">
-        {/* Mobile: compact filter trigger */}
         <div className="tenders-layout__mobile-bar">
           <button
             type="button"
@@ -169,6 +194,75 @@ export default function TendersClient() {
         </aside>
 
         <div className="tenders-main">
+          <div className="tenders-search" role="search" aria-label="Search live tenders">
+            <div className="tenders-search__head">
+              <h2 className="tenders-search__title">Search tenders</h2>
+              <p className="tenders-search__hint">Results update as you type — no Apply needed.</p>
+            </div>
+
+            <label className="tenders-search__field tenders-search__field--keyword">
+              <span className="tenders-search__label">Keyword</span>
+              <input
+                type="search"
+                className="tenders-search__input"
+                placeholder="e.g. domiciliary care, nursing, reablement…"
+                value={search.keyword}
+                onChange={(e) => updateSearch('keyword', e.target.value)}
+                autoComplete="off"
+              />
+            </label>
+
+            <div className="tenders-search__grid">
+              <label className="tenders-search__field">
+                <span className="tenders-search__label">Location</span>
+                <input
+                  type="search"
+                  className="tenders-search__input"
+                  placeholder="Council, region, postcode…"
+                  value={search.location}
+                  onChange={(e) => updateSearch('location', e.target.value)}
+                  autoComplete="off"
+                />
+              </label>
+              <label className="tenders-search__field">
+                <span className="tenders-search__label">Buying authority</span>
+                <input
+                  type="search"
+                  className="tenders-search__input"
+                  placeholder="Council, NHS trust, ICB…"
+                  value={search.organisation}
+                  onChange={(e) => updateSearch('organisation', e.target.value)}
+                  autoComplete="off"
+                />
+              </label>
+              <label className="tenders-search__field">
+                <span className="tenders-search__label">Notice ID or CPV</span>
+                <input
+                  type="search"
+                  className="tenders-search__input"
+                  placeholder="e.g. ocds-… or 85300000"
+                  value={search.noticeOrCpv}
+                  onChange={(e) => updateSearch('noticeOrCpv', e.target.value)}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+              </label>
+            </div>
+
+            <div className="tenders-search__footer">
+              <p className="tenders-search__status" aria-live="polite">
+                {!loading && searchActive
+                  ? `${filteredTenders.length} match${filteredTenders.length === 1 ? '' : 'es'} in this list`
+                  : 'Search title, description, authority, location, and notice details'}
+              </p>
+              {searchActive && (
+                <button type="button" className="tenders-search__clear" onClick={clearSearch}>
+                  Clear search
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="tenders-main__toolbar">
             <div className="tenders-main__sources" role="group" aria-label="Data source">
               {SOURCES.map((s) => (
@@ -234,18 +328,29 @@ export default function TendersClient() {
           {!loading && !error && filteredTenders.length === 0 && (
             <div className="tenders-list__empty">
               <p>
-                {category
-                  ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
-                  : 'No active tenders published yet. Check back soon.'}
+                {searchActive
+                  ? 'No tenders match your search. Try fewer words or clear a field.'
+                  : category
+                    ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
+                    : 'No active tenders published yet. Check back soon.'}
               </p>
-              {category && (
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  onClick={() => handleCategorySelect('')}
-                >
-                  Show all care settings
-                </button>
+              {(searchActive || category) && (
+                <div className="tenders-list__empty-actions">
+                  {searchActive && (
+                    <button type="button" className="btn btn-ghost" onClick={clearSearch}>
+                      Clear search
+                    </button>
+                  )}
+                  {category && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      onClick={() => handleCategorySelect('')}
+                    >
+                      Show all care settings
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -259,6 +364,7 @@ export default function TendersClient() {
                     {' · '}
                   </>
                 ) : null}
+                {searchActive ? 'Filtered · ' : ''}
                 Newest first
                 {newCount > 0 ? ` · ${newCount} new since your last refresh` : ''}
                 {' · '}
