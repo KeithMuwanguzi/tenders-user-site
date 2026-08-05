@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { getPortalApiUrl } from '@/lib/portal-api'
 
 /**
  * Inquiry relay endpoint for the TenderLab website contact form.
@@ -32,21 +33,18 @@ const SMTP_USER = process.env.SMTP_USER || ''
 const SMTP_PASS = process.env.SMTP_PASS || ''
 const SMTP_FROM_NAME = process.env.SMTP_FROM_NAME || 'TenderLab Website'
 const INQUIRY_TO = process.env.INQUIRY_TO || 'info@tenderlab.co.uk'
-const DEFAULT_PORTAL_API_URL = 'https://tenderlab-admin-api-quva.onrender.com'
 const PORTAL_ADMIN_URL =
-  process.env.PORTAL_ADMIN_URL || 'https://tenderlab-admin-portal.vercel.app'
+  process.env.PORTAL_ADMIN_URL || 'https://admin.tenderlab.co.uk'
+const MAX_REQUEST_BYTES = 32_000
+const ALLOWED_ORIGINS = new Set([
+  'https://www.tenderlab.co.uk',
+  'https://tenderlab.co.uk',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+])
 
 function resolvePortalApiUrl(): string {
-  const raw =
-    process.env.PORTAL_API_URL ||
-    process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-    DEFAULT_PORTAL_API_URL
-  const url = raw.trim().replace(/\/$/, '')
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    console.error('[inquiries] invalid PORTAL_API_URL — falling back to default:', raw)
-    return DEFAULT_PORTAL_API_URL
-  }
-  return url
+  return getPortalApiUrl()
 }
 
 interface InquiryPayload {
@@ -327,6 +325,16 @@ async function forwardToPortalApi(
 }
 
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin')
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return NextResponse.json({ error: 'Origin not allowed.' }, { status: 403 })
+  }
+
+  const declaredLength = Number(request.headers.get('content-length') || '0')
+  if (declaredLength > MAX_REQUEST_BYTES) {
+    return NextResponse.json({ error: 'Enquiry is too large.' }, { status: 413 })
+  }
+
   let body: InquiryPayload
   try {
     body = await request.json()
@@ -335,6 +343,40 @@ export async function POST(request: NextRequest) {
       { error: 'Invalid JSON body' },
       { status: 400 },
     )
+  }
+
+  const limits: Record<keyof InquiryPayload, number> = {
+    name: 120,
+    email: 254,
+    phone: 50,
+    org: 200,
+    serviceType: 120,
+    deadline: 80,
+    authority: 200,
+    howFound: 120,
+    message: 5_000,
+  }
+
+  for (const [field, limit] of Object.entries(limits) as Array<[keyof InquiryPayload, number]>) {
+    const value = body[field]
+    if (typeof value === 'string' && value.length > limit) {
+      return NextResponse.json(
+        { error: `${field} is too long.` },
+        { status: 400 },
+      )
+    }
+  }
+
+  body = {
+    name: String(body.name || '').trim(),
+    email: String(body.email || '').trim(),
+    phone: typeof body.phone === 'string' ? body.phone.trim() : null,
+    org: typeof body.org === 'string' ? body.org.trim() : null,
+    serviceType: typeof body.serviceType === 'string' ? body.serviceType.trim() : '',
+    deadline: typeof body.deadline === 'string' ? body.deadline.trim() : '',
+    authority: typeof body.authority === 'string' ? body.authority.trim() : '',
+    howFound: typeof body.howFound === 'string' ? body.howFound.trim() : '',
+    message: typeof body.message === 'string' ? body.message.trim() : '',
   }
 
   const name = (body.name || '').trim()

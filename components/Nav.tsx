@@ -21,7 +21,7 @@ const NAV: NavItem[] = [
       { label: 'Pre-Submission Review',  href: '/services/pre-submission-review',  desc: 'Quality checks before you submit' },
       { label: 'Lost Bid Debrief',       href: '/services/lost-bid-debrief',       desc: 'Understand why and improve fast' },
       { label: 'Tender Readiness Audit', href: '/services/tender-readiness-audit', desc: 'Assess your bid capability' },
-      { label: 'Bid Team Coaching',      href: '/services/bid-team-coaching',      desc: 'Build internal bid competence' },
+      { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build internal bid competence' },
       { label: 'Pipeline Tracking',      href: '/services/pipeline-tracking',      desc: 'Stay ahead of opportunities' },
       { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Win-to-deliver transition' },
       { label: 'Tender Retainer',        href: '/services/tender-retainer',        desc: 'Ongoing bid partnership' },
@@ -85,7 +85,6 @@ const NAV: NavItem[] = [
       { label: 'Client Reviews', href: '/reviews' },
     ],
   },
-  { label: 'Contact Us',      href: '/contact' },
 ]
 
 function ChevronDown({ className }: { className?: string }) {
@@ -111,6 +110,8 @@ export default function Nav() {
   const [mobileExpanded, setMobileExpanded]  = useState<string | null>(null)
   const [openMenu,       setOpenMenu]        = useState<string | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const drawerRef = useRef<HTMLDivElement | null>(null)
+  const burgerRef = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -131,6 +132,45 @@ export default function Nav() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const drawer = drawerRef.current
+    const closeButton = drawer?.querySelector<HTMLButtonElement>('.nav__drawer-close')
+    closeButton?.focus()
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setMenuOpen(false)
+        setMobileExpanded(null)
+        burgerRef.current?.focus()
+        return
+      }
+
+      if (event.key !== 'Tab' || !drawer) return
+      const focusable = Array.from(
+        drawer.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.offsetParent !== null)
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
+
   const openDropdown  = useCallback((label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current)
     setOpenMenu(label)
@@ -146,10 +186,63 @@ export default function Nav() {
     setOpenMenu(null)
   }, [])
 
+  useEffect(() => {
+    if (!menuOpen || !drawerRef.current) return
+
+    const drawer = drawerRef.current
+    const focusables = Array.from(
+      drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+    )
+    focusables[0]?.focus()
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeAll()
+        return
+      }
+      if (event.key !== 'Tab' || focusables.length === 0) return
+
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      burgerRef.current?.focus()
+    }
+  }, [menuOpen, closeAll])
+
+  useEffect(() => {
+    closeAll()
+  }, [pathname, closeAll])
+
+  const activeSection = (() => {
+    if (pathname === '/services' || pathname.startsWith('/services/')) return '/services'
+    if (pathname === '/care-settings' || pathname.startsWith('/care-settings/')) return '/care-settings'
+    if (pathname === '/tenders' || pathname.startsWith('/tenders/')) return '/tenders'
+    if (pathname === '/case-studies' || pathname.startsWith('/case-studies/')) return '/case-studies'
+    if (pathname === '/blog' || pathname.startsWith('/blog/')) return '/blog'
+    if (
+      pathname === '/about' || pathname.startsWith('/about/') ||
+      pathname === '/process' || pathname.startsWith('/process/') ||
+      pathname === '/reviews' || pathname.startsWith('/reviews/')
+    ) return '/about'
+    return pathname
+  })()
+
   const isActive = (href: string) => {
     const base = href.split('#')[0]
     if (base === '/') return pathname === '/'
-    return pathname.startsWith(base)
+    return activeSection === base
   }
 
   return (
@@ -162,6 +255,7 @@ export default function Nav() {
 
               {/* Burger — visible on mobile, Bain puts it left */}
               <button
+                ref={burgerRef}
                 className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
                 onClick={() => setMenuOpen((o) => !o)}
                 aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -176,11 +270,7 @@ export default function Nav() {
                   src="/images/Logo/tenderlab-logo-transparent.png"
                   alt="TenderLab"
                   height={28} width={120} priority
-                  style={{
-                    objectFit: 'contain', objectPosition: 'left center',
-                    filter: scrolled ? 'none' : 'brightness(0) invert(1)',
-                    transition: 'filter 0.3s ease',
-                  }}
+                  style={{ objectFit: 'contain', objectPosition: 'left center' }}
                 />
               </Link>
 
@@ -194,6 +284,7 @@ export default function Nav() {
                     return (
                       <li key={item.label} className="nav__item-wrap">
                         <Link href={item.href} onClick={closeAll}
+                          aria-current={active ? 'page' : undefined}
                           className={`nav__item${active ? ' nav__item--active' : ''}`}>
                           {item.label}
                         </Link>
@@ -208,7 +299,8 @@ export default function Nav() {
                       onMouseLeave={scheduleClose}
                     >
                       <span className={`nav__item nav__item--btn${active ? ' nav__item--active' : ''}${isOpen ? ' nav__item--open' : ''}`}>
-                        <Link href={item.href} onClick={closeAll} className="nav__item-link">
+                        <Link href={item.href} onClick={closeAll} className="nav__item-link"
+                          aria-current={active ? 'page' : undefined}>
                           {item.label}
                         </Link>
                         <button
@@ -246,8 +338,9 @@ export default function Nav() {
 
               {/* Right actions */}
               <div className="nav__actions">
-                <Link href="/score-my-response" className="nav__cta" onClick={closeAll}>
-                  Score My Response
+                <Link href="/contact" aria-current={pathname === '/contact' ? 'page' : undefined}
+                  className={`nav__cta${pathname === '/contact' ? ' nav__cta--active' : ''}`} onClick={closeAll}>
+                  Contact us
                 </Link>
               </div>
             </div>
@@ -303,11 +396,25 @@ export default function Nav() {
 
       {/* Mobile drawer */}
       <div
+        ref={drawerRef}
         className={`nav__drawer${menuOpen ? ' nav__drawer--open' : ''}`}
         aria-hidden={!menuOpen}
+        inert={!menuOpen}
         role="dialog"
+        aria-modal="true"
         aria-label="Site navigation"
       >
+        <div className="nav__drawer-head">
+          <span className="nav__drawer-title">Explore TenderLab</span>
+          <button
+            type="button"
+            className="nav__drawer-close"
+            onClick={closeAll}
+            aria-label="Close navigation menu"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
         <div className="nav__drawer-scroll">
           <div className="nav__drawer-links">
             {NAV.map((item) => {
@@ -364,7 +471,7 @@ export default function Nav() {
 
           <div className="nav__drawer-foot">
             <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
-              Free Consultation
+              Contact us
             </Link>
           </div>
         </div>

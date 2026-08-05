@@ -113,6 +113,16 @@ function gone410(): NextResponse {
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl
 
+  // Search Console shows that legacy ?source=cf and ?source=ft tender URLs
+  // already receive impressions and clicks. Permanently consolidate them into
+  // the clean detail URL so those signals are transferred rather than merely
+  // hiding the duplicates from future crawls in robots.txt.
+  if (pathname.startsWith('/tenders/') && request.nextUrl.searchParams.has('source')) {
+    const url = request.nextUrl.clone()
+    url.searchParams.delete('source')
+    return NextResponse.redirect(url, { status: 301 })
+  }
+
   // 1. Fix double-slash /blog//slug -> /blog/slug (301)
   if (pathname.startsWith('/blog//')) {
     const url = request.nextUrl.clone()
@@ -139,5 +149,5 @@ export function middleware(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ['/blog/:path*', '/faq', '/faq/'],
+  matcher: ['/blog/:path*', '/tenders/:path*', '/faq', '/faq/'],
   }

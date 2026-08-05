@@ -1,21 +1,87 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Script from 'next/script'
 import { notFound } from 'next/navigation'
-import { SERVICES_DATA, getServiceBySlug } from '@/lib/services-data'
+import EditorialHero from '@/components/EditorialHero'
+import EditorialFaq from '@/components/EditorialFaq'
+import { SERVICES_DATA, getServiceBySlug, type ServiceData } from '@/lib/services-data'
 import {
-  canonicalUrl,
   defaultOpenGraph,
   defaultTwitter,
   serviceSchema,
   faqSchema,
   breadcrumbSchema,
-  defaultFaq,
-  BRAND,
 } from '@/lib/seo'
 
+const SERVICE_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
+  'bid-writing': {
+    src: '/images/editorial/tenderlab-bid-writing-hero-v1.png',
+    alt: 'A care provider and tender specialist connecting operational evidence to a health and social care tender response',
+  },
+  'pre-submission-review': {
+    src: '/images/editorial/tenderlab-pre-submission-review-hero-v1.png',
+    alt: 'A tender reviewer checking a care provider response against the published question, evidence and scoring rubric',
+  },
+  'lost-bid-debrief': {
+    src: '/images/editorial/tenderlab-lost-bid-debrief-hero-v1.png',
+    alt: 'A care provider leadership team turning evaluator feedback into an evidence-led improvement plan',
+  },
+  'tender-readiness-audit': {
+    src: '/images/editorial/tenderlab-readiness-audit-hero-v1.png',
+    alt: 'A care provider checking mandatory tender requirements, available evidence and readiness actions before bidding',
+  },
+  'tender-training': {
+    src: '/images/editorial/tenderlab-tender-training-hero-v1.png',
+    alt: 'A care provider team learning tender analysis, evidence selection and evaluator-aligned answer structure in a live workshop',
+  },
+  'pipeline-tracking': {
+    src: '/images/editorial/tenderlab-pipeline-tracking-hero-v1.png',
+    alt: 'A care provider reviewing public tender opportunities for service, geography, capacity and deadline fit',
+  },
+  'mobilisation-support': {
+    src: '/images/editorial/tenderlab-mobilisation-support-hero-v1.png',
+    alt: 'A care provider coordinating people, training, policies and systems from contract award to day-one service delivery',
+  },
+  'tender-retainer': {
+    src: '/images/editorial/tenderlab-retainer-hero-v1.png',
+    alt: 'A care provider and tender adviser managing a year-round pipeline, evidence library, reviews and tender strategy',
+  },
+}
+
+const SERVICE_TONES = ['peach', 'blue', 'yellow', 'cream'] as const
+
+function makeFaq(service: ServiceData) {
+  const isTraining = service.slug === 'tender-training'
+  return [
+    {
+      q: `What is included in ${service.title.toLowerCase()}?`,
+      a: service.delivers.slice(0, 3).join(' '),
+    },
+    {
+      q: `When is ${service.title.toLowerCase()} the right option?`,
+      a: service.whenUsed.slice(0, 3).join(' '),
+    },
+    {
+      q: 'Will TenderLab check whether the opportunity fits before accepting the work?',
+      a: 'Yes. For a live tender, we check the mandatory requirements, service scope, geography, registration, evidence, mobilisation position and commercial conditions before confirming a full writing engagement. We proceed only when the available information supports a responsible view that the provider meets the tender requirements.',
+    },
+    {
+      q: 'Does TenderLab guarantee that the tender will be awarded?',
+      a: 'No. The buyer controls the evaluation and award decision. TenderLab improves compliance, evidence, structure and evaluator clarity, while identifying eligibility, delivery and commercial risks that writing alone cannot solve.',
+    },
+    ...(isTraining
+      ? [{
+          q: 'Is the tender training based on generic examples?',
+          a: 'No. The programme uses real procurement documents and examples relevant to the provider’s work. It teaches specification analysis, answer architecture, evidence selection and scoring so the team leaves with a method it can repeat.',
+        }]
+      : [{
+          q: 'Can this service be combined with other TenderLab support?',
+          a: 'Yes. The scope can combine readiness, complete writing, independent review, tender training, pipeline tracking or mobilisation support when those stages are genuinely required.',
+        }]),
+  ]
+}
+
 export function generateStaticParams() {
-  return SERVICES_DATA.map((s) => ({ slug: s.slug }))
+  return SERVICES_DATA.map((service) => ({ slug: service.slug }))
 }
 
 export async function generateMetadata({
@@ -24,25 +90,28 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const svc = getServiceBySlug(slug)
-  if (!svc) return {}
-  const fullTitle = `${svc.title} | TenderLab`
+  const service = getServiceBySlug(slug)
+  if (!service) return {}
+
+  const title = `${service.title} | TenderLab`
   const pathname = `/services/${slug}`
+  const hero = SERVICE_HERO_IMAGES[slug]
+
   return {
-    title: fullTitle,
-    description: svc.description,
+    title,
+    description: service.description,
     alternates: { canonical: pathname },
     openGraph: defaultOpenGraph({
-      title: fullTitle,
-      description: svc.description,
+      title,
+      description: service.description,
       path: pathname,
       type: 'website',
-      image: svc.heroImg,
+      image: hero?.src,
     }),
     twitter: defaultTwitter({
-      title: fullTitle,
-      description: svc.description,
-      image: svc.heroImg,
+      title,
+      description: service.description,
+      image: hero?.src,
     }),
   }
 }
@@ -53,205 +122,157 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const svc = getServiceBySlug(slug)
-  if (!svc) notFound()
+  const service = getServiceBySlug(slug)
+  if (!service) notFound()
 
   const pathname = `/services/${slug}`
+  const hero = SERVICE_HERO_IMAGES[slug] ?? SERVICE_HERO_IMAGES['bid-writing']
+  const serviceIndex = SERVICES_DATA.findIndex((item) => item.slug === slug)
+  const faq = makeFaq(service)
 
-  const ldService = serviceSchema({
-    name: svc.title,
-    description: svc.description,
-    path: pathname,
-    serviceType: svc.title,
-  })
-
-  const ldFaq = faqSchema(defaultFaq)
-
-  const ldBreadcrumb = breadcrumbSchema([
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: svc.title, path: pathname },
-  ])
+  const structuredData = [
+    serviceSchema({
+      name: service.title,
+      description: service.description,
+      path: pathname,
+      serviceType: service.title,
+    }),
+    faqSchema(faq.map(({ q, a }) => ({ question: q, answer: a }))),
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services' },
+      { name: service.title, path: pathname },
+    ]),
+  ]
 
   return (
-    <main>
-      <Script
-        id={`ld-svc-${slug}-service`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldService) }}
-      />
-      <Script
-        id={`ld-svc-${slug}-faq`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
-      />
-      <Script
-        id={`ld-svc-${slug}-breadcrumb`}
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }}
+    <main className="ep-page">
+      {structuredData.map((data, index) => (
+        <script
+          key={index}
+          id={`ld-service-${slug}-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+      ))}
+
+      <EditorialHero
+        eyebrow="TenderLab service"
+        title={service.title}
+        intro={service.description}
+        image={hero.src}
+        imageAlt={hero.alt}
+        primaryLabel="Discuss this service"
+        primaryHref="/contact"
+        secondaryLabel="Compare all services"
+        secondaryHref="/services"
+        tone={SERVICE_TONES[serviceIndex % SERVICE_TONES.length]}
       />
 
-      {/* Hero */}
-      <section className="svc-detail-hero">
-        <div className="svc-detail-hero__bg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={svc.heroImg} alt={svc.title} />
-        </div>
-        <div className="svc-detail-hero__overlay" />
-        <div className="container svc-detail-hero__content">
-          <p className="svc-detail-hero__label">Service - UK Health and Social Care</p>
-          <h1 className="svc-detail-hero__title">{svc.title}</h1>
-          <p className="svc-detail-hero__desc">{svc.description}</p>
-          <p className="svc-detail-hero__tagline">{svc.tagline}</p>
-          <p className="svc-detail-hero__trust">
-            <strong>{BRAND.winRate} win rate</strong> across <strong>{BRAND.submissions} submissions</strong>. {BRAND.positioning}
-          </p>
-        </div>
-      </section>
+      <section className="ep-section ep-service-detail">
+        <div className="ep-shell ep-service-detail__grid">
+          <article className="ep-service-detail__copy">
+            <p className="ep-kicker">What the service does</p>
+            <h2>{service.tagline}</h2>
+            {service.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </article>
 
-      {/* 01 What It Is + Sidebar */}
-      <section className="svc-detail-body">
-        <div className="container">
-          <div className="svc-detail-body__layout">
-
-            <div className="svc-detail-body__copy">
-              <h2 className="svc-section-heading">
-                <span className="svc-section-heading__num">01</span>
-                What It Is
-              </h2>
-              {svc.paragraphs.map((para, i) => (
-                <p key={i} className="svc-detail-body__para">{para}</p>
+          <aside className="ep-service-detail__deliverables">
+            <p className="ep-kicker">What you receive</p>
+            <ul>
+              {service.delivers.map((item, index) => (
+                <li key={item}><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>
               ))}
+            </ul>
+            <Link href="/contact" className="ep-button ep-button--primary">
+              Contact TenderLab <span aria-hidden="true">↗</span>
+            </Link>
+          </aside>
+        </div>
+      </section>
+
+      <section className="ep-section ep-service-decisions">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Choose this service when</p>
+              <h2>Match the support to the work that is actually required.</h2>
             </div>
-
-            <aside className="svc-detail-body__sidebar">
-              <div className="svc-delivers">
-                <h3 className="svc-delivers__heading">What You Receive</h3>
-                <ul className="svc-delivers__list">
-                  {svc.delivers.map((item) => (
-                    <li key={item} className="svc-delivers__item">
-                      <span className="svc-delivers__tick" aria-hidden="true">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                          <circle cx="8" cy="8" r="8" fill="currentColor" opacity="0.12" />
-                          <path d="M4.5 8l2.5 2.5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="svc-delivers__cta">
-                  <Link href="/contact" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    Get a Free Consultation
-                  </Link>
-                  <Link href="/services" className="svc-delivers__back">
-                    Back to all services
-                  </Link>
-                </div>
-              </div>
-            </aside>
-
+            <p>We agree the scope from the documents and the provider’s current position. A larger engagement is not automatically the responsible recommendation.</p>
           </div>
-        </div>
-      </section>
-
-      {/* 02 When This Is Used */}
-      <section className="svc-band svc-band--light">
-        <div className="container">
-          <h2 className="svc-section-heading">
-            <span className="svc-section-heading__num">02</span>
-            When This Is Used
-          </h2>
-          <ul className="svc-bullet-list">
-            {svc.whenUsed.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 03 How It Works */}
-      <section className="svc-band svc-band--white">
-        <div className="container">
-          <h2 className="svc-section-heading">
-            <span className="svc-section-heading__num">03</span>
-            How It Works
-          </h2>
-          <div className="svc-steps">
-            {svc.howItWorks.map((s, i) => (
-              <div key={s.step} className="svc-step">
-                <span className="svc-step__num">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="svc-step__title">{s.step}</h3>
-                <p className="svc-step__desc">{s.desc}</p>
-              </div>
+          <div className="ep-decision-list">
+            {service.whenUsed.map((item, index) => (
+              <article key={item}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <p>{item}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 04 What It Solves */}
-      <section className="svc-band svc-band--light">
-        <div className="container">
-          <h2 className="svc-section-heading">
-            <span className="svc-section-heading__num">04</span>
-            What It Solves
-          </h2>
-          <ul className="svc-bullet-list">
-            {svc.solves.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* 05 Transforms */}
-      <section className="svc-band svc-band--white">
-        <div className="container">
-          <h2 className="svc-section-heading">
-            <span className="svc-section-heading__num">05</span>
-            What This Transforms
-          </h2>
-          <div className="svc-transforms">
-            {svc.transforms.map((t) => (
-              <div key={t.from} className="svc-transform">
-                <span className="svc-transform__from">{t.from}</span>
-                <span className="svc-transform__arrow" aria-hidden="true">to</span>
-                <span className="svc-transform__to">{t.to}</span>
-              </div>
+      <section className="ep-section ep-service-process">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">How the work is controlled</p>
+              <h2>A visible process from first review to final output.</h2>
+            </div>
+            <p>Each stage has a defined purpose and output. The detail changes with the procurement; the control does not.</p>
+          </div>
+          <div className="ep-method-grid">
+            {service.howItWorks.map((step, index) => (
+              <article key={step.step}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h3>{step.step}</h3>
+                <p>{step.desc}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 06 Tiers */}
-      <section className="svc-band svc-band--light">
-        <div className="container">
-          <h2 className="svc-section-heading">
-            <span className="svc-section-heading__num">06</span>
-            Tiers
-          </h2>
-          <div className="svc-tiers">
-            {svc.tiers.map((t) => (
-              <div key={t.name} className="svc-tier">
-                <h3 className="svc-tier__name">{t.name}</h3>
-                <p className="svc-tier__desc">{t.desc}</p>
-              </div>
+      <section className="ep-section ep-service-change">
+        <div className="ep-shell ep-service-change__grid">
+          <div>
+            <p className="ep-kicker">The practical change</p>
+            <h2>What the engagement is intended to improve.</h2>
+            <ul className="ep-service-change__problems">
+              {service.solves.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+          <div className="ep-transform-list">
+            {service.transforms.map((item, index) => (
+              <article key={item.from}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div><small>From</small><p>{item.from}</p></div>
+                <b aria-hidden="true">→</b>
+                <div><small>To</small><p>{item.to}</p></div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="svc-cta">
-        <div className="container svc-cta__inner">
-          <h2 className="svc-cta__title">Ready to win your next contract?</h2>
-          <p className="svc-cta__desc">{BRAND.winRate} win rate across {BRAND.submissions} submissions. Evaluator-trained writers. UK health and social care specialists.</p>
-          <Link href="/contact" className="btn btn-primary">Book a Free Consultation</Link>
+      <section className="ep-section ep-service-scope">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div><p className="ep-kicker">Scope options</p><h2>The scope follows the complexity, not a sales label.</h2></div>
+            <p>We confirm the actual work after reviewing the available documents, deadline, lots, evidence and internal capacity.</p>
+          </div>
+          <div className="ep-scope-grid">
+            {service.tiers.map((tier, index) => (
+              <article key={tier.name}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h3>{tier.name}</h3>
+                <p>{tier.desc}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
+
+      <EditorialFaq title={`Questions about ${service.title.toLowerCase()}.`} items={faq} />
     </main>
   )
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import BlogExperience from '@/components/blog/BlogExperience'
-import { fetchBlogBySlug } from '@/lib/blogs'
+import BlogDetailView from '@/components/blog/BlogDetailView'
+import { fetchBlogBySlug, fetchBlogs } from '@/lib/blogs'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,13 +20,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: post.excerpt,
       url: `https://www.tenderlab.co.uk/blog/${slug}`,
       type: 'article',
+      images: post.imageUrl ? [{ url: post.imageUrl, alt: post.title }] : undefined,
     },
   }
 }
 
 export default async function BlogSlugPage({ params }: Props) {
   const { slug } = await params
-  const post = await fetchBlogBySlug(slug)
+  const [post, posts] = await Promise.all([fetchBlogBySlug(slug), fetchBlogs()])
   if (!post) notFound()
 
   return (
@@ -41,11 +42,16 @@ export default async function BlogSlugPage({ params }: Props) {
             description: post.excerpt,
             url: `https://www.tenderlab.co.uk/blog/${slug}`,
             datePublished: post.publishedAt || undefined,
+            mainEntityOfPage: `https://www.tenderlab.co.uk/blog/${slug}`,
+            image: post.imageUrl || undefined,
+            publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
             inLanguage: 'en-GB',
           }),
         }}
       />
-      <BlogExperience initialPost={post} />
+      <main className="blog-v2 blog-v2--detail">
+        <BlogDetailView post={post} posts={posts} />
+      </main>
     </>
   )
 }

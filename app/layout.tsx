@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
+import './editorial-system.css'
 import Nav from '@/components/Nav'
 import TopBar from '@/components/TopBar'
 import Footer from '@/components/Footer'
+import JsonLd from '@/components/JsonLd'
+import ConversionTracking from '@/components/ConversionTracking'
+import AnalyticsConsent from '@/components/AnalyticsConsent'
+import InternalLinkGuard from '@/components/InternalLinkGuard'
 import ReduxProvider from '@/store/Provider'
 import {
   SITE_URL,
@@ -13,47 +16,31 @@ import {
   BRAND,
   organizationSchema,
   websiteSchema,
-  LOGO_URL,
 } from '@/lib/seo'
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
-
-const GA_MEASUREMENT_ID = 'G-DLMB4FKDG0'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Win Care Tenders & Council Contracts | TenderLab',
+    default: 'TenderLab | Specialist Health & Social Care Bid Writing',
     template: '%s',
   },
   description: BRAND.description,
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   generator: 'Next.js',
-  keywords: [
-    'how to win care tenders',
-    'council care contracts',
-    'how to get on a care framework',
-    'domiciliary care tenders',
-    'supported living tenders',
-    'NHS care contracts',
-    'how to become a care provider',
-    'win council contracts',
-    'care tender support',
-    'framework application care',
-  ],
   creator: SITE_NAME,
   publisher: SITE_NAME,
-  alternates: {
-    canonical: '/',
-  },
+  // NOTE: `alternates.canonical` is deliberately NOT set here.
+  //
+  // It previously read `canonical: '/'`. In the App Router, child pages that do
+  // not declare their own canonical INHERIT the parent's, so every page missing
+  // an explicit canonical was telling Google it was a duplicate of the
+  // homepage. That is what de-indexed /care-settings/childrens-services and its
+  // children. Each page now sets its own canonical; there is no inherited
+  // default to leak.
   icons: {
-    icon: '/favicon.ico',
-   apple: '/apple-touch-icon.png',
+    icon: '/images/Logo/tenderlab-logo-transparent.png',
+    apple: '/images/Logo/tenderlab-logo-transparent.png',
   },
   verification: {
     google: 'UMLHV4HxkfIfzeul48d9nBZSMaKfFDo8TNbQAfhj_qc',
@@ -63,7 +50,7 @@ export const metadata: Metadata = {
     locale: 'en_GB',
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: 'Win Care Tenders & Council Contracts | TenderLab',
+    title: 'TenderLab | Specialist Health & Social Care Bid Writing',
     description: BRAND.description,
     images: [
       {
@@ -76,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Win Care Tenders & Council Contracts | TenderLab',
+    title: 'TenderLab | Specialist Health & Social Care Bid Writing',
     description: BRAND.description,
     images: [OG_IMAGE],
   },
@@ -106,38 +93,22 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={inter.variable} suppressHydrationWarning>
+    <html lang="en-GB" suppressHydrationWarning>
       <head>
-        {/* Sitewide JSON-LD. Loaded as inline script so it ships in the
-            server-rendered HTML and is crawlable on first byte. */}
-        <Script
-          id="ld-organization"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-        <Script
-          id="ld-website"
-          type="application/ld+json"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-        />
-        {/* Google Analytics 4 - gtag.js */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-              anonymize_ip: true,
-            });
-          `}
-        </Script>
+        {/* Sitewide JSON-LD.
+
+            Previously emitted through next/script with strategy="beforeInteractive".
+            In the App Router that does NOT put a <script type="application/ld+json">
+            tag in the server-rendered HTML: Next routes it through
+            self.__next_s.push and React injects it at hydration. A raw crawl of
+            all 165 URLs on 25 July 2026 found zero real ld+json tags, and the
+            Search Console "Search appearance" report was empty across 13,300
+            impressions.
+
+            JsonLd renders a plain <script> during SSR, so the schema is in the
+            first byte for Googlebot and for AI retrieval crawlers. */}
+        <JsonLd data={[organizationSchema, websiteSchema]} idPrefix="ld-site" />
+
       </head>
       <body suppressHydrationWarning>
         <ReduxProvider>
@@ -146,6 +117,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Footer />
         </ReduxProvider>
+        {/* Tracks tel: clicks, mailto: clicks, form_start and form_abandon.
+            None of these were measured before; every phone enquiry was invisible. */}
+        <ConversionTracking />
+        <AnalyticsConsent />
+        <InternalLinkGuard />
       </body>
     </html>
   )

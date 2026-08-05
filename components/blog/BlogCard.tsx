@@ -1,36 +1,30 @@
 'use client'
 
 import Image from 'next/image'
-import { categoryColor } from '@/lib/blogs'
+import Link from 'next/link'
+import { categoryColor, estimateReadMinutes } from '@/lib/blogs'
 import type { BlogPost } from '@/lib/blogs'
 
 type Props = {
-  post: Pick<BlogPost, 'slug' | 'title' | 'category' | 'excerpt' | 'imageUrl'>
+  post: Pick<BlogPost, 'slug' | 'title' | 'category' | 'excerpt' | 'imageUrl' | 'body'>
   variant?: 'default' | 'featured'
   dateLabel?: string
-  onOpen: (slug: string) => void
-  onPrefetch?: (slug: string) => void
 }
 
 export default function BlogCard({
   post,
   variant = 'default',
   dateLabel,
-  onOpen,
-  onPrefetch,
 }: Props) {
   const featured = variant === 'featured'
-
-  const open = () => onOpen(post.slug)
+  const readMinutes = estimateReadMinutes(post.body)
 
   return (
     <article className={`blog-v2-card blog-v2-card--${variant}`}>
-      <button
-        type="button"
+      <Link
+        href={`/blog/${post.slug}`}
+        scroll
         className="blog-v2-card__hit"
-        onClick={open}
-        onMouseEnter={() => onPrefetch?.(post.slug)}
-        onFocus={() => onPrefetch?.(post.slug)}
         aria-label={`Read: ${post.title}`}
       >
         {post.imageUrl ? (
@@ -61,6 +55,7 @@ export default function BlogCard({
               {post.category}
             </span>
             {dateLabel && <time className="blog-v2-card__date">{dateLabel}</time>}
+            <span className="blog-v2-card__read-time">{readMinutes} min read</span>
           </div>
           <h2 className="blog-v2-card__title">{post.title}</h2>
           {post.excerpt && <p className="blog-v2-card__excerpt">{post.excerpt}</p>}
@@ -71,7 +66,7 @@ export default function BlogCard({
             </span>
           </span>
         </div>
-      </button>
+      </Link>
     </article>
   )
 }

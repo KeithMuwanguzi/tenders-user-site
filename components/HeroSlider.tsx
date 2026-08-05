@@ -40,7 +40,7 @@ const SLIDES: Slide[] = [
     label: 'Pre-Submission Review',
     eyebrow: 'Pre-Submission Review',
     headline:
-      'Independent evaluator-grade scoring of your draft, 72 hours before deadline.',
+      'An independent review of your draft against the buyer’s published criteria.',
     cta: 'Book a review',
     href: '/services/pre-submission-review',
     image:
@@ -50,9 +50,9 @@ const SLIDES: Slide[] = [
     label: 'Bid Team Coaching',
     eyebrow: 'Bid Team Coaching',
     headline:
-      'We train your team to score 4 to 5 across 3 to 5 live procurements.',
+      'Build a repeatable method for planning, evidencing and reviewing live submissions.',
     cta: 'See the coaching path',
-    href: '/services/bid-team-coaching',
+    href: '/services/tender-training',
     image:
       'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=80',
   },
@@ -60,7 +60,7 @@ const SLIDES: Slide[] = [
     label: 'Tender Retainer',
     eyebrow: 'Tender Retainer',
     headline:
-      'Dedicated capacity for your pipeline. No bidding panic, no scramble.',
+      'Agree the capacity and responsibilities your tender pipeline needs before deadlines tighten.',
     cta: 'Discuss a retainer',
     href: '/services/tender-retainer',
     image:
@@ -245,7 +245,7 @@ export default function HeroSlider(_props: { children?: React.ReactNode }) {
       {/* Page H1 for SEO. Visually hidden so design is unchanged but Google
           and screen readers see the proper page heading. */}
       <h1 className="tlh-sr">
-        Win More Care Contracts: Tender & Bid Support for UK Care Providers
+        Tender Writing Services for UK Health and Social Care
       </h1>
 
       {/* Background slides (CSS background-image so transitions are crisp). */}

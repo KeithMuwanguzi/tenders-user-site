@@ -4,31 +4,36 @@ import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { BlogPost } from '@/lib/blogs'
-import { categoryColor, formatBlogDate } from '@/lib/blogs'
+import { categoryColor, contextualBlogImage, estimateReadMinutes, formatBlogDate } from '@/lib/blogs'
 import { renderMarkdownSafe } from './renderMarkdown'
 import BlogCard from './BlogCard'
 
 type Props = {
   post: BlogPost
   posts: BlogPost[]
-  bodyLoading?: boolean
-  onBack: () => void
-  onOpenPost: (slug: string) => void
-  onPrefetchPost?: (slug: string) => void
 }
 
-export default function BlogDetailView({
-  post,
-  posts,
-  bodyLoading = false,
-  onBack,
-  onOpenPost,
-  onPrefetchPost,
-}: Props) {
+export default function BlogDetailView({ post, posts }: Props) {
   const [progress, setProgress] = useState(0)
   const html = useMemo(() => renderMarkdownSafe(post.body || ''), [post.body])
   const color = categoryColor(post.category)
   const dateLabel = formatBlogDate(post.publishedAt)
+  const readMinutes = estimateReadMinutes(post.body)
+  const topicText = `${post.title} ${post.category} ${post.tags.join(' ')}`.toLowerCase()
+  const fallbackImage = contextualBlogImage(post)
+  const tenderHub = topicText.includes('domiciliary') || topicText.includes('home care')
+    ? { href: '/tenders/domiciliary-care', label: 'Domiciliary care tenders' }
+    : topicText.includes('supported living') || topicText.includes('supported accommodation')
+      ? { href: '/tenders/supported-living', label: 'Supported living tenders' }
+      : topicText.includes('mental health')
+        ? { href: '/tenders/mental-health', label: 'Mental health tenders' }
+        : topicText.includes('complex care') || topicText.includes('chc')
+          ? { href: '/tenders/complex-care-chc', label: 'Complex care and CHC tenders' }
+          : topicText.includes('residential') || topicText.includes('nursing')
+            ? { href: '/tenders/residential-nursing-care', label: 'Residential and nursing tenders' }
+            : topicText.includes('children') || topicText.includes('young people')
+              ? { href: '/tenders/children-young-people', label: "Children's services tenders" }
+              : { href: '/tenders', label: 'All live care tenders' }
 
   const related = useMemo(
     () =>
@@ -42,6 +47,10 @@ export default function BlogDetailView({
         .slice(0, 3),
     [posts, post.slug, post.category],
   )
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [post.slug])
 
   useEffect(() => {
     const onScroll = () => {
@@ -63,40 +72,44 @@ export default function BlogDetailView({
       />
 
       <header className="blog-v2-article__hero">
-        {post.imageUrl && (
-          <div className="blog-v2-article__hero-media">
-            <Image
-              src={post.imageUrl}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="blog-v2-article__hero-img"
-            />
-            <div className="blog-v2-article__hero-gradient" aria-hidden />
-          </div>
-        )}
-
         <div className="container blog-v2-article__hero-content">
-          <button type="button" className="blog-v2-article__back" onClick={onBack}>
+          <Link href="/blog" className="blog-v2-article__back">
             <span aria-hidden>←</span> All articles
-          </button>
+          </Link>
 
-          <div className="blog-v2-article__hero-text">
-            <div className="blog-v2-article__meta">
-              <span className="blog-v2-article__cat" style={{ background: color }}>
-                {post.category}
-              </span>
-              {dateLabel && <time dateTime={post.publishedAt ?? undefined}>{dateLabel}</time>}
+          <div className="blog-v2-article__hero-grid">
+            <div className="blog-v2-article__hero-text">
+              <div className="blog-v2-article__meta">
+                <span className="blog-v2-article__cat" style={{ background: color }}>
+                  {post.category}
+                </span>
+                {dateLabel && <time dateTime={post.publishedAt ?? undefined}>{dateLabel}</time>}
+                <span>{readMinutes} min read</span>
+              </div>
+              <h1 className="blog-v2-article__title">{post.title}</h1>
             </div>
-            <h1 className="blog-v2-article__title">{post.title}</h1>
-            {post.excerpt && <p className="blog-v2-article__lead">{post.excerpt}</p>}
+
+            <figure className="blog-v2-article__hero-media">
+              <Image
+                src={post.imageUrl || fallbackImage}
+                alt={`Editorial image for ${post.title}`}
+                fill
+                priority
+                quality={88}
+                sizes="(max-width: 900px) 100vw, 48vw"
+                className="blog-v2-article__hero-img"
+              />
+              {post.imageCredit && (
+                <figcaption className="blog-v2-article__credit">Image: {post.imageCredit}</figcaption>
+              )}
+            </figure>
+
+            <div className="blog-v2-article__hero-support">
+              {post.excerpt && <p className="blog-v2-article__lead">{post.excerpt}</p>}
+              <p className="blog-v2-article__byline">TenderLab editorial team</p>
+            </div>
           </div>
         </div>
-
-        {post.imageCredit && (
-          <p className="blog-v2-article__credit container">Image: {post.imageCredit}</p>
-        )}
       </header>
 
       <div className="blog-v2-article__layout container">
@@ -110,14 +123,7 @@ export default function BlogDetailView({
           )}
 
           <div className="blog-v2-article__prose">
-            {bodyLoading ? (
-              <div className="blog-v2-article__prose-loading" aria-busy="true" aria-label="Loading article">
-                <div className="blog-v2-detail-loading__line blog-v2-detail-loading__line--lg" />
-                <div className="blog-v2-detail-loading__line" />
-                <div className="blog-v2-detail-loading__line" />
-                <div className="blog-v2-detail-loading__line blog-v2-detail-loading__line--short" />
-              </div>
-            ) : post.body ? (
+            {post.body ? (
               <div dangerouslySetInnerHTML={{ __html: html }} />
             ) : (
               <p>{post.excerpt}</p>
@@ -125,22 +131,32 @@ export default function BlogDetailView({
           </div>
 
           <footer className="blog-v2-article__footer">
+            <div className="blog-v2-article__editorial-note">
+              <strong>Use the official documents for a live procurement.</strong>
+              <p>
+                This article provides general tender guidance. Requirements, dates and contract
+                terms must be checked against the buyer&apos;s current notice and tender pack.
+              </p>
+            </div>
             <Link href="/contact" className="btn btn-primary">
-              Book a free consultation
+              Discuss a live tender
             </Link>
-            <button type="button" className="btn btn-ghost" onClick={onBack}>
+            <Link href="/blog" className="btn btn-ghost" scroll>
               Back to all articles
-            </button>
+            </Link>
           </footer>
         </div>
 
         <aside className="blog-v2-article__rail" aria-label="Sidebar">
           <div className="blog-v2-rail-card blog-v2-rail-card--cta">
-            <p className="blog-v2-rail-card__label">TenderLab</p>
-            <h2>Win more UK care tenders</h2>
-            <p>Evaluator-trained bid writers. Specification mirroring, pre-submission review, full bid builds.</p>
-            <Link href="/contact" className="btn btn-primary btn-sm">
-              Get started
+            <p className="blog-v2-rail-card__label">Next useful step</p>
+            <h2>Apply the guidance to the opportunity in front of you.</h2>
+            <p>Compare the tender requirements with your evidence, delivery model, mobilisation and commercial position.</p>
+            <Link href="/services" className="btn btn-primary btn-sm">
+              Compare support options
+            </Link>
+            <Link href={tenderHub.href} className="blog-v2-rail-card__secondary-link">
+              Browse {tenderHub.label.toLowerCase()}
             </Link>
           </div>
 
@@ -150,7 +166,7 @@ export default function BlogDetailView({
               <ul className="blog-v2-rail-list">
                 {related.map((r) => (
                   <li key={r.slug}>
-                    <button type="button" onClick={() => onOpenPost(r.slug)}>
+                    <Link href={`/blog/${r.slug}`} scroll>
                       <span
                         className="blog-v2-rail-list__cat"
                         style={{ color: categoryColor(r.category) }}
@@ -158,7 +174,7 @@ export default function BlogDetailView({
                         {r.category}
                       </span>
                       <span className="blog-v2-rail-list__title">{r.title}</span>
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -172,9 +188,9 @@ export default function BlogDetailView({
           <div className="container">
             <div className="blog-v2-related__head">
               <h2>Related insights</h2>
-              <button type="button" className="blog-v2-related__all" onClick={onBack}>
+              <Link href="/blog" className="blog-v2-related__all">
                 View all
-              </button>
+              </Link>
             </div>
             <div className="blog-v2-related__grid">
               {related.map((r) => (
@@ -182,8 +198,6 @@ export default function BlogDetailView({
                   key={r.slug}
                   post={r}
                   dateLabel={formatBlogDate(r.publishedAt)}
-                  onOpen={onOpenPost}
-                  onPrefetch={onPrefetchPost}
                 />
               ))}
             </div>

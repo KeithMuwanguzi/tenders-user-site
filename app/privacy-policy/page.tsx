@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import LegalHeroVisual from "@/components/LegalHeroVisual";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | TenderLab",
@@ -134,7 +135,7 @@ export default function PrivacyPolicyPage() {
                 <h2><span className="num">Section 04</span>How we use your data</h2>
                 <p>We use the personal data we hold only for the purposes set out below.</p>
                 <ul>
-                  <li>Respond to enquiries and schedule the free 30-minute consultation.</li>
+                  <li>Respond to enquiries and arrange an initial discussion about the opportunity or support required.</li>
                   <li>Deliver tender writing, bid writing, pre-submission review, lost bid debrief, tender readiness audit, bid coaching, pipeline tracking and mobilisation support under your engagement letter.</li>
                   <li>Manage the day-to-day client relationship: scheduling, draft reviews, version control, evidence verification, sign-off and submission.</li>
                   <li>Send service updates relating to your active engagement (deadline reminders, draft review prompts, mobilisation alerts).</li>

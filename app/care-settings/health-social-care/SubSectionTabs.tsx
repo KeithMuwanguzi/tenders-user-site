@@ -13,7 +13,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'domiciliary-care',
     title: 'Domiciliary Care',
-    img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
+    img: '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg',
     paragraphs: [
       "Domiciliary care providers are frequently delivering care to 20 or more individuals per day, managing complex rota systems, variable care packages, and the full range of stakeholder engagement that goes with community-based delivery. Commissioning bodies understand the operational pressures of domiciliary provision and their evaluation criteria reflect it — they are looking for evidence that you can manage complexity at scale without compromising quality, continuity, or compliance.",
       "Evaluators in domiciliary care procurement prioritise consistent carer allocation, robust service management policies, and measurable person-centred outcomes. They want to see your staffing model, your supervision structure, your approach to continuity of care, and the systems you use to monitor quality at individual package level. Generic responses about person-centred care do not score. Named approaches, named tools, and named outcomes do.",
@@ -23,7 +23,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'shared-lives',
     title: 'Shared Lives',
-    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
+    img: '/images/editorial/tenderlab-shared-lives-hero-v1.jpg',
     paragraphs: [
       "Shared Lives care is a fundamentally different approach from other care delivery models, and commissioners procuring Shared Lives arrangements know it. The Shared Lives model values relationship quality, the matching process, carer development, and the integration of the person into family and community life. Commissioners are not looking for institutional quality assurance language — they are looking for evidence that your Shared Lives scheme genuinely embeds the principles of ordinary living.",
       "Evaluation criteria for Shared Lives contracts typically focus on your matching methodology, your carer recruitment and retention approach, your support to Shared Lives carers, your safeguarding infrastructure, and your outcomes data across current placements. The evidence needs to be specific to the Shared Lives model — not adapted from a residential or supported living framework.",
@@ -33,7 +33,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'residential-care',
     title: 'Residential Care',
-    img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80',
+    img: '/images/editorial/tenderlab-residential-care-hero-v1.jpg',
     paragraphs: [
       "Residential care homes operate at the intersection of CQC compliance, quality-of-life outcomes, and commissioning expectations that are shaped by years of national policy on personalisation and dignity. Local authority evaluators for residential care contracts expect to see evidence that your home goes beyond regulatory compliance — they want to see how your service improves residents' lives, not just how it avoids inspection failures.",
       "Evaluation criteria for residential care procurement include staffing ratios and qualifications, activities and social engagement provision, dementia and complex needs capability, quality assurance systems, safeguarding infrastructure, and measurable quality-of-life outcomes. Commissioners look for named registered managers, named clinical leads where applicable, and evidence from current residents and families rather than policy documents alone.",
@@ -43,7 +43,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'nursing-care',
     title: 'Nursing Care',
-    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80',
+    img: '/images/editorial/tenderlab-nursing-care-hero-v1.jpg',
     paragraphs: [
       "Nursing care tenders require you to demonstrate a combination of clinical governance infrastructure, registered nursing oversight, and complex health needs management that goes significantly beyond standard social care requirements. Commissioning bodies and NHS procurement teams evaluating nursing care submissions expect detailed evidence of how your clinical governance operates, how registered nurses are deployed and supervised, and how complex health needs are identified, assessed, and managed across the care home.",
       "Evaluators in nursing care procurement look for named Directors of Nursing or senior clinical leads, evidence of clinical audit, medication management systems, wound care and tissue viability capability, liaison with primary care and specialist services, and training frameworks for clinical staff. The gap between a compliant response and a high-scoring one in nursing care is almost always in the clinical specificity of the evidence provided.",
@@ -53,7 +53,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'extra-care-services',
     title: 'Extra Care Services',
-    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    img: '/images/editorial/tenderlab-extra-care-hero-v1.jpg',
     paragraphs: [
       "Extra care housing developments require a very different competitive bidding strategy from standard domiciliary or residential care commissioning. The integration of housing management and care delivery, the emphasis on independence and community integration, and the specific outcomes frameworks used by housing associations and local authorities jointly commissioning extra care schemes all create a commissioning environment that generalist bid writers consistently misunderstand.",
       "Evaluation criteria for extra care services focus on how your care model integrates with the housing and facilities management infrastructure, your approach to supporting independence rather than dependency, your outcomes data for existing extra care or housing with care services, your partnerships with housing providers, and your capacity to respond flexibly as residents' needs change over time.",
@@ -63,7 +63,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'reablement-services',
     title: 'Reablement Services',
-    img: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80',
+    img: '/images/editorial/tenderlab-reablement-rehabilitation-hero-v1.jpg',
     paragraphs: [
       "Reablement services are a short-term community programme with a single, measurable purpose: restoring independence and reducing ongoing support needs. Commissioning bodies procure reablement services with clear outcome expectations and they evaluate responses on whether providers can demonstrate they genuinely deliver on that purpose — not just describe it. A reablement tender that reads like a domiciliary care submission will not score well, because commissioners can see immediately that the provider does not understand the model.",
       "Evaluation criteria for reablement contracts focus on your goal-setting methodology, your timeframes to independence, your outcomes data showing reduction in care needs following reablement, your staff training and reablement-specific skills, your multi-disciplinary working arrangements with occupational therapists and physiotherapists, and your approach to equipment and home adaptation as part of the reablement pathway.",
@@ -73,7 +73,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'day-services',
     title: 'Day Services',
-    img: 'https://images.unsplash.com/photo-1531538606174-e1ac68e4e9d0?w=800&q=80',
+    img: '/images/editorial/tenderlab-day-services-hero-v1.jpg',
     paragraphs: [
       "Day services form a critical resource for adults with complex needs and their carers, and commissioning bodies procuring day service contracts are acutely aware of the difference between meaningful social engagement and time-filling activity. Day service tenders require evidence that your programme delivers genuine outcomes for individuals — improved wellbeing, social connection, skill development, and maintained independence — not simply a structured day away from home.",
       "Evaluators for day services look at the quality and variety of your activity programme, your approach to individual goal-setting and outcomes measurement, your capability to support people with complex needs including dementia, learning disabilities, and physical and sensory impairments, your carer support offer, your safeguarding infrastructure, and your transport and accessibility arrangements.",
@@ -83,7 +83,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'live-in-care-services',
     title: 'Live-In Care Services',
-    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
+    img: '/images/editorial/tenderlab-live-in-care-hero-v1.jpg',
     paragraphs: [
       "Live-in care services are fundamentally personal and require a very different evidence base from other care models. Commissioners and local authorities procuring live-in care arrangements are looking for evidence that your matching process, your carer training and support model, and your safeguarding infrastructure are all built around the unique dynamics of a carer living in a client's home — not adapted from a domiciliary or residential framework.",
       "Evaluators for live-in care contracts focus on your carer recruitment and vetting processes, your matching methodology, your approach to carer wellbeing and respite, your supervision model for live-in carers, your emergency and contingency arrangements, your safeguarding infrastructure specific to the live-in context, and your outcomes data for current live-in service users.",
@@ -93,7 +93,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'short-breaks',
     title: 'Short Breaks (Respite Care)',
-    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+    img: '/images/editorial/tenderlab-short-breaks-respite-hero-v1.jpg',
     paragraphs: [
       "Short breaks and respite care commissioning can be particularly challenging because the evaluation must satisfy two distinct sets of outcomes — the experience and wellbeing of the service user during the break, and the rest, relief, and support experience of the carer. Commissioners procuring short break services want to see evidence that your provision is genuinely restorative for carers and genuinely positive for service users, not simply a safe place to spend a few days.",
       "Evaluation criteria for short breaks services typically include your activities and wellbeing programme for service users, your approach to maintaining routines and familiar care practices, your communication with families and carers throughout the break, your complex needs capability, your safeguarding infrastructure, and your outcomes data demonstrating both service user experience and carer benefit from the respite period.",
@@ -103,7 +103,7 @@ const SECTIONS: SubSection[] = [
   {
     id: 'housing-support',
     title: 'Housing Support',
-    img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
+    img: '/images/editorial/tenderlab-housing-support-hero-v1.jpg',
     paragraphs: [
       "Housing support services are often procured within broader community services frameworks, which means providers tendering for housing support contracts are competing against a wide range of organisations — housing associations, voluntary sector providers, and specialist support agencies — each with different evidence bases and commissioning relationships. Standing out in housing support procurement requires a clear articulation of your tenancy sustainment model and your prevention-focused approach.",
       "Evaluation criteria for housing support commissioning focus on your tenancy sustainment outcome data, your approach to early intervention and crisis prevention, your multi-agency working with housing officers, social workers, mental health services, and community organisations, your financial inclusion capability, and your approach to supporting people with complex and multiple needs including substance misuse, mental health, and offending backgrounds.",

@@ -40,26 +40,49 @@ export type Review = {
   rating: number
 }
 
+const VERIFIED_REVIEW_FALLBACK: Review[] = [
+  {
+    name: 'Collins',
+    role: 'Manager, Living Plus Care',
+    rating: 5,
+    quote:
+      "It has been a pleasure working with Khol and his team, and I don't believe I could ever go back to doing tenders without their assistance. What I deeply appreciate is that they do not solely focus on writing bids; they have developed a deep understanding of our business, how we communicate, what our strengths are and what is important to us.",
+  },
+  {
+    name: 'Janine',
+    role: 'Director, Sorelle Support',
+    rating: 5,
+    quote:
+      "From the outset, the team took the time to understand our organisation, our values and the services we provide, rather than offering a generic approach. They don't just write bids; they help you understand what commissioners are looking for and how to continuously improve your organisation.",
+  },
+]
+
 export async function fetchReviews(): Promise<Review[]> {
-  const res = await fetch(REVIEWS_SHEET_URL, { cache: 'no-store' })
-  if (!res.ok) throw new Error(`Reviews sheet fetch failed: ${res.status}`)
-  const text = await res.text()
-  const lines = text.trim().split(/\r?\n/).filter(Boolean)
-  if (lines.length < 2) return []
+  try {
+    const res = await fetch(REVIEWS_SHEET_URL, { next: { revalidate: 3600 } })
+    if (!res.ok) throw new Error(`Reviews sheet fetch failed: ${res.status}`)
+    const text = await res.text()
+    const lines = text.trim().split(/\r?\n/).filter(Boolean)
+    if (lines.length < 2) return VERIFIED_REVIEW_FALLBACK
 
-  const headers = parseRow(lines[0]).map(h =>
-    h.toLowerCase().replace(/\s+/g, '_')
-  )
+    const headers = parseRow(lines[0]).map(h =>
+      h.toLowerCase().replace(/\s+/g, '_')
+    )
 
-  return lines.slice(1).map(line => {
-    const vals = parseRow(line)
-    const row = Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']))
-    return {
-      name: row.name ?? '',
-      role: row.role ?? '',
-      quote: row.quote ?? '',
-      rating: parseInt(row.rating ?? '5', 10) || 5,
-    }
-  })
+    const reviews = lines.slice(1).map(line => {
+      const vals = parseRow(line)
+      const row = Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']))
+      return {
+        name: row.name ?? '',
+        role: row.role ?? '',
+        quote: row.quote ?? '',
+        rating: parseInt(row.rating ?? '5', 10) || 5,
+      }
+    }).filter(review => review.name && review.quote)
+
+    return reviews.length > 0 ? reviews : VERIFIED_REVIEW_FALLBACK
+  } catch (error) {
+    console.warn('[reviews] using verified local fallback:', error)
+    return VERIFIED_REVIEW_FALLBACK
+  }
 }
-

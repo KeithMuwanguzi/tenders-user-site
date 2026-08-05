@@ -13,12 +13,12 @@ export default function BlogPostAside({ related, currentSlug }: Props) {
     <aside className="blog-aside" aria-label="Related articles">
       <div className="blog-aside__block blog-aside__cta">
         <p className="blog-aside__label">Work with TenderLab</p>
-        <h2 className="blog-aside__title">Win your next care sector tender</h2>
+        <h2 className="blog-aside__title">Turn your service evidence into a clear submission</h2>
         <p className="blog-aside__text">
-          Evaluator-trained bid writers. 92% win rate across 200+ UK submissions.
+          Specialist support for health and social care providers, with a 92% recorded historic win rate and more than 200 submissions supported.
         </p>
         <Link href="/contact" className="btn btn-primary btn-sm">
-          Book a free consultation
+          Discuss your tender
         </Link>
       </div>
 

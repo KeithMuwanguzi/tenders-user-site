@@ -12,7 +12,7 @@ type Props = {
 }
 
 /**
- * Free consultation CTA card for the right rail.
+ * Opportunity-assessment CTA card for the right rail.
  *
  * Note: the prop name is `attribution` (not `ref`) because React reserves the
  * `ref` prop name for the refs system. Passing `ref="..."` to a server

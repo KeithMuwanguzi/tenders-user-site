@@ -1,22 +1,22 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
+import JsonLd from '@/components/JsonLd'
 import {
   SITE_URL,
-  SITE_LEGAL_NAME,
-  COMPANY_NUMBER,
-  BRAND,
   defaultOpenGraph,
   defaultTwitter,
   breadcrumbSchema,
   faqSchema,
+  webPageSchema,
 } from '@/lib/seo'
+import { fetchPublishedTenders } from '@/lib/published-tenders'
 import TendersClient from './TendersClient'
 
 export const metadata: Metadata = {
-  title: 'Live UK Health and Social Care Tenders | Contracts Finder + Find a Tender',
+  title: 'Live Care Tenders UK | Health and Social Care Contracts',
   description:
-    'Active UK health and social care tender opportunities from Contracts Finder and Find a Tender. Domiciliary care, supported living, residential care, children services, mental health, nursing care, housing support. 92% win rate across 200+ submissions.',
+    'Browse live UK health and social care tenders, including domiciliary care, supported living, children\'s services, mental health, residential and nursing opportunities.',
   keywords: [
     'live tenders',
     'UK care tenders',
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: '/tenders' },
   openGraph: defaultOpenGraph({
-    title: 'Live UK Health and Social Care Tenders | TenderLab',
+    title: 'Live Care Tenders UK | TenderLab',
     description:
-      'Active UK care procurement opportunities from Contracts Finder and Find a Tender. 92% win rate across 200+ submissions.',
+      'Browse current health and social care procurement opportunities from official UK notice sources.',
     path: '/tenders',
   }),
   twitter: defaultTwitter({
-    title: 'Live UK Health and Social Care Tenders | TenderLab',
+    title: 'Live Care Tenders UK | TenderLab',
     description:
       'Active UK care procurement opportunities from Contracts Finder and Find a Tender.',
   }),
@@ -57,7 +57,7 @@ const FAQ = [
   {
     question: 'How often is the list updated?',
     answer:
-      'Source feeds refresh continuously from gov.uk. New notices appear here as they are published and our team triages relevance to UK health and social care providers.',
+      'The page refreshes from TenderLab\'s published tender feed. Always check the official notice for the current deadline, documents, clarifications and submission instructions before making a bid decision.',
   },
   {
     question: 'What counts as a UK health and social care tender?',
@@ -72,56 +72,86 @@ const FAQ = [
   {
     question: 'Can TenderLab write the response for a tender on this page?',
     answer:
-      'Yes. We write specification-mirrored method statements with named operational evidence and a 72-hour pre-submission review built in. 92% win rate across 200+ UK care submissions. Companies House ' + COMPANY_NUMBER + '. Book a free 30-minute consultation to discuss any tender on this list.',
+      'Yes. TenderLab can assess the opportunity, identify evidence gaps, write or review the response and help prepare a compliant submission. Share the tender pack and deadline so we can recommend the right level of support.',
   },
   {
     question: 'What is the difference between Contracts Finder and Find a Tender?',
     answer:
-      'Contracts Finder publishes UK procurement opportunities above approximately 12,000 GBP for central government and 30,000 GBP for sub-central authorities. Find a Tender publishes higher-value opportunities above the UK procurement regulations threshold. Both are official UK Government services and we monitor them in parallel.',
+      'They are official public procurement notice services with different coverage and notice types. The correct source link is shown on every TenderLab listing. The official record remains authoritative for the procurement details and submission instructions.',
   },
 ]
 
-export default function TendersPage() {
-  const collectionLd = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: 'Live UK Health and Social Care Tenders',
-    description:
-      'Active UK health and social care tender opportunities from Contracts Finder and Find a Tender.',
-    url: SITE_URL + '/tenders',
-    isPartOf: { '@id': SITE_URL + '/#website' },
-    publisher: { '@id': SITE_URL + '/#organization' },
-    inLanguage: 'en-GB',
-  }
+export default async function TendersPage() {
+  const initialTenders = await fetchPublishedTenders(150)
 
   return (
     <>
-      <Script id="ld-tenders-collection" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
-      <Script id="ld-tenders-breadcrumb" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+      <JsonLd id="ld-tenders-collection" data={webPageSchema({
+        name: 'Live UK health and social care tenders',
+        description: 'Current care-sector procurement opportunities from official UK notice sources.',
+        path: '/tenders',
+        type: 'CollectionPage',
+        about: 'UK health and social care tenders',
+      })} />
+      <JsonLd id="ld-tenders-breadcrumb" data={breadcrumbSchema([
         { name: 'Home', path: '/' },
         { name: 'Live Tenders', path: '/tenders' },
-      ])) }} />
-      <Script id="ld-tenders-faq" type="application/ld+json" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(FAQ)) }} />
+      ])} />
+      <JsonLd id="ld-tenders-faq" data={faqSchema(FAQ)} />
 
-      <section className="page-hero">
-        <div className="container">
-          <div className="section-label">Procurement Opportunities</div>
-          <h1>Live UK Health and Social Care Tenders</h1>
-          <p className="page-hero__desc">
-            Active opportunities from Contracts Finder and Find a Tender, the two official UK Government tender publication services. Triaged for UK health and social care providers. {BRAND.winRate} win rate across {BRAND.submissions} submissions.
-          </p>
+      <section className="tenders-search-hero" aria-labelledby="live-tenders-title">
+        <div className="container tenders-search-hero__grid">
+          <div className="tenders-search-hero__copy">
+            <p className="section-label">Current procurement opportunities</p>
+            <h1 id="live-tenders-title">Live care tenders across the UK.</h1>
+            <p>
+              Search current opportunities published through official UK notice sources. Filter by
+              care setting, open the complete tender record and examine the deadline, value, buyer and
+              submission documents before deciding whether to bid.
+            </p>
+          </div>
+          <figure className="tenders-search-hero__visual">
+            <Image
+              src="/images/editorial/tenderlab-live-tenders-hero-v1.png"
+              alt="Care-provider leaders comparing public procurement opportunities with care delivery requirements"
+              fill
+              priority
+              quality={88}
+              sizes="(max-width: 900px) 100vw, 53vw"
+            />
+            <figcaption>
+              Use the official notice to confirm the requirement, then test whether the opportunity
+              fits before committing.
+            </figcaption>
+          </figure>
+          <div className="tenders-search-hero__actions">
+            <a href="#live-tender-results" className="btn btn-primary">Search live tenders</a>
+            <Link href="/contact?ref=tender-fit" className="btn btn-ghost">Check whether a tender fits</Link>
+          </div>
         </div>
       </section>
 
-      <TendersClient />
+      <div id="live-tender-results">
+        <TendersClient initialTenders={initialTenders} />
+      </div>
 
       <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
         <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
+          <h2 style={{ fontSize: '1.75rem', color: '#0B1F3A', margin: '0 0 1rem' }}>
+            Find the opportunity, then test whether it fits your organisation.
+          </h2>
           <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: '0 0 1rem' }}>
-            This page lists active UK health and social care procurement opportunities. Every notice originates from Contracts Finder or Find a Tender. We filter for care-sector relevance across domiciliary care, supported living, residential care, nursing care, extra care housing, children services, fostering, supported accommodation, mental health, learning disability, autism, substance misuse, continuing healthcare, hospital discharge, reablement, day services, community health, and housing-related support.
+            TenderLab brings together relevant notices across domiciliary care, supported living,
+            residential and nursing care, children&apos;s services, supported accommodation, mental
+            health, complex care, continuing healthcare and housing support. Each sector hub combines
+            live opportunities with guidance on the evidence and delivery questions that commonly
+            affect the bid decision.
           </p>
           <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: 0 }}>
-            Bidding for any tender on this list? <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead" style={{ color: '#C8102E', fontWeight: 600 }}>Book a free 30-minute consultation</Link>. {BRAND.winRate} win rate across {BRAND.submissions} UK care submissions. {SITE_LEGAL_NAME}, Companies House {COMPANY_NUMBER}.
+            Finding a notice is only the beginning. Review eligibility, evidence, mobilisation,
+            staffing and commercial exposure before committing the team. If you have a live tender,
+            <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead" style={{ color: '#C8102E', fontWeight: 600 }}> share the opportunity with TenderLab</Link> or
+            compare our <Link href="/services" style={{ color: '#C8102E', fontWeight: 600 }}>tender support services</Link>.
           </p>
         </div>
       </section>
@@ -143,11 +173,11 @@ export default function TendersPage() {
       <section className="cta-banner">
         <div className="container">
           <div className="cta-banner__inner">
-            <h2>Need help winning a tender?</h2>
-            <p>Our evaluator-trained writers deliver a 92% win rate across 200+ health and social care submissions. {SITE_LEGAL_NAME}. Companies House {COMPANY_NUMBER}.</p>
+            <h2>Have you found a tender that could change your business?</h2>
+            <p>Share the tender pack and deadline. We will explain the fit, the evidence required and the most useful next step before writing begins.</p>
             <div className="cta-banner__actions">
-              <Link href="/score-my-response" className="btn btn-white">Score My Response</Link>
-              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead" className="btn btn-outline-white">Get in touch</Link>
+              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead" className="btn btn-white">Discuss this opportunity</Link>
+              <Link href="/services/bid-writing" className="btn btn-outline-white">Explore bid writing</Link>
             </div>
           </div>
         </div>

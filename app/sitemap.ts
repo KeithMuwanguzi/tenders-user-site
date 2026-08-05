@@ -1,13 +1,23 @@
 import type { MetadataRoute } from 'next'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { SERVICES_DATA } from '@/lib/services-data'
-import { fetchBlogs } from '@/lib/sheets'
+import { fetchBlogsResult } from '@/lib/server-blogs'
+import { TENDER_LANDING_PAGES } from '@/lib/tender-landing-pages'
+import { DECISION_GUIDES } from '@/lib/decision-guides'
 
 const BASE = 'https://www.tenderlab.co.uk'
+const STRUCTURAL_UPDATED = new Date('2026-07-30T00:00:00.000Z')
 
-// Revalidate the sitemap every hour so newly-added blog posts (sourced from
-// Google Sheets at request time) get listed promptly.
-export const revalidate = 3600
+// Resolve the publishing feed at request time. This prevents a transient CMS
+// outage from failing a deployment build or baking an empty blog archive into
+// the generated sitemap.
+export const dynamic = 'force-dynamic'
+
+function validDate(value: string | null | undefined): Date | undefined {
+  if (!value) return undefined
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? undefined : date
+}
 
 // Hardcoded list of care setting slugs. Mirrors every HTML file under
 // public/Page Content HTML Files/care-settings/ minus index.html.
@@ -55,67 +65,79 @@ const CARE_SETTING_SLUGS: string[] = [
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date()
-
   const core: MetadataRoute.Sitemap = [
-    { url: `${BASE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
-    { url: `${BASE}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${BASE}/services`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE}/care-settings`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
-    { url: `${BASE}/case-studies`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${BASE}/tenders`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
-    { url: `${BASE}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${BASE}/process`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE}/reviews`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE}/score-my-response`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
-    { url: `${BASE}/contact`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${BASE}/privacy-policy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${BASE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/`, changeFrequency: 'weekly', priority: 1.0 },
+    { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/services`, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${BASE}/care-settings`, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${BASE}/care-settings/health-social-care`, changeFrequency: 'monthly', priority: 0.85 },
+    { url: `${BASE}/case-studies`, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${BASE}/tenders`, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${BASE}/blog`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE}/process`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/reviews`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/proof`, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE}/faqs`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/contact`, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${BASE}/privacy-policy`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3 },
   ]
 
   const services: MetadataRoute.Sitemap = SERVICES_DATA.map((s) => ({
     url: `${BASE}/services/${s.slug}`,
-    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }))
 
   const careSettings: MetadataRoute.Sitemap = CARE_SETTING_SLUGS.map((slug) => ({
     url: `${BASE}/care-settings/${slug}`,
-    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+
+  const tenderHubs: MetadataRoute.Sitemap = TENDER_LANDING_PAGES.map((page) => ({
+    url: `${BASE}/tenders/${page.slug}`,
+    changeFrequency: 'daily' as const,
+    priority: 0.85,
+  }))
+
+  const guides: MetadataRoute.Sitemap = DECISION_GUIDES.map(({ slug }) => ({
+    url: `${BASE}/guides/${slug}`,
+    lastModified: STRUCTURAL_UPDATED,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))
 
   const caseStudies: MetadataRoute.Sitemap = CASE_STUDIES.map((cs) => ({
     url: `${BASE}/case-studies/${cs.slug}`,
-    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.75,
   }))
 
   // Blog posts from the Google Sheet CMS. Deduplicate on slug in case the
   // Sheet has duplicate rows (we have seen this happen during manual data entry).
-  let blog: MetadataRoute.Sitemap = []
-  try {
-    const posts = await fetchBlogs()
-    const seen = new Set<string>()
-    blog = posts
-      .filter((p) => {
-        if (!p.slug) return false
-        if (seen.has(p.slug)) return false
-        seen.add(p.slug)
-        return true
-      })
-      .map((p) => ({
-        url: `${BASE}/blog/${p.slug}`,
-        lastModified: now,
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      }))
-  } catch {
-    blog = []
+  const blogResult = await fetchBlogsResult()
+  if (blogResult.status === 'unavailable') {
+    // Serving a temporary 5xx preserves the last successfully crawled sitemap.
+    // Returning an empty blog set during an upstream outage would falsely tell
+    // search engines that every published article had been withdrawn.
+    throw new Error('The published blog service is temporarily unavailable.')
   }
 
-  return [...core, ...services, ...careSettings, ...caseStudies, ...blog]
+  const seen = new Set<string>()
+  const blog: MetadataRoute.Sitemap = blogResult.posts
+    .filter((p) => {
+      if (!p.slug || !p.title?.trim() || !p.body?.trim()) return false
+      if (seen.has(p.slug)) return false
+      seen.add(p.slug)
+      return true
+    })
+    .map((p) => ({
+      url: `${BASE}/blog/${p.slug}`,
+      lastModified: validDate(p.publishedAt),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }))
+
+  return [...core, ...services, ...careSettings, ...tenderHubs, ...caseStudies, ...blog]
 }

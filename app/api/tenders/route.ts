@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getPortalApiUrl } from '@/lib/portal-api'
 
 /* ================================================================
    Live Tenders — proxy to the portal's curated list
@@ -25,27 +26,34 @@ interface Tender {
   source: 'Contracts Finder' | 'Find a Tender'
 }
 
-const PORTAL_API_URL =
-  process.env.PORTAL_API_URL ||
-  process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-  'https://tenderlab-admin-api-quva.onrender.com'
-
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-// Render's free tier can take 30s to wake up. 60s gives us headroom.
 export const maxDuration = 60
 
 export async function GET(request: NextRequest) {
+  if (!getPortalApiUrl()) {
+    return NextResponse.json({ error: 'Portal API is not configured', tenders: [] }, { status: 503 })
+  }
   const { searchParams } = new URL(request.url)
   const query = searchParams.get('q') || ''
   const sourceFilter = searchParams.get('source') || 'all'
-  const page = parseInt(searchParams.get('page') || '1', 10)
+  if (!['all', 'cf', 'ft'].includes(sourceFilter)) {
+    return NextResponse.json(
+      { error: 'Invalid tender source. Use all, cf or ft.', tenders: [] },
+      { status: 400 },
+    )
+  }
+
+  const parsedPage = parseInt(searchParams.get('page') || '1', 10)
+  const page = Number.isFinite(parsedPage) ? Math.max(1, parsedPage) : 1
+  const parsedLimit = parseInt(searchParams.get('limit') || '500', 10)
   const limit = Math.min(
     500,
-    Math.max(1, parseInt(searchParams.get('limit') || '500', 10)),
+    Math.max(1, Number.isFinite(parsedLimit) ? parsedLimit : 500),
   )
 
-  const upstream = new URL(`${PORTAL_API_URL}/api/tenders/published`)
+  const portalBase = getPortalApiUrl()
+  const upstream = new URL(`${portalBase}/api/tenders/published`)
   // The portal already restricts to healthcare-relevant tenders the admin
   // chose to publish, so we only forward category + source as a refining
   // search. An empty `q` returns everything in the published list.
@@ -53,10 +61,13 @@ export async function GET(request: NextRequest) {
   if (sourceFilter && sourceFilter !== 'all')
     upstream.searchParams.set('source', sourceFilter)
   upstream.searchParams.set('active_only', 'true')
-  upstream.searchParams.set('limit', String(limit))
+  // Fetch the bounded published result set once, then paginate locally so the
+  // response can report a truthful total. The portal endpoint returns an
+  // array rather than a separate count field.
+  upstream.searchParams.set('limit', '500')
 
   try {
-    const res = await fetch(upstream.toString(), {
+    let res = await fetch(upstream.toString(), {
       headers: { Accept: 'application/json' },
       // No upstream cache — Vercel keys its fetch cache by URL, which
       // means the "All sources" URL and the "?source=cf" URL end up in
@@ -69,6 +80,23 @@ export async function GET(request: NextRequest) {
       cache: 'no-store',
     })
 
+    // The VPS API uses /api/tenders/published. A local design preview can
+    // safely point at the public website proxy instead, where the equivalent
+    // published list is exposed as /api/tenders. Keep the production path
+    // first and use this only when the public origin returns 404.
+    if (res.status === 404 && /^https?:\/\//.test(portalBase)) {
+      const publicProxy = new URL(`${portalBase}/api/tenders`)
+      if (query) publicProxy.searchParams.set('q', query)
+      if (sourceFilter && sourceFilter !== 'all')
+        publicProxy.searchParams.set('source', sourceFilter)
+      publicProxy.searchParams.set('page', String(page))
+      publicProxy.searchParams.set('limit', String(limit))
+      res = await fetch(publicProxy.toString(), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+    }
+
     if (!res.ok) {
       console.error(
         `[tenders] portal returned ${res.status}: ${await res.text().catch(() => '')}`,
@@ -79,7 +107,8 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const tenders = (await res.json()) as Tender[]
+    const payload = (await res.json()) as Tender[] | { tenders?: Tender[] }
+    const tenders = Array.isArray(payload) ? payload : (payload.tenders ?? [])
     return NextResponse.json({
       tenders,
       page,

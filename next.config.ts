@@ -1,8 +1,16 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+  poweredByHeader: false,
   trailingSlash: false,
+  // Low-memory VPS builds: one page at a time, longer timeout for heavy routes.
+  staticPageGenerationTimeout: 300,
+  experimental: {
+    staticGenerationMaxConcurrency: 1,
+  },
   images: {
+    qualities: [75, 84, 88],
     remotePatterns: [
       {
         protocol: 'https',
@@ -11,18 +19,73 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.hounslow.gov.uk',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.sefton.gov.uk',
       },
     ],
+  },
+  async headers() {
+    const contentSecurityPolicy = [
+      "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
+      "frame-ancestors 'none'",
+      "form-action 'self'",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+      "style-src 'self' 'unsafe-inline'",
+      "font-src 'self' data:",
+      "img-src 'self' data: blob: https:",
+      "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://stats.g.doubleclick.net",
+      "upgrade-insecure-requests",
+    ].join('; ')
+
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: contentSecurityPolicy },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+        ],
+      },
+    ]
   },
   async redirects() {
     return [
       // ── Renamed pages (old URL -> new URL) ────────────────────────────
       { source: '/live-tenders', destination: '/tenders', permanent: true },
       { source: '/7-step-tender-writing-process', destination: '/process', permanent: true },
+      { source: '/services/bid-team-coaching', destination: '/services/tender-training', permanent: true },
+      { source: '/score-my-response', destination: '/services/pre-submission-review', permanent: true },
       // /faq was incorrectly pointing to homepage — now points to /services
       // (middleware.ts also handles /faq and /faq/ as a belt-and-braces fix)
       { source: '/faq', destination: '/services', permanent: true },
+      { source: '/about-old', destination: '/about', permanent: true },
+      { source: '/services/bid-management', destination: '/services/tender-retainer', permanent: true },
+      { source: '/services/social-value', destination: '/services/bid-writing', permanent: true },
+      { source: '/services/pqq-writing', destination: '/services/bid-writing', permanent: true },
+      { source: '/health-and-social-care-bid-writing', destination: '/services/bid-writing', permanent: true },
+      { source: '/nhs-tenders', destination: '/tenders', permanent: true },
+      { source: '/local-authority-tenders', destination: '/tenders', permanent: true },
+      { source: '/sectors/supported-living', destination: '/care-settings/supported-living', permanent: true },
 
       // ── Trailing-slash normalisation ──────────────────────────────────
       // These appeared as "Page with redirect" in the May 2026 Search Console
@@ -34,6 +97,8 @@ const nextConfig: NextConfig = {
       { source: '/case-studies/', destination: '/case-studies', permanent: true },
       { source: '/faq/', destination: '/services', permanent: true },
       { source: '/live-tenders/', destination: '/tenders', permanent: true },
+      { source: '/about-old/', destination: '/about', permanent: true },
+      { source: '/blog/', destination: '/blog', permanent: true },
 
       // ── Blog posts moved from root to /blog/ ──────────────────────────
       { source: '/12-tender-writing-tips-from-an-evaluator-trained-bid-team', destination: '/blog/12-tender-writing-tips-from-an-evaluator-trained-bid-team', permanent: true },
@@ -47,41 +112,10 @@ const nextConfig: NextConfig = {
       { source: '/durham-county-council-domiciliary-care-spot-purchase-select-list-2026-to-2031/', destination: '/blog/durham-county-council-domiciliary-care-spot-purchase-select-list-2026-to-2031-provider-qualification-analysis', permanent: true },
       { source: '/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027', destination: '/blog/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027-provider-qualification-analysis', permanent: true },
       { source: '/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027/', destination: '/blog/city-of-york-council-care-at-home-domiciliary-care-approved-provider-list-2024-to-2027-provider-qualification-analysis', permanent: true },
-
-      // ── Migration recovery: legacy case-study URLs -> live case studies ──
-      // Added 18 June 2026. These old URLs were 404ing in Search Console (120
-      // not-found pages) after the late-May migration. Every destination below
-      // was verified live (HTTP 200). This is the fix for the ranking drop.
-      { source: '/choices-healthcare-essex-live-at-home', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
-      { source: '/choices-healthcare-essex-live-at-home.html', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
-      { source: '/livingstone-healthcare-essex-live-at-home', destination: '/case-studies/essex-live-at-home-tier-2-framework', permanent: true },
-      { source: '/livingstone-healthcare-essex-live-at-home.html', destination: '/case-studies/essex-live-at-home-tier-2-framework', permanent: true },
-      { source: '/inspire-care-outreach-dorset-open-framework', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
-      { source: '/inspire-care-outreach-dorset-open-framework.html', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
-      { source: '/choices-healthcare-southend-childrens-framework', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
-      { source: '/choices-healthcare-southend-childrens-framework.html', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
-      { source: '/havilah-care-bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
-      { source: '/havilah-care-bedford-supported-living.html', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
-      { source: '/nelson-ocean-central-bedfordshire-supported-living', destination: '/case-studies/central-bedfordshire-supported-living', permanent: true },
-      { source: '/nelson-ocean-central-bedfordshire-supported-living.html', destination: '/case-studies/central-bedfordshire-supported-living', permanent: true },
-      { source: '/rosecare-bradford-mental-health-supported-living', destination: '/case-studies/bradford-mental-health-provider-list', permanent: true },
-      { source: '/rosecare-bradford-mental-health-supported-living.html', destination: '/case-studies/bradford-mental-health-provider-list', permanent: true },
-      { source: '/alicelyn-sheffield-overnight-short-breaks', destination: '/case-studies/sheffield-dps-overnight-short-breaks', permanent: true },
-      { source: '/alicelyn-sheffield-overnight-short-breaks.html', destination: '/case-studies/sheffield-dps-overnight-short-breaks', permanent: true },
-      { source: '/in-home-carers-hertfordshire-children-young-people', destination: '/case-studies/hertfordshire-cyp-homecare-framework', permanent: true },
-      { source: '/in-home-carers-hertfordshire-children-young-people.html', destination: '/case-studies/hertfordshire-cyp-homecare-framework', permanent: true },
-      { source: '/pcas-childrens-services-procurement', destination: '/case-studies/childrens-services-direct-contract', permanent: true },
-      { source: '/pcas-childrens-services-procurement.html', destination: '/case-studies/childrens-services-direct-contract', permanent: true },
-
-      // ── Migration recovery: wrong /case-studies slugs -> correct slugs ──
-      { source: '/case-studies/bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
-      { source: '/case-studies/choices-healthcare-southend-childrens-framework', destination: '/case-studies/southend-childrens-residential-framework', permanent: true },
-      { source: '/case-studies/inspire-care-outreach-dorset-open-framework', destination: '/case-studies/dorset-care-support-open-framework', permanent: true },
-      { source: '/case-studies/choices-healthcare-essex-live-at-home', destination: '/case-studies/essex-domiciliary-framework-2025', permanent: true },
-      { source: '/case-studies/havilah-care-bedford-supported-living', destination: '/case-studies/bedford-supported-living-framework', permanent: true },
-
-      // ── Migration recovery: removed blog post with no live equivalent ──
-      { source: '/blog/tender-response-format-a-template-that-wins-uk-council-contracts', destination: '/blog', permanent: true },
+      { source: '/blog/how-to-get-on-a-care-framework-frameworks-dps-and-approved-provider-lists-explained', destination: '/blog/which-care-tenders-should-you-bid-for', permanent: true },
+      { source: '/blog/london-borough-of-bromley-domiciliary-care-framework-2026-to-2030-provider-qualification-analysis', destination: '/tenders/domiciliary-care', permanent: true },
+      { source: '/blog/newcastle-city-council-home-care-services-framework-2026-to-2034-provider-qualification-analysis', destination: '/tenders/domiciliary-care', permanent: true },
+      { source: '/blog/procurement-act-2023-light-touch-regime-adult-social-care-provider-guide', destination: '/blog/light-touch-regime-england-vs-scotland-care-tenders-2026', permanent: true },
 
       // ── Non-www to www ────────────────────────────────────────────────
       // (Belt and braces — Vercel domain settings usually handle this)

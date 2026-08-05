@@ -1,168 +1,111 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
+import EditorialHero from '@/components/EditorialHero'
+import EditorialFaq from '@/components/EditorialFaq'
+import JsonLd from '@/components/JsonLd'
+import { breadcrumbSchema, careSettingFaq, faqSchema, serviceSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: "Children's Services Tenders | TenderLab",
+  title: "Children's Services Tender Writing UK | TenderLab",
   description:
-    "Specialist tender writing for children's services contracts — residential, fostering, early intervention, family support, and child protection frameworks.",
+    "Specialist tender writing for children's residential care, supported accommodation, fostering, short breaks, family support and leaving care services.",
+  alternates: { canonical: '/care-settings/childrens-services' },
 }
 
-const DELIVERS = [
-  "Specification analysis aligned to children's services evaluation criteria",
-  'Safeguarding evidence framework mapped to Working Together 2023 requirements',
-  'Ofsted-aligned quality assurance narrative and inspection readiness evidence',
-  'Named designated safeguarding leads and clinical/therapeutic staff profiles',
-  'Outcomes evidence from current children\'s service delivery',
-  'Compliance with Children Act 1989, Children Act 2004, and relevant statutory guidance',
-]
+const settings = [
+  ['Children’s residential care', 'childrens-residential-care', 'Safeguarding, therapeutic support, workforce stability and Ofsted-aligned practice.'],
+  ['Supported accommodation', 'supported-accommodation', 'Key-work, independence, safeguarding and measurable move-on pathways for young people.'],
+  ['Fostering services', 'fostering-services', 'Carer recruitment, matching, placement stability, support and quality assurance.'],
+  ['Children’s short breaks', 'childrens-short-breaks', 'Safe, flexible support that evidences outcomes for children and families.'],
+  ['Family support and outreach', 'family-support-and-outreach', 'Early help, whole-family practice, multi-agency working and measurable change.'],
+  ['Leaving care services', 'leaving-care-services', 'Pathway planning, tenancy sustainment, education, employment and enduring support.'],
+] as const
 
-const WHY_MATTERS = [
-  {
-    title: 'Safeguarding is the Threshold',
-    desc: "In children's services, safeguarding is not a section of the tender — it is the foundation of every section. Evaluators look for evidence of embedded safeguarding culture, not bolted-on policy statements.",
-  },
-  {
-    title: 'Ofsted Alignment is Assumed',
-    desc: "Commissioners assume you understand Ofsted inspection frameworks. Your response must demonstrate how your practice reflects the standards inspectors measure — even when Ofsted is not mentioned in the specification.",
-  },
-  {
-    title: 'Relationship and Stability Evidence',
-    desc: "Children's services commissioners are acutely sensitive to placement stability, therapeutic relationships, and child-centred planning. These must be evidenced with real examples, not described in principle.",
-  },
-  {
-    title: 'Statutory Compliance is Non-Negotiable',
-    desc: "Children Act requirements, Working Together guidance, local threshold documents, and Multi-Agency Safeguarding Hub protocols must all be referenced and evidenced in your response.",
-  },
-]
+const faqs = careSettingFaq({ label: "children's services" })
+const faqItems = faqs.map(item => ({ q: item.question, a: item.answer }))
 
 export default function ChildrensServicesPage() {
   return (
-    <main>
+    <main className="ep-page">
+      <JsonLd
+        idPrefix="ld-childrens-services"
+        data={[
+          serviceSchema({
+            name: "Children's services tender writing",
+            description:
+              "Tender writing for children's services commissioned by local authorities and public-sector partners.",
+            path: '/care-settings/childrens-services',
+            serviceType: 'Tender writing',
+            audienceType: "UK children's services providers",
+          }),
+          faqSchema(faqs),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Care settings', path: '/care-settings' },
+            { name: "Children's services", path: '/care-settings/childrens-services' },
+          ]),
+        ]}
+      />
 
-      {/* ── Hero ── */}
-      <section className="page-hero page-hero--img">
-        <div className="page-hero__bg">
-          <Image
-            src="/images/business-people-video-call-meeting.jpg"
-            alt="Children's Services tender writing"
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 15%' }}
-          />
-        </div>
-        <div className="page-hero__overlay" />
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <p className="page-hero__breadcrumb">
-            <Link href="/care-settings">Care Settings</Link> / Children&apos;s Services
-          </p>
-          <h1 className="page-hero__title">Children&apos;s Services</h1>
-          <p className="page-hero__sub">Safeguarding-led, outcomes-evidenced tender responses built for commissioners who know exactly what good looks like.</p>
-        </div>
-      </section>
+      <EditorialHero
+        eyebrow="Children's services procurement"
+        title="Children's services tender writing"
+        intro="We help providers evidence safeguarding, workforce competence, child-centred practice, multi-agency working and outcomes in the language of the specification and scoring method."
+        image="/images/editorial/tenderlab-childrens-services-hero-v1.png"
+        imageAlt="A family-support professional discussing a plan at home, linked to safe accommodation and children’s service evidence"
+        primaryLabel="Ask us to assess a tender"
+        primaryHref="/contact"
+        secondaryLabel="Browse children’s settings"
+        secondaryHref="#childrens-settings"
+        tone="peach"
+      />
 
-      {/* ── Body ── */}
-      <section className="cs-detail-body">
-        <div className="container">
-          <div className="cs-detail-body__layout">
-
-            <div className="cs-detail-body__copy">
-              <p className="cs-detail-body__lead">
-                Children&apos;s services commissioning sits within the highest-scrutiny environment in health and social care procurement. Local authorities procure residential placements, fostering support, early intervention programmes, family support services, and child protection frameworks — each with distinct evaluation priorities and statutory compliance expectations that generic bid writing consistently fails to address.
-              </p>
-              <p>
-                TenderLab&apos;s children&apos;s services tender writing is built on an understanding of how children&apos;s social care commissioners think, what Ofsted-aligned evaluators prioritise, and how to translate your organisation&apos;s genuine practice into evidence that scores at the highest level. We do not produce responses that describe safeguarding in general terms. We produce responses that demonstrate your safeguarding culture through named systems, named leads, named case examples, and measurable outcomes that commissioners can verify.
-              </p>
-              <p>
-                Our team understands the difference between a children&apos;s residential framework and a fostering support contract, between an early help service and a child protection intervention. Each has its own commissioning culture, its own evaluation emphasis, and its own evidence requirements. We write for each one specifically — not from a template, but from genuine sector knowledge applied to your organisation&apos;s evidence base.
-              </p>
-              <p>
-                Whether you are tendering for a DPS placement framework, a spot purchase arrangement, a block contract, or a new service development opportunity, TenderLab brings the same rigorous, rubric-first methodology — adapted to the specific statutory and operational requirements of children&apos;s services commissioning in your target authority.
-              </p>
-
-              <h2 className="cs-detail-body__subheading">Why Children&apos;s Services Tenders Require Specialist Support</h2>
-              <div className="cs-why-grid">
-                {WHY_MATTERS.map((w) => (
-                  <div key={w.title} className="cs-why-card">
-                    <h3 className="cs-why-card__title">{w.title}</h3>
-                    <p className="cs-why-card__desc">{w.desc}</p>
-                  </div>
-                ))}
-              </div>
-
+      <section className="ep-section ep-care-hub" id="childrens-settings">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Choose the service model</p>
+              <h2>Write for the child, the service and the evaluator.</h2>
             </div>
-
-            {/* Sidebar */}
-            <aside className="cs-detail-body__sidebar">
-              <div className="svc-delivers">
-                <h3 className="svc-delivers__heading">What We Deliver</h3>
-                <ul className="svc-delivers__list">
-                  {DELIVERS.map((item) => (
-                    <li key={item} className="svc-delivers__item">
-                      <span className="svc-delivers__tick" aria-hidden="true">
-                        <svg viewBox="0 0 16 16" fill="none">
-                          <circle cx="8" cy="8" r="8" fill="currentColor" opacity="0.12"/>
-                          <path d="M4.5 8l2.5 2.5 5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="svc-delivers__cta">
-                  <Link href="/contact" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    Get a Free Consultation
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
-                      <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                    </svg>
-                  </Link>
-                  <Link href="/care-settings" className="svc-delivers__back">← All Care Settings</Link>
-                </div>
-              </div>
-            </aside>
-
-          </div>
-
-          {/* Care Areas — full-width below the sidebar grid */}
-          <div className="cs-care-areas">
-            <h2 className="cs-detail-body__subheading">Care Areas Within Children&apos;s Services</h2>
-            <p style={{ fontSize: 15, color: 'var(--slate)', lineHeight: 1.7, marginBottom: 24, maxWidth: 'none' }}>
-              Children&apos;s services encompasses a range of distinct provision types, each with its own commissioning culture and evaluation emphasis. Select a setting below to explore how TenderLab approaches it.
+            <p>
+              Children’s procurement carries distinct statutory, regulatory and
+              safeguarding expectations. Each setting below leads to a focused page,
+              not a recycled adult-care description.
             </p>
-            <div className="cs-sub-grid">
-              {[
-                { slug: 'care-home-accommodation', title: 'Care Home Accommodation', desc: 'Residential care home submissions for children require Ofsted-aligned quality evidence, named registered managers, and therapeutic environment descriptions that go beyond regulatory compliance.' },
-                { slug: 'supported-accommodation',  title: 'Supported Accommodation',  desc: 'Supported accommodation for young people demands evidence of key worker relationships, pathway planning, and measurable move-on outcomes to independent living.' },
-                { slug: 'temporary-accommodation',  title: 'Temporary Accommodation',  desc: 'Temporary accommodation submissions require rapid access evidence, crisis management protocols, and clear pathway planning from first placement to settled outcome.' },
-                { slug: 'emergency-accommodation',  title: 'Emergency Accommodation',  desc: 'Emergency accommodation tenders are evaluated on response times, safeguarding integration, and crisis support capacity — every section must demonstrate operational readiness.' },
-                { slug: 'supported-living',          title: 'Supported Living',          desc: 'Supported living for young people and care leavers requires evidence of tenancy sustainment, independence skill development, and multi-agency working that underpins long-term stability.' },
-              ].map((s) => (
-                <Link key={s.slug} href={`/care-settings/childrens-services/${s.slug}`} className="cs-sub-card">
-                  <h3 className="cs-sub-card__title">{s.title}</h3>
-                  <p className="cs-sub-card__desc">{s.desc}</p>
-                </Link>
-              ))}
-            </div>
           </div>
-
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="services-cta">
-        <div className="container">
-          <p className="section-label">Children&apos;s Services</p>
-          <h2 className="services-cta__headline">Ready to Win Your Next Children&apos;s Services Contract?</h2>
-          <p className="services-cta__sub">
-            Book a free consultation and we&apos;ll assess your next opportunity, the commissioning landscape, and what it takes to win.
-          </p>
-          <div className="services-cta__actions">
-            <Link href="/contact" className="btn btn-white">Book a Free Call</Link>
-            <Link href="/services" className="btn btn-outline-white">View All Services</Link>
+          <div className="ep-care-hub__grid ep-care-hub__grid--six">
+            {settings.map(([name, slug, description], index) => (
+              <Link href={`/care-settings/${slug}`} key={slug}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h3>{name}</h3>
+                <p>{description}</p>
+                <strong>Explore this setting ↗</strong>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
+      <section className="ep-section ep-care-hub-proof ep-care-hub-proof--yellow">
+        <div className="ep-shell ep-care-hub-proof__grid">
+          <div>
+            <p className="ep-kicker">Evidence before claims</p>
+            <h2>Safeguarding language must describe a working system.</h2>
+          </div>
+          <div>
+            <p>
+              A strong response names responsibilities, escalation routes, records,
+              oversight and learning. We work from the provider’s actual practice and
+              identify gaps that writing alone cannot responsibly conceal.
+            </p>
+            <Link href="/case-studies" className="ep-link">
+              Inspect documented case studies <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <EditorialFaq title="Questions about children’s services tenders" items={faqItems} />
     </main>
   )
 }

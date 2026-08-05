@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isTenderSourceParam } from '@/lib/tender-sources'
 
 /* ================================================================
    Single Tender Detail API
@@ -145,7 +146,15 @@ export async function GET(
 ) {
   const { id } = await params
   const { searchParams } = new URL(request.url)
-  const source = searchParams.get('source') || 'cf'
+  const requestedSource = searchParams.get('source')
+  if (requestedSource && !isTenderSourceParam(requestedSource)) {
+    return NextResponse.json(
+      { error: 'Invalid tender source. Use cf or ft.' },
+      { status: 400 },
+    )
+  }
+  const source =
+    requestedSource || (/^\d{6}-\d{4}$/.test(id) || /^ocds-/i.test(id) ? 'ft' : 'cf')
 
   try {
     let tender: TenderDetail | null = null

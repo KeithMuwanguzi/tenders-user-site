@@ -1,176 +1,193 @@
 import type { Metadata } from 'next'
-import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import Link from 'next/link'
-import Image from 'next/image'
+import EditorialHero from '@/components/EditorialHero'
+import EditorialFaq from '@/components/EditorialFaq'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
+const title = 'Tender Writing Process for UK Care Providers | TenderLab'
+const description =
+  'How TenderLab qualifies, structures, writes and reviews health and social care tenders from buyer-document assessment to submission-ready response.'
 
 export const metadata: Metadata = {
-  title: 'Our Process | TenderLab - How We Win Tenders',
-  description:
-    'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
+  title,
+  description,
   alternates: { canonical: '/process' },
-  openGraph: defaultOpenGraph({
-    title: 'Our Process | TenderLab - How We Win Tenders',
-    description: 'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
-    path: '/process',
-  }),
-  twitter: defaultTwitter({
-    title: 'Our Process | TenderLab - How We Win Tenders',
-    description: 'Six disciplined steps from Discovery Call to submission-ready document. How TenderLab engineers winning tender responses for UK care providers. 92% win rate.',
-  }),
+  openGraph: defaultOpenGraph({ title, description, path: '/process' }),
+  twitter: defaultTwitter({ title, description }),
 }
 
-const STEPS = [
+const stages = [
   {
-    num: 'Step 1',
-    title: 'Discovery Call (1–2 hours)',
-    desc: 'We begin with a structured intake call. We learn your organisation, your delivery model, your evidence base, and your target opportunity. We identify the gaps before the tender arrives and set the intelligence foundation for everything that follows.',
+    number: '01',
+    label: 'Qualification',
+    title: 'Check whether the opportunity fits',
+    text: 'We read the published conditions, scope, lots, timetable and commercial requirements, then test them against your registration, geography, delivery model, evidence and mobilisation position.',
+    output: 'A clear view of the fit, material gaps and responsible next step.',
   },
   {
-    num: 'Step 2',
-    title: 'Tender Decode (2–3 days)',
-    desc: 'The moment the ITT arrives, we dissect it completely. Every criterion extracted, weighted, and prioritised. Scoring frameworks reverse-engineered. Evaluator expectations mapped. Most providers start writing here. We have not written a word yet.',
+    number: '02',
+    label: 'Procurement map',
+    title: 'Turn the buyer documents into a controlled plan',
+    text: 'Every pass/fail condition, scored question, descriptor, word limit, attachment and submission rule is mapped before drafting begins.',
+    output: 'A requirement map, ownership plan and evidence request.',
   },
   {
-    num: 'Step 3',
-    title: 'Evidence Gathering (1–2 weeks)',
-    desc: 'We conduct structured interviews with your team, review your policies, outcomes data, case studies, and quality records. We identify the evidence that will score, the gaps that need filling, and build an evidence bank calibrated to the specific mark scheme.',
+    number: '03',
+    label: 'Evidence',
+    title: 'Gather proof from the people who run the service',
+    text: 'Structured working sessions identify the real roles, controls, records, case examples and outcomes that support each answer.',
+    output: 'An evidence bank linked to the questions and scoring method.',
   },
   {
-    num: 'Step 4',
-    title: 'Tender Writing (2–3 weeks)',
-    desc: 'Each response is drafted against the criterion, not the question. We write with operational specificity, named individuals, measurable outcomes, and evidence woven directly into the scoring structure. Every draft is reviewed against the rubric before it progresses.',
+    number: '04',
+    label: 'Writing',
+    title: 'Build each response for the scoring sheet',
+    text: 'We draft against the specification and descriptors, making responsibilities, sequence, frequency, oversight and outcomes easy for the evaluator to find.',
+    output: 'Complete draft responses with traceable operational evidence.',
   },
   {
-    num: 'Step 5',
-    title: 'Quality Assurance (1 week)',
-    desc: 'We conduct internal review. We verify rubric alignment, simulate evaluator scoring, check compliance with all requirements, proofread for errors, and refine weak sections. Outcome: Refined bid with scoring simulation results and compliance verification.',
+    number: '05',
+    label: 'Independent challenge',
+    title: 'Test what the evaluator can actually award',
+    text: 'The draft is challenged for compliance, unsupported claims, missed requirements, repetition, readability and evidence strength.',
+    output: 'A corrected response with clear actions for any unresolved gap.',
   },
   {
-    num: 'Step 6',
-    title: 'Submission Ready (2–3 days)',
-    desc: 'Final proofing, formatting, pagination, and file preparation. We ensure your submission meets all technical requirements. Outcome: Submission-ready document(s), formatted and compliant.',
+    number: '06',
+    label: 'Submission control',
+    title: 'Prepare the final response without breaking the rules',
+    text: 'We complete the final check against word counts, filenames, attachments, declarations, portal rules and the agreed submission timetable.',
+    output: 'Submission-ready files and a final compliance record.',
   },
 ]
 
-const METHOD = [
+const principles = [
   {
-    num: '01',
-    title: 'Specification Intelligence',
-    desc: 'Full specification analysis before a word is written. Every evaluator criterion extracted, weighted, and mapped to the question structure.',
+    title: 'Buyer documents come first',
+    text: 'The specification, conditions and scoring descriptors determine the response—not a reusable generic template.',
   },
   {
-    num: '02',
-    title: 'Framework-First Drafting',
-    desc: "Each response is drafted against our 20-criterion scoring framework built from real evaluator feedback across 200+ submissions.",
+    title: 'Evidence must be real',
+    text: 'TenderLab improves the selection and expression of genuine operational evidence. Missing capability is identified, not disguised.',
   },
   {
-    num: '03',
-    title: 'Evidence Calibration',
-    desc: 'Named staff. Specific case examples. Measurable outcomes. Dated policies. Every criterion that evaluators mark gets addressed precisely.',
+    title: 'The provider retains decisions',
+    text: 'Your authorised team approves factual claims, pricing, declarations and the final submission. We maintain a clear review trail.',
+  },
+]
+
+const faqs = [
+  {
+    q: 'Will TenderLab start writing every tender we receive?',
+    a: 'No. We first assess mandatory conditions, service scope, geography, registration, evidence, mobilisation and commercial fit. We will explain a material gap before proposing full writing work.',
   },
   {
-    num: '04',
-    title: 'Quality Gate',
-    desc: 'No response leaves without scoring 4 or above on every criterion. The gate is not a review. It is a hard stop. If it does not pass, it does not go.',
+    q: 'How long does the process take?',
+    a: 'It depends on the procurement pack, number of questions, evidence available and deadline. We confirm a practical timetable only after reviewing the documents and current position.',
+  },
+  {
+    q: 'Who supplies the evidence?',
+    a: 'Your leadership and operational teams provide and approve company facts, policies, records, examples, pricing and declarations. TenderLab structures that information around the buyer’s requirements.',
+  },
+  {
+    q: 'Does the process guarantee an award?',
+    a: 'No. The buyer controls evaluation and award. The process is designed to improve compliance, evidence and evaluator clarity while being honest about risks that writing cannot remove.',
   },
 ]
 
 export default function ProcessPage() {
   return (
-    <main>
+    <main className="ep-page">
+      <EditorialHero
+        eyebrow="The TenderLab process"
+        title="A controlled route from buyer documents to submission."
+        intro="The work begins by deciding whether the tender fits. Only then do we map the requirements, gather evidence, draft, challenge and prepare the final response."
+        image="/images/editorial/tenderlab-process-hero-v1.png"
+        imageAlt="A controlled tender workflow connecting opportunity fit, evidence, drafting, review and submission"
+        primaryLabel="Ask us to assess a tender"
+        primaryHref="/contact"
+        secondaryLabel="Compare tender services"
+        secondaryHref="/services"
+        tone="cream"
+      />
 
-      {/* ── Hero ── */}
-      <section className="page-hero page-hero--img">
-        <div className="page-hero__bg">
-          <Image
-            src="/images/business-people-video-call-meeting.jpg"
-            alt="TenderLab process"
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 35%' }}
-          />
-        </div>
-        <div className="page-hero__overlay" />
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="page-hero__title">Our Process</h1>
-          <p className="page-hero__sub">Six disciplined steps from Discovery Call to Submission-Ready document.</p>
-        </div>
-      </section>
-
-      {/* ── Steps timeline ── */}
-      <section className="proc-flow">
-        <div className="container">
-          <div className="proc-flow__header">
-            <div className="section-label">The Journey</div>
-            <h2 className="proc-flow__headline">From first conversation<br />to contract award.</h2>
-            <p className="proc-flow__sub">Every engagement follows the same six-stage sequence. No shortcuts. No skipped steps. Each one exists because evaluators told us it matters.</p>
+      <section className="ep-section ep-process">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Six controlled stages</p>
+              <h2>Every stage produces something the next stage needs.</h2>
+            </div>
+            <p>
+              The exact timetable changes with the procurement. The sequence remains
+              deliberate so the team does not start drafting before the conditions,
+              responsibilities and evidence are understood.
+            </p>
           </div>
-          <div className="proc-flow__timeline">
-            {STEPS.map((s, i) => (
-              <div key={s.num} className={`proc-step${i % 2 === 1 ? ' proc-step--alt' : ''}`}>
-                <div className="proc-step__line">
-                  <div className="proc-step__dot">
-                    <span>{String(i + 1).padStart(2, '0')}</span>
-                  </div>
-                  {i < STEPS.length - 1 && <div className="proc-step__connector" />}
+
+          <div className="ep-process__list">
+            {stages.map(stage => (
+              <article key={stage.number}>
+                <div className="ep-process__number">{stage.number}</div>
+                <div className="ep-process__copy">
+                  <span>{stage.label}</span>
+                  <h3>{stage.title}</h3>
+                  <p>{stage.text}</p>
                 </div>
-                <div className="proc-step__card">
-                  <span className="proc-step__tag">{s.num}</span>
-                  <h3 className="proc-step__title">{s.title}</h3>
-                  <p className="proc-step__desc">{s.desc}</p>
+                <div className="ep-process__output">
+                  <small>Stage output</small>
+                  <p>{stage.output}</p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── The Method ── */}
-      <section className="proc-method">
-        <div className="container">
-          <div className="proc-method__header">
-            <div className="section-label section-label--light">The Method</div>
-            <h2 className="proc-method__headline">Other firms write tenders.<br />We engineer them.</h2>
-            <p className="proc-method__sub">A four-pillar system built on evaluator intelligence and evidence precision.</p>
+      <section className="ep-section ep-process-principles">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Working principles</p>
+              <h2>Good process protects the provider as well as the submission.</h2>
+            </div>
+            <p>
+              Tender writing should not create promises the delivery team cannot keep.
+              These controls keep the response connected to the real service.
+            </p>
           </div>
-          <div className="proc-method__grid">
-            {METHOD.map((m, i) => (
-              <div key={m.num} className="proc-mcard">
-                <div className="proc-mcard__icon">
-                  <span>{m.num}</span>
-                </div>
-                <h3 className="proc-mcard__title">{m.title}</h3>
-                <p className="proc-mcard__desc">{m.desc}</p>
-                {i < METHOD.length - 1 && (
-                  <div className="proc-mcard__arrow" aria-hidden="true">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </div>
-                )}
-              </div>
+          <div className="ep-process-principles__grid">
+            {principles.map((principle, index) => (
+              <article key={principle.title}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <h3>{principle.title}</h3>
+                <p>{principle.text}</p>
+              </article>
             ))}
           </div>
-          <div className="proc-method__cta">
-            <Link href="/contact" className="btn btn-white">Book a Free Consultation</Link>
+        </div>
+      </section>
+
+      <section className="ep-section ep-process-cta">
+        <div className="ep-shell ep-process-cta__grid">
+          <div>
+            <p className="ep-kicker">Have a live tender?</p>
+            <h2>Start with the documents, deadline and intended lot.</h2>
+          </div>
+          <div>
+            <p>
+              Send the notice or procurement pack and a short description of your
+              current service. We will review the position before recommending the
+              writing support.
+            </p>
+            <Link href="/contact" className="ep-button ep-button--primary">
+              Contact TenderLab <span aria-hidden="true">↗</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="services-cta">
-        <div className="container">
-          <p className="section-label">Get Started</p>
-          <h2 className="services-cta__headline">Start the Process Today</h2>
-          <p className="services-cta__sub">
-            Book a free Discovery Call and we&apos;ll assess your position, your next opportunity, and what it would take to win.
-          </p>
-          <div className="services-cta__actions">
-            <Link href="/contact" className="btn btn-white">Book a Free Call</Link>
-            <Link href="/services" className="btn btn-outline-white">View All Services</Link>
-          </div>
-        </div>
-      </section>
-
+      <EditorialFaq title="Questions about the tender-writing process" items={faqs} />
     </main>
   )
 }

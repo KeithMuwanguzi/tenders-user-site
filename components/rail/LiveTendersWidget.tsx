@@ -94,6 +94,10 @@ async function fetchLiveTenders(
   cohort: string | undefined,
   limit: number
 ): Promise<LiveTender[]> {
+  if (process.env.SKIP_BUILD_TIME_FETCH === 'true') {
+    return []
+  }
+
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.tenderlab.co.uk'
   const url = new URL('/api/tenders', base)
   // Fetch a larger pool so we have material to filter from.

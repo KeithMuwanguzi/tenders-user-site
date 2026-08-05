@@ -1,317 +1,261 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import EditorialHero from '@/components/EditorialHero'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { CASE_STUDY_DETAILS } from '@/lib/case-studies-detail'
+import { breadcrumbSchema, defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import GalleryGrid from './GalleryGrid'
-import Script from 'next/script'
-import { defaultOpenGraph, defaultTwitter, articleSchema, breadcrumbSchema } from '@/lib/seo'
 
 export function generateStaticParams() {
-  return CASE_STUDIES.map(cs => ({ slug: cs.slug }))
+  return CASE_STUDIES.map((study) => ({ slug: study.slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const cs = CASE_STUDIES.find(c => c.slug === slug)
-  if (!cs) return {}
-  const fullTitle = `${cs.title} | TenderLab Case Studies`
-  const description = `TenderLab case study: ${cs.transformation}. ${cs.council}. Verified award letter.`
-  const pathname = `/case-studies/${slug}`
+  const study = CASE_STUDIES.find((item) => item.slug === slug)
+  if (!study) return {}
+
+  const title = `${study.provider}: ${study.council} ${study.categoryLabel} Case Study | TenderLab`
+  const description = `TenderLab supported ${study.provider} with ${study.council} ${study.contractType.toLowerCase()} work. ${study.transformation} Inspect the documented starting point, work and outcome.`
+  const path = `/case-studies/${slug}`
+
   return {
-    title: fullTitle,
+    title,
     description,
-    alternates: { canonical: pathname },
-    openGraph: defaultOpenGraph({ title: fullTitle, description, path: pathname, type: 'article' }),
-    twitter: defaultTwitter({ title: fullTitle, description }),
+    alternates: { canonical: path },
+    openGraph: defaultOpenGraph({ title, description, path, type: 'article' }),
+    twitter: defaultTwitter({ title, description }),
   }
 }
 
+function Arrow() {
+  return <span aria-hidden="true">↗</span>
+}
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const cs = CASE_STUDIES.find(c => c.slug === slug)
+  const study = CASE_STUDIES.find((item) => item.slug === slug)
   const detail = CASE_STUDY_DETAILS[slug]
-  if (!cs || !detail) notFound()
+  if (!study || !detail) notFound()
 
   const related = detail.relatedSlugs
-    .map(s => CASE_STUDIES.find(c => c.slug === s))
+    .map((relatedSlug) => CASE_STUDIES.find((item) => item.slug === relatedSlug))
     .filter(Boolean) as typeof CASE_STUDIES
 
+  const article = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: study.title,
+    description: `TenderLab case study: ${study.transformation}. ${study.council}.`,
+    url: `https://www.tenderlab.co.uk/case-studies/${slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.tenderlab.co.uk/case-studies/${slug}`,
+    },
+    author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
+    publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+    articleSection: study.categoryLabel,
+    inLanguage: 'en-GB',
+  }
+
   return (
-    <main>
-      <Script id={`ld-cs-${slug}-article`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: cs.title,
-        description: `TenderLab case study: ${cs.transformation}. ${cs.council}. Verified award letter.`,
-        url: `https://www.tenderlab.co.uk/case-studies/${slug}`,
-        mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.tenderlab.co.uk/case-studies/${slug}` },
-        author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
-        publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
-        articleSection: cs.categoryLabel,
-        inLanguage: 'en-GB',
-      }) }} />
-      <Script id={`ld-cs-${slug}-breadcrumb`} type="application/ld+json" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Case Studies', path: '/case-studies' },
-        { name: cs.title, path: `/case-studies/${slug}` },
-      ])) }} />
+    <main className="ep-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(article) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Case studies', path: '/case-studies' },
+          { name: study.title, path: `/case-studies/${slug}` },
+        ])) }}
+      />
 
+      <EditorialHero
+        eyebrow={`${study.categoryLabel} · ${study.contractType}`}
+        title={`${study.council} ${study.categoryLabel.toLowerCase()} tender case study`}
+        intro={detail.verdict}
+        image={detail.galleryImages[0]?.src || study.image}
+        imageAlt={`Redacted award evidence for ${study.council} case study`}
+        imageFit="contain"
+        primaryLabel="Discuss a similar tender"
+        primaryHref="/contact"
+        secondaryLabel="Back to all case studies"
+        secondaryHref="/case-studies"
+        tone="cream"
+      />
 
-      {/* ── Hero ── */}
-      <section className="csd-hero" style={{ '--case-accent': cs.accentColor } as React.CSSProperties}>
-        <div className="container">
-          <div className="csd-hero__inner">
-
-            {/* Breadcrumb */}
-            <nav className="csd-crumbs" aria-label="Breadcrumb">
-              <Link href="/case-studies" className="csd-crumbs__link">Case Studies</Link>
-              <span className="csd-crumbs__sep">›</span>
-              <span className="csd-crumbs__current">{cs.categoryLabel}</span>
-            </nav>
-
-            {/* Category tag */}
-            <div className="csd-cat-tag" style={{ background: cs.accentColor }}>
-              <span className="csd-cat-tag__dot" />
-              {cs.categoryLabel}
-            </div>
-
-            {/* Kicker */}
-            <p className="csd-kicker">Case Study · {cs.council} · {cs.contractType}</p>
-
-            {/* Title */}
-            <h1 className="csd-title">{cs.title}</h1>
-
-            {/* Verdict */}
-            <p className="csd-verdict">{detail.verdict}</p>
+      <section className="ep-case-detail-record">
+        <div className="ep-shell ep-case-detail-record__grid">
+          <div>
+            <span>Starting position</span>
+            <strong>{detail.entryAnchor.startedWith}</strong>
           </div>
-        </div>
-
-        {/* Entry anchor strip */}
-        <div className="csd-anchor" style={{ '--case-accent': cs.accentColor } as React.CSSProperties}>
-          <div className="container">
-            <div className="csd-anchor__row">
-              <div className="csd-anchor__cell">
-                <span className="csd-anchor__label">Started with</span>
-                <span className="csd-anchor__value">{detail.entryAnchor.startedWith}</span>
-              </div>
-              <div className="csd-anchor__cell">
-                <span className="csd-anchor__label">Result</span>
-                <span className="csd-anchor__value">{detail.entryAnchor.result}</span>
-              </div>
-              <div className="csd-anchor__cell">
-                <span className="csd-anchor__label">Context</span>
-                <span className="csd-anchor__value">{detail.entryAnchor.context}</span>
-              </div>
-            </div>
+          <div>
+            <span>Recorded result</span>
+            <strong>{detail.entryAnchor.result}</strong>
+          </div>
+          <div>
+            <span>Procurement context</span>
+            <strong>{detail.entryAnchor.context}</strong>
           </div>
         </div>
       </section>
 
-      {/* ── Starting position strip ── */}
-      <div className="csd-start-strip">
-        <div className="container">
-          <div className="csd-start-strip__inner">
-            <span className="csd-start-strip__label">Starting Position</span>
-            <span className="csd-start-strip__body">{detail.startingStrip}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Meta bar ── */}
-      <div className="csd-meta-bar" style={{ borderLeftColor: cs.accentColor }}>
-        <div className="container">
-          <div className="csd-meta-bar__inner">
-            <span className="csd-meta-item">
-              <strong>Award:</strong> {detail.metaBar.award}
-            </span>
-            <span className="csd-meta-sep">·</span>
-            <span className="csd-meta-item">
-              <strong>Outcome:</strong> {detail.metaBar.outcome}
-            </span>
-            {detail.metaBar.standstill && (
-              <>
-                <span className="csd-meta-sep">·</span>
-                <span className="csd-meta-item">
-                  <strong>Standstill:</strong> {detail.metaBar.standstill}
-                </span>
-              </>
-            )}
-            <span className="csd-meta-sep">·</span>
-            <span className="csd-meta-item">
-              <strong>Reference:</strong> {detail.metaBar.reference}
-            </span>
-            {detail.ftsUrl && (
-              <a href={detail.ftsUrl} target="_blank" rel="noopener noreferrer" className="csd-fts-link" style={{ background: cs.accentColor }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                View on Find a Tender
+      <section className="ep-section ep-case-detail-overview">
+        <div className="ep-shell ep-case-detail-overview__grid">
+          <aside>
+            <p className="ep-kicker">Case record</p>
+            <dl>
+              <div><dt>Provider</dt><dd>{study.provider}</dd></div>
+              <div><dt>Authority</dt><dd>{study.council}</dd></div>
+              <div><dt>Award</dt><dd>{detail.metaBar.award}</dd></div>
+              <div><dt>Reference</dt><dd>{detail.metaBar.reference}</dd></div>
+              <div><dt>Outcome</dt><dd>{detail.metaBar.outcome}</dd></div>
+            </dl>
+            {detail.ftsUrl ? (
+              <a href={detail.ftsUrl} target="_blank" rel="noopener noreferrer" className="ep-link">
+                View procurement record <Arrow />
               </a>
-            )}
+            ) : null}
+          </aside>
+          <div>
+            <p className="ep-kicker">The starting point</p>
+            <h2>{study.title}</h2>
+            <p>{detail.startingStrip}</p>
+            <p>{detail.stampSummary}</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Article body ── */}
-      <div className="csd-body">
-        <div className="container">
-          <div className="csd-article">
-
-            {/* WON stamp + summary */}
-            <div className="csd-stamp-row">
-              <div className="csd-won-stamp" aria-label="Awarded">
-                <div className="csd-won-stamp__ring" />
-                <span className="csd-won-stamp__award">★ Awarded ★</span>
-                <span className="csd-won-stamp__word">WON</span>
-                <span className="csd-won-stamp__sub">{detail.stampSub}</span>
-              </div>
-              <div className="csd-stamp-summary" style={{ borderLeftColor: cs.accentColor }}>
-                <span className="csd-stamp-summary__label" style={{ color: cs.accentColor }}>
-                  {cs.contractType} · {cs.complexity}
-                </span>
-                <p className="csd-stamp-summary__text">{detail.stampSummary}</p>
-              </div>
+      <section className="ep-section ep-case-evidence" id="award-evidence">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Redacted source material</p>
+              <h2>Inspect the evidence supporting the result.</h2>
             </div>
+            <p>
+              The gallery retains the source documents already published for this case. Names, identifiers and
+              commercially sensitive details may be redacted.
+            </p>
+          </div>
+          <div className="ep-case-evidence__gallery">
+            <GalleryGrid images={detail.galleryImages} accentColor={study.accentColor} />
+          </div>
+          <p className="ep-case-evidence__source">{detail.gallerySource}</p>
+        </div>
+      </section>
 
-            {/* Snapshot grid */}
-            <div className="csd-snapshot">
-              {detail.snapshotCells.map((cell, i) => (
-                <div key={i} className={`csd-snapshot__cell${cell.isLead ? ' csd-snapshot__cell--lead' : ''}`}
-                  style={cell.isLead ? { borderBottomColor: cs.accentColor } as React.CSSProperties : {}}>
-                  <span className="csd-snapshot__label">{cell.label}</span>
-                  <span className="csd-snapshot__value">{cell.value}</span>
+      <section className="ep-section ep-case-narrative">
+        <div className="ep-shell ep-case-narrative__grid">
+          <aside>
+            <p className="ep-kicker">What the record covers</p>
+            <h2>Starting position, TenderLab&apos;s role and the recorded outcome.</h2>
+          </aside>
+          <div className="ep-case-narrative__sections">
+            {detail.sections.map((section) => (
+              <article key={section.num}>
+                <span>{section.num}</span>
+                <div>
+                  <h3>{section.heading}</h3>
+                  <p>{section.body}</p>
+                  {section.callout ? (
+                    <blockquote>
+                      <strong>{section.callout.label}</strong>
+                      <p>{section.callout.text}</p>
+                    </blockquote>
+                  ) : null}
                 </div>
-              ))}
-            </div>
-
-            {/* Trust badges */}
-            <div className="csd-trust">
-              {detail.trustBadges.map((badge, i) => (
-                <div key={i} className="csd-trust__badge">
-                  <span className="csd-trust__check" style={{ background: cs.accentColor }}>✓</span>
-                  {badge}
-                </div>
-              ))}
-            </div>
-
-            {/* Award letter gallery */}
-            <section className="csd-gallery-section" id="award-letter">
-              <div className="csd-gallery-head">
-                <h2 className="csd-gallery-title">The Award Letter</h2>
-                <span className="csd-gallery-badge" style={{ background: cs.accentColor }}>Verified Source</span>
-              </div>
-              <GalleryGrid images={detail.galleryImages} accentColor={cs.accentColor} />
-              <p className="csd-gallery-source">{detail.gallerySource}</p>
-            </section>
-
-            {/* Article sections */}
-            {detail.sections.map((section, i) => (
-              <div key={i} className="csd-section">
-                <h2 className="csd-section__h2" style={{ borderLeftColor: cs.accentColor }}>
-                  <span className="csd-section__num" style={{ color: cs.accentColor }}>Section {section.num}</span>
-                  {section.heading}
-                </h2>
-                <p className="csd-section__body">{section.body}</p>
-                {section.callout && (
-                  <div className="csd-callout" style={{ borderLeftColor: cs.accentColor }}>
-                    <p className="csd-callout__label">{section.callout.label}</p>
-                    <p className="csd-callout__text">{section.callout.text}</p>
-                  </div>
-                )}
-                {/* Mid-CTA after section 08 */}
-                {section.num === '08' && (
-                  <div className="csd-mid-cta" style={{ borderTopColor: cs.accentColor, borderBottomColor: cs.accentColor }}>
-                    <div className="csd-mid-cta__text">
-                      <h3 className="csd-mid-cta__h">Working from a similar starting point?</h3>
-                      <p className="csd-mid-cta__p">Free consultation. We will read the specification, identify the deterministic and discretionary points, and tell you whether the win is realistic.</p>
-                    </div>
-                    <Link href="/contact" className="btn btn-primary">Book free consultation</Link>
-                  </div>
-                )}
-              </div>
+              </article>
             ))}
-
-            {/* Score table */}
-            {detail.scoreTable && (
-              <div className="csd-table-wrap">
-                <h3 className="csd-table-title">Measurable Uplift</h3>
-                <table className="csd-table">
-                  <thead>
-                    <tr style={{ background: cs.accentColor }}>
-                      {detail.scoreTable.headers.map((h, i) => (
-                        <th key={i}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detail.scoreTable.rows.map((row, i) => (
-                      <tr key={i}>
-                        <td><strong style={{ color: cs.accentColor }}>{row.lot}</strong></td>
-                        {row.cells.map((cell, j) => (
-                          <td key={j}>{cell}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {/* Before / After */}
-            <div className="csd-before-after">
-              <div className="csd-ba-block">
-                <div className="csd-ba-block__head">Before the Engagement</div>
-                <p className="csd-ba-block__body">{detail.beforeText}</p>
-              </div>
-              <div className="csd-ba-block csd-ba-block--after" style={{ borderTopColor: cs.accentColor }}>
-                <div className="csd-ba-block__head" style={{ color: cs.accentColor }}>After the Engagement</div>
-                <p className="csd-ba-block__body">{detail.afterText}</p>
-              </div>
-            </div>
-
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Related case studies ── */}
-      {related.length > 0 && (
-        <section className="csd-related">
-          <div className="container">
-            <h2 className="csd-related__h">Similar case studies</h2>
-            <div className="csd-related__grid">
-              {related.map(r => (
-                <Link
-                  key={r.slug}
-                  href={`/case-studies/${r.slug}`}
-                  className="csd-rcard"
-                  style={{ '--rcard-accent': r.accentColor } as React.CSSProperties}
-                >
-                  <div className="csd-rcard__accent" />
-                  <div className="csd-rcard__body">
-                    <span className="csd-rcard__tag" style={{ color: r.accentColor }}>
-                      {r.categoryLabel} · {r.contractType}
-                    </span>
-                    <h3 className="csd-rcard__title">{r.title}</h3>
-                    <p className="csd-rcard__transform">{r.transformation}</p>
-                  </div>
+      {detail.scoreTable ? (
+        <section className="ep-section ep-case-scores">
+          <div className="ep-shell">
+            <div className="ep-section-head ep-section-head--split">
+              <div>
+                <p className="ep-kicker">Recorded evaluation data</p>
+                <h2>Scores or lot outcomes available for this case.</h2>
+              </div>
+              <p>The table reproduces the structured result held in the case-study record.</p>
+            </div>
+            <div className="ep-case-scores__table">
+              <table>
+                <thead>
+                  <tr>{detail.scoreTable.headers.map((header) => <th key={header}>{header}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {detail.scoreTable.rows.map((row) => (
+                    <tr key={row.lot}>
+                      <th>{row.lot}</th>
+                      {row.cells.map((cell, index) => <td key={`${row.lot}-${index}`}>{cell}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="ep-section ep-case-before-after">
+        <div className="ep-shell ep-case-before-after__grid">
+          <article>
+            <p className="ep-kicker">Before the engagement</p>
+            <p>{detail.beforeText}</p>
+          </article>
+          <article>
+            <p className="ep-kicker">After the recorded outcome</p>
+            <p>{detail.afterText}</p>
+          </article>
+        </div>
+      </section>
+
+      {related.length > 0 ? (
+        <section className="ep-section ep-case-related">
+          <div className="ep-shell">
+            <div className="ep-section-head ep-section-head--split">
+              <div>
+                <p className="ep-kicker">Related evidence</p>
+                <h2>Compare another procurement context.</h2>
+              </div>
+              <Link href="/case-studies" className="ep-link">View all case studies <Arrow /></Link>
+            </div>
+            <div className="ep-case-related__grid">
+              {related.map((item) => (
+                <Link key={item.slug} href={`/case-studies/${item.slug}`}>
+                  <span>{item.categoryLabel} · {item.contractType}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.result} · {item.lots}</p>
+                  <strong>Read case study <Arrow /></strong>
                 </Link>
               ))}
             </div>
           </div>
         </section>
-      )}
+      ) : null}
 
-      {/* ── Closer CTA ── */}
-      <section className="csd-closer" style={{ background: cs.accentColor }}>
-        <div className="container">
-          <div className="csd-closer__inner">
-            <span className="csd-closer__lead">{detail.closerLead}</span>
-            <span className="csd-closer__sub">{detail.closerSub}</span>
-            <Link href="/contact" className="csd-closer__btn">Book a free consultation</Link>
+      <section className="ep-section ep-review-choice">
+        <div className="ep-shell ep-review-choice__panel">
+          <div>
+            <p className="ep-kicker">A comparable result is not a guarantee</p>
+            <h2>Let us check whether your tender is a responsible fit first.</h2>
+          </div>
+          <div>
+            <p>
+              We will read the published conditions and assess the evidence, delivery and commercial position before
+              agreeing to full writing support.
+            </p>
+            <Link href="/contact" className="ep-button ep-button--primary">
+              Share the opportunity <Arrow />
+            </Link>
           </div>
         </div>
       </section>
-
     </main>
   )
 }

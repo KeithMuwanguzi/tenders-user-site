@@ -2,6 +2,12 @@ export type TenderSourceLabel = 'Contracts Finder' | 'Find a Tender'
 
 export type TenderSourceParam = 'cf' | 'ft'
 
+export function isTenderSourceParam(
+  value: string | null | undefined,
+): value is TenderSourceParam {
+  return value === 'cf' || value === 'ft'
+}
+
 export function sourceParamFromLabel(source: TenderSourceLabel | string): TenderSourceParam {
   return source === 'Find a Tender' ? 'ft' : 'cf'
 }

@@ -1,0 +1,127 @@
+.page {
+  min-height: 70vh;
+  padding: clamp(7rem, 12vw, 11rem) clamp(1.25rem, 6vw, 7rem) 5rem;
+  background: #f7f2e9;
+  color: #172232;
+}
+
+.panel {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: clamp(2rem, 7vw, 8rem);
+  align-items: center;
+}
+
+.copy h1 {
+  max-width: 780px;
+  margin: 0 0 1.4rem;
+  font-family: Inter, Arial, sans-serif;
+  font-size: clamp(2.8rem, 6vw, 6.7rem);
+  line-height: 0.94;
+  letter-spacing: -0.065em;
+}
+
+.copy > p:not(.eyebrow) {
+  max-width: 650px;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.6;
+  color: #536171;
+}
+
+.eyebrow {
+  margin: 0 0 1.4rem;
+  color: #e23e34;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.actions button,
+.actions a {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #172232;
+  border-radius: 999px;
+  padding: 0.8rem 1.25rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.actions button {
+  border-color: #e23e34;
+  background: #e23e34;
+  color: #fffaf1;
+}
+
+.visual {
+  position: relative;
+  min-height: 390px;
+  overflow: hidden;
+  border-radius: 48% 48% 14% 14% / 30% 30% 12% 12%;
+  background: #d9eef0;
+}
+
+.visual span {
+  position: absolute;
+  display: block;
+}
+
+.sheetOne,
+.sheetTwo {
+  width: 47%;
+  height: 58%;
+  top: 20%;
+  border-radius: 1rem;
+  background: #fffdf7;
+  box-shadow: 0 24px 50px rgb(23 34 50 / 10%);
+}
+
+.sheetOne { left: 18%; transform: rotate(-8deg); }
+.sheetTwo { right: 15%; transform: rotate(7deg); }
+
+.thread {
+  width: 72%;
+  height: 46%;
+  left: 14%;
+  top: 30%;
+  border: 4px solid #e23e34;
+  border-color: #e23e34 transparent transparent #e23e34;
+  border-radius: 50%;
+  transform: rotate(14deg);
+}
+
+.visual strong {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #e23e34;
+  font-size: 7rem;
+  font-weight: 500;
+}
+
+@media (max-width: 760px) {
+  .page { padding: 6.5rem 1rem 3rem; }
+  .panel { grid-template-columns: 1fr; gap: 1.8rem; }
+  .copy h1 { font-size: clamp(2.65rem, 13vw, 4.2rem); }
+  .visual { min-height: 280px; order: -1; }
+  .actions { align-items: stretch; flex-direction: column; }
+  .actions button,
+  .actions a { width: 100%; }
+}

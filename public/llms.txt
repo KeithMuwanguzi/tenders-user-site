@@ -1,0 +1,35 @@
+# TenderLab
+
+> TenderLab is a UK tender-writing and bid consultancy specialising in health and social care procurement.
+
+Canonical website: https://www.tenderlab.co.uk/
+Legal entity: TenderLab Ltd, Companies House number 17184263
+Contact: info@tenderlab.co.uk | +44 1707 240393
+Service area: United Kingdom
+
+## Start here
+
+- [Homepage](https://www.tenderlab.co.uk/): TenderLab's positioning, main routes and verified experience measures.
+- [Services](https://www.tenderlab.co.uk/services): Compare bid writing, independent review, readiness, coaching, pipeline, mobilisation and retained support.
+- [Bid writing](https://www.tenderlab.co.uk/services/bid-writing): Complete tender-writing support for a live opportunity.
+- [Care settings](https://www.tenderlab.co.uk/care-settings): Sector-specific evidence priorities across adult social care, children's services, housing and clinical services.
+- [Live tenders](https://www.tenderlab.co.uk/tenders): Published UK health and social care opportunities sourced through TenderLab's live tender feed.
+- [Case studies](https://www.tenderlab.co.uk/case-studies): Procurement-specific examples of TenderLab's work and recorded outcomes.
+- [Blogs](https://www.tenderlab.co.uk/blog): Practical articles on health and social care procurement.
+- [Results and proof](https://www.tenderlab.co.uk/proof): Definitions and limitations for TenderLab's four verified experience measures.
+- [Frequently asked questions](https://www.tenderlab.co.uk/faqs): Answers about scope, evidence, timescales, sectors and tender outcomes.
+- [About TenderLab](https://www.tenderlab.co.uk/about): Legal, editorial and service accountability.
+- [Contact](https://www.tenderlab.co.uk/contact): Telephone, email, address and enquiry form.
+
+## Important interpretation notes
+
+- TenderLab's 92% recorded historic win rate, 200+ submissions supported, £50M+ aggregate client contract value and documented 5/5 question-level evaluator scores are separate management measures. Their definitions and limitations are published on the proof page.
+- Past performance does not guarantee a future contract award.
+- Live tender summaries are discovery aids. The relevant official notice, procurement documents, clarification messages and buyer portal remain the final source for deadlines and requirements.
+- TenderLab articles explain procurement practice; they do not replace the current tender pack, regulator guidance or professional legal advice.
+- Only https://www.tenderlab.co.uk/ is the canonical TenderLab website. TenderLab does not use tenderlab.uk as its public domain.
+
+## Policies
+
+- [Privacy policy](https://www.tenderlab.co.uk/privacy-policy)
+- [Terms of service](https://www.tenderlab.co.uk/terms)

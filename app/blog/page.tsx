@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
-import BlogExperience from '@/components/blog/BlogExperience'
+import BlogListingView from '@/components/blog/BlogListingView'
+import { fetchBlogs } from '@/lib/blogs'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'UK Care Tender Writing Blog and Insights | TenderLab',
+  title: 'UK Care Tender Writing Insights and Procurement Analysis | TenderLab',
   description:
-    'Live tender analysis, bid writing strategy, and commissioning trends for UK health and social care providers. 92% win rate across 200+ submissions.',
+    'Practical analysis of UK health and social care tenders, commissioner requirements, operational evidence, bid writing and public procurement for care providers.',
   alternates: { canonical: 'https://www.tenderlab.co.uk/blog' },
   openGraph: {
     title: 'UK Care Tender Writing Blog and Insights | TenderLab',
@@ -19,24 +20,25 @@ export const metadata: Metadata = {
 
 const FAQS = [
   {
-    q: 'How often does the TenderLab blog publish?',
-    a: 'We publish 2 to 3 posts per week across Live Tender Analysis and Sector Insights. Top-traffic posts are refreshed quarterly.',
+    q: 'What does TenderLab cover in these articles?',
+    a: 'The library covers live procurement notices, participation conditions, health and social care commissioning, bid writing, operational evidence, mobilisation, pricing and the questions care-provider leaders face before deciding whether to bid.',
   },
   {
-    q: 'What is a Live Tender Analysis post?',
-    a: 'A breakdown of a currently live UK public sector care tender: cohort, statutory context, scoring battlegrounds, and win-rate playbook from 200+ submissions.',
+    q: 'Can I use an article as the answer to a tender question?',
+    a: 'No. An article can help your team understand the issue, but the buyer documents, specification, question wording and scoring descriptors must control the response to a live procurement.',
   },
   {
-    q: 'Are these posts written by a human?',
-    a: 'Yes. Every post is written by an evaluator-trained bid writer. AI assists research only; framing and references are human-verified.',
+    q: 'How should I check whether guidance is still current?',
+    a: 'Start with the publication date, then check the official procurement notice, buyer documents and any current legislation or regulator guidance linked in the article. The official source remains authoritative.',
   },
   {
-    q: 'Can I get email alerts when a new post goes live?',
-    a: 'Yes. Subscribe from any post footer for monthly insights and subscriber-only briefings.',
+    q: 'Can TenderLab review a specific opportunity with us?',
+    a: 'Yes. Send the opportunity link or buyer documents through the contact page. We will first examine the mandatory requirements, service scope, evidence, mobilisation and commercial position before discussing full tender-writing support.',
   },
 ]
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await fetchBlogs()
   return (
     <>
       <script
@@ -52,7 +54,9 @@ export default function BlogPage() {
           }),
         }}
       />
-      <BlogExperience faqs={FAQS} />
+      <main className="blog-v2 blog-v2--list">
+        <BlogListingView posts={posts} faqs={FAQS} />
+      </main>
     </>
   )
 }

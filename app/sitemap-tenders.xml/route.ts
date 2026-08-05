@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getPortalApiUrl, isPortalApiAvailable } from '@/lib/portal-api'
 
 /* ================================================================
    Dynamic sitemap for live tender detail pages
@@ -18,72 +19,118 @@ interface PortalTender {
   status?: string
 }
 
-const PORTAL_API_URL =
-  process.env.PORTAL_API_URL ||
-  process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-  'https://tenderlab-admin-api-quva.onrender.com'
-
 const BASE = 'https://www.tenderlab.co.uk'
 
 export const runtime = 'nodejs'
-export const revalidate = 3600 // 1 hour
+// Tender data is supplied by the VPS at request time. Rendering this route at
+// build time can produce an empty sitemap when the private service hostname is
+// unavailable to the build runner, so keep the route dynamic and cache the
+// completed XML at the HTTP edge instead.
+export const dynamic = 'force-dynamic'
+
+function unavailable(message: string): NextResponse {
+  console.error(`[sitemap-tenders] ${message}`)
+  return new NextResponse('Tender sitemap is temporarily unavailable.', {
+    status: 503,
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Retry-After': '300',
+      'X-Robots-Tag': 'noindex',
+    },
+  })
+}
+
+function xmlEscape(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
+function validLastmod(value: string): string | null {
+  if (!value) return null
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? null : date.toISOString()
+}
 
 export async function GET() {
   let tenders: PortalTender[] = []
 
+  if (!isPortalApiAvailable()) {
+    return new NextResponse(emptySitemap(), {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      },
+    })
+  }
+
   try {
-    const upstream = new URL(`${PORTAL_API_URL}/api/tenders/published`)
+    const baseUrl = getPortalApiUrl()
+    const upstream = new URL(`${baseUrl}/api/tenders/published`)
     upstream.searchParams.set('active_only', 'true')
     upstream.searchParams.set('limit', '1000')
 
-    const res = await fetch(upstream.toString(), {
+    let res = await fetch(upstream.toString(), {
       headers: { Accept: 'application/json' },
-      next: { revalidate: 3600 },
+      cache: 'no-store',
     })
 
-    if (res.ok) {
-      const data = await res.json()
-      // Portal returns either an array or { tenders: [...] }
-      if (Array.isArray(data)) {
-        tenders = data as PortalTender[]
-      } else if (Array.isArray(data?.tenders)) {
-        tenders = data.tenders as PortalTender[]
-      }
+    if (!res.ok) {
+      return unavailable(`portal returned ${res.status}`)
+    }
+
+    const data = await res.json()
+    // Portal returns either an array or { tenders: [...] }.
+    if (Array.isArray(data)) {
+      tenders = data as PortalTender[]
+    } else if (Array.isArray(data?.tenders)) {
+      tenders = data.tenders as PortalTender[]
     } else {
-      console.error('[sitemap-tenders] portal returned', res.status)
+      return unavailable('portal returned an unexpected response shape')
     }
   } catch (e) {
-    console.error('[sitemap-tenders] fetch error:', e)
+    return unavailable(
+      `fetch failed: ${e instanceof Error ? e.message : String(e)}`,
+    )
   }
 
-  const nowIso = new Date().toISOString()
+  const seen = new Set<string>()
   const urls = tenders
-    .filter((t) => t.id && t.title)
+    .filter((t) => {
+      if (!t.id || !t.title) return false
+      const key = `${t.source}:${t.id}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
     .map((t) => {
-      const src = t.source === 'Find a Tender' ? 'ft' : 'cf'
-      let lastmod = nowIso
-      try {
-        if (t.publishedDate) lastmod = new Date(t.publishedDate).toISOString()
-      } catch {
-        lastmod = nowIso
-      }
-      const loc = `${BASE}/tenders/${encodeURIComponent(t.id)}?source=${src}`
-      // XML-escape ampersand for the query string
-      const safeLoc = loc.replace(/&/g, '&amp;')
+      const loc = `${BASE}/tenders/${encodeURIComponent(t.id)}`
+      const lastmod = validLastmod(t.publishedDate)
       return `  <url>
-    <loc>${safeLoc}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${xmlEscape(loc)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>`
     })
     .join('\n')
 
-  const body = `<?xml version="1.0" encoding="UTF-8"?>
+  return xmlResponse(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}
-</urlset>`
+</urlset>`)
+}
 
+function emptySitemap(): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+</urlset>`
+}
+
+function xmlResponse(body: string) {
   return new NextResponse(body, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',

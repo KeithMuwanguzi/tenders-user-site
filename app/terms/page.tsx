@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import LegalHeroVisual from "@/components/LegalHeroVisual";
 
 export const metadata: Metadata = {
   title: "Terms of Service | TenderLab",
@@ -43,7 +44,7 @@ export default function TermsPage() {
             url: "https://www.tenderlab.co.uk/terms",
             inLanguage: "en-GB",
             publisher: { "@id": "https://www.tenderlab.co.uk/#organization" },
-            dateModified: "2026-06-05",
+            dateModified: "2026-07-19",
           }),
         }}
       />
@@ -71,7 +72,7 @@ export default function TermsPage() {
               writing and consultancy services to UK health and social care providers. Drafted
               under the laws of England and Wales.
             </p>
-            <p className="he-meta">Last updated: 5 June 2026</p>
+            <p className="he-meta">Last updated: 19 July 2026</p>
           </div>
 
           <div className="he-grid he-grid--3col">

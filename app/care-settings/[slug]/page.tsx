@@ -1,108 +1,100 @@
 import { readFile, readdir } from 'fs/promises'
 import path from 'path'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import Script from 'next/script'
 import type { Metadata } from 'next'
+import EditorialHero from '@/components/EditorialHero'
+import EditorialFaq from '@/components/EditorialFaq'
+import { CASE_STUDIES } from '@/lib/case-studies-data'
 import {
+  breadcrumbSchema,
   canonicalUrl,
+  defaultFaq,
   defaultOpenGraph,
   defaultTwitter,
-  serviceSchema,
   faqSchema,
-  breadcrumbSchema,
-  defaultFaq,
+  serviceSchema,
 } from '@/lib/seo'
-import HybridE from '@/components/HybridE'
-import type { TOCItem } from '@/components/TOC'
-import LiveTendersWidget from '@/components/rail/LiveTendersWidget'
-import RelatedCareSettingsWidget from '@/components/rail/RelatedCareSettingsWidget'
-import RelatedCaseStudyWidget from '@/components/rail/RelatedCaseStudyWidget'
-import ConsultationCTA from '@/components/rail/ConsultationCTA'
 
 const HTML_DIR = path.join(
   process.cwd(),
   'public/Page Content HTML Files/care-settings'
 )
 
-const SETTING_IMAGES: Record<string, string> = {
-  'domiciliary-care': 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1200&q=80',
-  'live-in-care': 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1200&q=80',
-  'residential-care': 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1200&q=80',
-  'nursing-care': 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=1200&q=80',
-  'supported-living': 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1200&q=80',
-  'extra-care-housing': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80',
-  'day-services': 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&q=80',
-  'reablement-services': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80',
-  'short-breaks-and-respite': 'https://images.unsplash.com/photo-1516534775068-ba3e7458af70?w=1200&q=80',
-  'shared-lives': 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80',
-  'outreach-community-support': 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=1200&q=80',
-  'crisis-rapid-response': 'https://images.unsplash.com/photo-1504813184591-01572f98c85f?w=1200&q=80',
-  'childrens-residential-care': 'https://images.unsplash.com/photo-1540479859555-17af45c78602?w=1200&q=80',
-  'supported-accommodation': 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80',
-  'fostering-services': 'https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?w=1200&q=80',
-  'leaving-care-services': 'https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1200&q=80',
-  'childrens-short-breaks': 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1200&q=80',
-  'family-support-and-outreach': 'https://images.unsplash.com/photo-1491013516836-7db643ee125a?w=1200&q=80',
-  'housing-related-support': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80',
-  'temporary-accommodation': 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80',
-  'emergency-accommodation': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80',
-  'supported-housing': 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80',
-  'community-health-services': 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1200&q=80',
-  'continuing-healthcare': 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80',
-  'complex-care': 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200&q=80',
-  'rehabilitation-services': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&q=80',
-  'end-of-life-and-palliative-care': 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1200&q=80',
-  'hospital-discharge-services': 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1200&q=80',
-}
+type Props = { params: Promise<{ slug: string }> }
+type TocItem = { label: string; num: string; anchor: string }
+type Visual = { image: string; alt: string; tone: 'cream' | 'blue' | 'peach' | 'yellow' }
 
-/* Map care setting slug to the case study cohort tag used in
-   lib/case-studies-data.ts. Cohorts in that file are:
-   supported-living, domiciliary, multi-service, mental-health,
-   childrens. Pick the closest match per care setting so the rail
-   surfaces a relevant case study rather than the first one. */
+const HOME_CARE_SLUGS = new Set([
+  'domiciliary-care',
+  'live-in-care',
+  'residential-care',
+  'nursing-care',
+  'reablement-services',
+  'rehabilitation-services',
+  'end-of-life-and-palliative-care',
+  'hospital-discharge-services',
+  'short-breaks-and-respite',
+])
+
+const CHILDREN_SLUGS = new Set([
+  'childrens-residential-care',
+  'supported-accommodation',
+  'fostering-services',
+  'leaving-care-services',
+  'childrens-short-breaks',
+  'family-support-and-outreach',
+])
+
+const CLINICAL_SLUGS = new Set([
+  'community-health-services',
+  'continuing-healthcare',
+  'complex-care',
+  'complex-care-and-continuing-healthcare',
+  'crisis-rapid-response',
+])
+
+const HOUSING_SLUGS = new Set([
+  'housing-related-support',
+  'housing-support',
+  'supported-housing',
+  'temporary-accommodation',
+  'emergency-accommodation',
+])
+
 const CASE_STUDY_COHORT: Record<string, string> = {
   'domiciliary-care': 'domiciliary',
   'live-in-care': 'domiciliary',
+  'reablement-services': 'domiciliary',
   'residential-care': 'multi-service',
   'nursing-care': 'multi-service',
   'supported-living': 'supported-living',
   'extra-care-housing': 'supported-living',
+  'learning-disability-services': 'supported-living',
+  'housing-related-support': 'supported-living',
+  'temporary-accommodation': 'supported-living',
+  'emergency-accommodation': 'supported-living',
+  'supported-housing': 'supported-living',
   'childrens-residential-care': 'childrens',
   'supported-accommodation': 'childrens',
   'fostering-services': 'childrens',
   'leaving-care-services': 'childrens',
   'childrens-short-breaks': 'childrens',
   'family-support-and-outreach': 'childrens',
-  'mental-health-services': 'mental-health',
-  'autism-services': 'multi-service',
-  'learning-disability-services': 'supported-living',
-  'complex-care': 'multi-service',
-  'continuing-healthcare': 'multi-service',
-  'end-of-life-and-palliative-care': 'multi-service',
-  'rehabilitation-services': 'multi-service',
-  'reablement-services': 'domiciliary',
-  'hospital-discharge-services': 'multi-service',
-  'day-services': 'multi-service',
-  'shared-lives': 'multi-service',
   'short-breaks-and-respite': 'childrens',
-  'outreach-community-support': 'multi-service',
+  'mental-health-services': 'mental-health',
   'crisis-rapid-response': 'mental-health',
   'substance-misuse-services': 'mental-health',
-  'community-health-services': 'multi-service',
-  'housing-related-support': 'supported-living',
-  'temporary-accommodation': 'supported-living',
-  'emergency-accommodation': 'supported-living',
-  'supported-housing': 'supported-living',
 }
 
-type Props = { params: Promise<{ slug: string }> }
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
   try {
     const files = await readdir(HTML_DIR)
     return files
-      .filter(f => f.endsWith('.html') && f !== 'index.html')
-      .map(f => ({ slug: f.replace(/\.html$/, '') }))
+      .filter(file => file.endsWith('.html') && file !== 'index.html')
+      .map(file => ({ slug: file.replace(/\.html$/, '') }))
   } catch {
     return []
   }
@@ -110,159 +102,167 @@ export async function generateStaticParams() {
 
 async function getPageHtml(slug: string): Promise<string | null> {
   try {
-    const file = path.join(HTML_DIR, `${slug}.html`)
-    return await readFile(file, 'utf8')
+    return await readFile(path.join(HTML_DIR, `${slug}.html`), 'utf8')
   } catch {
     return null
   }
 }
 
+function plainText(value: string): string {
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&#x27;|&apos;/gi, "'")
+    .replace(/&amp;/gi, '&')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function extractClassText(html: string, className: string): string {
+  const match = html.match(
+    new RegExp(`<[^>]+class="[^"]*\\b${className}\\b[^"]*"[^>]*>([\\s\\S]*?)<\\/[^>]+>`, 'i')
+  )
+  return match ? plainText(match[1]) : ''
+}
+
 function extractTitle(html: string, slug: string): string {
-  const t = html.match(/<title>([^<]+)<\/title>/i)
-  if (t) return t[1].replace(/\s*\|\s*TenderLab.*$/i, '').trim()
   const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)
-  if (h1) return h1[1].replace(/<[^>]+>/g, '').trim()
-  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  const title = h1
+    ? plainText(h1[1])
+    : slug.replace(/-/g, ' ').replace(/\b\w/g, character => character.toUpperCase())
+
+  return title
+    .replace(/\s*\|\s*92%.*$/i, '')
+    .replace(/\s+Tender Writers?$/i, '')
+    .trim()
 }
 
 function extractMetaDescription(html: string, fallback: string): string {
-  const m = html.match(/<meta name="description" content="([^"]+)"/i)
-  return m ? m[1] : fallback
+  const match = html.match(/<meta name="description" content="([^"]+)"/i)
+  const description = match ? plainText(match[1]) : fallback
+  return description
+    .replace(/\s*92%\s+win rate[^.]*\.?/gi, '')
+    .replace(/\s*across\s+200\+\s+submissions\.?/gi, '')
+    .trim()
 }
 
-/**
- * Strip embedded site chrome from the legacy HTML files. Each file
- * in public/Page Content HTML Files/care-settings/ was written as a
- * standalone page with its own <nav>, <header>, <footer> and
- * <style> blocks. When those get dumped into the React shell via
- * dangerouslySetInnerHTML we end up with a duplicate logo, a
- * duplicate navigation row, a duplicate footer and conflicting
- * styles. This function removes those blocks before we render so
- * the page shows the site chrome (TopBar + Nav + Footer from React)
- * exactly once.
- *
- * Also strips inline <script> blocks for safety and the legacy
- * .sticky-cta bottom strip (replaced by the rail ConsultationCTA).
- */
-function cleanEmbeddedChrome(html: string): string {
-  return (
-    html
-      .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, '')
-      .replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi, '')
-      .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
-      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<div\s+class="sticky-cta"[\s\S]*?<\/div>\s*<\/div>?/gi, '')
-      /* Rewrite legacy WordPress-style relative links from when the
-         HTML files were standalone pages. These were 404ing on the
-         React routes because the routing scheme is different now.
-         The patterns below cover every relative link pattern present
-         in the source files. */
-      .replace(/href="index\.html"/gi, 'href="/care-settings"')
-      .replace(/href="\.\.\/index\.html"/gi, 'href="/"')
-      .replace(/href="\.\.\/care-settings\/index\.html"/gi, 'href="/care-settings"')
-      .replace(/href="\.\.\/case-studies\/index\.html"/gi, 'href="/case-studies"')
-      .replace(/href="\.\.\/services\/index\.html"/gi, 'href="/services"')
-      .replace(/href="\.\.\/blog\/index\.html"/gi, 'href="/blog"')
-      .replace(/href="\.\.\/about\.html"/gi, 'href="/about"')
-      .replace(/href="\.\.\/contact\.html"/gi, 'href="/contact"')
-      .replace(/href="\.\.\/care-settings\/([^"]+?)\.html"/gi, 'href="/care-settings/$1"')
-      .replace(/href="\.\.\/case-studies\/([^"]+?)\.html"/gi, 'href="/case-studies/$1"')
-      /* Legacy root-level case-study + services links (../provider.html) mapped
-         directly to current routes so they resolve without a redirect hop. */
-      .replaceAll('href="../choices-healthcare-essex-live-at-home.html"', 'href="/case-studies/essex-domiciliary-framework-2025"')
-      .replaceAll('href="../livingstone-healthcare-essex-live-at-home.html"', 'href="/case-studies/essex-live-at-home-tier-2-framework"')
-      .replaceAll('href="../inspire-care-outreach-dorset-open-framework.html"', 'href="/case-studies/dorset-care-support-open-framework"')
-      .replaceAll('href="../choices-healthcare-southend-childrens-framework.html"', 'href="/case-studies/southend-childrens-residential-framework"')
-      .replaceAll('href="../havilah-care-bedford-supported-living.html"', 'href="/case-studies/bedford-supported-living-framework"')
-      .replaceAll('href="../nelson-ocean-central-bedfordshire-supported-living.html"', 'href="/case-studies/central-bedfordshire-supported-living"')
-      .replaceAll('href="../rosecare-bradford-mental-health-supported-living.html"', 'href="/case-studies/bradford-mental-health-provider-list"')
-      .replaceAll('href="../alicelyn-sheffield-overnight-short-breaks.html"', 'href="/case-studies/sheffield-dps-overnight-short-breaks"')
-      .replaceAll('href="../in-home-carers-hertfordshire-children-young-people.html"', 'href="/case-studies/hertfordshire-cyp-homecare-framework"')
-      .replaceAll('href="../pcas-childrens-services-procurement.html"', 'href="/case-studies/childrens-services-direct-contract"')
-      .replaceAll('href="../services.html"', 'href="/services"')
-      .replace(/href="\.\.\/services\/([^"]+?)\.html"/gi, 'href="/services/$1"')
-      .replace(/href="\.\.\/blog\/([^"]+?)\.html"/gi, 'href="/blog/$1"')
-      /* Trailing-slash variant of the canonical URL pattern. */
-      .replace(
-        /href="https:\/\/www\.tenderlab\.co\.uk\/care-settings\/([^"\/]+)\/"/gi,
-        'href="/care-settings/$1"'
-      )
-  )
+function visualFor(slug: string): Visual {
+  if (CHILDREN_SLUGS.has(slug)) {
+    return {
+      image: '/images/editorial/tenderlab-childrens-services-hero-v1.png',
+      alt: 'A family-support professional discussing a plan at home, linked to safe accommodation and children’s service evidence',
+      tone: 'peach',
+    }
+  }
+
+  if (CLINICAL_SLUGS.has(slug)) {
+    return {
+      image: '/images/editorial/tenderlab-community-health-hero-v1.png',
+      alt: 'A community nurse supporting a person at home, linked to multidisciplinary review and clinical governance evidence',
+      tone: 'blue',
+    }
+  }
+
+  if (HOUSING_SLUGS.has(slug)) {
+    return {
+      image: '/images/editorial/tenderlab-housing-support-hero-v1.png',
+      alt: 'A tenant and housing support worker discussing support at home, linked to tenancy and outcomes evidence',
+      tone: 'cream',
+    }
+  }
+
+  if (HOME_CARE_SLUGS.has(slug)) {
+    return {
+      image: '/images/editorial/tenderlab-adult-social-care-hero-v1.png',
+      alt: 'A care professional supporting an older person at home, linked to provider records and service evidence',
+      tone: 'yellow',
+    }
+  }
+
+  return {
+    image: '/images/editorial/tenderlab-adult-social-care-hero-v1.png',
+    alt: 'Care delivery and provider evidence connected in an editorial collage',
+    tone: 'cream',
+  }
 }
 
-/**
- * Walk the HTML string, find every <h2>, inject an id if missing,
- * and collect a TOCItem list. Numbering rule: care setting HTML
- * files label their H2s as "Section 01 Title", "Section 02 Title".
- * Extract that printed number so the TOC matches the page even
- * when the file skips a number (extra-care-housing goes 01-10 then
- * 12). Falls back to a sequential counter if no "Section NN"
- * prefix is present.
- */
-function buildTocAndContent(html: string): {
-  tocItems: TOCItem[]
-  processedHtml: string
-} {
-  const tocItems: TOCItem[] = []
-  let fallbackCounter = 0
+function extractArticleSections(html: string): string {
+  const article = html.match(/<article\b[^>]*class="[^"]*\btlp\b[^"]*"[^>]*>([\s\S]*?)<\/article>/i)
+  const source = article ? article[1] : html
+  const firstSection = source.search(/<section\b[^>]*class="[^"]*\bcs-block\b/i)
+  const start = firstSection >= 0 ? firstSection : 0
+  const cta = source.search(/<div\b[^>]*class="[^"]*\bcta-block\b/i)
+  const end = cta > start ? cta : source.length
+
+  return source
+    .slice(start, end)
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/href="index\.html"/gi, 'href="/care-settings"')
+    .replace(/href="\.\.\/care-settings\/([^"]+?)\.html"/gi, 'href="/care-settings/$1"')
+    .replace(/href="\.\.\/case-studies\/([^"]+?)\.html"/gi, 'href="/case-studies/$1"')
+    .replace(/href="\.\.\/services\.html(?:#[^"]*)?"/gi, 'href="/services"')
+    .replace(/href="\.\.\/services\/([^"]+?)\.html"/gi, 'href="/services/$1"')
+    .replace(/href="\.\.\/blog\/([^"]+?)\.html"/gi, 'href="/blog/$1"')
+    .replace(/href="\.\.\/[^"]+?\.html"/gi, 'href="/case-studies"')
+    .replace(
+      /href="https:\/\/www\.tenderlab\.co\.uk\/care-settings\/([^"\/]+)\/?"/gi,
+      'href="/care-settings/$1"'
+    )
+}
+
+function buildTocAndContent(html: string): { tocItems: TocItem[]; processedHtml: string } {
+  const tocItems: TocItem[] = []
+  let counter = 0
 
   const processedHtml = html.replace(
     /<h2([^>]*)>([\s\S]*?)<\/h2>/gi,
-    (_match, rawAttrs: string, inner: string) => {
-      fallbackCounter++
-      const existingIdMatch = rawAttrs.match(/\sid="([^"]+)"/i)
-      const rawText = inner.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+    (_match, rawAttributes: string, inner: string) => {
+      counter += 1
+      const rawText = plainText(inner)
+      if (!rawText) return `<h2${rawAttributes}>${inner}</h2>`
 
-      if (!rawText) {
-        return `<h2${rawAttrs}>${inner}</h2>`
-      }
-
-      const sectionMatch = rawText.match(
-        /^section\s+(\d+)\s*[:.\-–—]?\s*(.+)$/i
-      )
-
-      let num: string
-      let label: string
-      if (sectionMatch) {
-        num = sectionMatch[1].padStart(2, '0')
-        label = sectionMatch[2].trim()
-      } else {
-        num = String(fallbackCounter).padStart(2, '0')
-        label = rawText
-      }
-
-      const anchor = existingIdMatch ? existingIdMatch[1] : `sec-${num}`
+      const section = rawText.match(/^section\s+(\d+)\s*[:.\-–—]?\s*(.+)$/i)
+      const num = (section ? section[1] : String(counter)).padStart(2, '0')
+      const label = section ? section[2].trim() : rawText
+      const existingId = rawAttributes.match(/\sid="([^"]+)"/i)?.[1]
+      const anchor = existingId || `section-${num}`
 
       tocItems.push({ label, num, anchor })
-
-      if (existingIdMatch) {
-        return `<h2${rawAttrs}>${inner}</h2>`
-      }
-      return `<h2${rawAttrs} id="${anchor}">${inner}</h2>`
+      return existingId
+        ? `<h2${rawAttributes}>${inner}</h2>`
+        : `<h2${rawAttributes} id="${anchor}">${inner}</h2>`
     }
   )
 
   return { tocItems, processedHtml }
 }
 
+function relatedCases(slug: string) {
+  const cohort = CASE_STUDY_COHORT[slug]
+  const matches = cohort ? CASE_STUDIES.filter(item => item.category === cohort) : []
+  return (matches.length ? matches : CASE_STUDIES).slice(0, 3)
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const html = await getPageHtml(slug)
   if (!html) return { title: 'Care Setting Not Found | TenderLab' }
-  const title = extractTitle(html, slug)
+
+  const setting = extractTitle(html, slug)
+  const title = `${setting} Tender Writing | TenderLab`
   const description = extractMetaDescription(
     html,
-    `Specialist ${title.toLowerCase()} tender writing for UK care providers. 92% win rate across 200+ submissions.`
+    `Specialist tender writing and bid support for UK ${setting.toLowerCase()} providers.`
   )
   const pathname = `/care-settings/${slug}`
-  const fullTitle = `${title} | TenderLab`
+
   return {
-    title: fullTitle,
+    title,
     description,
     alternates: { canonical: canonicalUrl(pathname) },
-    openGraph: defaultOpenGraph({ title: fullTitle, description, path: pathname }),
-    twitter: defaultTwitter({ title: fullTitle, description }),
+    openGraph: defaultOpenGraph({ title, description, path: pathname }),
+    twitter: defaultTwitter({ title, description }),
   }
 }
 
@@ -271,77 +271,159 @@ export default async function CareSettingPage({ params }: Props) {
   const html = await getPageHtml(slug)
   if (!html) notFound()
 
-  const title = extractTitle(html, slug)
+  const setting = extractTitle(html, slug)
+  const lede = extractClassText(html, 'lede')
+  const position = extractClassText(html, 'pos')
   const description = extractMetaDescription(
     html,
-    `Specialist ${title.toLowerCase()} tender writing for UK care providers.`
+    `Specialist tender writing and bid support for UK ${setting.toLowerCase()} providers.`
   )
-
-  const cleanedHtml = cleanEmbeddedChrome(html)
-  const { tocItems, processedHtml } = buildTocAndContent(cleanedHtml)
-
-  const _heroImage = SETTING_IMAGES[slug]
-  const caseStudyCohort = CASE_STUDY_COHORT[slug]
-
-  /* Right rail recipe for care setting pages:
-       1. Live Tenders (strict cohort filter; widget hides itself when no match)
-       2. Related Case Study (matched by case-study cohort)
-       3. Related Care Settings (cohort-adjacent siblings)
-       4. Consultation CTA (attribution to slug)
-  */
-  const rail = (
-    <>
-      <LiveTendersWidget cohort={slug} limit={3} variant="dark" />
-      <RelatedCaseStudyWidget cohort={caseStudyCohort} />
-      <RelatedCareSettingsWidget currentSlug={slug} />
-      <ConsultationCTA
-        title="Bidding in this setting?"
-        body="Free 20-minute call to scope your bid. 92% win rate across 200+ submissions."
-        attribution={`care-setting:${slug}`}
-      />
-    </>
-  )
+  const intro = position || lede || description
+  const visual = visualFor(slug)
+  const { tocItems, processedHtml } = buildTocAndContent(extractArticleSections(html))
+  const cases = relatedCases(slug)
+  const pathname = `/care-settings/${slug}`
 
   return (
     <main>
-      <Script
-        id={`ld-cs-${slug}-service`}
+      <script
+        id={`ld-care-setting-${slug}-service`}
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             serviceSchema({
-              name: title,
+              name: `${setting} tender writing`,
               description,
-              path: `/care-settings/${slug}`,
+              path: pathname,
             })
           ),
         }}
       />
-      <Script
-        id={`ld-cs-${slug}-faq`}
+      <script
+        id={`ld-care-setting-${slug}-faq`}
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(defaultFaq)) }}
       />
-      <Script
-        id={`ld-cs-${slug}-breadcrumb`}
+      <script
+        id={`ld-care-setting-${slug}-breadcrumb`}
         type="application/ld+json"
-        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             breadcrumbSchema([
               { name: 'Home', path: '/' },
-              { name: 'Care Settings', path: '/care-settings' },
-              { name: title, path: `/care-settings/${slug}` },
+              { name: 'Care settings', path: '/care-settings' },
+              { name: setting, path: pathname },
             ])
           ),
         }}
       />
 
-      <HybridE tocItems={tocItems} rail={rail}>
-        <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
-      </HybridE>
+      <EditorialHero
+        eyebrow="Health and social care tender writing"
+        title={`${setting} tender writing`}
+        intro={intro}
+        image={visual.image}
+        imageAlt={visual.alt}
+        tone={visual.tone}
+        primaryLabel="Ask us to assess a tender"
+        primaryHref="/contact"
+        secondaryLabel="Browse live tenders"
+        secondaryHref="/tenders"
+      />
+
+      <nav className="ep-care-toc" aria-label="On this page">
+        <div className="ep-shell">
+          <span>On this page</span>
+          <div>
+            {tocItems.slice(0, 7).map(item => (
+              <a href={`#${item.anchor}`} key={item.anchor}>
+                <b>{item.num}</b> {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      <section className="ep-section ep-care-content">
+        <div className="ep-shell ep-care-content__grid">
+          <aside>
+            <p className="ep-kicker">The TenderLab approach</p>
+            <h2>Make the service clear enough to score.</h2>
+            <p>
+              We test the buyer’s conditions first, then build each answer from the
+              provider’s real roles, controls, records and outcomes.
+            </p>
+            <Link href="/services" className="ep-link">
+              Compare tender support <span aria-hidden="true">↗</span>
+            </Link>
+          </aside>
+          <article
+            className="ep-care-article"
+            dangerouslySetInnerHTML={{ __html: processedHtml }}
+          />
+        </div>
+      </section>
+
+      <section className="ep-section ep-care-related">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Documented tender results</p>
+              <h2>See how similar requirements were evidenced.</h2>
+            </div>
+            <p>
+              Names and award details are shown only where TenderLab holds
+              documentary evidence suitable for publication.
+            </p>
+          </div>
+          <div className="ep-care-related__grid">
+            {cases.map(item => (
+              <Link href={`/case-studies/${item.slug}`} key={item.slug}>
+                <span>{item.categoryLabel}</span>
+                <h3>{item.council}</h3>
+                <p>{item.result}</p>
+                <strong>Inspect the case study ↗</strong>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <EditorialFaq
+        title={`Questions about ${setting.toLowerCase()} tenders`}
+        items={[
+          {
+            q: 'Will TenderLab confirm whether we should bid?',
+            a: 'Before full writing starts, we review the published conditions, service scope, available evidence, mobilisation position and commercial fit. We explain material gaps and will not recommend proceeding simply to sell writing time.',
+          },
+          {
+            q: 'Does TenderLab guarantee an award?',
+            a: 'No. The buyer controls the evaluation and award. Our role is to improve the quality, traceability and compliance of the submission while giving you a clear view of bid risk.',
+          },
+          {
+            q: 'What should we send for an initial assessment?',
+            a: 'Send the notice or portal link, procurement documents, deadline, intended lots and a short description of your current service. We will tell you what else is needed after reading the pack.',
+          },
+        ]}
+      />
+
+      <section className="ep-section ep-care-cta">
+        <div className="ep-shell ep-care-cta__grid">
+          <div>
+            <p className="ep-kicker">Have a live opportunity?</p>
+            <h2>Check the requirements before committing to the response.</h2>
+          </div>
+          <div>
+            <p>
+              Share the buyer documents. We will identify the mandatory conditions,
+              evidence gaps and practical next step before full tender writing begins.
+            </p>
+            <Link href="/contact" className="ep-button ep-button--primary">
+              Contact TenderLab <span aria-hidden="true">↗</span>
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   )
 }

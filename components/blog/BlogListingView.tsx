@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { BlogPost } from '@/lib/blogs'
 import { formatBlogDate } from '@/lib/blogs'
@@ -11,11 +12,10 @@ type Faq = { q: string; a: string }
 type Props = {
   posts: BlogPost[]
   faqs: Faq[]
-  onOpenPost: (slug: string) => void
-  onPrefetchPost?: (slug: string) => void
+  unavailable?: boolean
 }
 
-export default function BlogListingView({ posts, faqs, onOpenPost, onPrefetchPost }: Props) {
+export default function BlogListingView({ posts, faqs, unavailable = false }: Props) {
   const [category, setCategory] = useState<string>('all')
 
   const categories = useMemo(() => {
@@ -33,27 +33,68 @@ export default function BlogListingView({ posts, faqs, onOpenPost, onPrefetchPos
   return (
     <>
       <header className="blog-v2-hero">
-        <div className="container blog-v2-hero__inner">
-          <p className="blog-v2-hero__kicker">Insights · Analysis · Strategy</p>
-          <h1 className="blog-v2-hero__title">Tender writing intelligence for UK care providers</h1>
-          <p className="blog-v2-hero__sub">
-            Live tender analysis, bid strategy, and commissioning trends from evaluator-trained
-            writers — 92% win rate across 200+ submissions.
-          </p>
-          <div className="blog-v2-hero__stats">
-            <span>
-              <strong>{posts.length}</strong> articles
-            </span>
-            <span className="blog-v2-hero__stats-dot" aria-hidden />
-            <span>Updated from our editorial team</span>
+        <div className="container blog-v2-hero__grid">
+          <div className="blog-v2-hero__inner">
+            <p className="blog-v2-hero__kicker">Tender advice for care providers</p>
+            <h1 className="blog-v2-hero__title">Care tender advice and bid writing guides.</h1>
+            <p className="blog-v2-hero__sub">
+              Understand how to find suitable opportunities, test whether they fit, gather evidence
+              and write responses that evaluators can follow and score.
+            </p>
           </div>
+          <figure className="blog-v2-hero__visual">
+            <Image
+              src="/images/editorial/tenderlab-blog-hero-v1.png"
+              alt="An editor connecting operational care evidence to clear tender guidance"
+              fill
+              priority
+              quality={88}
+              sizes="(max-width: 900px) 100vw, 52vw"
+            />
+            <figcaption>Advice starts with the procurement documents and the evidence a provider can stand behind.</figcaption>
+          </figure>
         </div>
       </header>
 
+      <section className="blog-v2-paths" aria-labelledby="blog-paths-title">
+        <div className="container">
+          <div className="blog-v2-paths__head">
+            <p className="blog-v2-section-label">Choose where to begin</p>
+            <h2 id="blog-paths-title">Use the question you are trying to answer.</h2>
+          </div>
+          <div className="blog-v2-paths__grid">
+            <Link href="/tenders" className="blog-v2-path-card">
+              <span>01</span>
+              <h3>Find a live care tender</h3>
+              <p>Browse current opportunities by care setting and open the official notice.</p>
+            </Link>
+            <Link href="/services/tender-readiness-audit" className="blog-v2-path-card">
+              <span>02</span>
+              <h3>Decide whether to bid</h3>
+              <p>Test eligibility, evidence, mobilisation, capacity and commercial exposure.</p>
+            </Link>
+            <Link href="/services/bid-writing" className="blog-v2-path-card">
+              <span>03</span>
+              <h3>Build a stronger submission</h3>
+              <p>Turn the tender pack and operational evidence into a controlled response.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <div className="blog-v2-listing">
         <div className="container">
-          {posts.length === 0 ? (
-            <p className="blog-v2-empty">No posts published yet. Check back soon.</p>
+          {unavailable ? (
+            <div className="blog-v2-empty" role="status">
+              <strong>Tender advice is temporarily unavailable.</strong>
+              <span>The publishing service could not be reached. Please try this page again shortly, or browse live tenders and services in the meantime.</span>
+              <div className="blog-v2-cta-band__actions">
+                <Link href="/tenders" className="btn btn-primary">Browse live tenders</Link>
+                <Link href="/services" className="btn btn-ghost">View tender services</Link>
+              </div>
+            </div>
+          ) : posts.length === 0 ? (
+            <p className="blog-v2-empty">No articles have been published yet.</p>
           ) : (
             <>
               <div className="blog-v2-toolbar">
@@ -76,28 +117,24 @@ export default function BlogListingView({ posts, faqs, onOpenPost, onPrefetchPos
 
               {featured && (
                 <div className="blog-v2-featured">
-                  <p className="blog-v2-section-label">Latest</p>
+                  <p className="blog-v2-section-label">Latest guidance</p>
                   <BlogCard
                     post={featured}
                     variant="featured"
                     dateLabel={formatBlogDate(featured.publishedAt)}
-                    onOpen={onOpenPost}
-                    onPrefetch={onPrefetchPost}
                   />
                 </div>
               )}
 
               {rest.length > 0 && (
                 <div className="blog-v2-grid-wrap">
-                  <p className="blog-v2-section-label">More to read</p>
+                  <p className="blog-v2-section-label">Browse more tender advice</p>
                   <div className="blog-v2-grid">
                     {rest.map((post) => (
                       <BlogCard
                         key={post.slug}
                         post={post}
                         dateLabel={formatBlogDate(post.publishedAt)}
-                        onOpen={onOpenPost}
-                        onPrefetch={onPrefetchPost}
                       />
                     ))}
                   </div>
@@ -128,12 +165,12 @@ export default function BlogListingView({ posts, faqs, onOpenPost, onPrefetchPos
 
       <section className="blog-v2-cta-band">
         <div className="container blog-v2-cta-band__inner">
-          <p className="blog-v2-cta-band__label">Work with TenderLab</p>
-          <h2>Ready to win your next care sector tender?</h2>
-          <p>Free consultation — honest bid assessment, no sales pressure.</p>
+          <p className="blog-v2-cta-band__label">Have a live opportunity?</p>
+          <h2>Move from general advice to the documents in front of you.</h2>
+          <p>Share the tender pack and deadline so TenderLab can assess the fit and the work required.</p>
           <div className="blog-v2-cta-band__actions">
             <Link href="/contact" className="btn btn-white">
-              Book a free consultation
+              Discuss your tender
             </Link>
             <Link href="/services" className="btn btn-outline-white">
               View services

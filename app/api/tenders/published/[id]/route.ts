@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server'
-
-const PORTAL_API_URL =
-  process.env.PORTAL_API_URL ||
-  process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-  'https://tenderlab-admin-api-quva.onrender.com'
+import { getPortalApiUrl } from '@/lib/portal-api'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -12,10 +8,13 @@ type Params = { params: Promise<{ id: string }> }
 
 /** Proxy curated tender snapshot from the portal (same fields as publish time). */
 export async function GET(_request: Request, { params }: Params) {
+  if (!getPortalApiUrl()) {
+    return NextResponse.json({ error: 'Portal API is not configured' }, { status: 503 })
+  }
   const { id } = await params
   try {
     const res = await fetch(
-      `${PORTAL_API_URL}/api/tenders/published/${encodeURIComponent(id)}`,
+      `${getPortalApiUrl()}/api/tenders/published/${encodeURIComponent(id)}`,
       { headers: { Accept: 'application/json' }, cache: 'no-store' },
     )
     if (res.status === 404) {

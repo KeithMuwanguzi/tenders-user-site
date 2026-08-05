@@ -1,117 +1,186 @@
 import type { Metadata } from 'next'
-import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
-import Link from 'next/link'
 import Image from 'next/image'
-import { fetchReviews } from '@/lib/sheets'
-
+import Link from 'next/link'
+import EditorialHero from '@/components/EditorialHero'
+import { DIRECT_CLIENTS, VERIFIED_CLIENT_REVIEWS } from '@/lib/client-proof'
+import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Client Reviews | TenderLab - Real Results from Real Clients',
+  title: 'Tender Writing Reviews from UK Care Providers | TenderLab',
   description:
-    'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+    'Read independent TenderLab reviews from UK health and social care providers, see selected direct client organisations and understand our documented tender experience.',
   alternates: { canonical: '/reviews' },
   openGraph: defaultOpenGraph({
-    title: 'Client Reviews | TenderLab - Real Results from Real Clients',
-    description: 'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+    title: 'Tender Writing Reviews from UK Care Providers | TenderLab',
+    description:
+      'Independent client reviews, selected direct care-provider engagements and clearly labelled TenderLab performance records.',
     path: '/reviews',
   }),
   twitter: defaultTwitter({
-    title: 'Client Reviews | TenderLab - Real Results from Real Clients',
-    description: 'Real testimonials from UK health and social care providers who have won contracts with TenderLab. 92% win rate across 200+ submissions.',
+    title: 'Tender Writing Reviews from UK Care Providers | TenderLab',
+    description:
+      'Independent client reviews, selected direct care-provider engagements and clearly labelled TenderLab performance records.',
   }),
 }
 
-const STATS = [
-  { num: '92%', label: 'Win Rate' },
-  { num: '200+', label: 'Submissions Delivered' },
-  { num: '10+', label: 'Years in Care Sector' },
-  { num: '£50M+', label: 'Contract Value Won' },
+const record = [
+  { value: '92%', label: 'Recorded historic win rate' },
+  { value: '200+', label: 'Submissions supported' },
+  { value: '£50M+', label: 'Aggregate contract value linked to successful submissions' },
+  { value: '5/5', label: 'Documented top question scores' },
 ]
 
-export default async function ReviewsPage() {
-  const reviews = await fetchReviews()
+function Arrow() {
+  return <span aria-hidden="true">↗</span>
+}
+
+export default function ReviewsPage() {
   return (
-    <main>
+    <main className="ep-page">
+      <EditorialHero
+        eyebrow="Independent client feedback"
+        title="What care providers say after working with TenderLab."
+        intro="These are independently published reviews and named direct-client relationships. The evidence is presented with its source so you can inspect it for yourself."
+        image="/images/editorial/tenderlab-reviews-proof-hero-v1.png"
+        imageAlt="Care-provider leaders beside independent review and documented-results evidence"
+        primaryLabel="Talk to TenderLab"
+        primaryHref="/contact"
+        secondaryLabel="See documented case studies"
+        secondaryHref="/case-studies"
+        tone="peach"
+      />
 
-      {/* ── Hero ── */}
-      <section className="page-hero page-hero--img">
-        <div className="page-hero__bg">
-          <Image
-            src="/images/business-people-video-call-meeting.jpg"
-            alt="TenderLab client reviews"
-            fill
-            priority
-            style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
-          />
-        </div>
-        <div className="page-hero__overlay" />
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="page-hero__title">Reviews</h1>
-          <p className="page-hero__sub">Real results from real clients across UK health and social care.</p>
-        </div>
-      </section>
-
-      {/* ── Stats strip ── */}
-      <section className="reviews-stats">
-        <div className="container">
-          <div className="reviews-stats__grid">
-            {STATS.map((s) => (
-              <div key={s.label} className="reviews-stat">
-                <span className="reviews-stat__num">{s.num}</span>
-                <span className="reviews-stat__label">{s.label}</span>
+      <section className="ep-section ep-review-record">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Experience with the qualification attached</p>
+              <h2>Four different measures, kept separate.</h2>
+            </div>
+            <p>
+              These figures describe historic TenderLab records. They are not a promise that a future bid will win;
+              buyer decisions also depend on eligibility, competition, price and the provider&apos;s underlying service.
+            </p>
+          </div>
+          <div className="ep-review-record__grid">
+            {record.map((item) => (
+              <div key={item.value}>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Testimonials ── */}
-      <section className="svcs-testimonials">
-        <div className="svcs-testimonials__bg" aria-hidden="true" />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="section-header centered" style={{ marginBottom: 52 }}>
-            <p className="section-label" style={{ color: 'rgba(212,56,44,0.85)', justifyContent: 'center' }}>
-              Client Testimonials
-            </p>
-            <h2 style={{ color: '#ffffff', fontSize: 'clamp(28px,4vw,48px)', marginBottom: 14 }}>
-              Real Results from Real Clients
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
-              We help care providers turn average bids into winning submissions. Here&apos;s what our clients say about working with us.
+      <section className="ep-section ep-review-clients">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Direct TenderLab engagements</p>
+              <h2>Selected care providers that have worked directly with us.</h2>
+            </div>
+            <p>
+              Living Plus Care appears first by design. Every tile links to the provider&apos;s own website and is
+              included as a named relationship, not as a claim that every engagement produced the same outcome.
             </p>
           </div>
+          <div className="ep-review-clients__grid">
+            {DIRECT_CLIENTS.map((client) => (
+              <a
+                key={client.name}
+                href={client.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`ep-review-client${client.dark ? ' ep-review-client--dark' : ''}`}
+                aria-label={`Visit ${client.name} website`}
+              >
+                <span className={`ep-review-client__logo ep-review-client__logo--${client.treatment}`}>
+                  <Image src={client.logo} alt={client.name} width={220} height={86} />
+                </span>
+                <span>{client.name}</span>
+                <Arrow />
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="reviews-grid">
-            {reviews.map((t) => (
-              <div key={t.name} className="svcs-testimonial-card">
-                <div className="svcs-testimonial-card__stars">{'★'.repeat(t.rating)}</div>
-                <blockquote className="svcs-testimonial-card__quote">&ldquo;{t.quote}&rdquo;</blockquote>
-                <footer className="svcs-testimonial-card__footer">
-                  <strong className="svcs-testimonial-card__name">{t.name}</strong>
-                  {t.role && <span>{t.role}</span>}
+      <section className="ep-section ep-review-stories">
+        <div className="ep-shell">
+          <div className="ep-section-head ep-section-head--split">
+            <div>
+              <p className="ep-kicker">Published on Trustpilot</p>
+              <h2>Read the experience in the client&apos;s own words.</h2>
+            </div>
+            <p>
+              Longer reviews are given enough room to be readable without turning them into giant display text.
+              The newest review is clearly labelled as a summary until its exact wording is stored here.
+            </p>
+          </div>
+          <div className="ep-review-stories__grid">
+            {VERIFIED_CLIENT_REVIEWS.map((review, index) => (
+              <article
+                key={review.organisation}
+                className={`ep-review-story ep-review-story--${index === 0 ? 'featured' : index === 1 ? 'blue' : 'yellow'}`}
+              >
+                <header>
+                  <div className={`ep-review-story__logo${review.darkLogo ? ' ep-review-story__logo--dark' : ''}`}>
+                    {review.logo ? (
+                      <Image src={review.logo} alt={review.organisation} width={176} height={64} />
+                    ) : (
+                      <span>{review.organisation}</span>
+                    )}
+                  </div>
+                  <div className="ep-review-story__rating" aria-label="Five out of five stars">★★★★★</div>
+                </header>
+                <div className="ep-review-story__copy">
+                  <h3>{review.title}</h3>
+                  {review.quote ? (
+                    <blockquote>
+                      {review.quote.split('\n\n').map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                    </blockquote>
+                  ) : (
+                    <div className="ep-review-story__summary">
+                      <p className="ep-kicker">Review summary</p>
+                      <p>{review.summary}</p>
+                    </div>
+                  )}
+                </div>
+                <footer>
+                  <span><strong>{review.person}</strong>{review.role}</span>
+                  <a href={review.href} target="_blank" rel="noopener noreferrer">
+                    Open {review.sourceLabel.toLowerCase()} <Arrow />
+                  </a>
                 </footer>
-                <span className="svcs-testimonial-card__mark" aria-hidden="true">&rdquo;</span>
-              </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="services-cta">
-        <div className="container">
-          <p className="section-label">Join Our Clients</p>
-          <h2 className="services-cta__headline">Ready to Add Your Win?</h2>
-          <p className="services-cta__sub">
-            Book a free consultation today. We&apos;ll assess your next opportunity and tell you honestly what it takes to win.
-          </p>
-          <div className="services-cta__actions">
-            <Link href="/contact" className="btn btn-white">Get a Free Consultation</Link>
-            <Link href="/services" className="btn btn-outline-white">View All Services</Link>
+      <section className="ep-section ep-review-choice">
+        <div className="ep-shell ep-review-choice__panel">
+          <div>
+            <p className="ep-kicker">The first decision is whether to bid</p>
+            <h2>We do not begin full tender writing until the opportunity has been checked.</h2>
+          </div>
+          <div>
+            <p>
+              TenderLab checks the published participation conditions, your evidence, delivery position and
+              commercial fit first. If a mandatory requirement is not met, we will say so before taking on the
+              writing work. That protects your time and gives suitable opportunities the attention they deserve.
+            </p>
+            <p>
+              This is a professional assessment, not an award guarantee. The contracting authority always makes
+              the final decision.
+            </p>
+            <Link href="/contact" className="ep-button ep-button--primary">
+              Ask us to assess a tender <Arrow />
+            </Link>
           </div>
         </div>
       </section>
-
     </main>
   )
 }

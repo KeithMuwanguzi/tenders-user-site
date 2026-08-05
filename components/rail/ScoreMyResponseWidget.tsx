@@ -5,9 +5,9 @@ export default function ScoreMyResponseWidget() {
     <div className="he-score">
       <div className="he-score__stamp">Free</div>
       <h4>Score My Response</h4>
-      <p>Upload your draft. Get an evaluator-grade score in 72 hours.</p>
-      <Link href="/score-my-response" className="he-score__link">
-        Try it →
+      <p>Paste your draft and review it against the question, scoring criteria and evidence available.</p>
+      <Link href="/services/pre-submission-review" className="he-score__link">
+        Review a response →
       </Link>
     </div>
   )

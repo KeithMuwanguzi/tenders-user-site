@@ -1,17 +1,15 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import {
   SITE_URL,
-  SITE_LEGAL_NAME,
-  COMPANY_NUMBER,
-  BRAND,
   defaultOpenGraph,
   defaultTwitter,
   breadcrumbSchema,
 } from '@/lib/seo'
 import { fetchPublishedTenderById } from '@/lib/published-tenders'
+import { inferCareCategoryLabel } from '@/lib/tender-categories'
 import {
   mergeGovAndPublished,
   type TenderDetail,
@@ -61,6 +59,22 @@ function truncate(text: string, n: number): string {
   return clean.slice(0, n).replace(/\s+\S*$/, '') + '...'
 }
 
+function tenderEnquiryHref(tender: TenderDetail, id: string, placement: string): string {
+  const params = new URLSearchParams({
+    utm_source: 'tender_detail',
+    utm_medium: placement,
+    utm_campaign: 'lead',
+    tenderTitle: tender.title,
+    tenderDescription: truncate(tender.fullDescription || tender.description, 700),
+    tenderUrl: `/tenders/${encodeURIComponent(id)}`,
+  })
+  if (tender.organisation) params.set('authority', tender.organisation)
+  if (tender.deadline) params.set('deadline', tender.deadline.slice(0, 10))
+  const serviceType = tender.category || tender.sector || inferCareCategoryLabel(tender)
+  if (serviceType) params.set('serviceType', serviceType)
+  return `/contact?${params.toString()}#enquiry`
+}
+
 type Props = {
   params: Promise<{ id: string }>
   searchParams: Promise<{ source?: string }>
@@ -81,19 +95,24 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   }
 
   const description = truncate(tender.fullDescription || tender.description, 155)
-  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}?source=${src}`
+  // Parameter-free canonical. Each notice was reachable at both /tenders/<id>
+  // and /tenders/<id>?source=cf, and the canonical pointed at the parameterised
+  // form, so Google indexed the duplicate and crawled every notice twice.
+  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}`
   const isOpen =
     /open/i.test(tender.status) ||
     /active/i.test(tender.status) ||
     tender.status === 'Future'
 
-  const title = `${tender.title} | Live UK Tender | TenderLab`
+  const title = isOpen
+    ? `${tender.title} | Live UK Tender | TenderLab`
+    : `${tender.title} | UK Tender Notice | TenderLab`
 
   return {
     title,
     description: description || `${tender.title}. ${tender.source} notice from ${tender.organisation || 'a UK public sector body'}. Bid writing support from TenderLab.`,
     alternates: { canonical },
-    openGraph: defaultOpenGraph({ title, description, path: `/tenders/${encodeURIComponent(id)}?source=${src}` }),
+    openGraph: defaultOpenGraph({ title, description, path: `/tenders/${encodeURIComponent(id)}` }),
     twitter: defaultTwitter({ title, description }),
     robots: isOpen
       ? { index: true, follow: true }
@@ -112,7 +131,10 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
   }
 
   const urgency = daysUntilDeadline(tender.deadline)
-  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}?source=${src}`
+  // Parameter-free canonical. Each notice was reachable at both /tenders/<id>
+  // and /tenders/<id>?source=cf, and the canonical pointed at the parameterised
+  // form, so Google indexed the duplicate and crawled every notice twice.
+  const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}`
 
   // JSON-LD: GovernmentService (primary intent) + BreadcrumbList
   const govSchema = {
@@ -130,21 +152,20 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
       '@type': 'Audience',
       audienceType: 'UK Health and Social Care Providers',
     },
-    provider: { '@id': `${SITE_URL}/#organization` },
   }
 
   return (
-    <main>
-      <Script
+    <main className="ep-page tender-detail">
+      <script
         id={`ld-tender-${tender.id}-service`}
         type="application/ld+json"
-        strategy="beforeInteractive"
+
         dangerouslySetInnerHTML={{ __html: JSON.stringify(govSchema) }}
       />
-      <Script
+      <script
         id={`ld-tender-${tender.id}-breadcrumb`}
         type="application/ld+json"
-        strategy="beforeInteractive"
+
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             breadcrumbSchema([
@@ -152,7 +173,7 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
               { name: 'Live Tenders', path: '/tenders' },
               {
                 name: tender.title,
-                path: `/tenders/${encodeURIComponent(id)}?source=${src}`,
+                path: `/tenders/${encodeURIComponent(id)}`,
               },
             ])
           ),
@@ -169,33 +190,44 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
         </div>
       </section>
 
-      {/* Header */}
+      {/* Header: title and a documentary procurement image sit together, so a
+          long notice title does not create an empty first viewport. */}
       <section className="tender-detail__header">
-        <div className="container">
-          <div className="tender-detail__badges">
-            <span className="tender-card__status">{tender.status}</span>
-            {urgency && (
-              <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
-                {urgency}
-              </span>
+        <div className="container tender-detail__hero-grid">
+          <div className="tender-detail__hero-copy">
+            <p className="ep-kicker">Official UK procurement notice</p>
+            <div className="tender-detail__badges">
+              <span className="tender-card__status">{tender.status}</span>
+              {urgency && (
+                <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>
+                  {urgency}
+                </span>
+              )}
+            </div>
+            <h1 className="tender-detail__title">{tender.title}</h1>
+            {tender.organisation && (
+              <p className="tender-detail__org">{tender.organisation}</p>
             )}
+            <div className="tender-detail__header-actions">
+              <a
+                href={tender.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ep-button ep-button--primary tender-detail__source-btn"
+              >
+                {officialSourceLinkLabel(tender.source)}
+                <span className="tender-detail__source-btn-icon" aria-hidden>↗</span>
+              </a>
+            </div>
           </div>
-          <h1 className="tender-detail__title">{tender.title}</h1>
-          {tender.organisation && (
-            <p className="tender-detail__org">{tender.organisation}</p>
-          )}
-          <div className="tender-detail__header-actions">
-            <a
-              href={tender.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-ghost tender-detail__source-btn"
-            >
-              {officialSourceLinkLabel(tender.source)}
-              <span className="tender-detail__source-btn-icon" aria-hidden>
-                ↗
-              </span>
-            </a>
+          <div className="tender-detail__hero-media">
+            <Image
+              src="/images/editorial/tenderlab-live-tenders-hero-v1.webp"
+              alt="A public procurement notice being reviewed against care-provider evidence"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 44vw"
+            />
           </div>
         </div>
       </section>
@@ -281,29 +313,39 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
               )}
 
               <div className="tender-detail__section">
-                <h2>How TenderLab can help with this opportunity</h2>
+                <p className="ep-kicker">TenderLab qualification first</p>
+                <h2>Before we write, we establish whether the opportunity fits.</h2>
                 <p>
-                  TenderLab is a specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. Our evaluator-trained writers deliver a {BRAND.winRate} win rate across {BRAND.submissions} submissions. {SITE_LEGAL_NAME} (Companies House {COMPANY_NUMBER}).
+                  We examine the published participation conditions, service scope, geography,
+                  regulatory position, available evidence, mobilisation demands and commercial
+                  exposure with your team. We only confirm a full tender-writing engagement when
+                  the available information supports a responsible view that the provider meets
+                  the tender requirements.
                 </p>
                 <p className="pb-6">
-                  We can help you respond to <strong>{tender.title}</strong> with a specification-mirrored method statement, named operational evidence, and a 72-hour pre-submission review built in.
+                  If <strong>{tender.title}</strong> is a credible fit, we can map the scored
+                  requirements, gather operational evidence and build the response around the
+                  buyer documents. The qualification check and any writing support do not
+                  guarantee an award; the contracting authority makes the final decision.
                 </p>
                 <div className="tender-detail__inline-cta">
                   <Link
-                    href={`/contact?utm_source=tender_detail&utm_medium=inline&utm_campaign=lead&tender=${encodeURIComponent(tender.title.slice(0, 60))}`}
-                    className="btn btn-primary"
+                    href={tenderEnquiryHref(tender, id, 'inline')}
+                    className="ep-button ep-button--primary"
                   >
-                    Get a free 30-minute consultation
+                    Ask us to qualify this tender
                   </Link>
-                  <Link href="/score-my-response" className="btn btn-ghost">
-                    Score My Response
+                  <Link href="/services/tender-readiness-audit" className="ep-link">
+                    See how qualification works
                   </Link>
                 </div>
               </div>
 
               <div className="tender-detail__source-note">
                 <p>
-                  Full statutory notice text and attachments are on the official record.{' '}
+                  TenderLab presents this information to support discovery. Dates, conditions,
+                  amendments, documents and submission instructions on the official record remain
+                  authoritative.{' '}
                   <a href={tender.externalUrl} target="_blank" rel="noopener noreferrer">
                     Open official notice ↗
                   </a>
@@ -451,10 +493,16 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
               )}
 
               <div className="tender-detail__cta-card">
-                <h3>Need Help Bidding?</h3>
-                <p>Our evaluator-trained writers have a {BRAND.winRate} win rate across {BRAND.submissions} health and social care submissions.</p>
-                <Link href="/contact" className="btn btn-primary">Get Help With This Tender</Link>
-                <Link href="/score-my-response" className="btn btn-ghost">Score My Response</Link>
+                <p className="ep-kicker">Considering this opportunity?</p>
+                <h3>Check the requirements before committing your team.</h3>
+                <p>Send the notice or procurement pack. We will start by examining fit, evidence, delivery and commercial exposure.</p>
+                <Link
+                  href={tenderEnquiryHref(tender, id, 'sidebar')}
+                  className="ep-button ep-button--primary"
+                >
+                  Ask about this tender
+                </Link>
+                <Link href="/services/tender-readiness-audit" className="ep-link">How qualification works</Link>
               </div>
             </aside>
           </div>

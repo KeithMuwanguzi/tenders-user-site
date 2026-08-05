@@ -67,15 +67,32 @@ export const CARE_CATEGORY_GROUPS: CareCategoryGroup[] = [
   {
     title: 'Community & housing',
     categories: [
-      { id: 'housing-support', label: 'Housing support', keywords: ['housing support', 'homelessness', 'rough sleeping', 'tenancy support'] },
+      { id: 'housing-support', label: 'Housing support', keywords: ['housing support', 'homelessness', 'rough sleeping', 'tenancy support', 'temporary accommodation'] },
       { id: 'day-services', label: 'Day services', keywords: ['day service', 'day centre', 'day care', 'day opportunity'] },
     ],
+  },
+]
+
+// Combined categories used by dedicated search landing pages. They are not
+// repeated in the interactive sidebar because the individual filters already
+// cover the same inventory there.
+const LANDING_PAGE_CATEGORIES: CareCategory[] = [
+  {
+    id: 'complex-chc',
+    label: 'Complex care and continuing healthcare',
+    keywords: ['complex care', 'continuing healthcare', 'continuing care', 'chc', 'fnc'],
+  },
+  {
+    id: 'residential-nursing',
+    label: 'Residential and nursing care',
+    keywords: ['residential care', 'care home', 'nursing home', 'nursing care', 'registered nursing'],
   },
 ]
 
 export const ALL_CARE_CATEGORIES: CareCategory[] = [
   ALL_CARE_CATEGORY,
   ...CARE_CATEGORY_GROUPS.flatMap((g) => g.categories),
+  ...LANDING_PAGE_CATEGORIES,
 ]
 
 export function getCareCategoryById(id: string): CareCategory | undefined {
@@ -112,4 +129,17 @@ export function filterTendersByCareCategory<T extends Tender & { category?: stri
 ): T[] {
   if (!categoryId) return tenders
   return tenders.filter((t) => tenderMatchesCareCategory(t, categoryId))
+}
+
+export function inferCareCategoryLabel(
+  tender: Pick<Tender, 'title' | 'description'> &
+    Partial<Pick<Tender, 'organisation' | 'location'>> & {
+    category?: string | null
+  },
+): string | null {
+  if (tender.category?.trim()) return tender.category.trim()
+  const match = CARE_CATEGORY_GROUPS
+    .flatMap((group) => group.categories)
+    .find((category) => tenderMatchesCareCategory(tender as Tender, category.id))
+  return match?.label ?? null
 }

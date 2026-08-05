@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server'
-
-const PORTAL_API_URL =
-  process.env.PORTAL_API_URL ||
-  process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-  'https://tenderlab-admin-api-quva.onrender.com'
+import { getPortalApiUrl } from '@/lib/portal-api'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -11,12 +7,21 @@ export const dynamic = 'force-dynamic'
 type Params = { params: Promise<{ slug: string }> }
 
 export async function GET(_request: Request, { params }: Params) {
+  if (!getPortalApiUrl()) {
+    return NextResponse.json({ error: 'Portal API is not configured' }, { status: 503 })
+  }
   const { slug } = await params
   try {
-    const res = await fetch(
-      `${PORTAL_API_URL}/api/blogs/published/${encodeURIComponent(slug)}`,
+    let res = await fetch(
+      `${getPortalApiUrl()}/api/blogs/published/${encodeURIComponent(slug)}`,
       { headers: { Accept: 'application/json' }, cache: 'no-store' },
     )
+    if (res.status === 404 && /^https?:\/\//.test(getPortalApiUrl())) {
+      res = await fetch(
+        `${getPortalApiUrl()}/api/blogs/${encodeURIComponent(slug)}`,
+        { headers: { Accept: 'application/json' }, cache: 'no-store' },
+      )
+    }
     if (res.status === 404) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }

@@ -24,9 +24,9 @@ import Link from 'next/link'
    new value. For now we stay within the existing 34px envelope.
    ============================================================ */
 
-const RED = '#E63946'
+const RED = '#B52E24'
 const WHITE_92 = 'rgba(255,255,255,0.92)'
-const PILL_BG = 'rgba(255,255,255,0.18)'
+const PILL_BG = 'rgba(24,35,50,0.22)'
 const PILL_BORDER = 'rgba(255,255,255,0.34)'
 const GOLD = '#FFD166'
 
@@ -207,7 +207,7 @@ export default function TopBar() {
             rel="noopener noreferrer"
             style={pillStyle}
             title="Read our Google reviews"
-            aria-label="Read our reviews on Google"
+            aria-label="Read our Google reviews"
           >
             <span style={starsStyle} aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
             <span>Read our Google reviews</span>

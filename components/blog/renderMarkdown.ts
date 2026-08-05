@@ -20,10 +20,35 @@ export function renderMarkdownSafe(md: string): string {
       inPara = false
     }
   }
+  const safeHref = (value: string) => {
+    const raw = value.replace(/&amp;/g, '&').trim()
+    if (raw.startsWith('#') || raw.startsWith('/') || raw.startsWith('./') || raw.startsWith('../')) {
+      return raw.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    }
+
+    try {
+      const url = new URL(raw)
+      const protocol = url.protocol.toLowerCase()
+      if (!['http:', 'https:', 'mailto:', 'tel:'].includes(protocol)) return '#'
+
+      if (
+        (protocol === 'http:' || protocol === 'https:') &&
+        ['tenderlab.co.uk', 'www.tenderlab.co.uk'].includes(url.hostname.toLowerCase())
+      ) {
+        return `${url.pathname}${url.search}${url.hash}`
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+      }
+
+      return url.href.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    } catch {
+      return '#'
+    }
+  }
   const inline = (s: string) => {
     let t = esc(s)
     t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, txt, url) => {
-      const safe = String(url).replace(/&amp;/g, '&').replace(/"/g, '%22')
+      const safe = safeHref(String(url))
       return `<a href="${safe}" rel="noopener">${txt}</a>`
     })
     t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')

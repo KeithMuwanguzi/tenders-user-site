@@ -1,22 +1,17 @@
 'use client'
 
-import { useEffect, useCallback, useMemo, useState, useDeferredValue } from 'react'
+import { useEffect, useCallback, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Link from 'next/link'
 import type { RootState, AppDispatch } from '@/store'
-import { fetchTenders, setCategory, setSource, setPage, clearCache } from '@/store/tendersSlice'
+import { fetchTenders, setCategory, setSource, setPage, clearCache, type Tender } from '@/store/tendersSlice'
 import {
   ALL_CARE_CATEGORY,
   CARE_CATEGORY_GROUPS,
   filterTendersByCareCategory,
   getCareCategoryById,
+  inferCareCategoryLabel,
 } from '@/lib/tender-categories'
-import {
-  EMPTY_TENDER_SEARCH,
-  filterTendersBySearch,
-  hasActiveTenderSearch,
-  type TenderSearchFilters,
-} from '@/lib/tender-search'
 import {
   officialNoticeUrl,
   officialSourceLinkLabel,
@@ -29,16 +24,53 @@ const SOURCES = [
   { label: 'Above-threshold notices', value: 'ft' },
 ] as const
 
-const ITEMS_PER_PAGE = 10
+const DEFAULT_ITEMS_PER_PAGE = 15
 
-export default function TendersClient() {
+function buildTenderEnquiryHref(tender: {
+  id: string
+  title: string
+  description: string
+  organisation?: string | null
+  deadline?: string | null
+  category?: string | null
+  location?: string | null
+}) {
+  const params = new URLSearchParams({
+    utm_source: 'tender_detail',
+    utm_medium: 'listing',
+    utm_campaign: 'lead',
+    tenderTitle: tender.title,
+    tenderDescription: tender.description.slice(0, 600),
+    tenderUrl: `/tenders/${encodeURIComponent(tender.id)}`,
+  })
+  if (tender.organisation) params.set('authority', tender.organisation)
+  if (tender.deadline) params.set('deadline', tender.deadline.slice(0, 10))
+  const serviceType = inferCareCategoryLabel(tender)
+  if (serviceType) params.set('serviceType', serviceType)
+  return `/contact?${params.toString()}#enquiry`
+}
+
+export default function TendersClient({
+  initialTenders = [],
+  initialCategory,
+}: {
+  initialTenders?: Tender[]
+  initialCategory?: string
+}) {
   const dispatch = useDispatch<AppDispatch>()
   const { items: allTenders, loading, error, category, source, page, lastFetchKey, newCount } =
     useSelector((state: RootState) => state.tenders)
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [search, setSearch] = useState<TenderSearchFilters>(EMPTY_TENDER_SEARCH)
-  const deferredSearch = useDeferredValue(search)
+  const [searchDraft, setSearchDraft] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState<'newest' | 'deadline'>('newest')
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE)
+  const availableTenders = allTenders.length > 0 ? allTenders : initialTenders
+
+  useEffect(() => {
+    if (initialCategory) dispatch(setCategory(initialCategory))
+  }, [dispatch, initialCategory])
 
   useEffect(() => {
     if (lastFetchKey !== source) {
@@ -47,11 +79,33 @@ export default function TendersClient() {
   }, [dispatch, source, lastFetchKey])
 
   const filteredTenders = useMemo(() => {
-    const byCare = filterTendersByCareCategory(allTenders, category)
-    return filterTendersBySearch(byCare, deferredSearch)
-  }, [allTenders, category, deferredSearch])
+    const categoryMatches = filterTendersByCareCategory(availableTenders, category)
+    const query = searchQuery.trim().toLowerCase()
+    const searched = query
+      ? categoryMatches.filter((tender) =>
+          [
+            tender.title,
+            tender.description,
+            tender.organisation,
+            tender.location,
+            tender.category,
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase()
+            .includes(query),
+        )
+      : categoryMatches
 
-  const searchActive = hasActiveTenderSearch(deferredSearch)
+    return [...searched].sort((a, b) => {
+      if (sortBy === 'deadline') {
+        const aTime = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER
+        const bTime = b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER
+        return aTime - bTime
+      }
+      return new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
+    })
+  }, [availableTenders, category, searchQuery, sortBy])
 
   const activeCategoryLabel =
     getCareCategoryById(category)?.label ?? ALL_CARE_CATEGORY.label
@@ -64,19 +118,6 @@ export default function TendersClient() {
   const handleCategorySelect = (id: string) => {
     dispatch(setCategory(id))
     setMobileFiltersOpen(false)
-  }
-
-  const updateSearch = <K extends keyof TenderSearchFilters>(
-    key: K,
-    value: TenderSearchFilters[K],
-  ) => {
-    setSearch((prev) => ({ ...prev, [key]: value }))
-    dispatch(setPage(1))
-  }
-
-  const clearSearch = () => {
-    setSearch(EMPTY_TENDER_SEARCH)
-    dispatch(setPage(1))
   }
 
   const formatDate = (dateStr: string) => {
@@ -102,10 +143,10 @@ export default function TendersClient() {
     return `${diff} days left`
   }
 
-  const totalPages = Math.max(1, Math.ceil(filteredTenders.length / ITEMS_PER_PAGE))
+  const totalPages = Math.max(1, Math.ceil(filteredTenders.length / itemsPerPage))
   const pageTenders = filteredTenders.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE,
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage,
   )
 
   const sidebarFilters = (
@@ -117,7 +158,7 @@ export default function TendersClient() {
       >
         {ALL_CARE_CATEGORY.label}
         {!loading && category === '' && (
-          <span className="tenders-sidebar__count">{allTenders.length}</span>
+          <span className="tenders-sidebar__count">{availableTenders.length}</span>
         )}
       </button>
 
@@ -126,10 +167,7 @@ export default function TendersClient() {
           <p className="tenders-sidebar__group-title">{group.title}</p>
           <ul className="tenders-sidebar__list">
             {group.categories.map((cat) => {
-              const count = filterTendersBySearch(
-                filterTendersByCareCategory(allTenders, cat.id),
-                deferredSearch,
-              ).length
+              const count = filterTendersByCareCategory(availableTenders, cat.id).length
               return (
                 <li key={cat.id}>
                   <button
@@ -154,6 +192,7 @@ export default function TendersClient() {
   return (
     <section className="tenders-layout">
       <div className="container tenders-layout__container">
+        {/* Mobile: compact filter trigger */}
         <div className="tenders-layout__mobile-bar">
           <button
             type="button"
@@ -194,74 +233,58 @@ export default function TendersClient() {
         </aside>
 
         <div className="tenders-main">
-          <div className="tenders-search" role="search" aria-label="Search live tenders">
-            <div className="tenders-search__head">
-              <h2 className="tenders-search__title">Search tenders</h2>
-              <p className="tenders-search__hint">Results update as you type — no Apply needed.</p>
-            </div>
-
-            <label className="tenders-search__field tenders-search__field--keyword">
-              <span className="tenders-search__label">Keyword</span>
-              <input
-                type="search"
-                className="tenders-search__input"
-                placeholder="e.g. domiciliary care, nursing, reablement…"
-                value={search.keyword}
-                onChange={(e) => updateSearch('keyword', e.target.value)}
-                autoComplete="off"
-              />
-            </label>
-
-            <div className="tenders-search__grid">
-              <label className="tenders-search__field">
-                <span className="tenders-search__label">Location</span>
+          <form
+            className="tenders-discovery"
+            role="search"
+            onSubmit={(event) => {
+              event.preventDefault()
+              setSearchQuery(searchDraft)
+              dispatch(setPage(1))
+            }}
+          >
+            <div className="tenders-discovery__search">
+              <label htmlFor="tender-search">Search live tenders</label>
+              <div className="tenders-discovery__search-row">
                 <input
+                  id="tender-search"
                   type="search"
-                  className="tenders-search__input"
-                  placeholder="Council, region, postcode…"
-                  value={search.location}
-                  onChange={(e) => updateSearch('location', e.target.value)}
-                  autoComplete="off"
+                  value={searchDraft}
+                  onChange={(event) => setSearchDraft(event.target.value)}
+                  placeholder="Try domiciliary care, supported living, council or region"
                 />
-              </label>
-              <label className="tenders-search__field">
-                <span className="tenders-search__label">Buying authority</span>
-                <input
-                  type="search"
-                  className="tenders-search__input"
-                  placeholder="Council, NHS trust, ICB…"
-                  value={search.organisation}
-                  onChange={(e) => updateSearch('organisation', e.target.value)}
-                  autoComplete="off"
-                />
-              </label>
-              <label className="tenders-search__field">
-                <span className="tenders-search__label">Notice ID or CPV</span>
-                <input
-                  type="search"
-                  className="tenders-search__input"
-                  placeholder="e.g. ocds-… or 85300000"
-                  value={search.noticeOrCpv}
-                  onChange={(e) => updateSearch('noticeOrCpv', e.target.value)}
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-              </label>
+                <button type="submit">Search</button>
+              </div>
             </div>
-
-            <div className="tenders-search__footer">
-              <p className="tenders-search__status" aria-live="polite">
-                {!loading && searchActive
-                  ? `${filteredTenders.length} match${filteredTenders.length === 1 ? '' : 'es'} in this list`
-                  : 'Search title, description, authority, location, and notice details'}
-              </p>
-              {searchActive && (
-                <button type="button" className="tenders-search__clear" onClick={clearSearch}>
-                  Clear search
-                </button>
-              )}
+            <div className="tenders-discovery__control">
+              <label htmlFor="tender-sort">Order</label>
+              <select
+                id="tender-sort"
+                value={sortBy}
+                onChange={(event) => {
+                  setSortBy(event.target.value as 'newest' | 'deadline')
+                  dispatch(setPage(1))
+                }}
+              >
+                <option value="newest">Most recently published</option>
+                <option value="deadline">Closing soon</option>
+              </select>
             </div>
-          </div>
+            <div className="tenders-discovery__control">
+              <label htmlFor="tender-page-size">Show</label>
+              <select
+                id="tender-page-size"
+                value={itemsPerPage}
+                onChange={(event) => {
+                  setItemsPerPage(Number(event.target.value))
+                  dispatch(setPage(1))
+                }}
+              >
+                {[15, 30, 60, 150].map((size) => (
+                  <option key={size} value={size}>{size} per page</option>
+                ))}
+              </select>
+            </div>
+          </form>
 
           <div className="tenders-main__toolbar">
             <div className="tenders-main__sources" role="group" aria-label="Data source">
@@ -328,29 +351,18 @@ export default function TendersClient() {
           {!loading && !error && filteredTenders.length === 0 && (
             <div className="tenders-list__empty">
               <p>
-                {searchActive
-                  ? 'No tenders match your search. Try fewer words or clear a field.'
-                  : category
-                    ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
-                    : 'No active tenders published yet. Check back soon.'}
+                {category
+                  ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
+                  : 'No active tenders published yet. Check back soon.'}
               </p>
-              {(searchActive || category) && (
-                <div className="tenders-list__empty-actions">
-                  {searchActive && (
-                    <button type="button" className="btn btn-ghost" onClick={clearSearch}>
-                      Clear search
-                    </button>
-                  )}
-                  {category && (
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
-                      onClick={() => handleCategorySelect('')}
-                    >
-                      Show all care settings
-                    </button>
-                  )}
-                </div>
+              {category && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => handleCategorySelect('')}
+                >
+                  Show all care settings
+                </button>
               )}
             </div>
           )}
@@ -364,12 +376,11 @@ export default function TendersClient() {
                     {' · '}
                   </>
                 ) : null}
-                {searchActive ? 'Filtered · ' : ''}
-                Newest first
+                {sortBy === 'deadline' ? 'Closing soon' : 'Newest first'}
                 {newCount > 0 ? ` · ${newCount} new since your last refresh` : ''}
                 {' · '}
-                Showing {(page - 1) * ITEMS_PER_PAGE + 1}–
-                {Math.min(page * ITEMS_PER_PAGE, filteredTenders.length)} of{' '}
+                Showing {(page - 1) * itemsPerPage + 1}–
+                {Math.min(page * itemsPerPage, filteredTenders.length)} of{' '}
                 {filteredTenders.length}{' '}
                 {filteredTenders.length === 1 ? 'opportunity' : 'opportunities'}
               </div>
@@ -379,7 +390,7 @@ export default function TendersClient() {
                   const urgency = daysUntilDeadline(tender.deadline)
                   return (
                     <article
-                      key={`${tender.id}-${(page - 1) * ITEMS_PER_PAGE + idx}`}
+                      key={`${tender.id}-${(page - 1) * itemsPerPage + idx}`}
                       className={`tender-card${tender.isNew ? ' tender-card--new' : ''}`}
                     >
                       <div className="tender-card__header">
@@ -436,7 +447,7 @@ export default function TendersClient() {
                           href={`/tenders/${encodeURIComponent(tender.id)}?source=${sourceParamFromLabel(tender.source)}`}
                           className="btn btn-primary"
                         >
-                          View details
+                          Read the full tender
                         </Link>
                         <a
                           href={officialNoticeUrl(
@@ -452,10 +463,10 @@ export default function TendersClient() {
                           <span aria-hidden> ↗</span>
                         </a>
                         <Link
-                          href="/contact?utm_source=tenders&utm_medium=card&utm_campaign=lead"
+                          href={buildTenderEnquiryHref(tender)}
                           className="btn btn-ghost"
                         >
-                          Need help with this bid?
+                          Ask about this tender
                         </Link>
                       </div>
                     </article>

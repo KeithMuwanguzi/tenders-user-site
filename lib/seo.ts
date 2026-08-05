@@ -6,17 +6,19 @@ export const SITE_URL = 'https://www.tenderlab.co.uk'
 export const SITE_NAME = 'TenderLab'
 export const SITE_LEGAL_NAME = 'TenderLab Ltd'
 export const COMPANY_NUMBER = '17184263'
-export const OG_IMAGE = `${SITE_URL}/og-image.png`
+export const OG_IMAGE = `${SITE_URL}/images/business-people-video-call-meeting.jpg`
 export const LOGO_URL = `${SITE_URL}/images/Logo/tenderlab-logo-transparent.png`
 
 export const BRAND = {
   winRate: '92%',
   submissions: '200+',
+  contractValue: '£50M+',
+  topScore: '5/5',
   yearsCareSector: '10+',
   clientSatisfaction: '98%',
   positioning: 'Evaluator-trained writers with care sector expertise.',
   description:
-    'We help UK care providers win council and NHS contracts. Framework applications, tender bids and pre-submission reviews. 92% win rate across 200+ submissions.',
+    'Specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. 92% win rate across 200+ local authority and NHS submissions.',
 }
 
 // Verified off-domain profiles. Single source of truth for the Organization
@@ -82,11 +84,10 @@ export function defaultTwitter(args: {
 // This is what produces the consolidated brand panel for "TenderLab" searches.
 export const organizationSchema = {
   '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
+  '@type': 'Organization',
   '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   legalName: SITE_LEGAL_NAME,
-  taxID: COMPANY_NUMBER,
   identifier: {
     '@type': 'PropertyValue',
     propertyID: 'UK Companies House number',
@@ -97,8 +98,8 @@ export const organizationSchema = {
     '@type': 'ImageObject',
     '@id': `${SITE_URL}/#logo`,
     url: LOGO_URL,
-    width: 600,
-    height: 200,
+    width: 1024,
+    height: 1024,
     caption: SITE_NAME,
   },
   image: { '@id': `${SITE_URL}/#logo` },
@@ -164,20 +165,44 @@ export function serviceSchema(args: {
   path: string
   serviceType?: string
   priceRange?: string
+  audienceType?: string
 }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
+    '@id': `${canonicalUrl(args.path)}#service`,
     serviceType: args.serviceType ?? 'Tender Writing',
     name: args.name,
     description: args.description,
     url: canonicalUrl(args.path),
     provider: { '@id': `${SITE_URL}/#organization` },
+    isPartOf: { '@id': `${SITE_URL}/#website` },
     areaServed: { '@type': 'Country', name: 'United Kingdom' },
     audience: {
       '@type': 'BusinessAudience',
-      audienceType: 'UK health and social care providers',
+      audienceType: args.audienceType ?? 'UK health and social care providers',
     },
+  }
+}
+
+export function webPageSchema(args: {
+  name: string
+  description: string
+  path: string
+  type?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage'
+  about?: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': args.type ?? 'WebPage',
+    '@id': `${canonicalUrl(args.path)}#webpage`,
+    url: canonicalUrl(args.path),
+    name: args.name,
+    description: args.description,
+    isPartOf: { '@id': `${SITE_URL}/#website` },
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    about: args.about ? { '@type': 'Thing', name: args.about } : undefined,
+    inLanguage: 'en-GB',
   }
 }
 
@@ -190,10 +215,12 @@ export function articleSchema(args: {
   image?: string
   authorName?: string
   category?: string
+  type?: 'Article' | 'BlogPosting'
 }) {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': args.type ?? 'Article',
+    '@id': `${canonicalUrl(args.path)}#article`,
     headline: args.headline,
     description: args.description,
     url: canonicalUrl(args.path),
@@ -224,40 +251,54 @@ export function faqSchema(items: { question: string; answer: string }[]) {
   }
 }
 
-// Default FAQ used on every care setting and service page so every page hits
-// the FAQ schema requirement. Pages may override with topic-specific FAQs.
-// Six care-sector-specific questions that name regulators, statutory frameworks
-// and concrete commercial terms so the schema reads as written by a UK care
-// sector specialist rather than a generalist agency.
+export function careSettingFaq({ label }: { label: string }) {
+  return [
+    {
+      question: `Can TenderLab help with ${label} tenders across the UK?`,
+      answer: `Yes. TenderLab supports UK providers responding to ${label} procurements from councils, NHS organisations and other public bodies. The tender documents, eligibility and service model determine the exact support required.`,
+    },
+    {
+      question: `What evidence is important in a ${label} tender?`,
+      answer: `The evidence depends on the specification and scoring method. Common requirements include safeguarding, workforce competence, mobilisation, quality assurance, outcomes, partnership working and clear records that prove how the proposed service operates.`,
+    },
+    {
+      question: 'Will TenderLab check whether the opportunity is suitable before writing?',
+      answer: 'Yes. We examine the published conditions, available evidence, delivery model, mobilisation and commercial position before recommending full bid-writing support. We do not guarantee an award.',
+    },
+  ]
+}
+
+// Reusable buying questions. Only emit FAQ schema when these answers are also
+// visible on the page. Topic-specific questions are preferred where available.
 export const defaultFaq = [
   {
     question: 'What is your win rate on UK care sector tenders?',
     answer:
-      '92% across 200+ submissions for local authority and NHS care contracts. The biggest single lift is our 72-hour pre-submission review by an evaluator-perspective writer who has not drafted the bid.',
+      'TenderLab records a 92% historic win rate and has separately supported more than 200 submissions. The two figures should not be read as the same measurement. An award can never be guaranteed because the provider, opportunity, evidence, price and evaluation all affect the result.',
   },
   {
     question: 'Which care sectors do you write tenders for?',
     answer:
-      'UK health and social care exclusively. CQC-regulated adult social care (domiciliary, supported living, residential, nursing, extra care, complex care, CHC). Ofsted-regulated children\'s residential and 16-17 looked-after children supported accommodation under the Supported Accommodation (England) Regulations 2023. Non-regulated housing-related support and 18+ care leavers under Care Act 2014.',
+      'TenderLab supports adult social care, children\'s services, housing support and community health providers. This includes domiciliary care, supported living, supported accommodation, residential and nursing care, complex care, mental health, fostering, leaving care and related services.',
   },
   {
-    question: 'How do you handle regulator-correct framing in bids?',
+    question: 'What does TenderLab need before starting a bid?',
     answer:
-      'We never mix CQC, Ofsted and non-regulated language in a single response. Adult safeguarding wording is precise: the local authority leads any Care Act 2014 Section 42 enquiry, the provider supports. Mental Capacity Act 2005 references use the 5 statutory principles and 2-stage capacity test, never the incorrect 4-part formulations that AI tools commonly produce.',
+      'We normally need the complete tender pack, the submission deadline, the provider\'s policies and operational evidence, and access to people who understand delivery. We review these before confirming scope and timescales.',
   },
   {
     question: 'Do you write tenders for providers across the UK?',
     answer:
-      'Yes. England, Scotland, Wales and Northern Ireland. Delivery is remote with site visits arranged where mobilisation requires it. We adapt regulator framing to the devolved nation (Care Inspectorate Scotland, Care Inspectorate Wales, RQIA Northern Ireland) where the cohort sits outside the CQC remit.',
+      'Yes. TenderLab supports health and social care providers across the United Kingdom and adapts each response to the relevant commissioner, service, procurement documents and regulatory context.',
   },
   {
-    question: 'How quickly can you turn around a bid?',
+    question: 'Can TenderLab help decide whether a tender is suitable?',
     answer:
-      'Full method-statement bid: 3 to 4 weeks standard. 72-hour pre-submission review when the draft already exists. Bid Team Coaching: 1-to-1 or small-group sessions structured around CQC, Ofsted, Care Act 2014 Section 42 and Mental Capacity Act 5 principles.',
+      'Yes. We can examine the published conditions, available evidence, delivery model, mobilisation requirements and commercial position before writing begins. The purpose is to identify fit, gaps and material risks before the provider commits significant time.',
   },
   {
-    question: 'How much do your services cost?',
+    question: 'What results has TenderLab achieved?',
     answer:
-      'Bid writing from £3,000 per submission depending on scope. Pre-Submission Review from £950. Tender Retainer from £4,500 per month. Free 30-minute consultation to scope before any engagement. TenderLab Ltd, Companies House 17184263.',
+      'TenderLab has supported more than 200 submissions, records a 92% win rate, has contributed to client awards with a combined value above £50 million and has achieved evaluator scores of 5 out of 5. Results vary by opportunity and provider.',
   },
 ]
