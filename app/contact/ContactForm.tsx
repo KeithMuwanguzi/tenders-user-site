@@ -3,14 +3,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 const SERVICE_OPTIONS = [
+  'Bid Viability / Tender Qualification',
   'Bid Writing',
   'Pre-Submission Review',
   'Lost Bid Debrief',
   'Tender Readiness Audit',
   'Tender Training / Bid Team Coaching',
-  'Pipeline Tracking',
   'Mobilisation Support',
-  'Tender Retainer',
+  'Retained Tender Support',
 ]
 
 const HOW_OPTIONS = [
@@ -134,7 +134,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
       <div className="cf-sent">
         <div className="cf-sent__icon" aria-hidden="true">✓</div>
         <h3>Enquiry received</h3>
-        <p>Thank you — we&apos;ll review your enquiry and respond within one working day. You can also reach us at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
+        <p>Thank you — we&apos;ll review your enquiry and respond as soon as we can. You can also reach us at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
       </div>
     )
   }

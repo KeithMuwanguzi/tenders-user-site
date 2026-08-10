@@ -335,7 +335,7 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                   >
                     Ask us to qualify this tender
                   </Link>
-                  <Link href="/services/tender-readiness-audit" className="ep-link">
+                  <Link href="/services/bid-viability" className="ep-link">
                     See how qualification works
                   </Link>
                 </div>
@@ -502,7 +502,7 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                 >
                   Ask about this tender
                 </Link>
-                <Link href="/services/tender-readiness-audit" className="ep-link">How qualification works</Link>
+                <Link href="/services/bid-viability" className="ep-link">How qualification works</Link>
               </div>
             </aside>
           </div>

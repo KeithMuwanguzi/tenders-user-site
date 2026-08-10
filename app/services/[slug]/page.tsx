@@ -13,36 +13,36 @@ import {
 } from '@/lib/seo'
 
 const SERVICE_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
+  'bid-viability': {
+    src: '/images/editorial/tenderlab-readiness-audit-hero-v1.webp',
+    alt: 'A care provider and tender specialist checking published requirements, evidence, delivery and commercial fit before deciding to bid',
+  },
   'bid-writing': {
-    src: '/images/editorial/tenderlab-bid-writing-hero-v1.png',
+    src: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
     alt: 'A care provider and tender specialist connecting operational evidence to a health and social care tender response',
   },
   'pre-submission-review': {
-    src: '/images/editorial/tenderlab-pre-submission-review-hero-v1.png',
+    src: '/images/editorial/tenderlab-pre-submission-review-hero-v1.webp',
     alt: 'A tender reviewer checking a care provider response against the published question, evidence and scoring rubric',
   },
   'lost-bid-debrief': {
-    src: '/images/editorial/tenderlab-lost-bid-debrief-hero-v1.png',
+    src: '/images/editorial/tenderlab-lost-bid-debrief-hero-v1.webp',
     alt: 'A care provider leadership team turning evaluator feedback into an evidence-led improvement plan',
   },
   'tender-readiness-audit': {
-    src: '/images/editorial/tenderlab-readiness-audit-hero-v1.png',
+    src: '/images/editorial/tenderlab-readiness-audit-hero-v1.webp',
     alt: 'A care provider checking mandatory tender requirements, available evidence and readiness actions before bidding',
   },
   'tender-training': {
-    src: '/images/editorial/tenderlab-tender-training-hero-v1.png',
+    src: '/images/editorial/tenderlab-tender-training-hero-v1.webp',
     alt: 'A care provider team learning tender analysis, evidence selection and evaluator-aligned answer structure in a live workshop',
   },
-  'pipeline-tracking': {
-    src: '/images/editorial/tenderlab-pipeline-tracking-hero-v1.png',
-    alt: 'A care provider reviewing public tender opportunities for service, geography, capacity and deadline fit',
-  },
   'mobilisation-support': {
-    src: '/images/editorial/tenderlab-mobilisation-support-hero-v1.png',
+    src: '/images/editorial/tenderlab-mobilisation-support-hero-v1.webp',
     alt: 'A care provider coordinating people, training, policies and systems from contract award to day-one service delivery',
   },
   'tender-retainer': {
-    src: '/images/editorial/tenderlab-retainer-hero-v1.png',
+    src: '/images/editorial/tenderlab-retainer-hero-v1.webp',
     alt: 'A care provider and tender adviser managing a year-round pipeline, evidence library, reviews and tender strategy',
   },
 }
@@ -75,7 +75,7 @@ function makeFaq(service: ServiceData) {
         }]
       : [{
           q: 'Can this service be combined with other TenderLab support?',
-          a: 'Yes. The scope can combine readiness, complete writing, independent review, tender training, pipeline tracking or mobilisation support when those stages are genuinely required.',
+          a: 'Yes. The scope can combine qualification, readiness, complete writing, independent review, tender training, retained support or mobilisation support when those stages are genuinely required.',
         }]),
   ]
 }
@@ -129,6 +129,7 @@ export default async function ServicePage({
   const hero = SERVICE_HERO_IMAGES[slug] ?? SERVICE_HERO_IMAGES['bid-writing']
   const serviceIndex = SERVICES_DATA.findIndex((item) => item.slug === slug)
   const faq = makeFaq(service)
+  const contactHref = `/contact?serviceType=${encodeURIComponent(service.title)}#enquiry`
 
   const structuredData = [
     serviceSchema({
@@ -163,7 +164,7 @@ export default async function ServicePage({
         image={hero.src}
         imageAlt={hero.alt}
         primaryLabel="Discuss this service"
-        primaryHref="/contact"
+        primaryHref={contactHref}
         secondaryLabel="Compare all services"
         secondaryHref="/services"
         tone={SERVICE_TONES[serviceIndex % SERVICE_TONES.length]}
@@ -184,7 +185,7 @@ export default async function ServicePage({
                 <li key={item}><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>
               ))}
             </ul>
-            <Link href="/contact" className="ep-button ep-button--primary">
+            <Link href={contactHref} className="ep-button ep-button--primary">
               Contact TenderLab <span aria-hidden="true">↗</span>
             </Link>
           </aside>

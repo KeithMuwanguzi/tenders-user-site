@@ -67,7 +67,7 @@ const SECTIONS: SubSection[] = [
     paragraphs: [
       "Reablement services are a short-term community programme with a single, measurable purpose: restoring independence and reducing ongoing support needs. Commissioning bodies procure reablement services with clear outcome expectations and they evaluate responses on whether providers can demonstrate they genuinely deliver on that purpose — not just describe it. A reablement tender that reads like a domiciliary care submission will not score well, because commissioners can see immediately that the provider does not understand the model.",
       "Evaluation criteria for reablement contracts focus on your goal-setting methodology, your timeframes to independence, your outcomes data showing reduction in care needs following reablement, your staff training and reablement-specific skills, your multi-disciplinary working arrangements with occupational therapists and physiotherapists, and your approach to equipment and home adaptation as part of the reablement pathway.",
-      "TenderLab builds reablement responses around your operational model and your outcomes data. We identify the specific evidence — the goal-setting tools, the outcome percentages, the MDT working arrangements — that reablement evaluators score, and structure your response to present that evidence in the order and format that maximises marks at each section.",
+      "TenderLab builds reablement responses around your operational model and outcomes data. We identify the specific evidence — goal-setting tools, outcome measures and multidisciplinary working arrangements — and structure the response so an evaluator can connect it to the published criteria.",
     ],
   },
   {

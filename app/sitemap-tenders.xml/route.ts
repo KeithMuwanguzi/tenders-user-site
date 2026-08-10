@@ -79,6 +79,20 @@ export async function GET() {
       cache: 'no-store',
     })
 
+    // A private VPS exposes /api/tenders/published. The public website proxy
+    // exposes the equivalent curated feed at /api/tenders. Supporting both
+    // keeps private previews and the production sitemap aligned with the same
+    // live opportunity set instead of returning a false 503 on previews.
+    if (res.status === 404 && /^https?:\/\//.test(baseUrl)) {
+      const publicProxy = new URL(`${baseUrl}/api/tenders`)
+      publicProxy.searchParams.set('active_only', 'true')
+      publicProxy.searchParams.set('limit', '500')
+      res = await fetch(publicProxy.toString(), {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+      })
+    }
+
     if (!res.ok) {
       return unavailable(`portal returned ${res.status}`)
     }

@@ -9,19 +9,19 @@ const SECTIONS: { heading: string; items: FaqItem[] }[] = [
     items: [
       {
         q: 'How much does tender writing cost?',
-        a: 'Our pricing varies based on the scope of work. A full tender response typically ranges from £2,500 to £8,000 depending on length, complexity, and urgency. A mid-sized bid review costs £1,500–£3,000. We also offer training, evidence development, and ongoing support at different price points. Rather than assume pricing, we prefer to discuss your specific tender and provide a tailored quote.',
+        a: 'Pricing depends on the procurement pack, number and length of scored responses, lots, deadline, evidence already available and the work your team will complete. We review those facts before providing a written scope and quote.',
       },
       {
         q: 'Do you offer discounts for multiple tenders?',
-        a: 'Yes. We offer package pricing for organisations bidding for multiple tenders in the same quarter or year. The more we work together, the better the value and the more efficient we can be. We also offer retainer arrangements for organisations that want ongoing support with tender strategy and bid reviews.',
+        a: 'A retained arrangement may be appropriate when several suitable tenders are expected and evidence development needs to continue between deadlines. The scope is tailored to realistic demand rather than sold as an automatic discount bundle.',
       },
       {
-        q: 'What is your free bid review offer and what is included?',
-        a: 'Our free bid review is a genuine opportunity to get expert feedback without any sales pressure. You send us a draft tender response (or even just the tender spec if you have not started), and we review it and provide: assessment of your response against the tender scoring criteria, estimated scoring prediction, identified gaps and weak areas, top 3–5 improvements that would increase your score most, and recommendations on next steps. This typically takes 1 week.',
+        q: 'Can you review a draft before we commit to a larger engagement?',
+        a: 'Yes. The pre-submission review can be scoped around a defined group of important responses or the complete quality submission. We confirm the work and fee after seeing the buyer documents, draft and deadline.',
       },
       {
         q: 'Do you guarantee we will win the tender?',
-        a: 'No. Anyone who guarantees a win is not being honest. Tender outcomes depend on multiple factors beyond even the best written response. What we can guarantee is that we will help you write the best response possible, maximise your score against the evaluation criteria, and give you honest feedback about your competitiveness before you bid.',
+        a: 'No. Tender outcomes depend on eligibility, evidence, delivery, price, competition and the buyer’s evaluation. TenderLab can improve compliance, structure and evaluator clarity, but cannot guarantee the buyer’s decision or a particular score.',
       },
     ],
   },

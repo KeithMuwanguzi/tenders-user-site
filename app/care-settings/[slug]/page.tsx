@@ -87,8 +87,6 @@ const CASE_STUDY_COHORT: Record<string, string> = {
   'substance-misuse-services': 'mental-health',
 }
 
-export const dynamic = 'force-dynamic'
-
 export async function generateStaticParams() {
   try {
     const files = await readdir(HTML_DIR)
@@ -147,9 +145,99 @@ function extractMetaDescription(html: string, fallback: string): string {
 }
 
 function visualFor(slug: string): Visual {
+  const tailored: Record<string, Visual> = {
+    'domiciliary-care': {
+      image: '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg',
+      alt: 'A domiciliary care worker supporting an older person at home, connected to care records and commissioner evidence',
+      tone: 'yellow',
+    },
+    'live-in-care': {
+      image: '/images/editorial/tenderlab-live-in-care-hero-v1.jpg',
+      alt: 'A live-in carer supporting a person in their own home, connected to continuity and care-planning evidence',
+      tone: 'cream',
+    },
+    'supported-living': {
+      image: '/images/editorial/tenderlab-supported-living-hero-v1.jpg',
+      alt: 'A person and support worker planning independent living, connected to tenancy, choice and outcomes evidence',
+      tone: 'blue',
+    },
+    'residential-care': {
+      image: '/images/editorial/tenderlab-residential-care-hero-v1.jpg',
+      alt: 'An older person and residential care worker in a communal home setting, connected to governance and quality evidence',
+      tone: 'peach',
+    },
+    'nursing-care': {
+      image: '/images/editorial/tenderlab-nursing-care-hero-v1.jpg',
+      alt: 'A nurse supporting an older person in a care setting, connected to clinical oversight and quality evidence',
+      tone: 'blue',
+    },
+    'extra-care-housing': {
+      image: '/images/editorial/tenderlab-extra-care-hero-v1.jpg',
+      alt: 'An extra care housing resident and support professional, connected to housing, independence and care evidence',
+      tone: 'yellow',
+    },
+    'shared-lives': {
+      image: '/images/editorial/tenderlab-shared-lives-hero-v1.jpg',
+      alt: 'A Shared Lives household spending time together, connected to matching, safeguarding and outcomes evidence',
+      tone: 'peach',
+    },
+    'day-services': {
+      image: '/images/editorial/tenderlab-day-services-hero-v1.jpg',
+      alt: 'People taking part in a community day service, connected to activity, inclusion and outcomes evidence',
+      tone: 'yellow',
+    },
+    'short-breaks-and-respite': {
+      image: '/images/editorial/tenderlab-short-breaks-respite-hero-v1.jpg',
+      alt: 'A respite support worker with a person using the service, connected to continuity, safety and family support evidence',
+      tone: 'peach',
+    },
+    'reablement-services': {
+      image: '/images/editorial/tenderlab-reablement-rehabilitation-hero-v1.jpg',
+      alt: 'A reablement professional supporting recovery at home, connected to goals, progress and independence evidence',
+      tone: 'blue',
+    },
+    'rehabilitation-services': {
+      image: '/images/editorial/tenderlab-reablement-rehabilitation-hero-v1.jpg',
+      alt: 'A rehabilitation professional supporting recovery, connected to multidisciplinary goals and outcomes evidence',
+      tone: 'blue',
+    },
+    'mental-health-services': {
+      image: '/images/editorial/tenderlab-mental-health-hero-v1.jpg',
+      alt: 'A mental health professional in conversation with a person, connected to recovery, risk and partnership evidence',
+      tone: 'blue',
+    },
+    'complex-care': {
+      image: '/images/editorial/tenderlab-complex-care-chc-hero-v1.jpg',
+      alt: 'A complex care professional supporting a person at home, connected to clinical governance and coordinated-care evidence',
+      tone: 'blue',
+    },
+    'complex-care-and-continuing-healthcare': {
+      image: '/images/editorial/tenderlab-complex-care-chc-hero-v1.jpg',
+      alt: 'A continuing healthcare team coordinating complex care at home, connected to clinical and funding evidence',
+      tone: 'blue',
+    },
+    'continuing-healthcare': {
+      image: '/images/editorial/tenderlab-complex-care-chc-hero-v1.jpg',
+      alt: 'A continuing healthcare professional coordinating complex care, connected to assessment and clinical evidence',
+      tone: 'blue',
+    },
+    'housing-related-support': {
+      image: '/images/editorial/tenderlab-housing-support-hero-v1.jpg',
+      alt: 'A housing support worker and tenant reviewing a support plan, connected to tenancy and independence evidence',
+      tone: 'cream',
+    },
+    'supported-housing': {
+      image: '/images/editorial/tenderlab-housing-support-hero-v1.jpg',
+      alt: 'A supported housing tenant and worker reviewing goals, connected to tenancy sustainment and outcomes evidence',
+      tone: 'cream',
+    },
+  }
+
+  if (tailored[slug]) return tailored[slug]
+
   if (CHILDREN_SLUGS.has(slug)) {
     return {
-      image: '/images/editorial/tenderlab-childrens-services-hero-v1.png',
+      image: '/images/editorial/tenderlab-childrens-services-hero-v1.webp',
       alt: 'A family-support professional discussing a plan at home, linked to safe accommodation and children’s service evidence',
       tone: 'peach',
     }
@@ -157,7 +245,7 @@ function visualFor(slug: string): Visual {
 
   if (CLINICAL_SLUGS.has(slug)) {
     return {
-      image: '/images/editorial/tenderlab-community-health-hero-v1.png',
+      image: '/images/editorial/tenderlab-community-health-hero-v1.webp',
       alt: 'A community nurse supporting a person at home, linked to multidisciplinary review and clinical governance evidence',
       tone: 'blue',
     }
@@ -165,7 +253,7 @@ function visualFor(slug: string): Visual {
 
   if (HOUSING_SLUGS.has(slug)) {
     return {
-      image: '/images/editorial/tenderlab-housing-support-hero-v1.png',
+      image: '/images/editorial/tenderlab-housing-support-hero-v1.webp',
       alt: 'A tenant and housing support worker discussing support at home, linked to tenancy and outcomes evidence',
       tone: 'cream',
     }
@@ -173,14 +261,14 @@ function visualFor(slug: string): Visual {
 
   if (HOME_CARE_SLUGS.has(slug)) {
     return {
-      image: '/images/editorial/tenderlab-adult-social-care-hero-v1.png',
+      image: '/images/editorial/tenderlab-adult-social-care-hero-v1.webp',
       alt: 'A care professional supporting an older person at home, linked to provider records and service evidence',
       tone: 'yellow',
     }
   }
 
   return {
-    image: '/images/editorial/tenderlab-adult-social-care-hero-v1.png',
+    image: '/images/editorial/tenderlab-adult-social-care-hero-v1.webp',
     alt: 'Care delivery and provider evidence connected in an editorial collage',
     tone: 'cream',
   }
@@ -208,6 +296,10 @@ function extractArticleSections(html: string): string {
     .replace(
       /href="https:\/\/www\.tenderlab\.co\.uk\/care-settings\/([^"\/]+)\/?"/gi,
       'href="/care-settings/$1"'
+    )
+    .replace(
+      /href="https:\/\/(?:www\.)?tenderlab\.co\.uk([^"#?]*)([^" ]*)"/gi,
+      'href="$1$2"'
     )
 }
 

@@ -17,14 +17,14 @@ const NAV: NavItem[] = [
   {
     label: 'Services', href: '/services',
     children: [
-      { label: 'Bid Writing',            href: '/services/bid-writing',            desc: 'Expert-crafted tender responses' },
-      { label: 'Pre-Submission Review',  href: '/services/pre-submission-review',  desc: 'Quality checks before you submit' },
-      { label: 'Lost Bid Debrief',       href: '/services/lost-bid-debrief',       desc: 'Understand why and improve fast' },
-      { label: 'Tender Readiness Audit', href: '/services/tender-readiness-audit', desc: 'Assess your bid capability' },
-      { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build internal bid competence' },
-      { label: 'Pipeline Tracking',      href: '/services/pipeline-tracking',      desc: 'Stay ahead of opportunities' },
-      { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Win-to-deliver transition' },
-      { label: 'Tender Retainer',        href: '/services/tender-retainer',        desc: 'Ongoing bid partnership' },
+      { label: 'Bid Viability',          href: '/services/bid-viability',          desc: 'Check the opportunity before committing' },
+      { label: 'Bid Writing',            href: '/services/bid-writing',            desc: 'Build the complete care tender response' },
+      { label: 'Pre-Submission Review',  href: '/services/pre-submission-review',  desc: 'Challenge the draft before submission' },
+      { label: 'Lost Bid Debrief',       href: '/services/lost-bid-debrief',       desc: 'Turn feedback into specific changes' },
+      { label: 'Tender Readiness',       href: '/services/tender-readiness-audit', desc: 'Strengthen evidence before the next tender' },
+      { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build an internal, repeatable method' },
+      { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Turn winning promises into delivery actions' },
+      { label: 'Retained Support',       href: '/services/tender-retainer',        desc: 'Manage tendering as an ongoing function' },
     ],
   },
   {
@@ -235,9 +235,10 @@ export default function Nav() {
               {/* Logo */}
               <Link href="/" className="nav__logo" onClick={closeAll}>
                 <Image
-                  src="/images/Logo/tenderlab-logo-transparent.png"
+                  src="/images/Logo/Logo%20(2).png"
                   alt="TenderLab"
-                  height={28} width={120} priority
+                  height={61} width={112} priority
+                  sizes="112px"
                   style={{ objectFit: 'contain', objectPosition: 'left center' }}
                 />
               </Link>

@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     title,
     description,
     path: '/faqs',
-    image: '/images/editorial/tenderlab-faq-hero-v1.png',
+    image: '/images/editorial/tenderlab-faq-hero-v1.webp',
   }),
-  twitter: defaultTwitter({ title, description, image: '/images/editorial/tenderlab-faq-hero-v1.png' }),
+  twitter: defaultTwitter({ title, description, image: '/images/editorial/tenderlab-faq-hero-v1.webp' }),
 }
 
 const faqGroups = [
@@ -163,7 +163,7 @@ export default function FaqsPage() {
         eyebrow="Tender writing questions for care providers"
         title="Clear answers before you commit to tender support."
         description="Understand which service fits, what your organisation must contribute, how scope and fees are agreed, where live tender data comes from and how TenderLab’s recorded results should be read."
-        image="/images/editorial/tenderlab-faq-hero-v1.png"
+        image="/images/editorial/tenderlab-faq-hero-v1.webp"
         imageAlt="A care provider director and tender specialist discussing questions beside procurement notes and evidence"
         caption="A useful first conversation begins with the actual procurement, the deadline and the decision your organisation needs to make."
         primaryAction={{ href: '#tender-writing-questions', label: 'Browse the questions' }}

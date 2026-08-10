@@ -113,7 +113,7 @@ export default async function TendersPage() {
           </div>
           <figure className="tenders-search-hero__visual">
             <Image
-              src="/images/editorial/tenderlab-live-tenders-hero-v1.png"
+              src="/images/editorial/tenderlab-live-tenders-hero-v1.webp"
               alt="Care-provider leaders comparing public procurement opportunities with care delivery requirements"
               fill
               priority
@@ -132,7 +132,7 @@ export default async function TendersPage() {
         </div>
       </section>
 
-      <div id="live-tender-results">
+      <div id="live-tender-search">
         <TendersClient initialTenders={initialTenders} />
       </div>
 

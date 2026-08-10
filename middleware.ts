@@ -7,7 +7,7 @@ import { type NextRequest, NextResponse } from 'next/server'
  *
  * 1. Double-slash blog URLs  /blog//slug  -> 301 -> /blog/slug
  * 2. 410 Gone for the 109 phantom /blog/ slugs (fragment, sentence, doubled)
- * 3. /faq and /faq/ -> /services  (was wrongly redirecting to homepage /)
+ * 3. /faq and /faq/ -> /faqs  (preserves the dedicated answer library)
  */
 
 // ─── Exact phantom slugs confirmed in Search Console 404 report ─────────────
@@ -138,10 +138,10 @@ export function middleware(request: NextRequest): NextResponse {
     }
   }
 
-  // 3. /faq and /faq/ -> /services (corrects wrong homepage redirect in next.config.ts)
+  // 3. Preserve the legacy singular path while consolidating on /faqs.
   if (pathname === '/faq' || pathname === '/faq/') {
     const url = request.nextUrl.clone()
-    url.pathname = '/services'
+    url.pathname = '/faqs'
     return NextResponse.redirect(url, { status: 301 })
   }
 

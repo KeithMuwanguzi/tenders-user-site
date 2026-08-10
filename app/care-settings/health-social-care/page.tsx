@@ -53,7 +53,7 @@ export default function HealthSocialCarePage() {
         eyebrow="Integrated care procurement"
         title="Health and social care tender writing"
         intro="We help providers turn clinical governance, safeguarding, workforce controls, referral pathways and service outcomes into submissions that answer the buyer’s scored requirements."
-        image="/images/editorial/tenderlab-community-health-hero-v1.png"
+        image="/images/editorial/tenderlab-community-health-hero-v1.webp"
         imageAlt="A community nurse supporting a person at home, linked to multidisciplinary review and clinical governance evidence"
         primaryLabel="Ask us to assess a tender"
         primaryHref="/contact"

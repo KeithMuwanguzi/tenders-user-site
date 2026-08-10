@@ -51,7 +51,7 @@ export default function ChildrensServicesPage() {
         eyebrow="Children's services procurement"
         title="Children's services tender writing"
         intro="We help providers evidence safeguarding, workforce competence, child-centred practice, multi-agency working and outcomes in the language of the specification and scoring method."
-        image="/images/editorial/tenderlab-childrens-services-hero-v1.png"
+        image="/images/editorial/tenderlab-childrens-services-hero-v1.webp"
         imageAlt="A family-support professional discussing a plan at home, linked to safe accommodation and children’s service evidence"
         primaryLabel="Ask us to assess a tender"
         primaryHref="/contact"

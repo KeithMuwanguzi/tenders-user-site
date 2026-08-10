@@ -41,7 +41,7 @@ export default function ReviewsPage() {
         eyebrow="Independent client feedback"
         title="What care providers say after working with TenderLab."
         intro="These are independently published reviews and named direct-client relationships. The evidence is presented with its source so you can inspect it for yourself."
-        image="/images/editorial/tenderlab-reviews-proof-hero-v1.png"
+        image="/images/editorial/tenderlab-reviews-proof-hero-v1.webp"
         imageAlt="Care-provider leaders beside independent review and documented-results evidence"
         primaryLabel="Talk to TenderLab"
         primaryHref="/contact"

@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${guide.title} | TenderLab`,
     description: guide.description,
     alternates: { canonical: path },
-    openGraph: defaultOpenGraph({ title: guide.title, description: guide.description, path, type: 'article', image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.png' }),
-    twitter: defaultTwitter({ title: guide.title, description: guide.description, image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.png' }),
+    openGraph: defaultOpenGraph({ title: guide.title, description: guide.description, path, type: 'article', image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.webp' }),
+    twitter: defaultTwitter({ title: guide.title, description: guide.description, image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.webp' }),
   }
 }
 
@@ -31,7 +31,7 @@ export default async function DecisionGuidePage({ params }: { params: Promise<{ 
   const related = guide.related.map((relatedSlug) => DECISION_GUIDE_BY_SLUG.get(relatedSlug)).filter(Boolean)
   const path = `/guides/${slug}`
   const structured = [
-    articleSchema({ headline: guide.title, description: guide.description, path, image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.png', datePublished: '2026-07-30', dateModified: '2026-07-30' }),
+    articleSchema({ headline: guide.title, description: guide.description, path, image: '/images/editorial/tenderlab-blog-intelligence-hero-v1.webp', datePublished: '2026-07-30', dateModified: '2026-07-30' }),
     faqSchema(guide.faq.map(({ q, a }) => ({ question: q, answer: a }))),
     breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Tender guides', path: '/guides' }, { name: guide.title, path }]),
   ]
@@ -45,7 +45,7 @@ export default async function DecisionGuidePage({ params }: { params: Promise<{ 
         eyebrow={guide.eyebrow}
         title={guide.title}
         intro={guide.description}
-        image="/images/editorial/tenderlab-blog-intelligence-hero-v1.png"
+        image="/images/editorial/tenderlab-blog-intelligence-hero-v1.webp"
         imageAlt="Editorial collage of care-provider questions, procurement documents and evaluator evidence"
         primaryLabel={guide.service.label}
         primaryHref={guide.service.href}

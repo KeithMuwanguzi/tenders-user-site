@@ -54,27 +54,27 @@ export function contextualBlogImage(
     return '/images/editorial/tenderlab-residential-care-hero-v1.jpg'
   }
   if (topic.includes('children') || topic.includes('young people') || topic.includes('ofsted')) {
-    return '/images/editorial/tenderlab-childrens-services-hero-v1.png'
+    return '/images/editorial/tenderlab-childrens-services-hero-v1.webp'
   }
   if (topic.includes('mobilis') || topic.includes('tupe') || topic.includes('staff')) {
-    return '/images/editorial/tenderlab-mobilisation-support-hero-v1.png'
+    return '/images/editorial/tenderlab-mobilisation-support-hero-v1.webp'
   }
   if (topic.includes('training') || topic.includes('course') || topic.includes('skill')) {
-    return '/images/editorial/tenderlab-tender-training-hero-v1.png'
+    return '/images/editorial/tenderlab-tender-training-hero-v1.webp'
   }
   if (topic.includes('social value') || topic.includes('sustainab') || topic.includes('community')) {
-    return '/images/editorial/tenderlab-community-health-hero-v1.png'
+    return '/images/editorial/tenderlab-community-health-hero-v1.webp'
   }
   if (topic.includes('evidence') || topic.includes('cqc') || topic.includes('compliance')) {
-    return '/images/editorial/tenderlab-care-evidence-hero-v1.png'
+    return '/images/editorial/tenderlab-care-evidence-hero-v1.webp'
   }
   if (topic.includes('live tender') || topic.includes('framework') || topic.includes('dps')) {
-    return '/images/editorial/tenderlab-live-tenders-hero-v1.png'
+    return '/images/editorial/tenderlab-live-tenders-hero-v1.webp'
   }
   if (topic.includes('bid') || topic.includes('tender writing') || topic.includes('evaluator')) {
-    return '/images/editorial/tenderlab-bid-writing-hero-v1.png'
+    return '/images/editorial/tenderlab-bid-writing-hero-v1.webp'
   }
-  return '/images/editorial/tenderlab-blog-intelligence-hero-v1.png'
+  return '/images/editorial/tenderlab-blog-intelligence-hero-v1.webp'
 }
 
 export type BlogPostFromApi = {

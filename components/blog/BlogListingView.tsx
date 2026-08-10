@@ -17,6 +17,8 @@ type Props = {
 
 export default function BlogListingView({ posts, faqs, unavailable = false }: Props) {
   const [category, setCategory] = useState<string>('all')
+  const [page, setPage] = useState(1)
+  const perPage = 12
 
   const categories = useMemo(() => {
     const set = new Set(posts.map((p) => p.category).filter(Boolean))
@@ -28,7 +30,14 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
     return posts.filter((p) => p.category === category)
   }, [posts, category])
 
-  const [featured, ...rest] = filtered
+  const pageCount = Math.max(1, Math.ceil(filtered.length / perPage))
+  const pagePosts = filtered.slice((page - 1) * perPage, page * perPage)
+  const [featured, ...rest] = pagePosts
+
+  const chooseCategory = (nextCategory: string) => {
+    setCategory(nextCategory)
+    setPage(1)
+  }
 
   return (
     <>
@@ -44,7 +53,7 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
           </div>
           <figure className="blog-v2-hero__visual">
             <Image
-              src="/images/editorial/tenderlab-blog-hero-v1.png"
+              src="/images/editorial/tenderlab-blog-hero-v1.webp"
               alt="An editor connecting operational care evidence to clear tender guidance"
               fill
               priority
@@ -55,32 +64,6 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
           </figure>
         </div>
       </header>
-
-      <section className="blog-v2-paths" aria-labelledby="blog-paths-title">
-        <div className="container">
-          <div className="blog-v2-paths__head">
-            <p className="blog-v2-section-label">Choose where to begin</p>
-            <h2 id="blog-paths-title">Use the question you are trying to answer.</h2>
-          </div>
-          <div className="blog-v2-paths__grid">
-            <Link href="/tenders" className="blog-v2-path-card">
-              <span>01</span>
-              <h3>Find a live care tender</h3>
-              <p>Browse current opportunities by care setting and open the official notice.</p>
-            </Link>
-            <Link href="/services/tender-readiness-audit" className="blog-v2-path-card">
-              <span>02</span>
-              <h3>Decide whether to bid</h3>
-              <p>Test eligibility, evidence, mobilisation, capacity and commercial exposure.</p>
-            </Link>
-            <Link href="/services/bid-writing" className="blog-v2-path-card">
-              <span>03</span>
-              <h3>Build a stronger submission</h3>
-              <p>Turn the tender pack and operational evidence into a controlled response.</p>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       <div className="blog-v2-listing">
         <div className="container">
@@ -104,7 +87,7 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
                       key={cat}
                       type="button"
                       className={`blog-v2-filters__btn${category === cat ? ' is-active' : ''}`}
-                      onClick={() => setCategory(cat)}
+                      onClick={() => chooseCategory(cat)}
                     >
                       {cat === 'all' ? 'All topics' : cat}
                     </button>
@@ -144,10 +127,69 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
               {filtered.length === 0 && (
                 <p className="blog-v2-empty">No articles in this topic yet.</p>
               )}
+
+              {pageCount > 1 && (
+                <nav className="blog-v2-pagination" aria-label="Blog pages">
+                  <button
+                    type="button"
+                    onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </button>
+                  <div className="blog-v2-pagination__numbers">
+                    {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
+                      <button
+                        key={number}
+                        type="button"
+                        className={number === page ? 'is-active' : ''}
+                        aria-current={number === page ? 'page' : undefined}
+                        aria-label={`Page ${number}`}
+                        onClick={() => setPage(number)}
+                      >
+                        {number}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
+                    disabled={page === pageCount}
+                  >
+                    Next
+                  </button>
+                </nav>
+              )}
             </>
           )}
         </div>
       </div>
+
+      <section className="blog-v2-paths" aria-labelledby="blog-paths-title">
+        <div className="container">
+          <div className="blog-v2-paths__head">
+            <p className="blog-v2-section-label">Choose your next step</p>
+            <h2 id="blog-paths-title">Move from reading to the work in front of you.</h2>
+          </div>
+          <div className="blog-v2-paths__grid">
+            <Link href="/tenders" className="blog-v2-path-card">
+              <span>01</span>
+              <h3>Find a live care tender</h3>
+              <p>Browse current opportunities by care setting and open the official notice.</p>
+            </Link>
+            <Link href="/services/bid-viability" className="blog-v2-path-card">
+              <span>02</span>
+              <h3>Decide whether to bid</h3>
+              <p>Check the conditions, evidence, delivery demands and commercial position.</p>
+            </Link>
+            <Link href="/services/bid-writing" className="blog-v2-path-card">
+              <span>03</span>
+              <h3>Build the submission</h3>
+              <p>Turn the buyer documents and operational evidence into a controlled response.</p>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {faqs.length > 0 && (
         <section className="blog-v2-faq" aria-labelledby="blog-v2-faq-title">

@@ -35,7 +35,7 @@ const services = [
     outcome:
       'We test the published conditions, available evidence, mobilisation position and price before your team commits.',
     deliverable: 'A recorded bid or no-bid recommendation, with risks and actions.',
-    href: '/services/tender-readiness-audit',
+    href: '/services/bid-viability',
   },
   {
     number: '02',

@@ -68,7 +68,7 @@ export default function CareSettingsPage() {
         eyebrow="Care sector tender writing"
         title="Sector knowledge matters when the evaluator tests delivery."
         intro="Explore specialist tender support across the care settings commissioned by councils, NHS organisations and integrated care boards throughout the UK."
-        image="/images/editorial/tenderlab-adult-social-care-hero-v1.png"
+        image="/images/editorial/tenderlab-adult-social-care-hero-v1.webp"
         imageAlt="Care delivery, provider leadership and operational evidence connected in an editorial collage"
         primaryLabel="Discuss your care tender"
         primaryHref="/contact#enquiry"

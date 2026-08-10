@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     title,
     description,
     path: '/proof',
-    image: '/images/editorial/tenderlab-proof-hero-v1.png',
+    image: '/images/editorial/tenderlab-proof-hero-v1.webp',
   }),
-  twitter: defaultTwitter({ title, description, image: '/images/editorial/tenderlab-proof-hero-v1.png' }),
+  twitter: defaultTwitter({ title, description, image: '/images/editorial/tenderlab-proof-hero-v1.webp' }),
 }
 
 const claims = [
@@ -105,7 +105,7 @@ export default function ProofPage() {
         eyebrow="TenderLab results and proof"
         title="Performance figures you can examine properly."
         description="TenderLab reports four confirmed measures from past work. This page keeps them separate, explains what each one represents and shows the limits that should shape a responsible buying decision."
-        image="/images/editorial/tenderlab-proof-hero-v1.png"
+        image="/images/editorial/tenderlab-proof-hero-v1.webp"
         imageAlt="Tender specialists reviewing a performance ledger, evaluation scores and supporting records"
         caption="Useful proof includes the result, its definition and the context needed to interpret it."
         primaryAction={{ href: '#recorded-measures', label: 'Examine the figures' }}

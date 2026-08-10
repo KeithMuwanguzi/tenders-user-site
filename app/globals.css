@@ -10348,7 +10348,7 @@ body { background: #FAF8F2; }
 .tl-stat--sage { grid-area: sage; background: var(--tl-sage); }
 
 .tl-section {
-  padding: 88px 0;
+  padding: 72px 0;
   background: var(--tl-cream);
 }
 
@@ -10373,7 +10373,7 @@ body { background: #FAF8F2; }
 .tl-section-heading h2 {
   max-width: 19ch;
   margin: 14px 0 0;
-  font-size: clamp(39px, 4vw, 66px);
+  font-size: clamp(36px, 3.4vw, 58px);
   line-height: 1.02;
 }
 
@@ -10391,7 +10391,7 @@ body { background: #FAF8F2; }
 }
 
 .tl-method__item {
-  min-height: 248px;
+  min-height: 210px;
   padding: 25px;
   border: 1px solid var(--tl-line);
   border-radius: 34px 10px 34px 34px;
@@ -10422,7 +10422,7 @@ body { background: #FAF8F2; }
 }
 
 .tl-method__item h3 {
-  margin: 42px 0 13px;
+  margin: 28px 0 13px;
   font-size: 24px;
   line-height: 1.08;
 }
@@ -10446,7 +10446,7 @@ body { background: #FAF8F2; }
 
 .tl-service-card {
   display: flex;
-  min-height: 390px;
+  min-height: 330px;
   flex-direction: column;
   padding: 25px;
   border: 1px solid var(--tl-line);
@@ -10484,8 +10484,8 @@ body { background: #FAF8F2; }
 }
 
 .tl-service-card h3 {
-  margin: 36px 0 14px;
-  font-size: 30px;
+  margin: 26px 0 12px;
+  font-size: 27px;
   line-height: 1.04;
 }
 
@@ -10627,7 +10627,7 @@ body { background: #FAF8F2; }
 .tl-client {
   display: flex;
   flex: 0 1 calc((100% - 42px) / 4);
-  min-height: 142px;
+  min-height: 124px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -10651,7 +10651,7 @@ body { background: #FAF8F2; }
 .tl-client__logo {
   display: flex;
   width: min(100%, 224px);
-  height: 72px;
+  height: 60px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -10698,7 +10698,7 @@ body { background: #FAF8F2; }
 
 .tl-review {
   display: flex;
-  min-height: 350px;
+  min-height: 300px;
   flex-direction: column;
   padding: 30px;
   border: 1px solid var(--tl-line);
@@ -10735,7 +10735,7 @@ body { background: #FAF8F2; }
 }
 
 .tl-review blockquote {
-  font-size: clamp(20px, 1.6vw, 28px);
+  font-size: clamp(19px, 1.35vw, 24px);
   font-weight: 480;
   line-height: 1.35;
   letter-spacing: -0.025em;
@@ -10851,7 +10851,7 @@ body { background: #FAF8F2; }
 }
 
 .tl-faqs .tl-section-heading h2 {
-  font-size: clamp(42px, 4vw, 68px);
+  font-size: clamp(38px, 3.4vw, 58px);
 }
 
 .tl-faqs .tl-section-heading > p {
@@ -10978,8 +10978,8 @@ body { background: #FAF8F2; }
   .tl-method,
   .tl-service-compare,
   .tl-cases__grid { grid-template-columns: 1fr; }
-  .tl-method__item { min-height: 280px; }
-  .tl-method__item h3 { margin-top: 52px; }
+  .tl-method__item { min-height: 0; }
+  .tl-method__item h3 { margin-top: 28px; }
   .tl-service-card { min-height: auto; padding: 25px; }
   .tl-service-card__prompt { min-height: auto; }
   .tl-case-card__body { min-height: 230px; }

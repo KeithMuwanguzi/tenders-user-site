@@ -30,7 +30,7 @@ export default function AboutPage() {
         eyebrow="About TenderLab"
         title="Tender writing built around the way care contracts are evaluated."
         intro="TenderLab is a specialist bid consultancy for UK health and social care providers. We translate genuine operational capability into submissions that are compliant, evidenced and easier to score."
-        image="/images/editorial/tenderlab-about-practice-hero-v1.png"
+        image="/images/editorial/tenderlab-about-practice-hero-v1.webp"
         imageAlt="Tender specialists connecting care delivery, buyer requirements and operational evidence"
         primaryLabel="Contact TenderLab"
         secondaryLabel="See documented results"

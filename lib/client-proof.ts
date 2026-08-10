@@ -47,8 +47,7 @@ export const DIRECT_CLIENTS: DirectClient[] = [
   {
     name: 'Sorelle Support',
     href: 'https://sorellesupport.co.uk/',
-    logo: '/images/clients/sorelle-support.svg',
-    dark: true,
+    logo: '/images/clients/sorelle-support-light.svg',
     treatment: 'wide',
   },
   {
@@ -81,8 +80,7 @@ export const VERIFIED_CLIENT_REVIEWS: VerifiedClientReview[] = [
     organisation: 'Sorelle Support',
     person: 'Janine',
     role: 'Director, Sorelle Support',
-    logo: '/images/clients/sorelle-support.svg',
-    darkLogo: true,
+    logo: '/images/clients/sorelle-support-light.svg',
     href: 'https://uk.trustpilot.com/reviews/6a44fff253e578452ef74034',
     title: 'A trusted partner for small and medium care providers',
     quote:

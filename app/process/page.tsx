@@ -102,7 +102,7 @@ export default function ProcessPage() {
         eyebrow="The TenderLab process"
         title="A controlled route from buyer documents to submission."
         intro="The work begins by deciding whether the tender fits. Only then do we map the requirements, gather evidence, draft, challenge and prepare the final response."
-        image="/images/editorial/tenderlab-process-hero-v1.png"
+        image="/images/editorial/tenderlab-process-hero-v1.webp"
         imageAlt="A controlled tender workflow connecting opportunity fit, evidence, drafting, review and submission"
         primaryLabel="Ask us to assess a tender"
         primaryHref="/contact"

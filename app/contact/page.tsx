@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   { q: 'What should we send with the enquiry?', a: 'Send the tender notice or procurement pack if available, the submission deadline, the lots you are considering and a short description of your current services.' },
-  { q: 'How quickly will TenderLab respond?', a: 'We normally acknowledge enquiries within one working day. A live deadline, scope and document set help us give a useful first response.' },
+  { q: 'How quickly will TenderLab respond?', a: 'We respond as soon as we can. Sharing the live deadline, scope and buyer documents helps us give a useful first response rather than a generic acknowledgement.' },
   { q: 'Can we speak before sharing the documents?', a: 'Yes. Call 01707 240393 or use the form to request a conversation. We will still need the buyer documents before confirming the work required.' },
   { q: 'Does submitting the form create an obligation?', a: 'No. The enquiry allows us to understand the opportunity and discuss scope. Work begins only after the proposed engagement has been agreed.' },
   { q: 'Can TenderLab help with a tender already in progress?', a: 'Yes, subject to capacity and the remaining deadline. Tell us what has already been completed so we can assess whether full writing or independent review is the responsible option.' },
@@ -42,7 +42,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
         eyebrow="Contact TenderLab"
         title="Share the opportunity and tell us where the work stands."
         intro="Send the notice or procurement pack, the deadline and a short description of your service. We will review the context and respond with a clear first view of the support required."
-        image="/images/editorial/tenderlab-contact-briefing-hero-v1.png"
+        image="/images/editorial/tenderlab-contact-briefing-hero-v1.webp"
         imageAlt="A care-provider director and tender specialist reviewing an opportunity during a first briefing"
         primaryLabel="Go to the enquiry form"
         primaryHref="#enquiry"

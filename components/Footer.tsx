@@ -11,10 +11,11 @@ const footerGroups = [
   {
     title: 'Tender support',
     links: [
+      ['Bid viability', '/services/bid-viability'],
       ['Complete bid writing', '/services/bid-writing'],
       ['Pre-submission review', '/services/pre-submission-review'],
-      ['Tender readiness audit', '/services/tender-readiness-audit'],
-      ['Tender retainer', '/services/tender-retainer'],
+      ['Tender training', '/services/tender-training'],
+      ['Retained support', '/services/tender-retainer'],
       ['Compare all services', '/services'],
     ],
   },
@@ -26,7 +27,7 @@ const footerGroups = [
       ['Case studies', '/case-studies'],
       ['Tender guides', '/guides'],
       ['Blogs', '/blog'],
-      ['Frequently asked questions', '/contact#faqs'],
+      ['Frequently asked questions', '/faqs'],
     ],
   },
   {
@@ -49,10 +50,11 @@ export default function Footer() {
           <div className="tl-footer__identity">
             <Link href="/" aria-label="TenderLab home">
               <Image
-                src="/images/Logo/tenderlab-logo-transparent.png"
+                src="/images/Logo/Logo%20(2).png"
                 alt="TenderLab"
-                width={168}
-                height={52}
+                width={112}
+                height={61}
+                sizes="112px"
               />
             </Link>
             <p>Specialist tender writing and bid consultancy for UK health and social care providers.</p>
