@@ -33,6 +33,7 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 | Reduced motion | PASS | Motion rules include reduced-motion treatment |
 | Semantic structure | PASS | One H1 on tested routes; landmark, skip link, labelled navigation, form labels and native details present |
 | Indexability | PASS | Indexable pages use HTTP 200, self-canonical, internal links and sitemap inclusion; dynamic tender routes remain server rendered |
+| Preview index protection | PASS | Any Vercel preview host receives `X-Robots-Tag: noindex, nofollow, noarchive`; the production domain remains indexable |
 
 ## Accessibility checks performed
 
@@ -51,6 +52,7 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 3. Tender listing markup did not match the redesigned filter CSS scope. Aligned the ID so search, sort, source, care-setting, result-count and pagination controls render as designed.
 4. Legacy absolute TenderLab links could escape a preview into the old implementation. Sanitised internal CMS links and verified zero escaped links in the crawl.
 5. Heavy editorial PNG originals were still shipped beside WebP versions. Removed the unused originals and retained recoverability in Git.
+6. Preview hosts needed an explicit search-engine safety boundary. Added host/environment-aware `X-Robots-Tag` protection without applying it to the production domain.
 
 ## Non-blocking items for post-preview measurement
 

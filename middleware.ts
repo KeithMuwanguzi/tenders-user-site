@@ -110,6 +110,14 @@ function gone410(): NextResponse {
   })
 }
 
+function protectPreview(request: NextRequest, response: NextResponse): NextResponse {
+  const hostname = request.nextUrl.hostname.toLowerCase()
+  if (process.env.VERCEL_ENV === 'preview' || hostname.endsWith('.vercel.app')) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive')
+  }
+  return response
+}
+
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl
 
@@ -120,21 +128,21 @@ export function middleware(request: NextRequest): NextResponse {
   if (pathname.startsWith('/tenders/') && request.nextUrl.searchParams.has('source')) {
     const url = request.nextUrl.clone()
     url.searchParams.delete('source')
-    return NextResponse.redirect(url, { status: 301 })
+    return protectPreview(request, NextResponse.redirect(url, { status: 301 }))
   }
 
   // 1. Fix double-slash /blog//slug -> /blog/slug (301)
   if (pathname.startsWith('/blog//')) {
     const url = request.nextUrl.clone()
     url.pathname = pathname.replace('/blog//', '/blog/')
-    return NextResponse.redirect(url, { status: 301 })
+    return protectPreview(request, NextResponse.redirect(url, { status: 301 }))
   }
 
   // 2. 410 Gone for phantom blog slugs
   if (pathname.startsWith('/blog/')) {
     const slug = pathname.slice('/blog/'.length)
     if (slug && (PHANTOM_BLOG_SLUGS.has(slug) || isDoubledSlug(slug) || isSentenceSlug(slug))) {
-      return gone410()
+      return protectPreview(request, gone410())
     }
   }
 
@@ -142,12 +150,12 @@ export function middleware(request: NextRequest): NextResponse {
   if (pathname === '/faq' || pathname === '/faq/') {
     const url = request.nextUrl.clone()
     url.pathname = '/faqs'
-    return NextResponse.redirect(url, { status: 301 })
+    return protectPreview(request, NextResponse.redirect(url, { status: 301 }))
   }
 
-  return NextResponse.next()
+  return protectPreview(request, NextResponse.next())
 }
 
 export const config = {
-  matcher: ['/blog/:path*', '/tenders/:path*', '/faq', '/faq/'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|images/).*)'],
   }
