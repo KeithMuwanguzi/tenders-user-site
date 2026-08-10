@@ -129,14 +129,15 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   // and /tenders/<id>?source=cf, and the canonical pointed at the parameterised
   // form, so Google indexed the duplicate and crawled every notice twice.
   const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}`
-  const isOpen =
-    /open/i.test(tender.status) ||
-    /active/i.test(tender.status) ||
-    tender.status === 'Future'
+  const isOpen = /open|active/i.test(tender.status)
+  const isPlanned = /plan|future/i.test(tender.status)
+  const isIndexable = isOpen || isPlanned
 
   const title = isOpen
     ? `${tender.title} | Live UK Tender | TenderLab`
-    : `${tender.title} | UK Tender Notice | TenderLab`
+    : isPlanned
+      ? `${tender.title} | Upcoming UK Tender | TenderLab`
+      : `${tender.title} | UK Tender Notice | TenderLab`
 
   return {
     title,
@@ -144,7 +145,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     alternates: { canonical },
     openGraph: defaultOpenGraph({ title, description, path: `/tenders/${encodeURIComponent(id)}` }),
     twitter: defaultTwitter({ title, description }),
-    robots: isOpen
+    robots: isIndexable
       ? { index: true, follow: true }
       : { index: false, follow: true },
   }
