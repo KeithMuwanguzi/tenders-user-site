@@ -4,6 +4,7 @@ import test from 'node:test'
 import {
   inferTenderSourceParam,
   isTenderSourceParam,
+  normaliseExternalUrl,
   sourceLabelFromParam,
   sourceParamFromLabel,
   submissionSystemName,
@@ -35,4 +36,15 @@ test('maps official source labels to their stable URL values', () => {
 test('names submission systems separately from official notice services', () => {
   assert.equal(submissionSystemName('https://procontract.due-north.com/'), 'ProContract')
   assert.equal(submissionSystemName('https://example.gov.uk/tender'), 'the buyer’s electronic tendering system')
+})
+
+test('normalises supplier portal links from inconsistent notice data', () => {
+  assert.equal(normaliseExternalUrl('www.cornwall.gov.uk'), 'https://www.cornwall.gov.uk/')
+  assert.equal(
+    normaliseExternalUrl('Please refer to tender opportunity @ www.supplingthesouthwest.org.uk'),
+    'https://www.supplingthesouthwest.org.uk/',
+  )
+  assert.equal(normaliseExternalUrl('https://procontract.due-north.com/path'), 'https://procontract.due-north.com/path')
+  assert.equal(normaliseExternalUrl('not a web address'), null)
+  assert.equal(normaliseExternalUrl('javascript:alert(1)'), null)
 })

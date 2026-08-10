@@ -16,6 +16,27 @@ export function sourceLabelFromParam(param: string): TenderSourceLabel {
   return param === 'ft' ? 'Find a Tender' : 'Contracts Finder'
 }
 
+/** Convert inconsistent notice values into safe absolute HTTP(S) links. */
+export function normaliseExternalUrl(value: unknown): string | null {
+  const raw = String(value || '').replace(/&amp;/gi, '&').trim()
+  if (!raw) return null
+
+  const explicit = raw.match(/https?:\/\/[^\s<>"']+/i)?.[0]
+  const protocolRelative = raw.match(/\/\/[^\s<>"']+/)?.[0]
+  const hostname = raw.match(
+    /\b(?:www\.)?[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\.[a-z]{2,}(?:\/[^\s<>"']*)?/i,
+  )?.[0]
+  const candidate = explicit ||
+    (protocolRelative ? `https:${protocolRelative}` : hostname ? `https://${hostname}` : '')
+
+  try {
+    const parsed = new URL(candidate.replace(/[),.;]+$/, ''))
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? parsed.toString() : null
+  } catch {
+    return null
+  }
+}
+
 /**
  * Resolve the upstream from durable record evidence rather than relying on a
  * query string. Canonical tender URLs deliberately omit ?source=, so detail

@@ -1,4 +1,5 @@
 import {
+  normaliseExternalUrl,
   officialNoticeUrl,
   sourceLabelFromParam,
   type TenderSourceLabel,
@@ -346,10 +347,11 @@ export async function fetchFTNotice(
       sectionBlocks.push({ title: 'Procurement timetable and procedure', text: procedureParts.join('\n\n') })
     }
 
-    const submissionUrl =
+    const submissionUrl = normaliseExternalUrl(
       String(t.submissionMethodDetails || '') ||
       String((t.communication as { atypicalToolUrl?: string })?.atypicalToolUrl || '') ||
-      String((buyer as { contactPoint?: { url?: string } })?.contactPoint?.url || '')
+      String((buyer as { contactPoint?: { url?: string } })?.contactPoint?.url || ''),
+    )
 
     const sections = buildSections(sectionBlocks)
     const plainTender = htmlToPlainText(tenderDesc)
@@ -391,12 +393,12 @@ export async function fetchFTNotice(
         ? String((t.legalBasis as { id: string }).id)
         : null,
       procedure: String(t.procurementMethodDetails || t.procurementMethod || '') || null,
-      submissionUrl: submissionUrl || null,
+      submissionUrl,
       buyerAddress: buyer ? formatPartyAddress(buyer as { address?: { streetAddress?: string } }) : null,
-      buyerWebsite:
+      buyerWebsite: normaliseExternalUrl(
         String((buyer as { details?: { url?: string } })?.details?.url || '') ||
-        String((buyer as { details?: { buyerProfile?: string } })?.details?.buyerProfile || '') ||
-        null,
+        String((buyer as { details?: { buyerProfile?: string } })?.details?.buyerProfile || ''),
+      ),
       regionCode: regionCode || null,
       awardedDate: null,
       awardedValue: null,
@@ -407,8 +409,9 @@ export async function fetchFTNotice(
         .filter((d) => Boolean(d.url) && d.documentType !== 'tenderNotice')
         .map((d) => ({
           title: d.title || d.description || 'Procurement document',
-          url: d.url || '',
-        })),
+          url: normaliseExternalUrl(d.url),
+        }))
+        .filter((d): d is { title: string; url: string } => Boolean(d.url)),
       ...EMPTY_EXTRA,
     }
   } catch {
@@ -474,7 +477,9 @@ export async function fetchCFNotice(
       sector: n.sector || null,
       legalBasis: null,
       procedure: n.procurementMethod || null,
-      submissionUrl: n.url || null,
+      // `n.url` is the Contracts Finder notice, not necessarily the buyer's
+      // e-tendering system. Keep it as the official record only.
+      submissionUrl: null,
       buyerAddress: null,
       buyerWebsite: null,
       regionCode: n.region || null,
@@ -483,10 +488,12 @@ export async function fetchCFNotice(
       awardedSupplier: n.awardedSupplier || null,
       contactName: n.contactName || null,
       contactEmail: n.contactEmail || null,
-      documents: (n.documents || []).map((d: { title?: string; url?: string }) => ({
-        title: d.title || 'Document',
-        url: d.url || '',
-      })),
+      documents: (n.documents || [])
+        .map((d: { title?: string; url?: string }) => ({
+          title: d.title || 'Document',
+          url: normaliseExternalUrl(d.url),
+        }))
+        .filter((d: { title: string; url: string | null }): d is { title: string; url: string } => Boolean(d.url)),
       ...EMPTY_EXTRA,
     }
   } catch {
