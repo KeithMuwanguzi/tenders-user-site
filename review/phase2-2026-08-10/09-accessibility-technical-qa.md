@@ -20,7 +20,7 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 | Redirects | PASS | Sampled historic URLs return one-hop permanent HTTP 308 |
 | Security headers | PASS | CSP, HSTS, nosniff, frame denial, referrer and permissions policies present |
 | Contact validation | PASS | Missing required data returns 400; disallowed origin returns 403; no message sent during test |
-| Contact form delivery | CONTROLLED RETEST | Dual SMTP/VPS implementation reviewed; live delivery requires configured preview variables and one controlled real submission |
+| Contact form delivery | CONTROLLED RETEST | Preview validation and origin protection pass. The content and enquiry upstreams were separated so the established Portal API stores and notifies when website SMTP is absent; one controlled real submission remains before sign-off |
 | Contextual tender enquiry | PASS | Tender title, description, authority, deadline and service type carry to `#enquiry` and prefill the form |
 | Mobile overflow | PASS | Ten representative page types at 390 × 844 showed no horizontal overflow |
 | Responsive headings | PASS | Representative mobile H1 sizes remained within 46.8–54.6 px with controlled wrapping |
@@ -53,11 +53,12 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 4. Legacy absolute TenderLab links could escape a preview into the old implementation. Sanitised internal CMS links and verified zero escaped links in the crawl.
 5. Heavy editorial PNG originals were still shipped beside WebP versions. Removed the unused originals and retained recoverability in Git.
 6. Preview hosts needed an explicit search-engine safety boundary. Added host/environment-aware `X-Robots-Tag` protection without applying it to the production domain.
+7. Tender/blog reads and enquiry delivery were incorrectly forced through one upstream host, while the live infrastructure exposes them separately. Added `PORTAL_INQUIRY_API_URL`; the Portal API now sends its existing notification when website SMTP is unavailable and receives the relay marker only when the website already emailed, preventing both lost and duplicate notifications.
 
 ## Non-blocking items for post-preview measurement
 
 - Split the two global CSS bundles by route only if preview field data confirms mobile LCP remains above the 2.5-second target. The local Lighthouse model reports unused CSS but the measured server and image timings are already fast; premature splitting would add maintenance risk across 100+ templates.
 - Replace the current square schema/favicon logo only when an approved master brand asset is supplied. The visible navigation and footer use the transparent wordmark asset.
-- Run one controlled real enquiry after preview environment variables are confirmed. This is intentionally not simulated because it would create a real external email and portal record.
+- Run one clearly labelled controlled enquiry after the corrected preview is deployed. It will intentionally create one real Portal record and notification, which must then be confirmed before launch.
 
 No Critical accessibility or technical defect remains in the compiled candidate. Private-preview verification is still required before the formal Launch Gate can be signed.

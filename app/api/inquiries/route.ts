@@ -8,17 +8,16 @@ import { getPortalApiUrl } from '@/lib/portal-api'
  *
  * Two independent delivery channels protect against either failing:
  *
- *   1) Email  — sent via Gmail SMTP to INQUIRY_TO. Always-on Vercel runtime
- *               talking to Gmail makes this the guaranteed channel.
+ *   1) Email  — sent via Gmail SMTP to INQUIRY_TO when SMTP is configured.
  *
  *   2) Portal API — forwarded to the FastAPI service on TenderLab's VPS so it
  *                   appears in the admin portal. We mark the request with a
  *                   signed relay header so the API can reject direct abuse
  *                   and skip duplicate email sending.
  *
- * The handler returns success as soon as the email is sent. The DB forward
- * runs after that; if it ultimately fails the team still has the inquiry
- * in their inbox.
+ * If website SMTP is unavailable, the Portal API remains the delivery channel
+ * and sends its own notification email. The relay marker is applied only after
+ * this website has already delivered an email, preventing duplicate messages.
  */
 
 export const runtime = 'nodejs'
@@ -86,7 +85,8 @@ function isRateLimited(key: string): boolean {
 }
 
 function resolvePortalApiUrl(): string {
-  return getPortalApiUrl()
+  const raw = process.env.PORTAL_INQUIRY_API_URL || getPortalApiUrl()
+  return raw.replace(/\/$/, '')
 }
 
 interface InquiryPayload {
@@ -325,6 +325,7 @@ async function wakePortalApi(baseUrl: string): Promise<void> {
 async function forwardToPortalApi(
   portal: PortalInquiry,
   baseUrl: string,
+  relayAlreadyEmailed: boolean,
 ): Promise<{ ok: boolean; status?: number; error?: string }> {
   if (!baseUrl) return { ok: false, error: 'Portal API is not configured' }
   const url = `${baseUrl}/api/inquiries/`
@@ -349,8 +350,14 @@ async function forwardToPortalApi(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Inquiry-Source': 'website-relay',
-          ...(INQUIRY_RELAY_TOKEN ? { 'X-Inquiry-Token': INQUIRY_RELAY_TOKEN } : {}),
+          ...(relayAlreadyEmailed
+            ? {
+                'X-Inquiry-Source': 'website-relay',
+                ...(INQUIRY_RELAY_TOKEN
+                  ? { 'X-Inquiry-Token': INQUIRY_RELAY_TOKEN }
+                  : {}),
+              }
+            : {}),
         },
         body: JSON.stringify(portal),
         signal: controller.signal,
@@ -508,7 +515,11 @@ export async function POST(request: NextRequest) {
     wakePortalApi(portalApiUrl),
   ])
 
-  const forwardResult = await forwardToPortalApi(portal, portalApiUrl)
+  const forwardResult = await forwardToPortalApi(
+    portal,
+    portalApiUrl,
+    emailResult.ok,
+  )
 
   if (!emailResult.ok && !forwardResult.ok) {
     console.error('[inquiries] BOTH channels failed', {

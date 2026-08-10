@@ -3,6 +3,7 @@
   "endpoint": "/api/inquiries/",
   "method": "POST",
   "relayHeaders": ["X-Inquiry-Source", "X-Inquiry-Token"],
+  "relayHeaderRule": "X-Inquiry-Source is sent only when the website already delivered the notification email; otherwise the Portal API sends its own notification.",
   "portalFields": ["name", "email", "phone", "company", "subject", "message"],
   "websiteFields": [
     "name",
