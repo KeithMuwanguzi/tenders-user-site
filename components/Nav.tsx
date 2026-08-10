@@ -168,7 +168,10 @@ export default function Nav() {
     }
 
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      if (document.contains(burgerRef.current)) burgerRef.current?.focus()
+    }
   }, [menuOpen])
 
   const openDropdown  = useCallback((label: string) => {
@@ -185,41 +188,6 @@ export default function Nav() {
     setMobileExpanded(null)
     setOpenMenu(null)
   }, [])
-
-  useEffect(() => {
-    if (!menuOpen || !drawerRef.current) return
-
-    const drawer = drawerRef.current
-    const focusables = Array.from(
-      drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
-    )
-    focusables[0]?.focus()
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        closeAll()
-        return
-      }
-      if (event.key !== 'Tab' || focusables.length === 0) return
-
-      const first = focusables[0]
-      const last = focusables[focusables.length - 1]
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first.focus()
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      burgerRef.current?.focus()
-    }
-  }, [menuOpen, closeAll])
 
   useEffect(() => {
     closeAll()

@@ -48,7 +48,7 @@ export default function GalleryGrid({
           </div>
           <div className="gal__lead-meta">
             <span className="gal__meta-tag" style={{ background: accentColor }}>Primary Source</span>
-            <h4 className="gal__lead-h">{lead.caption}</h4>
+            <h3 className="gal__lead-h">{lead.caption}</h3>
             <p className="gal__lead-p">Primary award document issued by the Contracting Authority. Click any image to view full size.</p>
             <button className="gal__zoom-btn" onClick={() => setLightbox(leadIdx)}>
               View full size

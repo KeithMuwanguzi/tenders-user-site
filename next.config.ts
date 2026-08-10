@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
       { source: '/nhs-tenders', destination: '/tenders', permanent: true },
       { source: '/local-authority-tenders', destination: '/tenders', permanent: true },
       { source: '/sectors/supported-living', destination: '/care-settings/supported-living', permanent: true },
+      // Consolidate true care-setting synonyms so search engines do not split
+      // authority across two pages that answer the same intent.
+      { source: '/care-settings/care-home-accommodation', destination: '/care-settings/residential-care', permanent: true },
+      { source: '/care-settings/health-services', destination: '/care-settings/community-health-services', permanent: true },
+      { source: '/care-settings/housing-support', destination: '/care-settings/housing-related-support', permanent: true },
 
       // ── Trailing-slash normalisation ──────────────────────────────────
       // These appeared as "Page with redirect" in the May 2026 Search Console

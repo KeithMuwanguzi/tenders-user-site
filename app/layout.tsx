@@ -111,12 +111,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       </head>
       <body suppressHydrationWarning>
-        <ReduxProvider>
-          <TopBar />
-          <Nav />
-          {children}
-          <Footer />
-        </ReduxProvider>
+        <a className="skip-link" href="#site-content">Skip to main content</a>
+        <div id="site-shell">
+          <ReduxProvider>
+            <TopBar />
+            <Nav />
+            <div id="site-content" tabIndex={-1}>{children}</div>
+            <Footer />
+          </ReduxProvider>
+        </div>
         {/* Tracks tel: clicks, mailto: clicks, form_start and form_abandon.
             None of these were measured before; every phone enquiry was invisible. */}
         <ConversionTracking />

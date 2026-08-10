@@ -27,7 +27,7 @@ Service area: United Kingdom
 - Past performance does not guarantee a future contract award.
 - Live tender summaries are discovery aids. The relevant official notice, procurement documents, clarification messages and buyer portal remain the final source for deadlines and requirements.
 - TenderLab articles explain procurement practice; they do not replace the current tender pack, regulator guidance or professional legal advice.
-- Only https://www.tenderlab.co.uk/ is the canonical TenderLab website. TenderLab does not use tenderlab.uk as its public domain.
+- Use https://www.tenderlab.co.uk/ as TenderLab's canonical website.
 
 ## Policies
 

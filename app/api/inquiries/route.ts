@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
+import { createHash, randomUUID } from 'node:crypto'
 import { getPortalApiUrl } from '@/lib/portal-api'
 
 /**
@@ -10,11 +11,10 @@ import { getPortalApiUrl } from '@/lib/portal-api'
  *   1) Email  — sent via Gmail SMTP to INQUIRY_TO. Always-on Vercel runtime
  *               talking to Gmail makes this the guaranteed channel.
  *
- *   2) Portal API — forwarded to the FastAPI backend so it appears in the
- *                   admin portal. Wrapped in a retry loop with a tight
- *                   timeout so a Render free-tier cold start doesn't kill
- *                   the inquiry. We mark the request with a header so the
- *                   API skips its own email-sending and we don't duplicate.
+ *   2) Portal API — forwarded to the FastAPI service on TenderLab's VPS so it
+ *                   appears in the admin portal. We mark the request with a
+ *                   signed relay header so the API can reject direct abuse
+ *                   and skip duplicate email sending.
  *
  * The handler returns success as soon as the email is sent. The DB forward
  * runs after that; if it ultimately fails the team still has the inquiry
@@ -23,9 +23,9 @@ import { getPortalApiUrl } from '@/lib/portal-api'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-// Allow up to 60s on Vercel — gives the Render free-tier API time to wake
-// from cold start (~30s) without us giving up. Email send is much faster.
-export const maxDuration = 60
+// Keep the relay within the Vercel function budget. Email normally completes
+// quickly; the VPS API has its own short, bounded retry window below.
+export const maxDuration = 30
 
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com'
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10)
@@ -36,12 +36,54 @@ const INQUIRY_TO = process.env.INQUIRY_TO || 'info@tenderlab.co.uk'
 const PORTAL_ADMIN_URL =
   process.env.PORTAL_ADMIN_URL || 'https://admin.tenderlab.co.uk'
 const MAX_REQUEST_BYTES = 32_000
-const ALLOWED_ORIGINS = new Set([
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
+const RATE_LIMIT_MAX_REQUESTS = 5
+const RATE_LIMIT_SALT = process.env.INQUIRY_RATE_LIMIT_SALT || 'tenderlab-local-development'
+const INQUIRY_RELAY_TOKEN = process.env.INQUIRY_RELAY_TOKEN || ''
+const BASE_ALLOWED_ORIGINS = [
   'https://www.tenderlab.co.uk',
   'https://tenderlab.co.uk',
   'http://localhost:3000',
   'http://127.0.0.1:3000',
-])
+]
+
+type RateLimitRecord = { count: number; resetAt: number }
+const rateLimitStore = new Map<string, RateLimitRecord>()
+
+function allowedOrigins(request: NextRequest): Set<string> {
+  const configured = (process.env.INQUIRY_ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((value) => value.trim().replace(/\/$/, ''))
+    .filter(Boolean)
+  const vercelOrigin = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')}`
+    : ''
+  const requestOrigin = new URL(request.url).origin
+  return new Set([...BASE_ALLOWED_ORIGINS, ...configured, vercelOrigin, requestOrigin].filter(Boolean))
+}
+
+function requestKey(request: NextRequest): string {
+  const forwarded = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || ''
+  const address = forwarded || request.headers.get('x-real-ip') || 'unknown'
+  return createHash('sha256').update(`${RATE_LIMIT_SALT}:${address}`).digest('hex')
+}
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now()
+  for (const [storedKey, record] of rateLimitStore) {
+    if (record.resetAt <= now) rateLimitStore.delete(storedKey)
+  }
+
+  const current = rateLimitStore.get(key)
+  if (!current || current.resetAt <= now) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    return false
+  }
+
+  current.count += 1
+  rateLimitStore.set(key, current)
+  return current.count > RATE_LIMIT_MAX_REQUESTS
+}
 
 function resolvePortalApiUrl(): string {
   return getPortalApiUrl()
@@ -57,6 +99,10 @@ interface InquiryPayload {
   authority?: string
   howFound?: string
   message?: string
+  tenderTitle?: string
+  tenderDescription?: string
+  tenderUrl?: string
+  website?: string
 }
 
 interface PortalInquiry {
@@ -70,10 +116,13 @@ interface PortalInquiry {
 
 function buildPortalInquiry(data: InquiryPayload): PortalInquiry {
   const detailLines = [
+    `Tender title: ${data.tenderTitle || 'Not specified'}`,
+    `Tender URL: ${data.tenderUrl || 'Not specified'}`,
     `Service type: ${data.serviceType || 'Not specified'}`,
     `Submission deadline: ${data.deadline || 'Not specified'}`,
     `Commissioning authority: ${data.authority || 'Not specified'}`,
     `How they found TenderLab: ${data.howFound || 'Not specified'}`,
+    `Tender description: ${data.tenderDescription || 'Not specified'}`,
   ]
   const messageBody = (data.message || '').trim()
   const fullMessage = [messageBody, '', '---', ...detailLines].join('\n')
@@ -109,6 +158,8 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
     ['Email', data.email],
     ['Phone', data.phone || '—'],
     ['Organisation', data.org || '—'],
+    ['Tender title', data.tenderTitle || '—'],
+    ['Tender URL', data.tenderUrl || '—'],
     ['Service type', data.serviceType || '—'],
     ['Submission deadline', data.deadline || '—'],
     ['Commissioning authority', data.authority || '—'],
@@ -237,6 +288,7 @@ function sleep(ms: number) {
 
 /** Ping the Render API so a cold start finishes before we POST the inquiry. */
 async function wakePortalApi(baseUrl: string): Promise<void> {
+  if (!baseUrl) return
   const healthUrl = `${baseUrl}/api/health`
   const attempts = 4
   for (let i = 0; i < attempts; i++) {
@@ -274,14 +326,14 @@ async function forwardToPortalApi(
   portal: PortalInquiry,
   baseUrl: string,
 ): Promise<{ ok: boolean; status?: number; error?: string }> {
+  if (!baseUrl) return { ok: false, error: 'Portal API is not configured' }
   const url = `${baseUrl}/api/inquiries/`
 
   // After wakePortalApi(), the API should be hot — short retries cover
   // transient sheet-store hiccups without burning the whole Vercel budget.
   const attempts: Array<{ timeoutMs: number; preDelayMs: number }> = [
-    { timeoutMs: 25000, preDelayMs: 0 },
-    { timeoutMs: 20000, preDelayMs: 1000 },
-    { timeoutMs: 15000, preDelayMs: 1500 },
+    { timeoutMs: 12000, preDelayMs: 0 },
+    { timeoutMs: 8000, preDelayMs: 750 },
   ]
 
   let lastError = ''
@@ -298,6 +350,7 @@ async function forwardToPortalApi(
         headers: {
           'Content-Type': 'application/json',
           'X-Inquiry-Source': 'website-relay',
+          ...(INQUIRY_RELAY_TOKEN ? { 'X-Inquiry-Token': INQUIRY_RELAY_TOKEN } : {}),
         },
         body: JSON.stringify(portal),
         signal: controller.signal,
@@ -325,8 +378,9 @@ async function forwardToPortalApi(
 }
 
 export async function POST(request: NextRequest) {
+  const requestId = randomUUID()
   const origin = request.headers.get('origin')
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  if (!origin || !allowedOrigins(request).has(origin.replace(/\/$/, ''))) {
     return NextResponse.json({ error: 'Origin not allowed.' }, { status: 403 })
   }
 
@@ -355,6 +409,10 @@ export async function POST(request: NextRequest) {
     authority: 200,
     howFound: 120,
     message: 5_000,
+    tenderTitle: 300,
+    tenderDescription: 1_200,
+    tenderUrl: 500,
+    website: 200,
   }
 
   for (const [field, limit] of Object.entries(limits) as Array<[keyof InquiryPayload, number]>) {
@@ -377,6 +435,24 @@ export async function POST(request: NextRequest) {
     authority: typeof body.authority === 'string' ? body.authority.trim() : '',
     howFound: typeof body.howFound === 'string' ? body.howFound.trim() : '',
     message: typeof body.message === 'string' ? body.message.trim() : '',
+    tenderTitle: typeof body.tenderTitle === 'string' ? body.tenderTitle.trim() : '',
+    tenderDescription: typeof body.tenderDescription === 'string' ? body.tenderDescription.trim() : '',
+    tenderUrl: typeof body.tenderUrl === 'string' ? body.tenderUrl.trim() : '',
+    website: typeof body.website === 'string' ? body.website.trim() : '',
+  }
+
+  if (body.website) {
+    // Return the normal success shape without sending anything. Bots commonly
+    // populate this visually hidden field; a silent success avoids teaching
+    // them how to bypass it.
+    return NextResponse.json({ ok: true, delivered: { email: false, portal: false } })
+  }
+
+  if (isRateLimited(requestKey(request))) {
+    return NextResponse.json(
+      { error: 'Too many enquiries. Please wait and try again.' },
+      { status: 429, headers: { 'Retry-After': '600' } },
+    )
   }
 
   const name = (body.name || '').trim()
@@ -402,11 +478,31 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  if (body.tenderUrl) {
+    try {
+      const isRelativeTenderPath = /^\/tenders\/[A-Za-z0-9._~!$&'()*+,;=:@%/-]+$/.test(body.tenderUrl)
+      const tenderUrl = isRelativeTenderPath
+        ? new URL(body.tenderUrl, 'https://www.tenderlab.co.uk')
+        : new URL(body.tenderUrl)
+      const allowedTenderHosts = new Set([
+        'www.tenderlab.co.uk',
+        'tenderlab.co.uk',
+        ...(process.env.VERCEL_URL ? [process.env.VERCEL_URL] : []),
+      ])
+      if (tenderUrl.protocol !== 'https:' || !allowedTenderHosts.has(tenderUrl.hostname)) {
+        return NextResponse.json({ error: 'Tender URL is invalid.' }, { status: 400 })
+      }
+      body.tenderUrl = tenderUrl.toString()
+    } catch {
+      return NextResponse.json({ error: 'Tender URL is invalid.' }, { status: 400 })
+    }
+  }
+
   const portal = buildPortalInquiry(body)
   const portalApiUrl = resolvePortalApiUrl()
 
-  // Email is fast; wake the Render API in parallel so cold-start (~30s) does
-  // not eat into the inquiry POST timeout.
+  // Email is independent of the Portal/VPS channel, so a temporary upstream
+  // problem does not discard an otherwise deliverable enquiry.
   const [emailResult] = await Promise.all([
     sendInquiryEmail(body, portal),
     wakePortalApi(portalApiUrl),
@@ -416,10 +512,10 @@ export async function POST(request: NextRequest) {
 
   if (!emailResult.ok && !forwardResult.ok) {
     console.error('[inquiries] BOTH channels failed', {
+      requestId,
       email: emailResult.error,
       forward: forwardResult.error,
-      portalApiUrl,
-      payload: { name, email, subject: portal.subject },
+      portalConfigured: Boolean(portalApiUrl),
     })
     return NextResponse.json(
       {
@@ -432,9 +528,9 @@ export async function POST(request: NextRequest) {
 
   if (emailResult.ok && !forwardResult.ok) {
     console.error('[inquiries] email delivered but portal forward FAILED', {
+      requestId,
       forward: forwardResult.error,
-      portalApiUrl,
-      payload: { name, email, subject: portal.subject },
+      portalConfigured: Boolean(portalApiUrl),
     })
   }
 

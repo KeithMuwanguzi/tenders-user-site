@@ -5,7 +5,7 @@ import LegalHeroVisual from "@/components/LegalHeroVisual";
 export const metadata: Metadata = {
   title: "Terms of Service | TenderLab",
   description:
-    "TenderLab Ltd Terms of Service for tender writing, bid writing and consultancy engagements in UK health and social care. Last updated 5 June 2026.",
+    "TenderLab Ltd Terms of Service for tender writing, bid writing and consultancy engagements in UK health and social care. Last updated 10 August 2026.",
   alternates: { canonical: "https://www.tenderlab.co.uk/terms" },
   robots: { index: true, follow: true },
 };
@@ -44,7 +44,7 @@ export default function TermsPage() {
             url: "https://www.tenderlab.co.uk/terms",
             inLanguage: "en-GB",
             publisher: { "@id": "https://www.tenderlab.co.uk/#organization" },
-            dateModified: "2026-07-19",
+            dateModified: "2026-08-10",
           }),
         }}
       />
@@ -72,7 +72,7 @@ export default function TermsPage() {
               writing and consultancy services to UK health and social care providers. Drafted
               under the laws of England and Wales.
             </p>
-            <p className="he-meta">Last updated: 19 July 2026</p>
+            <p className="he-meta">Last updated: 10 August 2026</p>
           </div>
 
           <div className="he-grid he-grid--3col">
@@ -210,7 +210,7 @@ export default function TermsPage() {
               <section className="cs-block" id="sec-10">
                 <h2><span className="num">Section 10</span>Warranties and disclaimers</h2>
                 <p>We warrant that we will perform the services with reasonable care and skill in accordance with industry standards for tender writing and bid consultancy.</p>
-                <p>Where we cite a <strong>92% win rate across 200+ submissions</strong>, this refers to the aggregate of bids where the full submission was written or quality-gated by us and the commissioner has issued a final scoring decision. Failed PQQs we did not draft, withdrawn bids and bids still awaiting outcome are excluded. The win rate is a historical statement, not a contractual warranty of future outcomes.</p>
+                <p>Where we cite a <strong>92% recorded historic win rate</strong>, this is a TenderLab management measure for concluded supported submissions in its recorded reporting cohort. It is reported separately from the figure of more than 200 submissions supported, which is a count of work completed and is not presented as the published denominator for the 92% measure. Failed PQQs we did not draft, withdrawn bids and bids still awaiting outcome are excluded from the historic win-rate measure. Neither figure is a contractual warranty of future outcomes.</p>
                 <p>Past performance is not a guarantee of future results. Tender outcomes depend on factors outside our control, including price competition, evaluator interpretation, commissioner internal processes, your CQC or Ofsted rating, your financial standing and the quality of evidence you supply.</p>
                 <p>Except as expressly stated, we exclude all other warranties to the maximum extent permitted by law.</p>
               </section>

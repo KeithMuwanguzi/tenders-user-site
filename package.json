@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
+    "verify:public": "node scripts/verify-public-assets.mjs",
     "verify:contracts": "node scripts/verify-site-contracts.mjs",
+    "verify:claims": "node scripts/verify-claims.mjs",
     "verify:built": "node scripts/verify-built-site.mjs",
-    "verify": "npm run verify:contracts && npm run typecheck && npm run build && npm run verify:built"
+    "verify": "npm run verify:public && npm run verify:contracts && npm run verify:claims && npm run typecheck && npm run build && npm run verify:built"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",

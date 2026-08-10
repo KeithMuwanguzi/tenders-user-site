@@ -79,7 +79,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The case studies were the binary gateway. The provider\'s first draft included a confident overview of independent living skills work but had not yet tied every sub-point of the question criteria back to a worked example. Business continuity stress testing was thin, assistive technology evidence carried headline references without enabling detail, and coproduction was referenced rather than demonstrated. Each gap is a deduction waiting to happen on a 50/50 sub-point rubric — combined they would have produced a case study at 35–40 of 50, closing the framework door regardless of the quality questions that followed.',
+        body: 'The case studies were the binary gateway. The provider\'s first draft included a confident overview of independent living skills work but had not yet tied every sub-point of the question criteria back to a worked example. Business continuity stress testing was thin, assistive technology evidence carried headline references without enabling detail, and coproduction was referenced rather than demonstrated. TenderLab\'s pre-submission review treated each gap as a scoring risk on the published 50-point rubric; the buyer did not score the earlier draft.',
       },
       {
         num: '08', heading: 'Our Role',
@@ -305,7 +305,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     afterText: 'The provider sits on Lots 1 and 2 with the provider list operational from 27 January 2025, six of eight responses at full marks, with documented improvement points for Q3 and Q8 built into the next bid cycle.',
     relatedSlugs: ['sheffield-dps-overnight-short-breaks', 'bedford-supported-living-framework', 'southend-childrens-residential-framework'],
     closerLead: 'Bring your next tender.',
-    closerSub: '6 of 8 at full marks on a binary rubric. Both lots awarded, placements live from day one.',
+    closerSub: '6 of 8 at full marks on a binary rubric. Both lots were awarded; subsequent placement activity is recorded separately from the award decision.',
   },
 
   'southend-childrens-residential-framework': {
@@ -325,18 +325,18 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's framework approved", 'Local authority contracts', 'Verified award letters', 'SEND panel evidence'],
     galleryImages: [
-      { src: '/Page Content HTML Files/assets/feedback/c3-1.png', caption: 'Award confirmation — Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
-      { src: '/Page Content HTML Files/assets/feedback/c3-2.png', caption: 'Lot 2D score breakdown',                              tag: 'Score breakdown' },
-      { src: '/Page Content HTML Files/assets/feedback/c3-3.png', caption: 'Lot 2E score breakdown',                              tag: 'Score breakdown' },
-      { src: '/Page Content HTML Files/assets/feedback/c3-4.png', caption: 'Lot 2F score breakdown',                              tag: 'Score breakdown' },
-      { src: '/Page Content HTML Files/assets/feedback/c3-5.png', caption: 'Framework terms and conditions',                      tag: 'Framework terms' },
-      { src: '/Page Content HTML Files/assets/feedback/c3-6.png', caption: 'Compliance and standstill notice',                    tag: 'Compliance' },
+      { src: '/images/case-studies/evidence/c3-1.png', caption: 'Award confirmation — Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/evidence/c3-2.png', caption: 'Lot 2D score breakdown',                              tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c3-3.png', caption: 'Lot 2E score breakdown',                              tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c3-4.png', caption: 'Lot 2F score breakdown',                              tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c3-5.png', caption: 'Framework terms and conditions',                      tag: 'Framework terms' },
+      { src: '/images/case-studies/evidence/c3-6.png', caption: 'Compliance and standstill notice',                    tag: 'Compliance' },
     ],
     gallerySource: "Source: Southend-on-Sea City Council Children's Residential and Accommodation Framework award notice, reference DN762527, PCR 2015.",
     sections: [
       {
         num: '01', heading: 'Case Overview',
-        body: "This case study examines the route Choices Healthcare Limited took onto Southend-on-Sea City Council's Children's Residential and Accommodation Framework (DN762527), securing Lot 2 D, E and F for 18+ accommodation. The provider's starting position was adult social care, and the bid needed to translate that evidence base into a children's services register without misrepresenting the cohort or citng superseded policy.",
+        body: "This case study examines the route Choices Healthcare Limited took onto Southend-on-Sea City Council's Children's Residential and Accommodation Framework (DN762527), securing Lot 2 D, E and F for 18+ accommodation. The provider's starting position was adult social care, and the bid needed to translate that evidence base into a children's services register without misrepresenting the cohort or citing superseded policy.",
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
@@ -348,7 +348,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: "Q5 Monitoring Outcomes and Evaluation scored 5/5. This was the highest-scoring question in the provider's submission and the only question at the maximum mark. The rebuild of Q5 around the Southend quality framework, rather than the provider's internal adult-derived monitoring approach, was the structural change that produced the 5/5 result. Q3 Social Value at 4/5 and Q11 Transition Support at 4/5 also performed above threshold.",
+        body: "Q5 Monitoring Outcomes and Evaluation scored 5/5. This was the highest-scoring question in the provider's submission and the only question at the maximum mark. TenderLab's post-result analysis identifies the rebuild around the Southend quality framework as a material improvement from the provider's earlier adult-derived monitoring approach; only the contracting authority determined the final score. Q3 Social Value at 4/5 and Q11 Transition Support at 4/5 also performed above threshold.",
       },
       {
         num: '13', heading: 'Outcome Achieved',
@@ -409,7 +409,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     sections: [
       {
         num: '01', heading: 'Case Overview',
-        body: 'This case study analyses the route Livingstone Health Care Limited took onto Essex County Council\'s Live at Home domiciliary framework, securing Tier 2 places across five priority districts in a single submission window after a procedural Tier 1 miss. Q9 Video evidence had not been submitted at first close. The clarification window passed without response, forcing a Tier 2 outcome on CQC scoring. The provider\'s underlying CQC profile was strong enough for Tier 1 had the video evidence been submitted in window.',
+        body: 'This case study analyses the route Livingstone Health Care Limited took onto Essex County Council\'s Live at Home domiciliary framework, securing Tier 2 places across five priority districts in a single submission window after a procedural Tier 1 miss. Q9 Video evidence had not been submitted at first close and the clarification window passed without response. TenderLab\'s review of the published criteria and provider record indicates that the missing evidence prevented a stronger tier assessment; the counterfactual Tier 1 outcome was not tested by the authority.',
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
@@ -421,7 +421,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Packaging the digital systems contracts and the branch coordinate data against the scoring specification moved the Tier 2 score above threshold across all five districts. The Tier 1 path — Q9 video evidence, digital systems contracts and CQC documentation — was locked for the next refresh before the current window closed, so the provider entered the next cycle with a complete Tier 1 submission already built.',
+        body: 'The final submission packaged the digital systems contracts and branch coordinate data against the scoring specification. The authority confirmed Tier 2 places across all five districts. TenderLab also documented a proposed Tier 1 evidence path — Q9 video evidence, digital systems contracts and CQC documentation — for use in a future refresh, subject to the next published requirements.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
@@ -462,13 +462,13 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's framework approved", 'SEND Commissioning', 'Verified award letters', 'Standstill cleared'],
     galleryImages: [
-      { src: '/Page Content HTML Files/assets/feedback/c5-1.png', caption: 'Provisional award — Hertfordshire SEND Framework', tag: 'Award confirmation', isLead: true },
-      { src: '/Page Content HTML Files/assets/feedback/c5-2.png', caption: 'Lot 1 award letter — HCC2314690',                   tag: 'Lot award' },
-      { src: '/Page Content HTML Files/assets/feedback/c5-3.png', caption: 'Lot 2 award letter — HCC2314691',                   tag: 'Lot award' },
-      { src: '/Page Content HTML Files/assets/feedback/c5-4.png', caption: 'Standstill notice',                                  tag: 'Compliance' },
-      { src: '/Page Content HTML Files/assets/feedback/c5-5.png', caption: 'Score breakdown — quality questions',                tag: 'Score breakdown' },
-      { src: '/Page Content HTML Files/assets/feedback/c5-6.png', caption: 'Score breakdown — page 2',                           tag: 'Score breakdown' },
-      { src: '/Page Content HTML Files/assets/feedback/c5-7.png', caption: 'Framework compliance documentation',                 tag: 'Compliance' },
+      { src: '/images/case-studies/evidence/c5-1.png', caption: 'Provisional award — Hertfordshire SEND Framework', tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/evidence/c5-2.png', caption: 'Lot 1 award letter — HCC2314690',                   tag: 'Lot award' },
+      { src: '/images/case-studies/evidence/c5-3.png', caption: 'Lot 2 award letter — HCC2314691',                   tag: 'Lot award' },
+      { src: '/images/case-studies/evidence/c5-4.png', caption: 'Standstill notice',                                  tag: 'Compliance' },
+      { src: '/images/case-studies/evidence/c5-5.png', caption: 'Score breakdown — quality questions',                tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c5-6.png', caption: 'Score breakdown — page 2',                           tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c5-7.png', caption: 'Framework compliance documentation',                 tag: 'Compliance' },
     ],
     gallerySource: 'Source: Hertfordshire County Council provisional award notifications HCC2314690 and HCC2314691 dated 11 August 2025. Standstill closed 21 August 2025.',
     sections: [

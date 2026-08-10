@@ -20,13 +20,12 @@ function validDate(value: string | null | undefined): Date | undefined {
 }
 
 // Hardcoded list of care setting slugs. Mirrors every HTML file under
-// public/Page Content HTML Files/care-settings/ minus index.html.
+// content/private-source-assets/page-content-html/care-settings/ minus index.html.
 // Hardcoded (rather than read via fs.readdir) because Vercel serverless does
 // not expose the public folder file tree at sitemap render time, which is why
 // these URLs were previously absent from the sitemap.
 const CARE_SETTING_SLUGS: string[] = [
   'autism-services',
-  'care-home-accommodation',
   'childrens-residential-care',
   'childrens-services',
   'childrens-short-breaks',
@@ -42,10 +41,8 @@ const CARE_SETTING_SLUGS: string[] = [
   'extra-care-housing',
   'family-support-and-outreach',
   'fostering-services',
-  'health-services',
   'hospital-discharge-services',
   'housing-related-support',
-  'housing-support',
   'learning-disability-services',
   'leaving-care-services',
   'live-in-care',
@@ -118,10 +115,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Sheet has duplicate rows (we have seen this happen during manual data entry).
   const blogResult = await fetchBlogsResult()
   if (blogResult.status === 'unavailable') {
-    // Serving a temporary 5xx preserves the last successfully crawled sitemap.
-    // Returning an empty blog set during an upstream outage would falsely tell
-    // search engines that every published article had been withdrawn.
-    throw new Error('The published blog service is temporarily unavailable.')
+    // A sitemap is a discovery aid, not a deletion instruction. Keep the
+    // independently valid structural routes available during a CMS outage;
+    // published article URLs return automatically when the feed recovers.
+    console.warn('[sitemap] blog feed unavailable; returning structural routes')
   }
 
   const seen = new Set<string>()
@@ -139,5 +136,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }))
 
-  return [...core, ...services, ...careSettings, ...tenderHubs, ...caseStudies, ...blog]
+  return [...core, ...services, ...careSettings, ...tenderHubs, ...guides, ...caseStudies, ...blog]
 }

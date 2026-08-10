@@ -18,7 +18,7 @@ export const BRAND = {
   clientSatisfaction: '98%',
   positioning: 'Evaluator-trained writers with care sector expertise.',
   description:
-    'Specialist tender writing and bid consultancy operating exclusively within UK health and social care procurement. 92% win rate across 200+ local authority and NHS submissions.',
+    'Specialist tender writing and bid consultancy for UK health and social care procurement. TenderLab records a 92% historic win rate and has separately supported more than 200 submissions.',
 }
 
 // Verified off-domain profiles. Single source of truth for the Organization

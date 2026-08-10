@@ -106,7 +106,10 @@ export default function BlogDetailView({ post, posts }: Props) {
 
             <div className="blog-v2-article__hero-support">
               {post.excerpt && <p className="blog-v2-article__lead">{post.excerpt}</p>}
-              <p className="blog-v2-article__byline">TenderLab editorial team</p>
+              <p className="blog-v2-article__byline">
+                Published by the TenderLab editorial team. Tender guidance is checked against the source material
+                available on the publication date.
+              </p>
             </div>
           </div>
         </div>
@@ -138,7 +141,7 @@ export default function BlogDetailView({ post, posts }: Props) {
                 terms must be checked against the buyer&apos;s current notice and tender pack.
               </p>
             </div>
-            <Link href="/contact" className="btn btn-primary">
+            <Link href="/contact#enquiry" className="btn btn-primary">
               Discuss a live tender
             </Link>
             <Link href="/blog" className="btn btn-ghost" scroll>

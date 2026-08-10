@@ -179,6 +179,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
           <label className="cf-label" htmlFor="cf-service">Tender / Service type</label>
           <div className="cf-select-wrap">
             <select id="cf-service" className="cf-select"
+              name="serviceType"
               value={form.serviceType} onChange={set('serviceType')}>
               <option value="">Select a service</option>
               {serviceOptions.map(o => <option key={o} value={o}>{o}</option>)}
@@ -188,6 +189,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
         <div className="cf-field">
           <label className="cf-label" htmlFor="cf-deadline">Submission deadline</label>
           <input id="cf-deadline" className="cf-input" type="date"
+            name="deadline"
             value={form.deadline} onChange={set('deadline')} />
         </div>
         <div className="cf-field">
@@ -201,6 +203,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
           <label className="cf-label" htmlFor="cf-how">How did you find TenderLab?</label>
           <div className="cf-select-wrap">
             <select id="cf-how" className="cf-select"
+              name="howFound"
               value={form.howFound} onChange={set('howFound')}>
               <option value="">Select an option</option>
               {HOW_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
@@ -211,6 +214,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
 
       {form.tenderTitle && (
         <div className="cf-context" aria-label="Tender carried over from the opportunity page">
+          <input type="hidden" name="tenderUrl" value={form.tenderUrl} />
           <p className="cf-context__label">Tender selected</p>
           <div className="cf-field cf-field--full">
             <label className="cf-label" htmlFor="cf-tender-title">Tender title</label>

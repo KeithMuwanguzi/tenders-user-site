@@ -26,8 +26,8 @@ export default function ConsultationCTA({
   attribution,
 }: Props) {
   const href = attribution
-    ? `/contact?ref=${encodeURIComponent(attribution)}`
-    : '/contact'
+    ? `/contact?ref=${encodeURIComponent(attribution)}#enquiry`
+    : '/contact#enquiry'
   return (
     <div className="he-cta-card">
       <div className="he-cta-card__ttl">{title}</div>

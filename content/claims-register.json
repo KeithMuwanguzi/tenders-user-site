@@ -1,0 +1,31 @@
+{
+  "version": "2026-08-10",
+  "owner": "TenderLab management",
+  "independentlyAudited": false,
+  "claims": [
+    {
+      "id": "recorded-historic-win-rate",
+      "display": "92%",
+      "definition": "Recorded historic win rate for TenderLab-supported submissions in the concluded management reporting cohort.",
+      "limitations": "The reporting period and denominator are held in TenderLab management records and are not inferred from the separate 200+ submissions-supported figure. It is not a forecast or guarantee."
+    },
+    {
+      "id": "submissions-supported",
+      "display": "200+",
+      "definition": "More than 200 tender submissions completed or reviewed with TenderLab support.",
+      "limitations": "This is a volume measure and is not the denominator used for the 92% historic win-rate measure."
+    },
+    {
+      "id": "aggregate-contract-value",
+      "display": "£50M+",
+      "definition": "More than £50 million in aggregate contract value linked to successful TenderLab-supported submissions.",
+      "limitations": "Aggregate contract value is not TenderLab revenue, guaranteed provider revenue or proof that every available lot or call-off was used."
+    },
+    {
+      "id": "documented-question-score",
+      "display": "5/5",
+      "definition": "TenderLab-supported answers that received a documented maximum score where the authority used a five-point evaluation scale.",
+      "limitations": "This is a question-level result, not a universal score across every response or procurement."
+    }
+  ]
+}

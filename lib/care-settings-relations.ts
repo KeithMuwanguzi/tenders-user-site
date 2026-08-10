@@ -5,7 +5,7 @@
  * the 4 most cohort-adjacent siblings to render in the right-rail widget.
  *
  * Update this file whenever a new care setting slug is added in
- * public/Page Content HTML Files/care-settings/.
+ * content/private-source-assets/page-content-html/care-settings/.
  *
  * See references/layout-system.md in the tenderlab-seo-engine skill.
  */

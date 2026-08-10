@@ -55,6 +55,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
     },
     author: { '@type': 'Organization', name: 'TenderLab', url: 'https://www.tenderlab.co.uk' },
     publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+    dateModified: '2026-08-10',
     articleSection: study.categoryLabel,
     inLanguage: 'en-GB',
   }
@@ -79,7 +80,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         imageAlt={`Redacted award evidence for ${study.council} case study`}
         imageFit="contain"
         primaryLabel="Discuss a similar tender"
-        primaryHref="/contact"
+        primaryHref="/contact#enquiry"
         secondaryLabel="Back to all case studies"
         secondaryHref="/case-studies"
         tone="cream"
@@ -250,7 +251,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
               We will read the published conditions and assess the evidence, delivery and commercial position before
               agreeing to full writing support.
             </p>
-            <Link href="/contact" className="ep-button ep-button--primary">
+            <Link href="/contact#enquiry" className="ep-button ep-button--primary">
               Share the opportunity <Arrow />
             </Link>
           </div>

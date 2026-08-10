@@ -18,7 +18,7 @@ import {
 
 const HTML_DIR = path.join(
   process.cwd(),
-  'public/Page Content HTML Files/care-settings'
+  'content/private-source-assets/page-content-html/care-settings'
 )
 
 type Props = { params: Promise<{ slug: string }> }
@@ -326,7 +326,7 @@ export default async function CareSettingPage({ params }: Props) {
         imageAlt={visual.alt}
         tone={visual.tone}
         primaryLabel="Ask us to assess a tender"
-        primaryHref="/contact"
+        primaryHref="/contact#enquiry"
         secondaryLabel="Browse live tenders"
         secondaryHref="/tenders"
       />
@@ -418,7 +418,7 @@ export default async function CareSettingPage({ params }: Props) {
               Share the buyer documents. We will identify the mandatory conditions,
               evidence gaps and practical next step before full tender writing begins.
             </p>
-            <Link href="/contact" className="ep-button ep-button--primary">
+            <Link href="/contact#enquiry" className="ep-button ep-button--primary">
               Contact TenderLab <span aria-hidden="true">↗</span>
             </Link>
           </div>

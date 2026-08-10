@@ -99,6 +99,7 @@ export default async function TendersPage() {
       ])} />
       <JsonLd id="ld-tenders-faq" data={faqSchema(FAQ)} />
 
+      <main className="tenders-page">
       <section className="tenders-search-hero" aria-labelledby="live-tenders-title">
         <div className="container tenders-search-hero__grid">
           <div className="tenders-search-hero__copy">
@@ -126,7 +127,7 @@ export default async function TendersPage() {
           </figure>
           <div className="tenders-search-hero__actions">
             <a href="#live-tender-results" className="btn btn-primary">Search live tenders</a>
-            <Link href="/contact?ref=tender-fit" className="btn btn-ghost">Check whether a tender fits</Link>
+            <Link href="/contact?ref=tender-fit#enquiry" className="btn btn-ghost">Check whether a tender fits</Link>
           </div>
         </div>
       </section>
@@ -150,7 +151,7 @@ export default async function TendersPage() {
           <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: 0 }}>
             Finding a notice is only the beginning. Review eligibility, evidence, mobilisation,
             staffing and commercial exposure before committing the team. If you have a live tender,
-            <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead" style={{ color: '#C8102E', fontWeight: 600 }}> share the opportunity with TenderLab</Link> or
+              <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead#enquiry" style={{ color: '#C8102E', fontWeight: 600 }}> share the opportunity with TenderLab</Link> or
             compare our <Link href="/services" style={{ color: '#C8102E', fontWeight: 600 }}>tender support services</Link>.
           </p>
         </div>
@@ -176,12 +177,13 @@ export default async function TendersPage() {
             <h2>Have you found a tender that could change your business?</h2>
             <p>Share the tender pack and deadline. We will explain the fit, the evidence required and the most useful next step before writing begins.</p>
             <div className="cta-banner__actions">
-              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead" className="btn btn-white">Discuss this opportunity</Link>
+              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead#enquiry" className="btn btn-white">Discuss this opportunity</Link>
               <Link href="/services/bid-writing" className="btn btn-outline-white">Explore bid writing</Link>
             </div>
           </div>
         </div>
       </section>
+      </main>
     </>
   )
 }

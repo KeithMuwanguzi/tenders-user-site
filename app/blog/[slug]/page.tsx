@@ -42,9 +42,11 @@ export default async function BlogSlugPage({ params }: Props) {
             description: post.excerpt,
             url: `https://www.tenderlab.co.uk/blog/${slug}`,
             datePublished: post.publishedAt || undefined,
+            dateModified: post.publishedAt || undefined,
             mainEntityOfPage: `https://www.tenderlab.co.uk/blog/${slug}`,
             image: post.imageUrl || undefined,
             publisher: { '@id': 'https://www.tenderlab.co.uk/#organization' },
+            author: { '@type': 'Organization', name: 'TenderLab editorial team', url: 'https://www.tenderlab.co.uk/about' },
             inLanguage: 'en-GB',
           }),
         }}

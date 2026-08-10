@@ -5,7 +5,7 @@ import EditorialFaq from '@/components/EditorialFaq'
 
 export const metadata: Metadata = {
   title: 'About TenderLab | Health and Social Care Tender Writing Specialists',
-  description: 'Meet TenderLab, a specialist UK health and social care tender writing consultancy with a recorded 92% historic win rate across 200+ supported submissions.',
+  description: 'Meet TenderLab, a specialist UK health and social care tender writing consultancy with a recorded 92% historic win rate and more than 200 submissions supported as a separate measure.',
   alternates: { canonical: '/about' },
 }
 

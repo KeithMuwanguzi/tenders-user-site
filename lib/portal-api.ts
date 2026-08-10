@@ -8,10 +8,10 @@ export function getPortalApiUrl(): string {
     return ''
   }
 
-  const raw =
-    process.env.PORTAL_API_URL ||
-    process.env.NEXT_PUBLIC_PORTAL_API_URL ||
-    'http://api:8000'
+  // Server integrations must be configured explicitly. Do not fall back to a
+  // Docker-only hostname, a retired provider or a NEXT_PUBLIC variable: those
+  // behaviours make a Vercel build look healthy while runtime data is broken.
+  const raw = process.env.PORTAL_API_URL || ''
   return raw.replace(/\/$/, '')
 }
 

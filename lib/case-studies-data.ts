@@ -30,7 +30,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Gateway selection, high competition',
     result: '1 of 44 from 154',
     lots: '3 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c4-1.png',
+    image: '/images/case-studies/evidence/c4-1.png',
   },
   {
     slug: 'essex-domiciliary-framework-2025',
@@ -46,7 +46,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Multi-lot, deterministic banding',
     result: '5 Tier 2 lots',
     lots: '5 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c2-01.png',
+    image: '/images/case-studies/evidence/c2-01.png',
   },
   {
     slug: 'dorset-care-support-open-framework',
@@ -62,7 +62,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Multi-lot, multi-cohort',
     result: '5 lots on first application',
     lots: '5 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c6-1.png',
+    image: '/images/case-studies/evidence/c6-1.png',
   },
   {
     slug: 'bradford-mental-health-provider-list',
@@ -78,7 +78,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Binary rubric precision',
     result: '6/8 full marks',
     lots: '2 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c8-1.png',
+    image: '/images/case-studies/evidence/c8-1.png',
   },
   {
     slug: 'southend-childrens-residential-framework',
@@ -94,7 +94,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'High complexity, multi-sub-lot',
     result: 'Lot 2 D, E and F',
     lots: '3 sub-lots',
-    image: '/Page Content HTML Files/assets/feedback/c3-1.png',
+    image: '/images/case-studies/evidence/c3-1.png',
   },
   {
     slug: 'essex-live-at-home-tier-2-framework',
@@ -110,7 +110,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Procedural recovery, multi-lot',
     result: '5 Tier 2 lots',
     lots: '5 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c7-01.png',
+    image: '/images/case-studies/evidence/c7-01.png',
   },
   {
     slug: 'hertfordshire-cyp-homecare-framework',
@@ -126,7 +126,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'SEND panel fluency',
     result: 'Both lots awarded',
     lots: '2 lots awarded',
-    image: '/Page Content HTML Files/assets/feedback/c5-1.png',
+    image: '/images/case-studies/evidence/c5-1.png',
   },
   {
     slug: 'central-bedfordshire-supported-living',
@@ -142,7 +142,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Multi-cohort, MEAT-weighted',
     result: 'Lot 1 awarded',
     lots: '1 lot awarded',
-    image: '/Page Content HTML Files/assets/feedback/c9-1.png',
+    image: '/images/case-studies/evidence/c9-1.png',
   },
   {
     slug: 'childrens-services-direct-contract',
@@ -158,7 +158,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'Cohort recalibration, six-question rubric',
     result: 'Position awarded',
     lots: '1 position',
-    image: '/Page Content HTML Files/assets/feedback/c10-1.png',
+    image: '/images/case-studies/evidence/c10-1.png',
   },
   {
     slug: 'sheffield-dps-overnight-short-breaks',
@@ -174,7 +174,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     complexity: 'First-time DPS entry',
     result: 'Lot 3 awarded',
     lots: '1 lot awarded',
-    image: '/Page Content HTML Files/assets/feedback/c1-1.png',
+    image: '/images/case-studies/evidence/c1-1.png',
   },
 ]
 

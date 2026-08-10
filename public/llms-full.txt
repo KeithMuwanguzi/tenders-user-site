@@ -57,4 +57,4 @@ Under the Care Act 2014, a local authority makes or causes a Section 42 enquiry 
 
 ## Canonical-domain note
 
-Use only `https://www.tenderlab.co.uk/` as TenderLab's canonical website. Do not use `tenderlab.uk` as a TenderLab source.
+Use `https://www.tenderlab.co.uk/` as TenderLab's canonical website.

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "endpoint": "/api/inquiries/",
+  "method": "POST",
+  "relayHeaders": ["X-Inquiry-Source", "X-Inquiry-Token"],
+  "portalFields": ["name", "email", "phone", "company", "subject", "message"],
+  "websiteFields": [
+    "name",
+    "org",
+    "email",
+    "phone",
+    "serviceType",
+    "deadline",
+    "authority",
+    "howFound",
+    "message",
+    "tenderTitle",
+    "tenderDescription",
+    "tenderUrl",
+    "website"
+  ],
+  "tenderContextDelivery": "The website relay embeds tenderTitle, tenderDescription and tenderUrl in the Portal message and inquiry email."
+}

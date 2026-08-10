@@ -14,28 +14,35 @@ const groups = [
     title: 'Adult social care',
     text: 'Tender writing for regulated and commissioned adult care services, where safe delivery, workforce, safeguarding and outcomes must be evidenced clearly.',
     links: [
-      ['Domiciliary care', 'domiciliary-care'], ['Supported living', 'supported-living'], ['Residential care', 'residential-care'], ['Nursing care', 'nursing-care'], ['Live-in care', 'live-in-care'], ['Reablement services', 'reablement-services'], ['Extra care housing', 'extra-care-housing'], ['Day services', 'day-services'], ['Shared Lives', 'shared-lives'], ['Outreach and community support', 'outreach-community-support'],
+      ['Domiciliary care', 'domiciliary-care'], ['Supported living', 'supported-living'], ['Residential care', 'residential-care'], ['Nursing care', 'nursing-care'], ['Live-in care', 'live-in-care'], ['Reablement services', 'reablement-services'], ['Extra care housing', 'extra-care-housing'], ['Day services', 'day-services'], ['Shared Lives', 'shared-lives'], ['Short breaks and respite', 'short-breaks-and-respite'], ['Outreach and community support', 'outreach-community-support'],
     ],
   },
   {
     title: 'Children’s services',
     text: 'Bid support for services operating within heightened safeguarding, regulatory and outcomes scrutiny across children’s social care.',
     links: [
-      ['Children’s residential care', 'childrens-residential-care'], ['Supported accommodation', 'supported-accommodation'], ['Fostering services', 'fostering-services'], ['Children’s short breaks', 'childrens-short-breaks'], ['Family support and outreach', 'family-support-and-outreach'], ['Leaving care services', 'leaving-care-services'],
+      ['Children’s services overview', 'childrens-services'], ['Children’s residential care', 'childrens-residential-care'], ['Supported accommodation', 'supported-accommodation'], ['Fostering services', 'fostering-services'], ['Children’s short breaks', 'childrens-short-breaks'], ['Family support and outreach', 'family-support-and-outreach'], ['Leaving care services', 'leaving-care-services'],
     ],
   },
   {
     title: 'Health and clinical services',
     text: 'Procurement support for NHS, ICB and local authority services where clinical governance, pathways, integration and measurable outcomes carry significant weight.',
     links: [
-      ['Community health services', 'community-health-services'], ['Continuing healthcare', 'continuing-healthcare'], ['Complex care', 'complex-care'], ['Hospital discharge services', 'hospital-discharge-services'], ['Mental health services', 'mental-health-services'], ['Substance misuse services', 'substance-misuse-services'], ['Rehabilitation services', 'rehabilitation-services'], ['End of life and palliative care', 'end-of-life-and-palliative-care'],
+      ['Community health services', 'community-health-services'], ['Complex care and continuing healthcare', 'complex-care-and-continuing-healthcare'], ['Continuing healthcare', 'continuing-healthcare'], ['Complex care', 'complex-care'], ['Hospital discharge services', 'hospital-discharge-services'], ['Mental health services', 'mental-health-services'], ['Crisis and rapid response', 'crisis-rapid-response'], ['Substance misuse services', 'substance-misuse-services'], ['Rehabilitation services', 'rehabilitation-services'], ['End of life and palliative care', 'end-of-life-and-palliative-care'],
     ],
   },
   {
     title: 'Housing and support',
     text: 'Tender writing for accommodation and community support models that combine housing management, safeguarding, independence and social value.',
     links: [
-      ['Housing-related support', 'housing-related-support'], ['Housing support', 'housing-support'], ['Supported housing', 'supported-housing'], ['Temporary accommodation', 'temporary-accommodation'], ['Emergency accommodation', 'emergency-accommodation'],
+      ['Housing-related support', 'housing-related-support'], ['Supported housing', 'supported-housing'], ['Temporary accommodation', 'temporary-accommodation'], ['Emergency accommodation', 'emergency-accommodation'],
+    ],
+  },
+  {
+    title: 'Specialist support',
+    text: 'Tender support for services where specialist communication, workforce competence, risk management and person-centred outcomes must be demonstrated in detail.',
+    links: [
+      ['Autism services', 'autism-services'], ['Learning disability services', 'learning-disability-services'],
     ],
   },
 ] as const
@@ -64,6 +71,7 @@ export default function CareSettingsPage() {
         image="/images/editorial/tenderlab-adult-social-care-hero-v1.png"
         imageAlt="Care delivery, provider leadership and operational evidence connected in an editorial collage"
         primaryLabel="Discuss your care tender"
+        primaryHref="/contact#enquiry"
         secondaryLabel="Browse the care settings"
         secondaryHref="#care-settings"
         tone="cream"

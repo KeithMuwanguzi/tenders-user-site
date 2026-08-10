@@ -1206,6 +1206,30 @@
   .tl-consent__actions { min-width: 0; }
 }
 
+/* Keyboard users can bypass the repeated top bar and navigation. */
+.skip-link {
+  position: fixed;
+  z-index: 10000;
+  top: 10px;
+  left: 10px;
+  padding: 12px 16px;
+  border: 2px solid var(--ep-ink);
+  border-radius: 999px;
+  background: var(--ep-paper);
+  color: var(--ep-ink);
+  font: 700 14px/1 var(--ep-sans);
+  transform: translateY(-160%);
+  transition: transform 140ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+#site-content:focus {
+  outline: none;
+}
+
 /* Decision-maker guide cluster. It is deliberately editorial rather than a
    generic blog grid so problem-aware searchers can move through a decision. */
 .ep-guides { background: var(--ep-paper); }

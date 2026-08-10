@@ -60,7 +60,7 @@ export default async function TenderCategoryLanding({
                 TenderLab can test the published conditions, evidence, delivery model and commercial
                 fit before writing begins.
               </p>
-              <Link href={`/contact?ref=${page.slug}-opportunity-review`}>
+              <Link href={`/contact?ref=${page.slug}-opportunity-review#enquiry`}>
                 Ask TenderLab to review this tender
               </Link>
             </figcaption>
@@ -69,7 +69,7 @@ export default async function TenderCategoryLanding({
             <Link href="#current-opportunities" className="btn btn-primary">
               Browse current opportunities
             </Link>
-            <Link href={`/contact?ref=${page.slug}-tenders`} className="btn btn-ghost">
+            <Link href={`/contact?ref=${page.slug}-tenders#enquiry`} className="btn btn-ghost">
               Get tender support
             </Link>
           </div>
@@ -150,7 +150,7 @@ export default async function TenderCategoryLanding({
             and the support most likely to improve the submission.
           </p>
           <div className="services-cta__actions">
-            <Link href={`/contact?utm_source=${page.slug}&utm_medium=cta&utm_campaign=tender_support`} className="btn btn-white">
+            <Link href={`/contact?utm_source=${page.slug}&utm_medium=cta&utm_campaign=tender_support#enquiry`} className="btn btn-white">
               Share the opportunity
             </Link>
             <Link href="/services" className="btn btn-outline-white">Compare support options</Link>
