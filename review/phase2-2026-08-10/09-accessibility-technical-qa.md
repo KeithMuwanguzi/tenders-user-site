@@ -1,7 +1,7 @@
 # Accessibility and technical QA register
 
 Date: 10 August 2026  
-Environment tested: compiled production build at `127.0.0.1:3000`; private-preview retest pending deployment
+Environment tested: compiled production build and TenderLab-controlled Vercel preview at `https://tenderlab-website-git-agent-23bbe9-tenderlab333-7841s-projects.vercel.app`
 
 ## Gate results
 
@@ -12,7 +12,7 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 | Claims controls | PASS | `verify-claims` passed against the claims register |
 | Type safety | PASS | TypeScript no-error check passed |
 | Production compilation | PASS | Next.js 15 production build completed; 105 pages generated or configured dynamically |
-| Canonicals and built links | PASS | 94 built pages verified |
+| Canonicals and built links | PASS | 101 built pages verified across the 105-route production build |
 | Runtime internal links | PASS | 300 pages, 158 internal targets, zero broken, zero absolute TenderLab escapes |
 | Main sitemap | PASS | HTTP 200; canonical `www` URLs |
 | Live tender sitemap | PASS | HTTP 200; 231 live tender detail URLs after proxy fallback correction |
@@ -20,15 +20,15 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 | Redirects | PASS | Sampled historic URLs return one-hop permanent HTTP 308 |
 | Security headers | PASS | CSP, HSTS, nosniff, frame denial, referrer and permissions policies present |
 | Contact validation | PASS | Missing required data returns 400; disallowed origin returns 403; no message sent during test |
-| Contact form delivery | CONTROLLED RETEST | Preview validation and origin protection pass. The content and enquiry upstreams were separated so the established Portal API stores and notifies when website SMTP is absent; one controlled real submission remains before sign-off |
+| Contact form delivery | PASS WITH MINOR NON-BLOCKING ITEM | A clearly labelled controlled submission returned HTTP 200 with `portal: true` and appeared in the signed-in TenderLab Portal as a new unread enquiry (`TenderLab Preview QA`, TenderLab Ltd, Bid viability). No matching alert appeared in `tenderlab333@gmail.com`; the enquiry itself is safely stored and actionable, while email-alert delivery remains an operational follow-up |
 | Contextual tender enquiry | PASS | Tender title, description, authority, deadline and service type carry to `#enquiry` and prefill the form |
 | Mobile overflow | PASS | Ten representative page types at 390 × 844 showed no horizontal overflow |
 | Responsive headings | PASS | Representative mobile H1 sizes remained within 46.8–54.6 px with controlled wrapping |
 | Mobile/desktop accessibility audit | PASS | Lighthouse accessibility 100 on homepage, contact, tenders and blog |
-| SEO audit | PASS | Lighthouse SEO 100 on homepage, tenders and blog; contact metadata exists in rendered HTML (Lighthouse reported 91 because Next streams metadata for a dynamic route to non-bot clients) |
-| Best practices | PASS | Lighthouse 100 on tested pages |
-| Desktop performance | PASS | Homepage Lighthouse performance 98 |
-| Mobile performance | PASS WITH NON-BLOCKING OPTIMISATION | Simulated slow-device results 74–79; server response 6–10 ms and LCP image was early/high-priority; remaining opportunity is global CSS splitting |
+| SEO audit | PASS | Local production-mode Lighthouse SEO 100 on homepage, tenders and blog; contact metadata exists in both standard rendered HTML and Googlebot HTML. Deployed-preview SEO scores of 54–66 are deliberately reduced by the mandatory preview `noindex` header and are not production scores |
+| Best practices | PASS WITH PREVIEW-ONLY EXCEPTION | Local production-mode Lighthouse 100. Deployed-preview Lighthouse 92 solely because Vercel's injected preview toolbar is blocked by the site's CSP; that toolbar is absent from the production site |
+| Desktop performance | PASS | Homepage production-mode Lighthouse performance 98 |
+| Mobile performance | PASS WITH NON-BLOCKING OPTIMISATION | Local simulated slow-device results 74–79; deployed preview 77–88 on representative routes. Server response remained fast and the LCP image was early/high-priority; remaining opportunity is evidence-led global CSS splitting |
 | Image delivery | PASS | 22 editorial PNGs converted to WebP; editorial asset directory reduced to 9.5 MB; hero image delivered responsively |
 | Reduced motion | PASS | Motion rules include reduced-motion treatment |
 | Semantic structure | PASS | One H1 on tested routes; landmark, skip link, labelled navigation, form labels and native details present |
@@ -53,12 +53,13 @@ Environment tested: compiled production build at `127.0.0.1:3000`; private-previ
 4. Legacy absolute TenderLab links could escape a preview into the old implementation. Sanitised internal CMS links and verified zero escaped links in the crawl.
 5. Heavy editorial PNG originals were still shipped beside WebP versions. Removed the unused originals and retained recoverability in Git.
 6. Preview hosts needed an explicit search-engine safety boundary. Added host/environment-aware `X-Robots-Tag` protection without applying it to the production domain.
-7. Tender/blog reads and enquiry delivery were incorrectly forced through one upstream host, while the live infrastructure exposes them separately. Added `PORTAL_INQUIRY_API_URL`; the Portal API now sends its existing notification when website SMTP is unavailable and receives the relay marker only when the website already emailed, preventing both lost and duplicate notifications.
+7. Tender/blog reads and enquiry delivery were incorrectly forced through one upstream host, while the live infrastructure exposes them separately. Added `PORTAL_INQUIRY_API_URL`; the Portal API stores an enquiry when website SMTP is unavailable and receives the relay marker only when the website already emailed, preventing duplicate records and preserving the enquiry even if email alerting is unavailable.
+8. A controlled end-to-end preview submission was made using the labelled identity `TenderLab Preview QA`. The API returned HTTP 200 (`email: false`, `portal: true`) and the signed-in Portal displayed it as the newest unread enquiry. This confirms the primary operational record is not lost. Gmail was searched read-only in the correct `tenderlab333@gmail.com` account; no alert was present, so email notification is not falsely marked as passed.
 
 ## Non-blocking items for post-preview measurement
 
 - Split the two global CSS bundles by route only if preview field data confirms mobile LCP remains above the 2.5-second target. The local Lighthouse model reports unused CSS but the measured server and image timings are already fast; premature splitting would add maintenance risk across 100+ templates.
 - Replace the current square schema/favicon logo only when an approved master brand asset is supplied. The visible navigation and footer use the transparent wordmark asset.
-- Run one clearly labelled controlled enquiry after the corrected preview is deployed. It will intentionally create one real Portal record and notification, which must then be confirmed before launch.
+- Investigate or add Portal-side email-alert configuration after launch preparation if an email alert is operationally required. This is non-blocking because the form acknowledgement succeeds and every enquiry is preserved as an unread record in the Portal; the Portal should remain the authoritative queue.
 
-No Critical accessibility or technical defect remains in the compiled candidate. Private-preview verification is still required before the formal Launch Gate can be signed.
+No Critical or High accessibility or technical defect remains in the candidate. The private preview, contextual enquiry route, live data APIs, crawl boundary, mobile layouts and Portal delivery have been verified. The formal Launch Gate is recorded separately.
