@@ -15,13 +15,17 @@ import {
   type TenderDetail,
 } from '@/lib/tender-detail-merge'
 import { fetchGovTender } from '@/lib/gov-tender-fetch'
-import { officialSourceLinkLabel, type TenderSourceParam } from '@/lib/tender-sources'
+import {
+  inferTenderSourceParam,
+  officialSourceLinkLabel,
+  submissionSystemName,
+} from '@/lib/tender-sources'
 
 export const revalidate = 1800 // 30 minutes
 
-async function getTender(id: string, source: string): Promise<TenderDetail | null> {
-  const sourceParam: TenderSourceParam = source === 'ft' ? 'ft' : 'cf'
+async function getTender(id: string, source?: string): Promise<TenderDetail | null> {
   const published = await fetchPublishedTenderById(id)
+  const sourceParam = inferTenderSourceParam(id, source, published?.source)
   const gov = await fetchGovTender(id, sourceParam, published?.url)
   return mergeGovAndPublished(gov, published, id, sourceParam)
 }
@@ -33,6 +37,23 @@ function formatDate(dateStr: string): string {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
+    })
+  } catch {
+    return dateStr
+  }
+}
+
+function formatDateTime(dateStr: string): string {
+  if (!dateStr) return ''
+  try {
+    return new Date(dateStr).toLocaleString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Europe/London',
     })
   } catch {
     return dateStr
@@ -83,8 +104,7 @@ type Props = {
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { id } = await params
   const { source } = await searchParams
-  const src = source || 'cf'
-  const tender = await getTender(id, src)
+  const tender = await getTender(id, source)
 
   if (!tender) {
     return {
@@ -123,8 +143,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 export default async function TenderDetailPage({ params, searchParams }: Props) {
   const { id } = await params
   const { source } = await searchParams
-  const src = source || 'cf'
-  const tender = await getTender(id, src)
+  const tender = await getTender(id, source)
 
   if (!tender) {
     notFound()
@@ -135,6 +154,9 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
   // and /tenders/<id>?source=cf, and the canonical pointed at the parameterised
   // form, so Google indexed the duplicate and crawled every notice twice.
   const canonical = `${SITE_URL}/tenders/${encodeURIComponent(id)}`
+  const submissionSystem = tender.submissionUrl
+    ? submissionSystemName(tender.submissionUrl)
+    : null
 
   // JSON-LD: GovernmentService (primary intent) + BreadcrumbList
   const govSchema = {
@@ -263,12 +285,9 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
 
               {tender.submissionUrl && (
                 <div className="tender-detail__section">
-                  <h2>Submission portal</h2>
-                  <p>
-                    <a href={tender.submissionUrl} target="_blank" rel="noopener noreferrer">
-                      {tender.submissionUrl}
-                    </a>
-                  </p>
+                  <h2>How to submit</h2>
+                  <p>The official Find a Tender notice directs suppliers to <strong>{submissionSystem}</strong>. The procurement documents, clarifications and response area are managed there.</p>
+                  <p><a href={tender.submissionUrl} target="_blank" rel="noopener noreferrer">Open {submissionSystem} ↗</a></p>
                 </div>
               )}
 
@@ -364,7 +383,7 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                   {tender.deadline && (
                     <>
                       <dt>Deadline</dt>
-                      <dd>{formatDate(tender.deadline)}</dd>
+                      <dd>{formatDateTime(tender.deadline)}</dd>
                     </>
                   )}
 

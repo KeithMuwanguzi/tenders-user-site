@@ -104,12 +104,65 @@ function fmtSingle(v: number): string | null {
   return `£${v.toLocaleString()}`
 }
 
-function fmtOCDS(value: { amount?: number; currency?: string } | null | undefined): string | null {
-  if (!value?.amount) return null
-  const a = value.amount
+function fmtOCDS(value: { amount?: number; amountGross?: number; currency?: string } | null | undefined): string | null {
+  const a = value?.amountGross ?? value?.amount
+  if (!a) return null
   if (a >= 1_000_000) return `£${(a / 1_000_000).toFixed(1)}m`
   if (a >= 1_000) return `£${(a / 1_000).toFixed(0)}k`
   return `£${a.toLocaleString()}`
+}
+
+function formatNoticeDate(value: string | null | undefined): string | null {
+  if (!value) return null
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function formatNoticeDateTime(value: string | null | undefined): string | null {
+  if (!value) return null
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  return date.toLocaleString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Europe/London',
+  })
+}
+
+function percentageFromCriterion(criterion: {
+  name?: string
+  numbers?: { number?: number; weight?: string }[]
+}): string | null {
+  const number = criterion.numbers?.[0]?.number
+  if (!criterion.name) return null
+  return typeof number === 'number' ? `${criterion.name}: ${number}%` : criterion.name
+}
+
+function collectCpvDescriptions(
+  tender: Record<string, unknown>,
+  items: { classification?: { id?: string; description?: string }; additionalClassifications?: { id?: string; description?: string }[] }[],
+): string | null {
+  const direct = tender.classification as { id?: string; description?: string } | undefined
+  const values = [
+    direct,
+    ...items.flatMap((item) => [item.classification, ...(item.additionalClassifications || [])]),
+  ]
+    .filter(Boolean)
+    .map((entry) => {
+      const classification = entry as { id?: string; description?: string }
+      return [classification.id, classification.description].filter(Boolean).join(' — ')
+    })
+    .filter(Boolean)
+  return [...new Set(values)].join('; ') || null
 }
 
 function formatPartyAddress(party: {
@@ -183,25 +236,68 @@ export async function fetchFTNotice(
 
     const r = releases[0] as Record<string, unknown>
     const t = (r.tender || {}) as Record<string, unknown>
-    const lots = (t.lots || []) as { description?: string }[]
+    const lots = (t.lots || []) as {
+      id?: string
+      title?: string
+      description?: string
+      value?: { amount?: number; amountGross?: number; currency?: string }
+      awardCriteria?: { criteria?: { name?: string; numbers?: { number?: number; weight?: string }[] }[] }
+      selectionCriteria?: { criteria?: { description?: string }[] }
+      suitability?: { sme?: boolean; vcse?: boolean }
+      contractPeriod?: { startDate?: string; endDate?: string; maxExtentDate?: string }
+      hasRenewal?: boolean
+      renewal?: { description?: string }
+    }[]
     const parties = (r.parties || []) as unknown[]
     const buyer = buyerParty(parties)
-    const classification = (t.classification || {}) as { description?: string; id?: string }
     const items = (t.items || []) as {
+      classification?: { description?: string; id?: string }
+      additionalClassifications?: { description?: string; id?: string }[]
       deliveryAddresses?: { region?: string }[]
     }[]
-    const regionCode = items[0]?.deliveryAddresses?.[0]?.region || buyer?.address
-      ? ((buyer as { address?: { region?: string } }).address?.region ?? null)
-      : null
+    const regionCode =
+      items[0]?.deliveryAddresses?.[0]?.region ||
+      ((buyer as { address?: { region?: string } } | null)?.address?.region ?? null)
 
-    const lotText = lots.map((l) => l.description || '').filter(Boolean).join('\n\n')
     const releaseDesc = String(r.description || '')
     const tenderDesc = String(t.description || '')
 
     const sectionBlocks: { title: string; text: string }[] = []
     if (releaseDesc) sectionBlocks.push({ title: 'Notice summary', text: releaseDesc })
     if (tenderDesc) sectionBlocks.push({ title: 'Opportunity overview', text: tenderDesc })
-    if (lotText) sectionBlocks.push({ title: 'Contract and delivery', text: lotText })
+    for (const lot of lots) {
+      const lotDetails = [
+        lot.description || '',
+        lot.value ? `Estimated lot value including VAT: ${fmtOCDS(lot.value)}` : '',
+        ...(lot.selectionCriteria?.criteria || [])
+          .map((criterion) => criterion.description ? `Participation condition: ${criterion.description}` : '')
+          .filter(Boolean),
+        ...(lot.awardCriteria?.criteria || [])
+          .map(percentageFromCriterion)
+          .filter((criterion): criterion is string => Boolean(criterion))
+          .map((criterion) => `Award criterion: ${criterion}`),
+        lot.suitability?.sme ? 'Suitable for small and medium-sized enterprises.' : '',
+        lot.suitability?.vcse ? 'Suitable for voluntary, community and social enterprises.' : '',
+        lot.contractPeriod?.startDate
+          ? `Contract starts: ${formatNoticeDate(lot.contractPeriod.startDate)}`
+          : '',
+        lot.contractPeriod?.endDate
+          ? `Initial contract ends: ${formatNoticeDate(lot.contractPeriod.endDate)}`
+          : '',
+        lot.contractPeriod?.maxExtentDate
+          ? `Maximum term ends: ${formatNoticeDate(lot.contractPeriod.maxExtentDate)}`
+          : '',
+        lot.hasRenewal && lot.renewal?.description
+          ? `Extension: ${lot.renewal.description}`
+          : '',
+      ].filter(Boolean)
+      if (lotDetails.length) {
+        sectionBlocks.push({
+          title: `Lot ${lot.id || sectionBlocks.length} — ${lot.title || 'Contract lot'}`,
+          text: lotDetails.join('\n\n'),
+        })
+      }
+    }
 
     if (buyer) {
       const lines = [
@@ -224,9 +320,30 @@ export async function fetchFTNotice(
       t.procurementMethodDetails ? `Procedure: ${t.procurementMethodDetails}` : '',
       t.procurementMethod ? `Method: ${t.procurementMethod}` : '',
       (t.legalBasis as { id?: string })?.id ? `Legal basis: ${(t.legalBasis as { id: string }).id}` : '',
+      Array.isArray(t.specialRegime) && t.specialRegime.includes('lightTouch')
+        ? 'Special regime: Light Touch Regime'
+        : '',
+      (t.enquiryPeriod as { endDate?: string })?.endDate
+        ? `Clarification deadline: ${formatNoticeDateTime((t.enquiryPeriod as { endDate: string }).endDate)}`
+        : '',
+      (t.tenderPeriod as { endDate?: string })?.endDate
+        ? `Submission deadline: ${formatNoticeDateTime((t.tenderPeriod as { endDate: string }).endDate)}`
+        : '',
+      (t.awardPeriod as { endDate?: string })?.endDate
+        ? `Award decision expected by: ${formatNoticeDateTime((t.awardPeriod as { endDate: string }).endDate)}`
+        : '',
+      (t.submissionTerms as { electronicSubmissionPolicy?: string })?.electronicSubmissionPolicy
+        ? `Electronic submissions: ${(t.submissionTerms as { electronicSubmissionPolicy: string }).electronicSubmissionPolicy}`
+        : '',
+      Array.isArray((t.submissionTerms as { languages?: string[] })?.languages)
+        ? `Submission language: ${(t.submissionTerms as { languages: string[] }).languages.join(', ').toUpperCase()}`
+        : '',
+      (t.contractTerms as { financialTerms?: string })?.financialTerms
+        ? `Financial terms: ${(t.contractTerms as { financialTerms: string }).financialTerms}`
+        : '',
     ].filter(Boolean)
     if (procedureParts.length) {
-      sectionBlocks.push({ title: 'Procedure', text: procedureParts.join('\n') })
+      sectionBlocks.push({ title: 'Procurement timetable and procedure', text: procedureParts.join('\n\n') })
     }
 
     const submissionUrl =
@@ -234,19 +351,15 @@ export async function fetchFTNotice(
       String((t.communication as { atypicalToolUrl?: string })?.atypicalToolUrl || '') ||
       String((buyer as { contactPoint?: { url?: string } })?.contactPoint?.url || '')
 
-    if (submissionUrl) {
-      sectionBlocks.push({
-        title: 'How to respond',
-        text: `Submissions and documents are handled via:\n${submissionUrl}`,
-      })
-    }
-
     const sections = buildSections(sectionBlocks)
     const plainTender = htmlToPlainText(tenderDesc)
     const fullDescription = combineFullDescription(sections, plainTender)
 
     const noticeId = String(r.id || '')
     const noticeIdentifier = FT_NOTICE_ID.test(noticeId) ? noticeId.match(FT_NOTICE_ID)![1] : noticeId || null
+
+    const noticeDocument = ((t.documents || []) as { noticeType?: string; documentType?: string }[])
+      .find((document) => document.documentType === 'tenderNotice' && document.noticeType)
 
     return {
       id: String(r.ocid || routeId),
@@ -256,7 +369,7 @@ export async function fetchFTNotice(
       sections,
       publishedDate: String(r.date || ''),
       deadline: String((t.tenderPeriod as { endDate?: string })?.endDate || '') || null,
-      value: fmtOCDS(t.value as { amount?: number }),
+      value: fmtOCDS(t.value as { amount?: number; amountGross?: number }),
       location: regionCode,
       organisation: String((r.buyer as { name?: string })?.name || (buyer as { name?: string })?.name || ''),
       status: t.status === 'active' ? 'Open' : String(t.status || 'Unknown'),
@@ -268,10 +381,11 @@ export async function fetchFTNotice(
       ),
       noticeIdentifier,
       procurementIdentifier: String(r.ocid || '') || null,
-      noticeType: Array.isArray(r.tag) ? String(r.tag[0] || '') : String(r.tag || '') || null,
-      cpvDescription: classification.description
-        ? `${classification.id ? `${classification.id} — ` : ''}${classification.description}`
-        : null,
+      noticeType:
+        noticeDocument?.noticeType ||
+        (Array.isArray(r.tag) ? String(r.tag[0] || '') : String(r.tag || '')) ||
+        null,
+      cpvDescription: collectCpvDescriptions(t, items),
       sector: String(t.mainProcurementCategory || '') || null,
       legalBasis: (t.legalBasis as { id?: string })?.id
         ? String((t.legalBasis as { id: string }).id)
@@ -289,10 +403,12 @@ export async function fetchFTNotice(
       awardedSupplier: null,
       contactName: String((buyer as { contactPoint?: { name?: string } })?.contactPoint?.name || '') || null,
       contactEmail: String((buyer as { contactPoint?: { email?: string } })?.contactPoint?.email || '') || null,
-      documents: ((t.documents || []) as { title?: string; url?: string }[]).map((d) => ({
-        title: d.title || 'Document',
-        url: d.url || '',
-      })),
+      documents: ((t.documents || []) as { title?: string; description?: string; url?: string; documentType?: string }[])
+        .filter((d) => Boolean(d.url) && d.documentType !== 'tenderNotice')
+        .map((d) => ({
+          title: d.title || d.description || 'Procurement document',
+          url: d.url || '',
+        })),
       ...EMPTY_EXTRA,
     }
   } catch {

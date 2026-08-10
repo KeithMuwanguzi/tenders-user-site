@@ -62,7 +62,10 @@ export function snapshotToDetail(
     sector: null,
     legalBasis: null,
     procedure: null,
-    submissionUrl: published.url || null,
+    // The stored snapshot URL is the official notice, not necessarily the
+    // buyer's electronic tendering system. Never relabel it as a submission
+    // portal when the richer official record is temporarily unavailable.
+    submissionUrl: null,
     buyerAddress: null,
     buyerWebsite: null,
     regionCode: null,

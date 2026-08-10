@@ -34,6 +34,7 @@ Environment tested: compiled production build and TenderLab-controlled Vercel pr
 | Semantic structure | PASS | One H1 on tested routes; landmark, skip link, labelled navigation, form labels and native details present |
 | Indexability | PASS | Indexable pages use HTTP 200, self-canonical, internal links and sitemap inclusion; dynamic tender routes remain server rendered |
 | Preview index protection | PASS | Any Vercel preview host receives `X-Robots-Tag: noindex, nofollow, noarchive`; the production domain remains indexable |
+| Official tender-detail integrity | PASS | Exact regression test against Find a Tender notice `074292-2026`: clean canonical route infers the correct source; five rich official-data sections, both lots, values, participation conditions, award criteria, timetable, authority and CPV data render; the Find a Tender notice and ProContract submission system are labelled and linked separately |
 
 ## Accessibility checks performed
 
@@ -55,6 +56,7 @@ Environment tested: compiled production build and TenderLab-controlled Vercel pr
 6. Preview hosts needed an explicit search-engine safety boundary. Added host/environment-aware `X-Robots-Tag` protection without applying it to the production domain.
 7. Tender/blog reads and enquiry delivery were incorrectly forced through one upstream host, while the live infrastructure exposes them separately. Added `PORTAL_INQUIRY_API_URL`; the Portal API stores an enquiry when website SMTP is unavailable and receives the relay marker only when the website already emailed, preventing duplicate records and preserving the enquiry even if email alerting is unavailable.
 8. A controlled end-to-end preview submission was made using the labelled identity `TenderLab Preview QA`. The API returned HTTP 200 (`email: false`, `portal: true`) and the signed-in Portal displayed it as the newest unread enquiry. This confirms the primary operational record is not lost. Gmail was searched read-only in the correct `tenderlab333@gmail.com` account; no alert was present, so email notification is not falsely marked as passed.
+9. A post-gate review found that clean tender-detail URLs lost their `source` query parameter after canonical redirection. Find a Tender records could therefore fall back to a short curated snapshot, and the official notice URL could be presented incorrectly as a submission portal. Source inference now uses the stored source and official identifier, the detail page and API share one merge pipeline, and published-notice URLs are kept separate from true buyer submission systems. The Oldham `ocds-h6vhtk-06dca8` regression fixture passes against the official Find a Tender OCDS release package and correctly identifies ProContract as the submission system.
 
 ## Non-blocking items for post-preview measurement
 

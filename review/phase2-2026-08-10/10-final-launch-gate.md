@@ -2,7 +2,7 @@
 
 Date: 10 August 2026  
 Candidate branch: `agent/tenderlab-phase2-working-20260810`  
-Code candidate: `566dfeb`  
+Code candidate: pending signed tender-data correction commit (supersedes `23567ee65368aa2601f344060bef0f19d77c69d2`)
 Private preview: `https://tenderlab-website-git-agent-23bbe9-tenderlab333-7841s-projects.vercel.app`  
 Production domain status: unchanged; no cutover performed
 
@@ -10,7 +10,7 @@ Production domain status: unchanged; no cutover performed
 
 **READY FOR PRODUCTION DEPLOYMENT, SUBJECT TO AN EXPLICIT PRODUCTION CUTOVER INSTRUCTION.**
 
-The source-led rebuild, implementation, private preview, deployed crawl, responsive checks, technical checks, controlled form submission and adversarial review are complete. No Critical or High defect remains. Production DNS and the live `www.tenderlab.co.uk` service have not been changed.
+The source-led rebuild, implementation, private preview, deployed crawl, responsive checks, technical checks, controlled form submission and adversarial review are complete. A post-gate tender-data defect was corrected before cutover: clean canonical tender routes now retain correct source identity, full official detail and a strict distinction between the published notice and the buyer's submission system. No Critical or High defect remains. Production DNS and the live `www.tenderlab.co.uk` service have not been changed.
 
 ## Formal gate
 
@@ -40,12 +40,15 @@ The source-led rebuild, implementation, private preview, deployed crawl, respons
 | Analytics | PASS | Consent-aware GA4 event architecture includes form success, telephone and email interactions; production verification is required immediately after cutover |
 | Privacy / cookie implementation | PASS | Optional analytics remains consent-gated; the site works without consent and the privacy route explains the processing |
 | Technical deployment | PASS | TenderLab-controlled Vercel branch preview builds and serves live tender/blog APIs. Production environment/domain remain protected |
+| Tender data fidelity | PASS | The detail page and API use the same official-data merge pipeline; exact Find a Tender regression testing confirms full official sections and separates the official notice from the ProContract submission system |
 
 ## Adversarial red-team outcome
 
 The final review looked specifically for unsupported claims, AI-like or inconsistent design, legacy/dark templates, incorrect imagery, dead navigation, escaped old-site links, broken routes, missing metadata, indexing contradictions, duplicate intent, form loss, mobile overflow, weak focus handling, performance regressions and production-domain changes.
 
 Findings corrected before this gate included the tender-sitemap upstream mismatch, an invisible tender CTA, filter/CSS scope mismatch, escaped absolute links, unused heavy image originals, missing preview noindex protection and the split between content and enquiry API hosts.
+
+The gate was reopened before production when notice `074292-2026` exposed a source-inference error. The release was paused, the mapping was corrected, and the official notice and submission-system links were separated. The previously signed commit must not be promoted; only the new correction commit may become the production candidate after its preview deployment passes.
 
 No Critical or High red-team finding remains.
 

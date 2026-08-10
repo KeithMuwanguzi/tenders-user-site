@@ -15,7 +15,6 @@ import {
 import {
   officialNoticeUrl,
   officialSourceLinkLabel,
-  sourceParamFromLabel,
 } from '@/lib/tender-sources'
 
 const SOURCES = [
@@ -444,7 +443,7 @@ export default function TendersClient({
                       </div>
                       <div className="tender-card__actions">
                         <Link
-                          href={`/tenders/${encodeURIComponent(tender.id)}?source=${sourceParamFromLabel(tender.source)}`}
+                          href={`/tenders/${encodeURIComponent(tender.id)}`}
                           className="btn btn-primary"
                         >
                           Read the full tender
