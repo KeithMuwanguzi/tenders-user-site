@@ -114,7 +114,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     }
   }
 
-  const description = truncate(tender.fullDescription || tender.description, 155)
+  const suppliedDescription = truncate(tender.fullDescription || tender.description, 155)
+  const fallbackDescription = truncate(
+    `${tender.title}. ${tender.source} notice from ${tender.organisation || 'a UK public sector body'}. View the scope, dates and submission information, with specialist care tender support from TenderLab.`,
+    155,
+  )
+  // Some upstream notices expose only the buyer name in their description
+  // field. That is factually correct but too thin to help a searcher decide
+  // whether the result is relevant, so use a factual notice summary instead.
+  const description = suppliedDescription.length >= 70
+    ? suppliedDescription
+    : fallbackDescription
   // Parameter-free canonical. Each notice was reachable at both /tenders/<id>
   // and /tenders/<id>?source=cf, and the canonical pointed at the parameterised
   // form, so Google indexed the duplicate and crawled every notice twice.
@@ -130,7 +140,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   return {
     title,
-    description: description || `${tender.title}. ${tender.source} notice from ${tender.organisation || 'a UK public sector body'}. Bid writing support from TenderLab.`,
+    description,
     alternates: { canonical },
     openGraph: defaultOpenGraph({ title, description, path: `/tenders/${encodeURIComponent(id)}` }),
     twitter: defaultTwitter({ title, description }),
