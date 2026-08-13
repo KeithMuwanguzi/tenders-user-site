@@ -269,7 +269,7 @@ export const DECISION_GUIDES: DecisionGuide[] = [
     slug: 'why-care-providers-lose-tenders',
     title: 'Why Do Care Providers Lose Tenders?',
     eyebrow: 'From feedback to a stronger next bid',
-    description: 'The recurring reasons credible care providers lose marks—and how to distinguish a writing problem from a fit problem.',
+    description: 'The recurring reasons credible care providers lose marks, and how to distinguish a writing problem from a fit problem.',
     directAnswer: 'Care providers often lose for one of two different reasons: the opportunity did not fit the provider, or the submission did not make the provider’s evidence easy to score. Common causes include missed conditions, weak answer mapping, unsupported claims, generic examples, uncosted delivery promises and poor submission control. Start with the evaluator feedback and buyer documents, not assumptions.',
     sections: [
       {

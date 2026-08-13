@@ -1,4 +1,4 @@
-/** Blog posts are served from the Portal API — see `lib/blogs.ts`. */
+/** Blog posts are served from the Portal API, see `lib/blogs.ts`. */
 export {
   fetchBlogs,
   fetchBlogBySlug,

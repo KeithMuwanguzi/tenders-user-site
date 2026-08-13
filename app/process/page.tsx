@@ -64,7 +64,7 @@ const stages = [
 const principles = [
   {
     title: 'Buyer documents come first',
-    text: 'The specification, conditions and scoring descriptors determine the response—not a reusable generic template.',
+    text: 'The specification, conditions and scoring descriptors determine the response, not a reusable generic template.',
   },
   {
     title: 'Evidence must be real',

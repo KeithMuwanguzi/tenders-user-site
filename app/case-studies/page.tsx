@@ -117,7 +117,7 @@ export default function CaseStudiesPage() {
         <div className="ep-shell ep-faq__grid">
           <div className="ep-section-head">
             <p className="ep-kicker">Case-study questions</p>
-            <h2>What these results do—and do not—prove.</h2>
+            <h2>What these results do, and do not, prove.</h2>
             <p>
               Evidence should reduce uncertainty, not create a promise that the next procurement will behave the same way.
             </p>

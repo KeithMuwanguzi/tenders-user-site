@@ -134,7 +134,7 @@ export default function ContactForm({ initialContext = {} }: { initialContext?: 
       <div className="cf-sent">
         <div className="cf-sent__icon" aria-hidden="true">✓</div>
         <h3>Enquiry received</h3>
-        <p>Thank you — we&apos;ll review your enquiry and respond as soon as we can. You can also reach us at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
+        <p>Thank you, we&apos;ll review your enquiry and respond as soon as we can. You can also reach us at <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>.</p>
       </div>
     )
   }

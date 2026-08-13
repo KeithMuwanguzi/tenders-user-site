@@ -3,7 +3,7 @@
  * Browser clients should use same-origin `/api/*` routes on the website.
  */
 export function getPortalApiUrl(): string {
-  // During `docker build` the API container is not running — skip upstream calls.
+  // During `docker build` the API container is not running, skip upstream calls.
   if (process.env.SKIP_BUILD_TIME_FETCH === 'true') {
     return ''
   }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPortalApiUrl } from '@/lib/portal-api'
 
 /* ================================================================
-   Live Tenders — proxy to the portal's curated list
+   Live Tenders, proxy to the portal's curated list
    ================================================================
    Tenders are now editorially curated in the admin portal. The portal
    FastAPI exposes `GET /api/tenders/published`, which reads the
@@ -69,13 +69,13 @@ export async function GET(request: NextRequest) {
   try {
     let res = await fetch(upstream.toString(), {
       headers: { Accept: 'application/json' },
-      // No upstream cache — Vercel keys its fetch cache by URL, which
+      // No upstream cache, Vercel keys its fetch cache by URL, which
       // means the "All sources" URL and the "?source=cf" URL end up in
       // separate cache slots. If the All-sources URL was ever fetched
       // when the published list was empty, that empty response would
       // get pinned for the cache lifetime and "All sources" would keep
       // showing an empty list while the per-source filters happily
-      // return the new tender. Better to always go to source — the
+      // return the new tender. Better to always go to source, the
       // upstream is reading a small sheet, it's quick.
       cache: 'no-store',
     })

@@ -53,7 +53,7 @@ export function inferTenderSourceParam(
   return /^ocds-/i.test(id) || /^\d{6}-\d{4}$/.test(id) ? 'ft' : 'cf'
 }
 
-/** Official gov.uk notice URL — prefers stored snapshot url from the portal. */
+/** Official gov.uk notice URL, prefers stored snapshot url from the portal. */
 export function officialNoticeUrl(
   id: string,
   source: TenderSourceLabel | string,
@@ -67,7 +67,7 @@ export function officialNoticeUrl(
   return `https://www.contractsfinder.service.gov.uk/Notice/${id}`
 }
 
-/** Neutral label — platform names are not shown in the public UI. */
+/** Neutral label, platform names are not shown in the public UI. */
 export function officialSourceLinkLabel(_source?: TenderSourceLabel | string): string {
   return 'View official notice'
 }

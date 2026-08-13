@@ -1,6 +1,6 @@
 import type { Tender } from '@/store/tendersSlice'
 
-/** One care-setting filter — keywords are matched OR-style in tender text. */
+/** One care-setting filter, keywords are matched OR-style in tender text. */
 export type CareCategory = {
   id: string
   label: string
@@ -12,7 +12,7 @@ export type CareCategoryGroup = {
   categories: CareCategory[]
 }
 
-/** Flat list including "All" — first entry is the reset filter. */
+/** Flat list including "All", first entry is the reset filter. */
 export const ALL_CARE_CATEGORY: CareCategory = {
   id: '',
   label: 'All care settings',

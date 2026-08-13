@@ -314,7 +314,7 @@ function buildTocAndContent(html: string): { tocItems: TocItem[]; processedHtml:
       const rawText = plainText(inner)
       if (!rawText) return `<h2${rawAttributes}>${inner}</h2>`
 
-      const section = rawText.match(/^section\s+(\d+)\s*[:.\-–—]?\s*(.+)$/i)
+      const section = rawText.match(/^section\s+(\d+)\s*[:.\-–, ]?\s*(.+)$/i)
       const num = (section ? section[1] : String(counter)).padStart(2, '0')
       const label = section ? section[2].trim() : rawText
       const existingId = rawAttributes.match(/\sid="([^"]+)"/i)?.[1]

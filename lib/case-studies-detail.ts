@@ -66,16 +66,16 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     galleryImages: [
       { src: '/images/case-studies/havilah-1.png', caption: 'Award confirmation letter, page 1',        tag: 'Award confirmation', isLead: true },
       { src: '/images/case-studies/havilah-2.png', caption: 'Standstill and compliance notice, page 2', tag: 'Compliance' },
-      { src: '/images/case-studies/havilah-3.png', caption: 'Score breakdown — Selection criteria',     tag: 'Score breakdown' },
-      { src: '/images/case-studies/havilah-4.png', caption: 'Score breakdown — Quality questions',      tag: 'Score breakdown' },
-      { src: '/images/case-studies/havilah-5.png', caption: 'Score breakdown — Q4 to Q6 commentary',   tag: 'Score breakdown' },
-      { src: '/images/case-studies/havilah-6.png', caption: 'Score breakdown — pricing and totals',     tag: 'Score breakdown' },
+      { src: '/images/case-studies/havilah-3.png', caption: 'Score breakdown, Selection criteria',     tag: 'Score breakdown' },
+      { src: '/images/case-studies/havilah-4.png', caption: 'Score breakdown, Quality questions',      tag: 'Score breakdown' },
+      { src: '/images/case-studies/havilah-5.png', caption: 'Score breakdown, Q4 to Q6 commentary',   tag: 'Score breakdown' },
+      { src: '/images/case-studies/havilah-6.png', caption: 'Score breakdown, pricing and totals',     tag: 'Score breakdown' },
     ],
     gallerySource: 'Source: Bedford Borough Council Intention to Award letter dated 11 July 2025, reference BBC AD 03786, signed by Nadine Raenke, Senior Commissioning Officer (Adults).',
     sections: [
       {
         num: '01', heading: 'Case Overview',
-        body: 'This case study examines the route Havilah Care Ltd took onto Bedford Borough Council\'s Supported Living and Community Based Support Services Framework (BBC AD 03786). The procurement ran under the Public Contract Regulations 2015 and the Intention to Award letter reached the provider on 11 July 2025. The standstill ran to midnight 21 July 2025. The Council recorded 154 tender submissions against 44 successful awards — a sub-30 percent acceptance rate.',
+        body: 'This case study examines the route Havilah Care Ltd took onto Bedford Borough Council\'s Supported Living and Community Based Support Services Framework (BBC AD 03786). The procurement ran under the Public Contract Regulations 2015 and the Intention to Award letter reached the provider on 11 July 2025. The standstill ran to midnight 21 July 2025. The Council recorded 154 tender submissions against 44 successful awards, a sub-30 percent acceptance rate.',
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
@@ -87,14 +87,14 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Three interventions did the heavy lifting. The case studies were rebuilt sub-point by sub-point, each sub-point closed with a dated, named operational example — securing 50/50 on both Standard and Complex gateways. Q5 Partnerships was rebuilt around joined-up working across health, housing and voluntary sector partners, earning an excellent rating and the maximum 15 percent contribution. The pricing schedule was triple-checked against the published matrix: Day Hours at £20.40 Standard / £21.80 Complex, Sleep-in at £12.00 — reaching 35.29% commercial on Lot 1 Standard and 35.53% on Lot 1 Complex.',
+        body: 'Three interventions did the heavy lifting. The case studies were rebuilt sub-point by sub-point, each sub-point closed with a dated, named operational example, securing 50/50 on both Standard and Complex gateways. Q5 Partnerships was rebuilt around joined-up working across health, housing and voluntary sector partners, earning an excellent rating and the maximum 15 percent contribution. The pricing schedule was triple-checked against the published matrix: Day Hours at £20.40 Standard / £21.80 Complex, Sleep-in at £12.00, reaching 35.29% commercial on Lot 1 Standard and 35.53% on Lot 1 Complex.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
         body: 'Both Standard and Complex categories were accepted on Lot 1 and Community Based Support was accepted on Lot 2. Total scores reached 69.04% on Lot 1 Standard, 69.28% on Lot 1 Complex and 56.25% on Lot 2, with an excellent rating recorded on Q5 Partnerships. The standstill closed at midnight on 21 July 2025 without challenge.',
         callout: {
-          label: 'Award notification — Bedford Borough Council',
-          text: '"We are pleased to inform you of the following: your offer of Standard support on the framework has been accepted. Your offer of Complex support has been accepted. The Council received 154 tender submissions; 44 submissions were successful." — Nadine Raenke, Senior Commissioning Officer (Adults), Bedford BC. 11 July 2025.',
+          label: 'Award notification, Bedford Borough Council',
+          text: '"We are pleased to inform you of the following: your offer of Standard support on the framework has been accepted. Your offer of Complex support has been accepted. The Council received 154 tender submissions; 44 submissions were successful.", Nadine Raenke, Senior Commissioning Officer (Adults), Bedford BC. 11 July 2025.',
         },
       },
     ],
@@ -131,17 +131,17 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     trustBadges: ['Framework awarded providers', 'Local authority contracts', 'Verified award letters', 'Procurement Act 2023'],
     galleryImages: [
       { src: '/images/case-studies/choices_healthcare-01.png', caption: 'Award confirmation letter, page 1',   tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/choices_healthcare-02.png', caption: 'Lot 1 Basildon — outcome page',        tag: 'Lot outcome' },
-      { src: '/images/case-studies/choices_healthcare-03.png', caption: 'Lot 2 Braintree — outcome page',       tag: 'Lot outcome' },
-      { src: '/images/case-studies/choices_healthcare-04.png', caption: 'Lot 4 Castle Point — outcome page',    tag: 'Lot outcome' },
-      { src: '/images/case-studies/choices_healthcare-05.png', caption: 'Lot 6 Colchester — outcome page',      tag: 'Lot outcome' },
-      { src: '/images/case-studies/choices_healthcare-06.png', caption: 'Lot 10 Rochford — outcome page',       tag: 'Lot outcome' },
-      { src: '/images/case-studies/choices_healthcare-07.png', caption: 'Score breakdown — quality questions',  tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_healthcare-08.png', caption: 'Score breakdown — page 2',             tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_healthcare-09.png', caption: 'Score breakdown — page 3',             tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_healthcare-10.png', caption: 'Score breakdown — page 4',             tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_healthcare-11.png', caption: 'Score breakdown — page 5',             tag: 'Score breakdown' },
-      { src: '/images/case-studies/choices_healthcare-12.png', caption: 'Score breakdown — page 6',             tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-02.png', caption: 'Lot 1 Basildon, outcome page',        tag: 'Lot outcome' },
+      { src: '/images/case-studies/choices_healthcare-03.png', caption: 'Lot 2 Braintree, outcome page',       tag: 'Lot outcome' },
+      { src: '/images/case-studies/choices_healthcare-04.png', caption: 'Lot 4 Castle Point, outcome page',    tag: 'Lot outcome' },
+      { src: '/images/case-studies/choices_healthcare-05.png', caption: 'Lot 6 Colchester, outcome page',      tag: 'Lot outcome' },
+      { src: '/images/case-studies/choices_healthcare-06.png', caption: 'Lot 10 Rochford, outcome page',       tag: 'Lot outcome' },
+      { src: '/images/case-studies/choices_healthcare-07.png', caption: 'Score breakdown, quality questions',  tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-08.png', caption: 'Score breakdown, page 2',             tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-09.png', caption: 'Score breakdown, page 3',             tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-10.png', caption: 'Score breakdown, page 4',             tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-11.png', caption: 'Score breakdown, page 5',             tag: 'Score breakdown' },
+      { src: '/images/case-studies/choices_healthcare-12.png', caption: 'Score breakdown, page 6',             tag: 'Score breakdown' },
     ],
     gallerySource: 'Source: Essex County Council outcome letter issued via Essex Supplier Portal, reference 1038 / 2025/S 000-019527.',
     sections: [
@@ -151,7 +151,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The CQC rating gap made Tier 1 unreachable at first close. Beyond the tier ceiling, the digital systems evidence — active and operationally documented — had not been surfaced in the format the evaluator required. The social value commitments had not been quantified against the Council\'s published Social Value Model requirements, and the method statements needed reframing from internal operational language into procurement-register evidence.',
+        body: 'The CQC rating gap made Tier 1 unreachable at first close. Beyond the tier ceiling, the digital systems evidence, active and operationally documented, had not been surfaced in the format the evaluator required. The social value commitments had not been quantified against the Council\'s published Social Value Model requirements, and the method statements needed reframing from internal operational language into procurement-register evidence.',
       },
       {
         num: '08', heading: 'Our Role',
@@ -200,8 +200,8 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ['Open Framework approved', 'Local authority contracts', 'Verified award letters', 'Multi-cohort evidence'],
     galleryImages: [
-      { src: '/images/case-studies/inspire-1.png', caption: 'Award confirmation — Dorset Open Framework',  tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/inspire-2.png', caption: 'Framework approval — lot breakdown',          tag: 'Framework approval' },
+      { src: '/images/case-studies/inspire-1.png', caption: 'Award confirmation, Dorset Open Framework',  tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/inspire-2.png', caption: 'Framework approval, lot breakdown',          tag: 'Framework approval' },
     ],
     gallerySource: 'Source: Dorset Council Care, Support, Housing and Community Safety Open Framework approval notice, reference DN548158.',
     sections: [
@@ -211,7 +211,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The provider had entered with a single generic evidence base stretched across five cohort lots. The live-in care content had been bundled inside the domiciliary care method statements, which erased the cohort distinction the evaluator was scoring against. Each lot covered a distinct cohort profile — home care, live-in, learning disability, autism and mental health — and the evidence needed to track each profile separately to score at or above the award threshold.',
+        body: 'The provider had entered with a single generic evidence base stretched across five cohort lots. The live-in care content had been bundled inside the domiciliary care method statements, which erased the cohort distinction the evaluator was scoring against. Each lot covered a distinct cohort profile, home care, live-in, learning disability, autism and mental health, and the evidence needed to track each profile separately to score at or above the award threshold.',
       },
       {
         num: '08', heading: 'Our Role',
@@ -219,11 +219,11 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Separating the live-in care narrative was the pivotal change — it was the most structurally incorrect element in the original submission. Each lot was then rebuilt to its cohort, with specialist language for learning disability, autism and mental health introduced in proportion to the scoring weight those cohort elements carried. The generic framework became five distinct evidence packages, each tracking its own cohort scoring criteria.',
+        body: 'Separating the live-in care narrative was the pivotal change, it was the most structurally incorrect element in the original submission. Each lot was then rebuilt to its cohort, with specialist language for learning disability, autism and mental health introduced in proportion to the scoring weight those cohort elements carried. The generic framework became five distinct evidence packages, each tracking its own cohort scoring criteria.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
-        body: 'All five lots were awarded. Inspire Care Outreach Ltd is now an approved Dorset Council Open Framework provider for Lots 1, 2, 9, 10 and 11 — covering care at home, live-in care, LD/PD/autism support, MH/autism support and bespoke specialist support. The provider has direct access to all Call-Off Opportunities released against any of these lots.',
+        body: 'All five lots were awarded. Inspire Care Outreach Ltd is now an approved Dorset Council Open Framework provider for Lots 1, 2, 9, 10 and 11, covering care at home, live-in care, LD/PD/autism support, MH/autism support and bespoke specialist support. The provider has direct access to all Call-Off Opportunities released against any of these lots.',
       },
     ],
     scoreTable: {
@@ -260,9 +260,9 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ['Provider list approved', 'Local authority contracts', 'Verified award letters', 'Standstill cleared'],
     galleryImages: [
-      { src: '/images/case-studies/melm-1.png', caption: 'Award confirmation — Bradford Provider List',  tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/melm-2.png', caption: 'Score breakdown — Q1 to Q4',                   tag: 'Score breakdown' },
-      { src: '/images/case-studies/melm-3.png', caption: 'Score breakdown — Q5 to Q8',                   tag: 'Score breakdown' },
+      { src: '/images/case-studies/melm-1.png', caption: 'Award confirmation, Bradford Provider List',  tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/melm-2.png', caption: 'Score breakdown, Q1 to Q4',                   tag: 'Score breakdown' },
+      { src: '/images/case-studies/melm-3.png', caption: 'Score breakdown, Q5 to Q8',                   tag: 'Score breakdown' },
       { src: '/images/case-studies/melm-4.png', caption: 'Provider list confirmation',                   tag: 'Confirmation' },
     ],
     gallerySource: 'Source: Bradford Council Mental Health Supported Living Provider List award documentation, reference 85402. Provider list operational from 27 January 2025.',
@@ -273,15 +273,15 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The provider had written quality answers to a 0–5 gradient that did not exist in this procurement — Bradford\'s rubric was binary. A score of 1 on this rubric means incomplete or partial: only 2 is full marks. The original narrative addressed the questions confidently but at a level of generality that the binary rubric would have scored at 1 for most questions. Coproduction was mentioned rather than demonstrated with named service user roles and dated examples.',
+        body: 'The provider had written quality answers to a 0–5 gradient that did not exist in this procurement, Bradford\'s rubric was binary. A score of 1 on this rubric means incomplete or partial: only 2 is full marks. The original narrative addressed the questions confidently but at a level of generality that the binary rubric would have scored at 1 for most questions. Coproduction was mentioned rather than demonstrated with named service user roles and dated examples.',
       },
       {
         num: '08', heading: 'Our Role',
-        body: 'We took the engagement as lead writer on all eight technical questions, restructuring each response to the binary rubric logic — where 2 means every element met, every example named and dated, and no evaluator discretion required. The coproduction narrative was rebuilt with named service user roles in the review cycle. Trauma-informed care practice was evidenced through specific approaches rather than referenced as a framework.',
+        body: 'We took the engagement as lead writer on all eight technical questions, restructuring each response to the binary rubric logic, where 2 means every element met, every example named and dated, and no evaluator discretion required. The coproduction narrative was rebuilt with named service user roles in the review cycle. Trauma-informed care practice was evidenced through specific approaches rather than referenced as a framework.',
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'The pivotal change was understanding the binary nature of the rubric and rewriting every answer to close every possible gap at 2/2 rather than at a confident 1/2. Questions 3 and 8 remained at 1/2 — Q3 Equality and Diversity and Q8 Quality — where the evidence base at the time of engagement did not fully support a 2/2 answer. All other questions were written to 2/2, with the specific recovery points for Q3 and Q8 documented for the next bid cycle.',
+        body: 'The pivotal change was understanding the binary nature of the rubric and rewriting every answer to close every possible gap at 2/2 rather than at a confident 1/2. Questions 3 and 8 remained at 1/2, Q3 Equality and Diversity and Q8 Quality, where the evidence base at the time of engagement did not fully support a 2/2 answer. All other questions were written to 2/2, with the specific recovery points for Q3 and Q8 documented for the next bid cycle.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
@@ -325,7 +325,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's framework approved", 'Local authority contracts', 'Verified award letters', 'SEND panel evidence'],
     galleryImages: [
-      { src: '/images/case-studies/evidence/c3-1.png', caption: 'Award confirmation — Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/evidence/c3-1.png', caption: 'Award confirmation, Southend Children\'s Framework', tag: 'Award confirmation', isLead: true },
       { src: '/images/case-studies/evidence/c3-2.png', caption: 'Lot 2D score breakdown',                              tag: 'Score breakdown' },
       { src: '/images/case-studies/evidence/c3-3.png', caption: 'Lot 2E score breakdown',                              tag: 'Score breakdown' },
       { src: '/images/case-studies/evidence/c3-4.png', caption: 'Lot 2F score breakdown',                              tag: 'Score breakdown' },
@@ -340,11 +340,11 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: "The default register of the bid material was adult social care, while the panel was reading children's services. Case examples drawn from adult domiciliary care did not map to the 18+ residential cohort. Policy citations referenced the Care Standards Act 2000 in contexts where the Children Act 1989 and Children and Families Act 2014 were the applicable frameworks. The scoring rubric included questions specifically testing children's services competency — these could not be answered from adult-derived material.",
+        body: "The default register of the bid material was adult social care, while the panel was reading children's services. Case examples drawn from adult domiciliary care did not map to the 18+ residential cohort. Policy citations referenced the Care Standards Act 2000 in contexts where the Children Act 1989 and Children and Families Act 2014 were the applicable frameworks. The scoring rubric included questions specifically testing children's services competency, these could not be answered from adult-derived material.",
       },
       {
         num: '08', heading: 'Our Role',
-        body: "We took the engagement as lead writer on all quality questions, recalibrating from adult social care language to children's services language across all twelve questions. Case examples were rebuilt around 18+ residential scenarios. Policy citations were corrected to the applicable children's legislation, and the monitoring and outcomes section — Q5, which scored 5/5 — was built from scratch around the Southend quality framework.",
+        body: "We took the engagement as lead writer on all quality questions, recalibrating from adult social care language to children's services language across all twelve questions. Case examples were rebuilt around 18+ residential scenarios. Policy citations were corrected to the applicable children's legislation, and the monitoring and outcomes section, Q5, which scored 5/5, was built from scratch around the Southend quality framework.",
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
@@ -392,17 +392,17 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ['Framework awarded providers', 'Local authority contracts', 'Verified award letters', 'Procurement Act 2023'],
     galleryImages: [
-      { src: '/images/case-studies/livingstone-01.png', caption: 'Award confirmation — Essex Live at Home',   tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/livingstone-01.png', caption: 'Award confirmation, Essex Live at Home',   tag: 'Award confirmation', isLead: true },
       { src: '/images/case-studies/livingstone-02.png', caption: 'Lot 1 Basildon outcome',                   tag: 'Lot outcome' },
       { src: '/images/case-studies/livingstone-03.png', caption: 'Lot 3 Brentwood outcome',                  tag: 'Lot outcome' },
       { src: '/images/case-studies/livingstone-04.png', caption: 'Lot 5 Chelmsford outcome',                 tag: 'Lot outcome' },
       { src: '/images/case-studies/livingstone-05.png', caption: 'Lot 7 Epping Forest outcome',              tag: 'Lot outcome' },
       { src: '/images/case-studies/livingstone-06.png', caption: 'Lot 8 Harlow outcome',                     tag: 'Lot outcome' },
-      { src: '/images/case-studies/livingstone-07.png', caption: 'Score breakdown — quality questions',      tag: 'Score breakdown' },
-      { src: '/images/case-studies/livingstone-08.png', caption: 'Score breakdown — page 2',                 tag: 'Score breakdown' },
-      { src: '/images/case-studies/livingstone-09.png', caption: 'Score breakdown — page 3',                 tag: 'Score breakdown' },
-      { src: '/images/case-studies/livingstone-10.png', caption: 'Score breakdown — page 4',                 tag: 'Score breakdown' },
-      { src: '/images/case-studies/livingstone-11.png', caption: 'Score breakdown — page 5',                 tag: 'Score breakdown' },
+      { src: '/images/case-studies/livingstone-07.png', caption: 'Score breakdown, quality questions',      tag: 'Score breakdown' },
+      { src: '/images/case-studies/livingstone-08.png', caption: 'Score breakdown, page 2',                 tag: 'Score breakdown' },
+      { src: '/images/case-studies/livingstone-09.png', caption: 'Score breakdown, page 3',                 tag: 'Score breakdown' },
+      { src: '/images/case-studies/livingstone-10.png', caption: 'Score breakdown, page 4',                 tag: 'Score breakdown' },
+      { src: '/images/case-studies/livingstone-11.png', caption: 'Score breakdown, page 5',                 tag: 'Score breakdown' },
       { src: '/images/case-studies/livingstone-12.png', caption: 'CQC and compliance documentation',         tag: 'Compliance' },
     ],
     gallerySource: 'Source: Essex County Council outcome letter via Essex Supplier Portal, reference 1038 / 2025/S 000-019527.',
@@ -413,7 +413,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The Q9 Video evidence miss was procedural, not substantive — the provider\'s CQC record was strong. But the clarification non-response had closed the Tier 1 route for this window. Below the tier ceiling, the digital systems contracts had not been packaged for evaluator review, and the branch coordinate data that forms part of the geographic coverage requirement had not been formatted to the specification. These were the remaining gaps to address for the Tier 2 submission.',
+        body: 'The Q9 Video evidence miss was procedural, not substantive, the provider\'s CQC record was strong. But the clarification non-response had closed the Tier 1 route for this window. Below the tier ceiling, the digital systems contracts had not been packaged for evaluator review, and the branch coordinate data that forms part of the geographic coverage requirement had not been formatted to the specification. These were the remaining gaps to address for the Tier 2 submission.',
       },
       {
         num: '08', heading: 'Our Role',
@@ -421,11 +421,11 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'The final submission packaged the digital systems contracts and branch coordinate data against the scoring specification. The authority confirmed Tier 2 places across all five districts. TenderLab also documented a proposed Tier 1 evidence path — Q9 video evidence, digital systems contracts and CQC documentation — for use in a future refresh, subject to the next published requirements.',
+        body: 'The final submission packaged the digital systems contracts and branch coordinate data against the scoring specification. The authority confirmed Tier 2 places across all five districts. TenderLab also documented a proposed Tier 1 evidence path, Q9 video evidence, digital systems contracts and CQC documentation, for use in a future refresh, subject to the next published requirements.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
-        body: 'Five Tier 2 framework places were confirmed: Basildon, Brentwood, Chelmsford, Epping Forest and Harlow. Tier 1 status was not awarded due to the outstanding Q9 Video evidence. The Tier 1 improvement plan — with Q9 evidence, digital systems contract proof and refreshed branch coordinates — sits inside the organisation for the next refresh window.',
+        body: 'Five Tier 2 framework places were confirmed: Basildon, Brentwood, Chelmsford, Epping Forest and Harlow. Tier 1 status was not awarded due to the outstanding Q9 Video evidence. The Tier 1 improvement plan, with Q9 evidence, digital systems contract proof and refreshed branch coordinates, sits inside the organisation for the next refresh window.',
       },
     ],
     scoreTable: {
@@ -462,12 +462,12 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's framework approved", 'SEND Commissioning', 'Verified award letters', 'Standstill cleared'],
     galleryImages: [
-      { src: '/images/case-studies/evidence/c5-1.png', caption: 'Provisional award — Hertfordshire SEND Framework', tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/evidence/c5-2.png', caption: 'Lot 1 award letter — HCC2314690',                   tag: 'Lot award' },
-      { src: '/images/case-studies/evidence/c5-3.png', caption: 'Lot 2 award letter — HCC2314691',                   tag: 'Lot award' },
+      { src: '/images/case-studies/evidence/c5-1.png', caption: 'Provisional award, Hertfordshire SEND Framework', tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/evidence/c5-2.png', caption: 'Lot 1 award letter, HCC2314690',                   tag: 'Lot award' },
+      { src: '/images/case-studies/evidence/c5-3.png', caption: 'Lot 2 award letter, HCC2314691',                   tag: 'Lot award' },
       { src: '/images/case-studies/evidence/c5-4.png', caption: 'Standstill notice',                                  tag: 'Compliance' },
-      { src: '/images/case-studies/evidence/c5-5.png', caption: 'Score breakdown — quality questions',                tag: 'Score breakdown' },
-      { src: '/images/case-studies/evidence/c5-6.png', caption: 'Score breakdown — page 2',                           tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c5-5.png', caption: 'Score breakdown, quality questions',                tag: 'Score breakdown' },
+      { src: '/images/case-studies/evidence/c5-6.png', caption: 'Score breakdown, page 2',                           tag: 'Score breakdown' },
       { src: '/images/case-studies/evidence/c5-7.png', caption: 'Framework compliance documentation',                 tag: 'Compliance' },
     ],
     gallerySource: 'Source: Hertfordshire County Council provisional award notifications HCC2314690 and HCC2314691 dated 11 August 2025. Standstill closed 21 August 2025.',
@@ -478,11 +478,11 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: "The provider operated in adult homecare and had applied adult care planning language, assessment frameworks and safeguarding references to a SEND panel that was reading for children and young people-specific competency. The care planning language did not reference Education, Health and Care (EHC) plans, and coproduction had been described in adult terms — key worker relationships — rather than in terms of family involvement and child voice, which the SEND commissioning panel expected.",
+        body: "The provider operated in adult homecare and had applied adult care planning language, assessment frameworks and safeguarding references to a SEND panel that was reading for children and young people-specific competency. The care planning language did not reference Education, Health and Care (EHC) plans, and coproduction had been described in adult terms, key worker relationships, rather than in terms of family involvement and child voice, which the SEND commissioning panel expected.",
       },
       {
         num: '08', heading: 'Our Role',
-        body: "We took the engagement as lead writer on all quality method statements, recalibrating from adult homecare language to SEND-aligned children's services language. EHC plan references were introduced. Coproduction was rebuilt around family involvement and child voice. Safeguarding was updated to reflect the children's safeguarding framework — Working Together to Safeguard Children — rather than the adult safeguarding framework.",
+        body: "We took the engagement as lead writer on all quality method statements, recalibrating from adult homecare language to SEND-aligned children's services language. EHC plan references were introduced. Coproduction was rebuilt around family involvement and child voice. Safeguarding was updated to reflect the children's safeguarding framework, Working Together to Safeguard Children, rather than the adult safeguarding framework.",
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
@@ -525,7 +525,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ['Framework awarded providers', 'Local authority contracts', 'Verified award letters', 'Standstill cleared'],
     galleryImages: [
-      { src: '/images/case-studies/nelson_ocean-1.png', caption: 'Award confirmation — Central Bedfordshire SL',  tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/nelson_ocean-1.png', caption: 'Award confirmation, Central Bedfordshire SL',  tag: 'Award confirmation', isLead: true },
       { src: '/images/case-studies/nelson_ocean-2.png', caption: 'Contract terms and lot breakdown',              tag: 'Contract terms' },
       { src: '/images/case-studies/nelson_ocean-3.png', caption: 'SSQ financial assessment clearance',            tag: 'Compliance' },
     ],
@@ -537,7 +537,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: "Variable day hours was buried inside the staffing method statement rather than fronted as a distinct capability. The MEAT-weighted scoring structure meant that cohort content needed to be separated across LD, MH, autism and physical disability lines — a generic supported living narrative that merged cohorts would score below the award threshold on a MEAT assessment. The social value evidence had not been quantified.",
+        body: "Variable day hours was buried inside the staffing method statement rather than fronted as a distinct capability. The MEAT-weighted scoring structure meant that cohort content needed to be separated across LD, MH, autism and physical disability lines, a generic supported living narrative that merged cohorts would score below the award threshold on a MEAT assessment. The social value evidence had not been quantified.",
       },
       {
         num: '08', heading: 'Our Role',
@@ -545,7 +545,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Leading with variable day hours as a defined service capability — with a specific staffing model, rota structure and response time framework — moved the narrative from a generic supported living submission to a procurement-specific response. The cohort separation ensured the evaluator could read LD, MH, autism and physical disability evidence in distinct sections rather than scanning a merged generic narrative.',
+        body: 'Leading with variable day hours as a defined service capability, with a specific staffing model, rota structure and response time framework, moved the narrative from a generic supported living submission to a procurement-specific response. The cohort separation ensured the evaluator could read LD, MH, autism and physical disability evidence in distinct sections rather than scanning a merged generic narrative.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
@@ -586,9 +586,9 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ["Children's services approved", 'Local authority contract', 'Evaluator feedback documented', 'Improvement plan active'],
     galleryImages: [
-      { src: '/images/case-studies/pcas-1.png', caption: "Award confirmation — Children's Services",     tag: 'Award confirmation', isLead: true },
-      { src: '/images/case-studies/pcas-2.png', caption: 'Score breakdown — Q1 to Q3',                   tag: 'Score breakdown' },
-      { src: '/images/case-studies/pcas-3.png', caption: 'Score breakdown — Q4 to Q6',                   tag: 'Score breakdown' },
+      { src: '/images/case-studies/pcas-1.png', caption: "Award confirmation, Children's Services",     tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/pcas-2.png', caption: 'Score breakdown, Q1 to Q3',                   tag: 'Score breakdown' },
+      { src: '/images/case-studies/pcas-3.png', caption: 'Score breakdown, Q4 to Q6',                   tag: 'Score breakdown' },
       { src: '/images/case-studies/pcas-4.png', caption: 'Evaluator feedback summary',                   tag: 'Evaluator feedback' },
     ],
     gallerySource: "Source: Local Authority Children's Services post-procurement feedback and award documentation.",
@@ -599,7 +599,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: "The provider's existing bid material was built around adult social care practice. The one-page profile — Q6 — lacked child photographs, child voice quotes and an accessible format appropriate for children's services commissioning. Policy citations referenced adult frameworks. Q5 Family Engagement and Trust was answered in terms of care planning meetings rather than family partnership and relational practice.",
+        body: "The provider's existing bid material was built around adult social care practice. The one-page profile, Q6, lacked child photographs, child voice quotes and an accessible format appropriate for children's services commissioning. Policy citations referenced adult frameworks. Q5 Family Engagement and Trust was answered in terms of care planning meetings rather than family partnership and relational practice.",
       },
       {
         num: '08', heading: 'Our Role',
@@ -607,11 +607,11 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Q2 Recruit, Train and Retain Staff at 4/5 was the highest score and the key change. Restructuring the recruitment narrative around children\'s services-specific training — RIDDOR, restraint-reduction training, trauma-informed practice — and giving named examples of the training pathway moved Q2 above the entry threshold. The one-page profile rebuild also moved Q6 above the threshold where the adult-derived format would have scored below it.',
+        body: 'Q2 Recruit, Train and Retain Staff at 4/5 was the highest score and the key change. Restructuring the recruitment narrative around children\'s services-specific training, RIDDOR, restraint-reduction training, trauma-informed practice, and giving named examples of the training pathway moved Q2 above the entry threshold. The one-page profile rebuild also moved Q6 above the threshold where the adult-derived format would have scored below it.',
       },
       {
         num: '13', heading: 'Outcome Achieved',
-        body: "The provider was awarded a position on the procurement. Q2 Recruit, Train and Retain Staff scored 4 of 5 — the strongest result. Q1, Q3, Q4 and Q5 scored 3 of 5. Q6 One-Page Profile scored 2 of 5 — the improvement point documented for the next bid cycle, with a child-accessible format now built and ready.",
+        body: "The provider was awarded a position on the procurement. Q2 Recruit, Train and Retain Staff scored 4 of 5, the strongest result. Q1, Q3, Q4 and Q5 scored 3 of 5. Q6 One-Page Profile scored 2 of 5, the improvement point documented for the next bid cycle, with a child-accessible format now built and ready.",
       },
     ],
     scoreTable: {
@@ -649,7 +649,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
     ],
     trustBadges: ['DPS place confirmed', 'Local authority contract', 'Verified award letters', 'Standstill cleared'],
     galleryImages: [
-      { src: '/images/case-studies/alicelyn-1.png', caption: 'Successful Alcatel Letter — Sheffield DPS',   tag: 'Award confirmation', isLead: true },
+      { src: '/images/case-studies/alicelyn-1.png', caption: 'Successful Alcatel Letter, Sheffield DPS',   tag: 'Award confirmation', isLead: true },
       { src: '/images/case-studies/alicelyn-2.png', caption: 'DPS place confirmation and compliance',       tag: 'Compliance' },
     ],
     gallerySource: 'Source: Sheffield City Council Successful Alcatel Letter under PCR 2015 Regulation 87, reference 62329, dated 24 January 2025. Standstill closed midnight 3 February 2025.',
@@ -660,7 +660,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '04', heading: 'Starting Gaps & Limitations',
-        body: 'The provider had no place on the Sheffield DPS and no internal bid lead. The overnight delivery was operationally strong — staffing ratios, handover procedures, sleep-in protocols and risk escalation were all mature — but none of this had been translated into procurement evidence. The bid narrative needed to surface the overnight operational substance in the language of the DPS evaluation criteria.',
+        body: 'The provider had no place on the Sheffield DPS and no internal bid lead. The overnight delivery was operationally strong, staffing ratios, handover procedures, sleep-in protocols and risk escalation were all mature, but none of this had been translated into procurement evidence. The bid narrative needed to surface the overnight operational substance in the language of the DPS evaluation criteria.',
       },
       {
         num: '08', heading: 'Our Role',
@@ -668,7 +668,7 @@ export const CASE_STUDY_DETAILS: Record<string, CaseStudyDetail> = {
       },
       {
         num: '12', heading: 'What Changed the Trajectory',
-        body: 'Building the overnight staffing matrix as a standalone evidence document — showing cover ratios, handover procedures and sleep-in escalation steps against the published DPS criteria — moved the operational substance from implicit to explicit. The five-beat case-example library structured the narrative around named individuals and dated interventions, closing the evaluator\'s discretion on outcome evidence.',
+        body: 'Building the overnight staffing matrix as a standalone evidence document, showing cover ratios, handover procedures and sleep-in escalation steps against the published DPS criteria, moved the operational substance from implicit to explicit. The five-beat case-example library structured the narrative around named individuals and dated interventions, closing the evaluator\'s discretion on outcome evidence.',
       },
       {
         num: '13', heading: 'Outcome Achieved',

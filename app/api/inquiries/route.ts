@@ -8,9 +8,9 @@ import { getPortalApiUrl } from '@/lib/portal-api'
  *
  * Two independent delivery channels protect against either failing:
  *
- *   1) Email  — sent via Gmail SMTP to INQUIRY_TO when SMTP is configured.
+ *   1) Email, sent via Gmail SMTP to INQUIRY_TO when SMTP is configured.
  *
- *   2) Portal API — forwarded to the FastAPI service on TenderLab's VPS so it
+ *   2) Portal API, forwarded to the FastAPI service on TenderLab's VPS so it
  *                   appears in the admin portal. We mark the request with a
  *                   signed relay header so the API can reject direct abuse
  *                   and skip duplicate email sending.
@@ -132,7 +132,7 @@ function buildPortalInquiry(data: InquiryPayload): PortalInquiry {
     email: data.email,
     phone: data.phone || null,
     company: data.org || null,
-    subject: `Tender Enquiry — ${data.serviceType || 'General'}`,
+    subject: `Tender Enquiry, ${data.serviceType || 'General'}`,
     message: fullMessage,
   }
 }
@@ -141,7 +141,7 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
   // Spam filters dislike "New …" subjects and repeated brand keywords.
   // A short, person-first subject reads like real correspondence.
   const subject = data.org
-    ? `Enquiry from ${data.name} — ${data.org}`
+    ? `Enquiry from ${data.name}, ${data.org}`
     : `Enquiry from ${data.name}`
 
   // Hidden preheader: the bit Gmail/Outlook show next to the subject in the
@@ -156,14 +156,14 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
   const rows: Array<[string, string]> = [
     ['Name', data.name],
     ['Email', data.email],
-    ['Phone', data.phone || '—'],
-    ['Organisation', data.org || '—'],
-    ['Tender title', data.tenderTitle || '—'],
-    ['Tender URL', data.tenderUrl || '—'],
-    ['Service type', data.serviceType || '—'],
-    ['Submission deadline', data.deadline || '—'],
-    ['Commissioning authority', data.authority || '—'],
-    ['How they found us', data.howFound || '—'],
+    ['Phone', data.phone || ', '],
+    ['Organisation', data.org || ', '],
+    ['Tender title', data.tenderTitle || ', '],
+    ['Tender URL', data.tenderUrl || ', '],
+    ['Service type', data.serviceType || ', '],
+    ['Submission deadline', data.deadline || ', '],
+    ['Commissioning authority', data.authority || ', '],
+    ['How they found us', data.howFound || ', '],
   ]
 
   const text = [
@@ -176,7 +176,7 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
     `Message:`,
     (data.message || '(no message)').trim(),
     ``,
-    `Reply directly to this email — it goes straight to ${data.email}.`,
+    `Reply directly to this email, it goes straight to ${data.email}.`,
     `Or open the inquiry in the portal: ${PORTAL_ADMIN_URL}/enquiries`,
   ].join('\n')
 
@@ -223,7 +223,7 @@ function buildEmailContent(data: InquiryPayload, portal: PortalInquiry) {
           )}</p>
         </div>
         <p style="margin:20px 0 0;font-size:13px;color:#6b7280;">
-          Reply directly to this email — it goes straight to <a href="mailto:${escape(
+          Reply directly to this email, it goes straight to <a href="mailto:${escape(
             data.email,
           )}" style="color:#374151;">${escape(data.email)}</a>.
         </p>
@@ -265,7 +265,7 @@ async function sendInquiryEmail(
       text,
       html,
       // Headers that mark this as a one-shot transactional notification
-      // — helps Gmail / Outlook classify it as legitimate mail rather
+      //, helps Gmail / Outlook classify it as legitimate mail rather
       // than bulk marketing.
       headers: {
         'Auto-Submitted': 'auto-generated',
@@ -330,7 +330,7 @@ async function forwardToPortalApi(
   if (!baseUrl) return { ok: false, error: 'Portal API is not configured' }
   const url = `${baseUrl}/api/inquiries/`
 
-  // After wakePortalApi(), the API should be hot — short retries cover
+  // After wakePortalApi(), the API should be hot, short retries cover
   // transient sheet-store hiccups without burning the whole Vercel budget.
   const attempts: Array<{ timeoutMs: number; preDelayMs: number }> = [
     { timeoutMs: 12000, preDelayMs: 0 },
