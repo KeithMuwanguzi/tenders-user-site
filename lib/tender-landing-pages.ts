@@ -25,7 +25,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Find live domiciliary care tenders, home care frameworks and reablement opportunities across the UK, with practical guidance for deciding whether to bid.',
     h1: 'Live domiciliary care tenders and home care contracts.',
-    heroImage: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg',
     heroAlt: 'A home care professional supporting an older person in their own home',
     introduction:
       'Browse current home care, domiciliary care and reablement opportunities published through official UK procurement notice sources. Open each record for the buyer, deadline, value, documents and official submission route.',
@@ -71,7 +71,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Browse live supported living tenders and supported accommodation opportunities for learning disability, autism, mental health and complex support services.',
     h1: 'Live supported living tenders for UK care providers.',
-    heroImage: 'https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-supported-living-hero-v1.jpg',
     heroAlt: 'A support worker and an adult discussing everyday choices in a home setting',
     introduction:
       'Find current supported living and related accommodation-based support opportunities. Use the filters and official notice links to examine service scope, cohorts, locations, lots, deadlines and procurement documents.',
@@ -117,7 +117,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Find live children and young people tenders, including residential care, supported accommodation, leaving care, fostering and family support opportunities.',
     h1: "Live children's services tenders.",
-    heroImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-childrens-services-hero-v1.webp',
     heroAlt: 'Young people and support professionals working together around a table',
     introduction:
       'Browse current procurement opportunities for children\'s residential care, supported accommodation, leaving care, fostering, short breaks, outreach and family support. Always use the official notice and tender pack as the final source of requirements.',
@@ -163,7 +163,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Browse live UK mental health tenders for supported living, community support, crisis, recovery and related health and social care services.',
     h1: 'Live mental health tenders and support contracts.',
-    heroImage: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-mental-health-hero-v1.jpg',
     heroAlt: 'People sharing a supportive conversation in a calm community setting',
     introduction:
       'Find current mental health procurement opportunities across community support, supported living, crisis response, recovery and related services. Open the official record for the complete scope, eligibility conditions and submission instructions.',
@@ -209,7 +209,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Find live complex care and continuing healthcare tenders, including community packages, framework opportunities and specialist support contracts.',
     h1: 'Live complex care and continuing healthcare tenders.',
-    heroImage: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-complex-care-chc-hero-v1.jpg',
     heroAlt: 'A healthcare professional discussing a complex care plan with a patient',
     introduction:
       'Browse current complex care and continuing healthcare opportunities. These procurements may involve community packages, specialist staffing, clinical governance, rapid mobilisation and coordination with commissioners and health professionals.',
@@ -255,7 +255,7 @@ export const TENDER_LANDING_PAGES: TenderLandingPage[] = [
     description:
       'Browse live residential care, care home and nursing care tenders, including frameworks, placements and specialist accommodation-based care opportunities.',
     h1: 'Live residential and nursing care tenders.',
-    heroImage: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=1400&q=84&auto=format',
+    heroImage: '/images/editorial/tenderlab-nursing-care-hero-v1.jpg',
     heroAlt: 'A nursing professional speaking with an older person about their care',
     introduction:
       'Find current care home, residential care and nursing care procurement opportunities. Review each official record for lot structure, service-user cohorts, quality requirements, pricing schedules, deadlines and submission documents.',

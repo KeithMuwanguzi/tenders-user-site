@@ -39,7 +39,7 @@
   margin: 0;
   color: var(--red);
   font-size: clamp(0.82rem, 0.95vw, 1rem);
-  font-weight: 850;
+  font-weight: 650;
   letter-spacing: 0.15em;
   line-height: 1.45;
   text-transform: uppercase;
@@ -50,7 +50,7 @@
   margin: 0;
   color: var(--ink);
   font-size: clamp(2.55rem, 4.7vw, 5.25rem);
-  font-weight: 720;
+  font-weight: 540;
   letter-spacing: -0.06em;
   line-height: 0.98;
   text-wrap: balance;
@@ -81,7 +81,7 @@
   max-width: 15ch;
   color: var(--ink);
   font-size: clamp(2.6rem, 4.6vw, 5.1rem);
-  font-weight: 720;
+  font-weight: 540;
   letter-spacing: -0.06em;
   line-height: 0.98;
   text-wrap: balance;
@@ -106,7 +106,7 @@
 
 .textLink {
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 650;
   text-decoration-color: var(--red);
   text-decoration-thickness: 2px;
   text-underline-offset: 0.24em;
@@ -142,7 +142,7 @@
   content: counter(chapter, decimal-leading-zero);
   color: var(--red);
   font-size: clamp(1.45rem, 2vw, 2.2rem);
-  font-weight: 850;
+  font-weight: 650;
   letter-spacing: -0.04em;
 }
 
@@ -170,7 +170,7 @@
 
 .card {
   grid-column: span 4;
-  min-height: 21rem;
+  min-height: 18rem;
   padding: clamp(1.8rem, 3vw, 3.2rem);
   border: 1px solid rgba(25, 34, 49, 0.12);
   border-radius: 1.15rem 4.5rem 1.15rem 4.5rem;
@@ -190,7 +190,7 @@
   margin-bottom: auto;
   color: var(--red);
   font-size: 0.95rem;
-  font-weight: 850;
+  font-weight: 650;
   letter-spacing: 0.12em;
 }
 
@@ -245,7 +245,7 @@
   gap: 0.75rem;
   color: var(--ink);
   background: rgba(255, 253, 248, 0.82);
-  font-weight: 750;
+  font-weight: 600;
   line-height: 1.35;
 }
 
@@ -300,7 +300,7 @@
 .metricValue {
   color: var(--red);
   font-size: clamp(3rem, 5.2vw, 6rem);
-  font-weight: 760;
+  font-weight: 560;
   letter-spacing: -0.07em;
   line-height: 0.9;
 }
@@ -435,7 +435,7 @@
   align-items: center;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.62);
-  font-weight: 800;
+  font-weight: 650;
   text-decoration: none;
 }
 
@@ -472,7 +472,7 @@
   cursor: pointer;
   color: var(--ink);
   font-size: clamp(1.08rem, 1.35vw, 1.32rem);
-  font-weight: 780;
+  font-weight: 620;
   line-height: 1.36;
   list-style: none;
 }
@@ -542,19 +542,19 @@
   justify-content: space-between;
   gap: 1rem;
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 650;
   text-decoration: none;
 }
 
 .stepList { counter-reset: next; }
 .stepList li { counter-increment: next; display: grid; grid-template-columns: 2rem 1fr; gap: 0.8rem; color: #465366; line-height: 1.55; }
-.stepList li::before { content: counter(next, decimal-leading-zero); color: var(--red); font-weight: 850; }
+.stepList li::before { content: counter(next, decimal-leading-zero); color: var(--red); font-weight: 650; }
 .stepList strong { display: block; margin-bottom: 0.2rem; color: var(--ink); }
 
 .formShell :global(.cf-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
 .formShell :global(.cf-field) { min-width: 0; }
 .formShell :global(.cf-field--full) { margin-top: 1.15rem; }
-.formShell :global(.cf-label) { display: block; margin: 0 0 0.55rem; color: var(--ink); font-size: 0.92rem; font-weight: 800; }
+.formShell :global(.cf-label) { display: block; margin: 0 0 0.55rem; color: var(--ink); font-size: 0.92rem; font-weight: 650; }
 .formShell :global(.cf-input),
 .formShell :global(.cf-select),
 .formShell :global(.cf-textarea) {
@@ -583,7 +583,7 @@
   color: #fff;
   background: var(--red);
   font: inherit;
-  font-weight: 850;
+  font-weight: 650;
   cursor: pointer;
 }
 .formShell :global(.cf-submit:hover) { background: var(--ink); }
@@ -642,7 +642,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.7rem;
-  font-weight: 850;
+  font-weight: 650;
   text-decoration: none;
 }
 .ctaPrimary { color: #fff; background: var(--red); }

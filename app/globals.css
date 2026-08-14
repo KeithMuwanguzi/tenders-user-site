@@ -9275,7 +9275,7 @@ body { background: #FAF8F2; }
   margin-bottom: clamp(50px,7vw,86px);
 }
 .legal-editorial-hero .he-eyebrow { color: #d4382c; font-size: .78rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-.legal-editorial-hero .he-title { max-width: 700px; margin: 10px 0 0; color: #192231; font-size: clamp(2.8rem,4.4vw,4.85rem); font-weight: 760; line-height: 1.01; letter-spacing: -.047em; text-wrap: balance; }
+.legal-editorial-hero .he-title { max-width: 700px; margin: 10px 0 0; color: #192231; font-size: clamp(2.8rem,4.4vw,4.85rem); font-weight: 520; line-height: 1.01; letter-spacing: -.047em; text-wrap: balance; }
 .legal-editorial-hero .he-sub { max-width: 640px; margin: 22px 0 0; color: #4f5e70; font-size: clamp(1.02rem,1.3vw,1.16rem); line-height: 1.65; }
 .legal-editorial-hero .he-meta { margin: 16px 0 0; color: #687386; font-size: .85rem; font-weight: 700; }
 .legal-hero-visual { overflow: hidden; margin: 0; border-radius: 58px 58px 8px 58px; background: #dceff0; box-shadow: 0 24px 60px rgba(25,34,49,.12); }

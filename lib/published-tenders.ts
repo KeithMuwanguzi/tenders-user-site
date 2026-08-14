@@ -57,6 +57,7 @@ export async function fetchPublishedTenderById(
 ): Promise<PublishedTenderSnapshot | null> {
   try {
     const baseUrl = getPortalApiUrl()
+    if (!baseUrl) return null
     let res = await fetch(
       `${baseUrl}/api/tenders/published/${encodeURIComponent(id)}`,
       {

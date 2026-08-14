@@ -28,8 +28,9 @@ export default function EditorialHero({
   tone = 'cream',
   imageFit = 'cover',
 }: Props) {
+  const titleClass = title.length > 56 ? ' ep-hero--long-title' : ''
   return (
-    <section className={`ep-hero ep-hero--${tone}`}>
+    <section className={`ep-hero ep-hero--${tone}${titleClass}`}>
       <div className="ep-shell ep-hero__grid">
         <div className="ep-hero__copy">
           <p className="ep-kicker">{eyebrow}</p>
@@ -43,7 +44,7 @@ export default function EditorialHero({
           </div>
         </div>
         <div className={`ep-hero__image ep-hero__image--${imageFit}`}>
-          <Image src={image} alt={imageAlt} fill priority sizes="(max-width: 860px) 100vw, 48vw" />
+          <Image src={image} alt={imageAlt} fill priority sizes="100vw" />
         </div>
       </div>
     </section>

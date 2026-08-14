@@ -54,16 +54,6 @@ export default async function TenderCategoryLanding({
                 sizes="(max-width: 900px) 100vw, 52vw"
               />
             </div>
-            <figcaption className="tender-landing__hero-note">
-              <strong>Check the opportunity before you bid.</strong>
-              <p>
-                TenderLab can test the published conditions, evidence, delivery model and commercial
-                fit before writing begins.
-              </p>
-              <Link href={`/contact?ref=${page.slug}-opportunity-review#enquiry`}>
-                Ask TenderLab to review this tender
-              </Link>
-            </figcaption>
           </figure>
           <div className="tender-landing__hero-actions">
             <Link href="#current-opportunities" className="btn btn-primary">

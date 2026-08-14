@@ -60,15 +60,18 @@ export default function PrivacyPolicyPage() {
 
       <div className="he-wrap">
         <div className="container">
-          <div className="he-hero">
-            <p className="he-eyebrow">Legal</p>
-            <h1 className="he-title">Privacy Policy</h1>
-            <p className="he-sub">
-              How TenderLab Ltd collects, uses and protects your personal data under the
-              UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018
-              and the Privacy and Electronic Communications Regulations 2003 (PECR).
-            </p>
-            <p className="he-meta">Last updated: 5 June 2026</p>
+          <div className="legal-editorial-hero">
+            <div className="he-hero">
+              <p className="he-eyebrow">Legal</p>
+              <h1 className="he-title">Privacy Policy</h1>
+              <p className="he-sub">
+                How TenderLab Ltd collects, uses and protects your personal data under the
+                UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018
+                and the Privacy and Electronic Communications Regulations 2003 (PECR).
+              </p>
+              <p className="he-meta">Last updated: 5 June 2026</p>
+            </div>
+            <LegalHeroVisual variant="privacy" />
           </div>
 
           <div className="he-grid he-grid--3col">

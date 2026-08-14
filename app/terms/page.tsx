@@ -64,15 +64,18 @@ export default function TermsPage() {
 
       <div className="he-wrap">
         <div className="container">
-          <div className="he-hero">
-            <p className="he-eyebrow">Legal</p>
-            <h1 className="he-title">Terms of Service</h1>
-            <p className="he-sub">
-              The contractual terms under which TenderLab Ltd provides tender writing, bid
-              writing and consultancy services to UK health and social care providers. Drafted
-              under the laws of England and Wales.
-            </p>
-            <p className="he-meta">Last updated: 10 August 2026</p>
+          <div className="legal-editorial-hero">
+            <div className="he-hero">
+              <p className="he-eyebrow">Legal</p>
+              <h1 className="he-title">Terms of Service</h1>
+              <p className="he-sub">
+                The contractual terms under which TenderLab Ltd provides tender writing, bid
+                writing and consultancy services to UK health and social care providers. Drafted
+                under the laws of England and Wales.
+              </p>
+              <p className="he-meta">Last updated: 10 August 2026</p>
+            </div>
+            <LegalHeroVisual variant="terms" />
           </div>
 
           <div className="he-grid he-grid--3col">

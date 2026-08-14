@@ -136,35 +136,45 @@ export default async function TendersPage() {
         <TendersClient initialTenders={initialTenders} />
       </div>
 
-      <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
-          <h2 style={{ fontSize: '1.75rem', color: '#0B1F3A', margin: '0 0 1rem' }}>
+      <section className="tenders-intro">
+        <div className="container tenders-intro__layout">
+          <div className="tenders-intro__heading">
+            <p className="section-label">A useful notice is only the starting point</p>
+            <h2>
             Find the opportunity, then test whether it fits your organisation.
-          </h2>
-          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: '0 0 1rem' }}>
-            TenderLab brings together relevant notices across domiciliary care, supported living,
-            residential and nursing care, children&apos;s services, supported accommodation, mental
-            health, complex care, continuing healthcare and housing support. Each sector hub combines
-            live opportunities with guidance on the evidence and delivery questions that commonly
-            affect the bid decision.
-          </p>
-          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: 0 }}>
-            Finding a notice is only the beginning. Review eligibility, evidence, mobilisation,
-            staffing and commercial exposure before committing the team. If you have a live tender,
-              <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead#enquiry" style={{ color: '#C8102E', fontWeight: 600 }}> share the opportunity with TenderLab</Link> or
-            compare our <Link href="/services" style={{ color: '#C8102E', fontWeight: 600 }}>tender support services</Link>.
-          </p>
+            </h2>
+          </div>
+          <div className="tenders-intro__content">
+            <p>
+              TenderLab brings together relevant notices across domiciliary care, supported living,
+              residential and nursing care, children&apos;s services, supported accommodation, mental
+              health, complex care, continuing healthcare and housing support. Each sector hub combines
+              live opportunities with guidance on the evidence and delivery questions that commonly
+              affect the bid decision.
+            </p>
+            <p>
+              Finding a notice is only the beginning. Review eligibility, evidence, mobilisation,
+              staffing and commercial exposure before committing the team.
+            </p>
+            <div className="tenders-intro__links">
+              <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead#enquiry">Share the opportunity with TenderLab</Link>
+              <Link href="/services">Compare tender support services</Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="hub-faq" style={{ background: '#F7F8FA', padding: '3rem 0' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0B1F3A', margin: '0 0 1.5rem' }}>Frequently asked questions</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <section className="hub-faq tenders-faq">
+        <div className="container tenders-faq__layout">
+          <div className="tenders-faq__heading">
+            <p className="section-label">Questions before you commit</p>
+            <h2>Frequently asked questions about live care tenders.</h2>
+          </div>
+          <div className="tenders-faq__items">
             {FAQ.map((item, i) => (
-              <details key={i} style={{ background: '#fff', border: '1px solid #E0E4E8', borderRadius: 8, padding: '1rem 1.25rem' }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#0B1F3A' }}>{item.question}</summary>
-                <p style={{ margin: '0.75rem 0 0', color: '#3A4A5C', lineHeight: 1.7 }}>{item.answer}</p>
+              <details key={i} className="tenders-faq__item">
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
               </details>
             ))}
           </div>
