@@ -160,7 +160,7 @@ function collectCpvDescriptions(
     .filter(Boolean)
     .map((entry) => {
       const classification = entry as { id?: string; description?: string }
-      return [classification.id, classification.description].filter(Boolean).join(' — ')
+      return [classification.id, classification.description].filter(Boolean).join(': ')
     })
     .filter(Boolean)
   return [...new Set(values)].join('; ') || null
@@ -294,7 +294,7 @@ export async function fetchFTNotice(
       ].filter(Boolean)
       if (lotDetails.length) {
         sectionBlocks.push({
-          title: `Lot ${lot.id || sectionBlocks.length} — ${lot.title || 'Contract lot'}`,
+          title: `Lot ${lot.id || sectionBlocks.length}: ${lot.title || 'Contract lot'}`,
           text: lotDetails.join('\n\n'),
         })
       }
