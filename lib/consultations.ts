@@ -14,7 +14,7 @@ export const CONSULTATIONS: Consultation[] = [
     id: 'tender-consultation',
     title: 'Tender Consultation',
     duration: '60 minutes',
-    price: 150,
+    price: 80,
     description: 'Understand how public-sector care procurement works, what commissioners score and whether your organisation is ready to bid.',
     preparation: 'No tender-pack review is included. Bring your questions and a summary of your organisation.',
     documentsRequired: false,

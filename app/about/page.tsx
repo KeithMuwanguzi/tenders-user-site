@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
 
@@ -23,6 +24,12 @@ const faqs = [
   { q: 'Does TenderLab invent case studies or operational evidence?', a: 'No. We improve how real evidence is selected, structured and expressed. Unsupported claims create commercial and delivery risk and should not appear in a submission.' },
 ]
 
+const specialistPerspectives = [
+  { n: '01', title: 'Care practitioners', text: 'Carers and registered managers bring direct knowledge of delivery, staffing, safeguarding, quality assurance and the practical realities behind a commissioner’s requirements.', image: '/images/editorial/tenderlab-care-evidence-hero-v1.webp' },
+  { n: '02', title: 'Tender specialists', text: 'Writers trained in health and social care procurement keep each response aligned with the buyer documents, current standards and the evidence the provider can genuinely support.', image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp' },
+  { n: '03', title: 'Former council evaluators', text: 'Consultants with experience on the buyer side understand how public bodies interpret requirements, test credibility and decide whether an answer deserves the marks.', image: '/images/editorial/tenderlab-proof-hero-v1.webp' },
+]
+
 export default function AboutPage() {
   return (
     <main className="ep-page">
@@ -37,6 +44,24 @@ export default function AboutPage() {
         secondaryHref="/case-studies"
         tone="blue"
       />
+
+      <section className="lob-expertise lob-expertise--about" aria-labelledby="about-expertise-heading">
+        <div className="ep-shell">
+          <div className="lob-expertise__intro">
+            <p className="ep-kicker">Knowledge from both sides of the procurement</p>
+            <h2 id="about-expertise-heading">A tender practice grounded in care delivery, bid discipline and evaluator insight.</h2>
+            <p>TenderLab specialises in one field. Our work brings together people who understand the service being promised and people who understand how public-sector buyers test that promise.</p>
+          </div>
+          <div className="lob-expertise__grid">
+            {specialistPerspectives.map((item) => (
+              <article key={item.n}>
+                <div className="lob-expertise__image"><Image src={item.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div>
+                <span>{item.n}</span><h3>{item.title}</h3><p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="ep-section ep-about-position">
         <div className="ep-shell ep-about-position__grid">

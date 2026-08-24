@@ -46,11 +46,11 @@ export default function Footer() {
   return (
     <footer className="tl-footer">
       <div className="tl-footer__shell">
-        <div className="tl-footer__choices" aria-label="TenderLab next steps">
+        <div className="tl-footer__lead" aria-label="TenderLab contact and next steps">
           <div className="tl-footer__identity">
             <Link href="/" aria-label="TenderLab home">
               <Image
-                src="/images/Logo/Logo%20(2).png"
+                src="/images/Logo/tenderlab-logo-transparent.png"
                 alt="TenderLab"
                 width={112}
                 height={61}
@@ -58,29 +58,19 @@ export default function Footer() {
               />
             </Link>
             <p>Specialist tender writing and bid consultancy for UK health and social care providers.</p>
-            <div>
+            <div className="tl-footer__contact">
               <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>
               <a href="tel:+441707240393">01707 240393</a>
             </div>
           </div>
-
-          <Link href="/contact" className="tl-footer__choice tl-footer__choice--coral">
-            <small>I have a live tender</small>
-            <strong>Share the opportunity</strong>
-            <span aria-hidden="true">↗</span>
-          </Link>
-
-          <Link href="/tenders" className="tl-footer__choice tl-footer__choice--blue">
-            <small>I am building a pipeline</small>
-            <strong>Explore live tenders</strong>
-            <span aria-hidden="true">↗</span>
-          </Link>
-
-          <Link href="/services" className="tl-footer__choice tl-footer__choice--yellow">
-            <small>I need specialist support</small>
-            <strong>Find the right service</strong>
-            <span aria-hidden="true">↗</span>
-          </Link>
+          <div className="tl-footer__lead-copy">
+            <p>Bring us the notice, the deadline and the service you deliver. We will start with the requirements and explain the responsible next step.</p>
+            <div>
+              <Link href="/book-consultation">Book a consultation <span aria-hidden="true">↗</span></Link>
+              <Link href="/contact?request=callback#enquiry">Request a call back <span aria-hidden="true">↗</span></Link>
+              <Link href="/tenders">See live tenders <span aria-hidden="true">↗</span></Link>
+            </div>
+          </div>
         </div>
 
         <div className="tl-footer__directory">

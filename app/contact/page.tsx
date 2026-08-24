@@ -27,6 +27,7 @@ const first = (value: string | string[] | undefined) =>
 
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   const query = await searchParams
+  const callbackRequested = first(query.request) === 'callback'
   const initialContext: TenderEnquiryContext = {
     tenderTitle: first(query.tenderTitle) || first(query.tender),
     tenderDescription: first(query.tenderDescription),
@@ -39,9 +40,11 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
   return (
     <main className="ep-page">
       <EditorialHero
-        eyebrow="Contact TenderLab"
-        title="Share the opportunity and tell us where the work stands."
-        intro="Send the notice or procurement pack, the deadline and a short description of your service. We will review the context and respond with a clear first view of the support required."
+        eyebrow={callbackRequested ? 'Request a call back' : 'Contact TenderLab'}
+        title={callbackRequested ? 'Tell us when and how to reach you.' : 'Share the opportunity and tell us where the work stands.'}
+        intro={callbackRequested
+          ? 'Leave your contact details and a short note about the tender or decision in front of you. A TenderLab specialist will respond in context.'
+          : 'Send the notice or procurement pack, the deadline and a short description of your service. We will review the context and respond with a clear first view of the support required.'}
         image="/images/editorial/tenderlab-contact-briefing-hero-v1.webp"
         imageAlt="A care-provider director and tender specialist reviewing an opportunity during a first briefing"
         primaryLabel="Go to the enquiry form"
@@ -56,14 +59,16 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
           <div className="ep-contact__form">
             <div className="ep-contact__heading">
               <div>
-                <p className="ep-kicker">Your enquiry</p>
-                <h2>Tell us about the tender.</h2>
+                <p className="ep-kicker">{callbackRequested ? 'Your call-back request' : 'Your enquiry'}</p>
+                <h2>{callbackRequested ? 'Tell us how we can help.' : 'Tell us about the tender.'}</h2>
               </div>
               <div className="ep-contact__thread" aria-hidden="true">
                 <span>notice</span><i /><span>fit</span><i /><span>next step</span>
               </div>
             </div>
-            <p className="ep-contact__lead">Share enough for us to understand the opportunity. We check the buyer documents and mandatory requirements before recommending any writing or review work.</p>
+            <p className="ep-contact__lead">{callbackRequested
+              ? 'Share the best number to use and enough context for us to prepare a useful conversation.'
+              : 'Share enough for us to understand the opportunity. We check the buyer documents and mandatory requirements before recommending any writing or review work.'}</p>
             <Suspense fallback={<div className="cf cf--loading" aria-label="Loading enquiry form" />}>
               <ContactForm initialContext={initialContext} />
             </Suspense>

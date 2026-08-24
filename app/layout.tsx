@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import './editorial-system.css'
 import './runway-system.css'
+import './lobster-system.css'
 import Nav from '@/components/Nav'
-import TopBar from '@/components/TopBar'
 import Footer from '@/components/Footer'
 import JsonLd from '@/components/JsonLd'
 import ConversionTracking from '@/components/ConversionTracking'
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0B1F3A',
+  themeColor: '#EB5078',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -115,7 +115,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#site-content">Skip to main content</a>
         <div id="site-shell">
           <ReduxProvider>
-            <TopBar />
             <Nav />
             <div id="site-content" tabIndex={-1}>{children}</div>
             <Footer />

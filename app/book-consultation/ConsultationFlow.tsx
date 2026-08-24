@@ -92,7 +92,11 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
 
       {step === 1 && (
         <div className="booking-stage">
-          <header><p className="booking-kicker">Choose a service</p><h2 id="booking-flow-title">What do you need help with?</h2></header>
+          <header className="booking-stage__intro">
+            <p className="booking-kicker">Book focused tender advice</p>
+            <h1 id="booking-flow-title">Choose the preparation that fits the decision in front of you.</h1>
+            <p>Every option has a fixed price and a defined outcome. The higher fees include document review completed before the session or written briefing.</p>
+          </header>
           <div className="booking-options">
             {consultations.map((item) => (
               <button

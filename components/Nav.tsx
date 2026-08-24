@@ -75,11 +75,10 @@ const NAV: NavItem[] = [
       },
     ],
   },
-  { label: 'Live Tenders', href: '/tenders' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Blogs',         href: '/blog' },
   {
-    label: 'About', href: '/about',
+    label: 'About Us', href: '/about',
     children: [
       { label: 'Our Story',     href: '/about' },
       { label: 'Our Process',   href: '/process' },
@@ -110,6 +109,7 @@ export default function Nav() {
   const [menuOpen,       setMenuOpen]        = useState(false)
   const [mobileExpanded, setMobileExpanded]  = useState<string | null>(null)
   const [openMenu,       setOpenMenu]        = useState<string | null>(null)
+  const [contactOpen,    setContactOpen]     = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const drawerRef = useRef<HTMLDivElement | null>(null)
   const burgerRef = useRef<HTMLButtonElement | null>(null)
@@ -129,9 +129,18 @@ export default function Nav() {
   }, [])
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    document.body.style.overflow = menuOpen || contactOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [menuOpen])
+  }, [menuOpen, contactOpen])
+
+  useEffect(() => {
+    if (!contactOpen) return
+    const close = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setContactOpen(false)
+    }
+    document.addEventListener('keydown', close)
+    return () => document.removeEventListener('keydown', close)
+  }, [contactOpen])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -306,12 +315,20 @@ export default function Nav() {
                 })}
               </ul>
 
+              <Link
+                href="/tenders"
+                className={`nav__live${activeSection === '/tenders' ? ' nav__live--active' : ''}`}
+                onClick={closeAll}
+              >
+                Live tenders
+              </Link>
+
               {/* Right actions */}
               <div className="nav__actions">
-                <Link href="/contact" aria-current={pathname === '/contact' ? 'page' : undefined}
-                  className={`nav__cta${pathname === '/contact' ? ' nav__cta--active' : ''}`} onClick={closeAll}>
-                  Contact us
-                </Link>
+                <Link href="/book-consultation" className="nav__book" onClick={closeAll}>Book consultation</Link>
+                <a className="nav__utility" href="mailto:info@tenderlab.co.uk" aria-label="Email TenderLab">Email</a>
+                <a className="nav__utility" href="tel:+441707240393" aria-label="Call TenderLab on 01707 240393">Call</a>
+                <button type="button" className="nav__cta" onClick={() => setContactOpen(true)}>Contact us</button>
               </div>
             </div>
           </div>
@@ -440,12 +457,15 @@ export default function Nav() {
           </div>
 
           <div className="nav__drawer-foot">
+            <Link href="/tenders" className="nav__drawer-live" onClick={closeAll}>
+              See live tenders
+            </Link>
             <Link href="/book-consultation" className="nav__drawer-book" onClick={closeAll}>
               Book a consultation
             </Link>
-            <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
+            <button type="button" className="nav__cta nav__cta--full" onClick={() => { closeAll(); setContactOpen(true) }}>
               Contact us
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -453,6 +473,29 @@ export default function Nav() {
       {/* Backdrop */}
       {menuOpen && (
         <div className="nav__backdrop" onClick={closeAll} aria-hidden="true" />
+      )}
+
+      {contactOpen && (
+        <div className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+          <button className="contact-modal__backdrop" aria-label="Close contact options" onClick={() => setContactOpen(false)} />
+          <div className="contact-modal__panel">
+            <button className="contact-modal__close" type="button" onClick={() => setContactOpen(false)} aria-label="Close contact options">×</button>
+            <p className="contact-modal__eyebrow">Contact TenderLab</p>
+            <h2 id="contact-modal-title">Tell us how you would like to speak.</h2>
+            <p>Share a live tender, ask for a call back or contact the team directly. We will respond in the context of your deadline and service.</p>
+            <div className="contact-modal__choices">
+              <Link href="/contact#enquiry" onClick={() => setContactOpen(false)}>Send an enquiry <ArrowRight /></Link>
+              <Link href="/contact?request=callback#enquiry" onClick={() => setContactOpen(false)}>Request a call back <ArrowRight /></Link>
+              <a href="tel:+441707240393">01707 240393 <ArrowRight /></a>
+              <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk <ArrowRight /></a>
+            </div>
+            <div className="contact-modal__socials" aria-label="TenderLab social media">
+              <a href="https://www.linkedin.com/company/tenderlabuk/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://www.instagram.com/tenderlabuk/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://www.facebook.com/tenderlabuk" target="_blank" rel="noopener noreferrer">Facebook</a>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

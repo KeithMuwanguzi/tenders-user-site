@@ -7,6 +7,7 @@ import { DIRECT_CLIENTS, VERIFIED_CLIENT_REVIEWS } from '@/lib/client-proof'
 import { DECISION_GUIDE_BY_SLUG } from '@/lib/decision-guides'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import HomeHero from '@/components/HomeHero'
+import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
 export const revalidate = 60
 
@@ -145,14 +146,105 @@ function caseEditorialImage(category: string) {
   return '/images/editorial/tenderlab-adult-social-care-hero-v1.webp'
 }
 
+const expertise = [
+  {
+    number: '01',
+    title: 'Care delivery experience',
+    text: 'Our care practitioners and registered managers understand how commissioned services work from the frontline through to governance, staffing and quality assurance.',
+    image: '/images/editorial/tenderlab-care-evidence-hero-v1.webp',
+  },
+  {
+    number: '02',
+    title: 'Specialist tender practice',
+    text: 'Our tender writers work specifically with health and social care providers and keep their practice aligned with current standards, commissioner expectations and procurement rules.',
+    image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
+  },
+  {
+    number: '03',
+    title: 'Evaluator-side insight',
+    text: 'Consultants with council-side procurement and evaluation experience help us anticipate how evidence is read, challenged and scored by public-sector buyers.',
+    image: '/images/editorial/tenderlab-proof-hero-v1.webp',
+  },
+]
+
+function tenderDaysLeft(deadline: string | null) {
+  if (!deadline) return 'Deadline in notice'
+  const days = Math.ceil((new Date(deadline).getTime() - Date.now()) / 86_400_000)
+  if (days <= 0) return 'Closing today'
+  return `${days} day${days === 1 ? '' : 's'} left`
+}
+
+function isCurrentTender(tender: PublishedTenderSnapshot) {
+  if (!tender.deadline) return true
+  return new Date(tender.deadline).getTime() >= Date.now()
+}
+
 export default async function HomePage() {
-  const blogPosts = await fetchBlogs()
+  const [blogPosts, publishedTenders] = await Promise.all([fetchBlogs(), fetchPublishedTenders(80)])
   const featuredCases = CASE_STUDIES.slice(0, 4)
   const featuredBlogs = blogPosts.slice(0, 3)
+  const liveTenders = publishedTenders
+    .filter(isCurrentTender)
+    .sort((a, b) => {
+      if (!a.deadline) return 1
+      if (!b.deadline) return -1
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+    })
+    .slice(0, 8)
 
   return (
     <main className="tl-home">
       <HomeHero />
+
+      {liveTenders.length > 0 ? (
+        <section className="lob-tenders" aria-labelledby="live-tender-heading">
+          <div className="lob-tenders__head tl-shell">
+            <div>
+              <p className="tl-kicker">Active care opportunities</p>
+              <h2 id="live-tender-heading">Live public-sector tenders worth checking now.</h2>
+            </div>
+            <Link href="/tenders" className="lob-pill lob-pill--ink">See all live tenders <Arrow /></Link>
+          </div>
+          <div className="lob-tenders__viewport">
+            <div className="lob-tenders__track">
+              {[...liveTenders, ...liveTenders].map((tender, index) => (
+                <Link
+                  href={`/tenders/${encodeURIComponent(tender.id)}`}
+                  className="lob-tender"
+                  key={`${tender.id}-${index}`}
+                  aria-hidden={index >= liveTenders.length ? true : undefined}
+                  tabIndex={index >= liveTenders.length ? -1 : undefined}
+                >
+                  <span>{tender.organisation || 'Public-sector buyer'}</span>
+                  <strong>{tender.title}</strong>
+                  <small>{tenderDaysLeft(tender.deadline)} <Arrow /></small>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="lob-expertise" aria-labelledby="expertise-heading">
+        <div className="tl-shell">
+          <div className="lob-expertise__intro">
+            <p className="tl-kicker">One specialist field</p>
+            <h2 id="expertise-heading">Health and social care tender writing informed from three sides.</h2>
+            <p>We combine operational care knowledge, specialist bid practice and public-sector evaluation insight. That focus helps us turn a provider’s real service into evidence a commissioner can understand and score.</p>
+          </div>
+          <div className="lob-expertise__grid">
+            {expertise.map((item) => (
+              <article key={item.number}>
+                <div className="lob-expertise__image"><Image src={item.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div>
+                <span>{item.number}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+          <Link href="/services/bid-writing" className="lob-pill">Explore specialist tender writing <Arrow /></Link>
+        </div>
+      </section>
 
       <section className="rl-method" id="method">
         <div className="tl-shell rl-method__stage">
@@ -332,8 +424,8 @@ export default async function HomePage() {
             <p className="tl-kicker">Independent client feedback</p>
             <h2>What long-term tender support feels like from the client side.</h2>
           </div>
-          <div className="rl-testimonials__grid">
-            {VERIFIED_CLIENT_REVIEWS.slice(0, 2).map((review) => (
+          <div className="rl-testimonials__grid lob-review-track">
+            {VERIFIED_CLIENT_REVIEWS.map((review) => (
               <article key={review.organisation} className="rl-review">
                 <div className={`rl-review__brand${review.darkLogo ? ' rl-review__brand--dark' : ''}`}>
                   {review.logo ? <Image src={review.logo} alt={review.organisation} width={176} height={64} /> : null}
@@ -348,6 +440,10 @@ export default async function HomePage() {
                 </footer>
               </article>
             ))}
+          </div>
+          <div className="lob-review-actions">
+            <a href="https://g.page/r/CarBdrVY3WO4EBM/review" target="_blank" rel="noopener noreferrer" className="lob-pill">Read our Google reviews <Arrow /></a>
+            <a href="https://uk.trustpilot.com/review/tenderlab.co.uk" target="_blank" rel="noopener noreferrer" className="lob-pill lob-pill--ink">Read our Trustpilot reviews <Arrow /></a>
           </div>
         </div>
       </section>

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import ConsultationFlow from './ConsultationFlow'
 import { CONSULTATIONS } from '@/lib/consultations'
 
@@ -12,22 +11,6 @@ export const metadata: Metadata = {
 export default function BookConsultationPage() {
   return (
     <main className="booking-page">
-      <section className="booking-hero">
-        <div className="booking-hero__copy">
-          <p className="booking-kicker">Focused tender advice</p>
-          <h1>Choose the work you need before choosing a time.</h1>
-          <p>Each option has a clear preparation requirement, fixed price and defined outcome. Higher prices reflect the document review completed before your session or written briefing.</p>
-        </div>
-        <figure>
-          <Image
-            src="/images/editorial/tenderlab-contact-briefing-hero-v1.webp"
-            alt="A TenderLab specialist examining a public-sector tender pack before advising a care provider"
-            fill
-            priority
-            sizes="(max-width: 850px) 100vw, 50vw"
-          />
-        </figure>
-      </section>
       <ConsultationFlow consultations={CONSULTATIONS} />
     </main>
   )
