@@ -7,21 +7,9 @@ export type Consultation = {
   preparation: string
   documentsRequired: boolean
   deductible: boolean
-  free?: boolean
 }
 
 export const CONSULTATIONS: Consultation[] = [
-  {
-    id: 'eligibility-call',
-    title: 'Eligibility call',
-    duration: '20 minutes',
-    price: 0,
-    description: 'A short first conversation to establish whether TenderLab is likely to be the right source of help.',
-    preparation: 'Bring the tender link if you already have one.',
-    documentsRequired: false,
-    deductible: false,
-    free: true,
-  },
   {
     id: 'tender-consultation',
     title: 'Tender Consultation',

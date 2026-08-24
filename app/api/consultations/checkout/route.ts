@@ -110,7 +110,7 @@ export async function POST(request: Request) {
       details,
       documents,
       createdAt: new Date().toISOString(),
-      paymentStatus: consultation.free ? 'not-required' : 'checkout-created',
+      paymentStatus: 'checkout-created',
     }
     await put(`consultations/${bookingReference}/booking.json`, JSON.stringify(record, null, 2), {
       access: 'private',
@@ -124,10 +124,6 @@ export async function POST(request: Request) {
     }
 
     const origin = new URL(request.url).origin
-    if (consultation.free) {
-      const params = new URLSearchParams({ booking: bookingReference, service: consultation.title, date, time })
-      return NextResponse.json({ url: `${origin}/book-consultation/confirmation?${params}` })
-    }
     if (!process.env.STRIPE_SECRET_KEY) return NextResponse.json({ error: 'Secure payment is not configured on this preview yet. Your details have not been charged.' }, { status: 503 })
 
     const payload = new URLSearchParams()

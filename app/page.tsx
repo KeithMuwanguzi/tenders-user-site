@@ -37,6 +37,7 @@ const services = [
       'We test the published conditions, available evidence, mobilisation position and price before your team commits.',
     deliverable: 'A recorded bid or no-bid recommendation, with risks and actions.',
     href: '/services/bid-viability',
+    image: '/images/editorial/tenderlab-readiness-audit-hero-v1.webp',
   },
   {
     number: '02',
@@ -46,6 +47,7 @@ const services = [
       'We map every scored requirement, gather operational proof and write the response through to final review.',
     deliverable: 'A submission-ready response aligned to the buyer documents.',
     href: '/services/bid-writing',
+    image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
     featured: true,
   },
   {
@@ -56,6 +58,7 @@ const services = [
       'We score the draft, expose unsupported claims and identify where an evaluator may struggle to award marks.',
     deliverable: 'A prioritised improvement plan with annotated, score-led feedback.',
     href: '/services/pre-submission-review',
+    image: '/images/editorial/tenderlab-pre-submission-review-hero-v1.webp',
   },
   {
     number: '04',
@@ -65,6 +68,7 @@ const services = [
       'We help manage the pipeline, strengthen the evidence bank and reserve writing capacity for suitable opportunities.',
     deliverable: 'A more controlled and repeatable tender function.',
     href: '/services/tender-retainer',
+    image: '/images/editorial/tenderlab-retainer-hero-v1.webp',
   },
 ]
 
@@ -133,6 +137,14 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>
 }
 
+function caseEditorialImage(category: string) {
+  if (category === 'supported-living') return '/images/editorial/tenderlab-supported-living-hero-v1.jpg'
+  if (category === 'domiciliary') return '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg'
+  if (category === 'mental-health') return '/images/editorial/tenderlab-mental-health-hero-v1.jpg'
+  if (category === 'childrens') return '/images/editorial/tenderlab-childrens-services-hero-v1.webp'
+  return '/images/editorial/tenderlab-adult-social-care-hero-v1.webp'
+}
+
 export default async function HomePage() {
   const blogPosts = await fetchBlogs()
   const featuredCases = CASE_STUDIES.slice(0, 4)
@@ -142,57 +154,28 @@ export default async function HomePage() {
     <main className="tl-home">
       <HomeHero />
 
-      <section className="tl-proof" aria-label="TenderLab recorded experience">
-        <div className="tl-shell tl-proof__grid">
-          <div className="tl-proof__intro">
-            <p className="tl-kicker">A record stated precisely</p>
-            <h2>Experience, with the qualification attached.</h2>
-          </div>
-          <div className="tl-stat tl-stat--coral">
-            <strong>92%</strong>
-            <span>Recorded historic win rate</span>
-          </div>
-          <div className="tl-stat tl-stat--blue">
-            <strong>200+</strong>
-            <span>Submissions supported</span>
-          </div>
-          <div className="tl-stat tl-stat--yellow">
-            <strong>£50M+</strong>
-            <span>Aggregate contract value</span>
-          </div>
-          <div className="tl-stat tl-stat--sage">
-            <strong>5/5</strong>
-            <span>Documented question scores</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="tl-section tl-section--blue">
-        <div className="tl-shell">
-          <div className="tl-section-heading tl-section-heading--split">
-            <div>
+      <section className="rl-method" id="method">
+        <div className="tl-shell rl-method__stage">
+          <div className="rl-method__visual">
+            <Image src="/images/editorial/tenderlab-process-hero-v1.webp" alt="Tender specialists mapping buyer requirements to operational evidence" fill sizes="(max-width: 900px) 100vw, 58vw" />
+            <div className="rl-method__statement">
               <p className="tl-kicker">How the work is controlled</p>
               <h2>From buyer documents to evidence an evaluator can score.</h2>
+              <p>Every scored requirement stays visible from qualification through final review.</p>
             </div>
-            <p>
-              Health and social care tenders compress years of operational practice into a fixed set of questions.
-              Our job is to make the service model, safeguards and outcomes visible without forcing the evaluator to
-              search for them.
-            </p>
           </div>
-          <div className="tl-method">
+          <div className="rl-method__index">
             {decisionStages.map((stage) => (
-              <article key={stage.number} className="tl-method__item">
+              <article key={stage.number}>
                 <span>{stage.number}</span>
-                <h3>{stage.title}</h3>
-                <p>{stage.text}</p>
+                <div><h3>{stage.title}</h3><p>{stage.text}</p></div>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="tl-section tl-services" id="services">
+      <section className="rl-services" id="services">
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -205,34 +188,38 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="tl-service-compare">
-            {services.map((service) => (
-              <article
+          <div className="rl-services__grid">
+            {services.slice(0, 3).map((service) => (
+              <Link
                 key={service.number}
-                className={`tl-service-card${service.featured ? ' tl-service-card--featured' : ''}`}
+                href={service.href}
+                className="rl-service"
               >
-                <div className="tl-service-card__top">
+                <div className="rl-service__media">
+                  <Image src={service.image} alt="" fill sizes="(max-width: 760px) 100vw, 50vw" />
                   <span>{service.number}</span>
-                  {service.featured && <em>Most requested</em>}
                 </div>
-                <h3>{service.title}</h3>
-                <p className="tl-service-card__prompt">{service.prompt}</p>
-                <dl>
-                  <div>
-                    <dt>What TenderLab does</dt>
-                    <dd>{service.outcome}</dd>
-                  </div>
-                  <div>
-                    <dt>What you receive</dt>
-                    <dd>{service.deliverable}</dd>
-                  </div>
-                </dl>
-                <Link href={service.href} className="tl-card-link">
-                  Explore {service.title.toLowerCase()} <Arrow />
-                </Link>
-              </article>
+                <div className="rl-service__body">
+                  <div><h3>{service.title}</h3>{service.featured && <em>Most requested</em>}</div>
+                  <p>{service.prompt}</p>
+                  <p>{service.deliverable}</p>
+                  <strong>Explore the service <Arrow /></strong>
+                </div>
+              </Link>
             ))}
           </div>
+          <Link href={services[3].href} className="rl-service-feature">
+            <div className="rl-service-feature__media">
+              <Image src={services[3].image} alt="" fill sizes="(max-width: 760px) 100vw, 50vw" />
+            </div>
+            <div className="rl-service-feature__body">
+              <span>{services[3].number} · Tender function support</span>
+              <h3>{services[3].title}</h3>
+              <p>{services[3].prompt}</p>
+              <p>{services[3].deliverable}</p>
+              <strong>Explore retained tender support <Arrow /></strong>
+            </div>
+          </Link>
           <div className="tl-services__footer">
             <Link href="/services" className="tl-button tl-button--ink">
               Compare all tender services <Arrow />
@@ -241,7 +228,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-decision-guides">
+      <section className="rl-guides" id="guides">
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -253,7 +240,7 @@ export default async function HomePage() {
               public-sector route first, then show where specialist support may be useful.
             </p>
           </div>
-          <div className="ep-guide-index">
+          <div className="rl-guide-index">
             {decisionGuides.map((guide, index) => (
               <Link href={`/guides/${guide.slug}`} key={guide.slug}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
@@ -272,7 +259,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-cases">
+      <section className="rl-cases" id="case-studies">
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -284,13 +271,13 @@ export default async function HomePage() {
               supported by available award evidence.
             </p>
           </div>
-          <div className="tl-cases__grid">
+          <div className="rl-cases__grid">
             {featuredCases.map((study, index) => (
-              <Link href={`/case-studies/${study.slug}`} key={study.slug} className="tl-case-card">
-                <div className="tl-case-card__image">
-                  <Image src={study.image} alt="" fill sizes="(max-width: 760px) 100vw, 50vw" />
+              <Link href={`/case-studies/${study.slug}`} key={study.slug} className="rl-case">
+                <div className="rl-case__image">
+                  <Image src={caseEditorialImage(study.category)} alt="" fill sizes="(max-width: 760px) 100vw, 50vw" />
                 </div>
-                <div className="tl-case-card__body">
+                <div className="rl-case__body">
                   <span>{String(index + 1).padStart(2, '0')} · {study.categoryLabel}</span>
                   <h3>{study.council}</h3>
                   <p>{study.result}</p>
@@ -305,51 +292,53 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-clients">
+      <section className="rl-clients" id="clients">
         <div className="tl-shell">
-          <div className="tl-section-heading tl-section-heading--split">
-            <div>
+          <div className="rl-clients__stage">
+            <div className="rl-clients__media"><Image src="/images/editorial/tenderlab-about-practice-hero-v1.webp" alt="TenderLab specialists working with health and social care providers" fill sizes="100vw" /></div>
+            <div className="rl-clients__heading">
               <p className="tl-kicker">Direct TenderLab engagements</p>
               <h2>Care providers that have worked directly with TenderLab.</h2>
-            </div>
-            <p>
+              <p>
               Selected health and social care organisations supported through direct TenderLab engagements. Links
               lead to each provider’s own website.
-            </p>
+              </p>
+            </div>
           </div>
-          <div className="tl-client-grid">
+          <div className="rl-client-strip" role="list">
             {DIRECT_CLIENTS.map((client) => (
               <a
                 key={client.name}
                 href={client.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}
-                aria-label={`Visit provider — ${client.name} website`}
+                className={`rl-client${client.dark ? ' rl-client--dark' : ''}`}
+                aria-label={`Visit ${client.name} website`}
+                role="listitem"
               >
-                <span className={`tl-client__logo tl-client__logo--${client.treatment}`}>
+                <span className={`rl-client__logo rl-client__logo--${client.treatment}`}>
                   <Image src={client.logo} alt={client.name} width={220} height={86} />
                 </span>
-                <small>Visit provider <Arrow /></small>
+                <small>{client.name} <Arrow /></small>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="tl-section tl-testimonials">
+      <section className="rl-testimonials" id="reviews">
         <div className="tl-shell">
           <div className="tl-section-heading">
             <p className="tl-kicker">Independent client feedback</p>
             <h2>What long-term tender support feels like from the client side.</h2>
           </div>
-          <div className="tl-testimonials__grid">
+          <div className="rl-testimonials__grid">
             {VERIFIED_CLIENT_REVIEWS.slice(0, 2).map((review) => (
-              <article key={review.organisation} className="tl-review">
-                <div className={`tl-review__brand${review.darkLogo ? ' tl-review__brand--dark' : ''}`}>
+              <article key={review.organisation} className="rl-review">
+                <div className={`rl-review__brand${review.darkLogo ? ' rl-review__brand--dark' : ''}`}>
                   {review.logo ? <Image src={review.logo} alt={review.organisation} width={176} height={64} /> : null}
                 </div>
-                <div className="tl-review__stars" aria-label="Five star review">★★★★★</div>
+                <div className="rl-review__stars" aria-label="Five star review">★★★★★</div>
                 <blockquote>“{review.quote?.split('\n\n')[0]}”</blockquote>
                 <footer>
                   <span><strong>{review.person}</strong>{review.role}</span>
@@ -363,7 +352,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-insights">
+      <section className="rl-insights" id="insights">
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -373,26 +362,34 @@ export default async function HomePage() {
             <Link href="/blog" className="tl-text-link">Browse all blogs <Arrow /></Link>
           </div>
           {featuredBlogs.length > 0 ? (
-            <div className="tl-insights__grid">
+            <div className="rl-insights__grid">
               {featuredBlogs.map((post) => (
-                <Link href={`/blog/${post.slug}`} key={post.slug} className="tl-blog-card">
-                  <span>{post.category || 'Tender guidance'}</span>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                  <small>{formatBlogDate(post.publishedAt)} <Arrow /></small>
+                <Link href={`/blog/${post.slug}`} key={post.slug} className="rl-blog-card">
+                  <div className="rl-blog-card__media"><Image src={post.imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div>
+                  <div className="rl-blog-card__body">
+                    <span>{post.category || 'Tender guidance'}</span>
+                    <h3>{post.title}</h3>
+                    <p>{post.excerpt}</p>
+                    <small>{formatBlogDate(post.publishedAt)} <Arrow /></small>
+                  </div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="tl-insights__empty">
-              <p>Current tender analysis and procurement guidance are available in the TenderLab blog.</p>
-              <Link href="/blog" className="tl-button tl-button--ink">Open the blogs <Arrow /></Link>
-            </div>
+            <Link href="/blog" className="rl-insights__fallback">
+              <div className="rl-insights__fallback-media"><Image src="/images/editorial/tenderlab-blog-intelligence-hero-v1.webp" alt="Tender analysis prepared for health and social care providers" fill sizes="100vw" /></div>
+              <div className="rl-insights__fallback-copy">
+                <span>Current analysis</span>
+                <h3>Read tender guidance written for care-provider decision-makers.</h3>
+                <p>Explore procurement analysis, practical bid guidance and explanations of the questions providers ask before they commit to a tender.</p>
+                <strong>Open the blogs <Arrow /></strong>
+              </div>
+            </Link>
           )}
         </div>
       </section>
 
-      <section className="tl-section tl-faqs">
+      <section className="rl-faqs" id="faqs">
         <div className="tl-shell tl-faqs__layout">
           <div className="tl-section-heading">
             <p className="tl-kicker">Frequently asked questions</p>
@@ -414,16 +411,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-contact-band">
-        <div className="tl-shell tl-contact-band__inner">
-          <div>
-            <p className="tl-kicker">Have a tender in front of you?</p>
-            <h2>Share the opportunity. We will start with the requirements.</h2>
-          </div>
-          <div className="tl-contact-band__actions">
-            <Link href="/contact" className="tl-button tl-button--primary">Contact TenderLab <Arrow /></Link>
-            <a href="tel:+441707240393">01707 240393</a>
-            <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>
+      <section className="rl-consultation" id="consultation">
+        <div className="tl-shell rl-consultation__panel">
+          <div className="rl-consultation__image"><Image src="/images/editorial/tenderlab-contact-briefing-hero-v1.webp" alt="A TenderLab specialist preparing for a consultation with a care provider" fill sizes="(max-width: 820px) 100vw, 55vw" /></div>
+          <div className="rl-consultation__copy">
+            <p className="tl-kicker">Book a consultation</p>
+            <h2>Choose a focused session with the preparation already defined.</h2>
+            <p>Book tender advice, a feedback debrief, a readiness review or a full tender briefing. Prices reflect the document review completed before the session.</p>
+            <Link href="/book-consultation" className="tl-button tl-button--primary">View consultation options <Arrow /></Link>
+            <p className="rl-consultation__contact"><a href="tel:+441707240393">01707 240393</a><a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a></p>
           </div>
         </div>
       </section>

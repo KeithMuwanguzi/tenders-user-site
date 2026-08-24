@@ -103,10 +103,10 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
                 onClick={() => setSelectedId(item.id)}
                 key={item.id}
               >
-                <span>{item.free ? 'No-cost starting point' : item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span>
+                <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
-                <div><strong>{item.free ? 'Free' : `£${item.price}`}</strong><small>{item.duration}</small></div>
+                <div><strong>£{item.price}</strong><small>{item.duration}</small></div>
               </button>
             ))}
           </div>
@@ -154,11 +154,11 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
             <label className="wide">Anything we should know?<textarea rows={4} value={details.notes} onChange={set('notes')} /></label>
           </div>
           <aside className="booking-summary">
-            <span>{selected.title}</span><strong>{selected.free ? 'Free' : `£${selected.price}`}</strong><p>{date} at {time} · {selected.duration}</p>
-            <small>{selected.free ? 'Continue to appointment confirmation.' : 'Continue to secure payment.'}</small>
+            <span>{selected.title}</span><strong>£{selected.price}</strong><p>{date} at {time} · {selected.duration}</p>
+            <small>Continue to secure payment.</small>
           </aside>
           {submitting && files.length > 0 && <p className="booking-upload-progress" role="status">Securely uploading documents: {uploadProgress}%</p>}
-          <button disabled={submitting} type="submit">{submitting ? 'Preparing your booking…' : selected.free ? 'Request this appointment' : `Continue to payment · £${selected.price}`}</button>
+          <button disabled={submitting} type="submit">{submitting ? 'Preparing your booking…' : `Continue to payment · £${selected.price}`}</button>
         </form>
       )}
 

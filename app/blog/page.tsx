@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import BlogListingView from '@/components/blog/BlogListingView'
+import EditorialHero from '@/components/EditorialHero'
 import { fetchBlogs } from '@/lib/blogs'
 
 export const dynamic = 'force-dynamic'
@@ -55,7 +56,20 @@ export default async function BlogPage() {
         }}
       />
       <main className="blog-v2 blog-v2--list">
+        <EditorialHero
+          eyebrow="Tender advice for care providers"
+          title="Care tender analysis built around the decision in front of you."
+          intro="Find suitable opportunities, test whether they fit, gather evidence and build responses that evaluators can follow and score."
+          image="/images/editorial/tenderlab-blog-hero-v1.webp"
+          imageAlt="An editor connecting operational care evidence to clear tender guidance"
+          primaryLabel="Browse the analysis"
+          primaryHref="#blog-library"
+          secondaryLabel="Book a consultation"
+          secondaryHref="/book-consultation"
+        />
+        <div id="blog-library">
         <BlogListingView posts={posts} faqs={FAQS} />
+        </div>
       </main>
     </>
   )

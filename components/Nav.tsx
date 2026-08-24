@@ -25,6 +25,7 @@ const NAV: NavItem[] = [
       { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build an internal, repeatable method' },
       { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Turn winning promises into delivery actions' },
       { label: 'Retained Support',       href: '/services/tender-retainer',        desc: 'Manage tendering as an ongoing function' },
+      { label: 'Book a Consultation',    href: '/book-consultation',               desc: 'Choose and pay for focused tender advice' },
     ],
   },
   {
@@ -221,7 +222,7 @@ export default function Nav() {
           <div className="container">
             <div className="nav__inner">
 
-              {/* Burger — visible on mobile, Bain puts it left */}
+              {/* Burger, visible on mobile, Bain puts it left */}
               <button
                 ref={burgerRef}
                 className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
@@ -316,7 +317,7 @@ export default function Nav() {
           </div>
         </div>
 
-        {/* Mega panels — full-width, absolutely below nav__strip */}
+        {/* Mega panels, full-width, absolutely below nav__strip */}
         {(NAV.filter((i): i is NavItem & { mega: true; children: Child[] } => !!i.mega)).map((item) => {
           const isOpen = openMenu === item.label
           return (
@@ -439,6 +440,9 @@ export default function Nav() {
           </div>
 
           <div className="nav__drawer-foot">
+            <Link href="/book-consultation" className="nav__drawer-book" onClick={closeAll}>
+              Book a consultation
+            </Link>
             <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
               Contact us
             </Link>

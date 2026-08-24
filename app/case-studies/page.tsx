@@ -84,9 +84,9 @@ export default function CaseStudiesPage() {
         eyebrow="Documented tender results"
         title="See the starting point, the work and the recorded outcome."
         intro="Each case study separates the provider’s position, the procurement challenge, TenderLab’s role and the evidence supporting the result."
-        image="/images/case-studies/havilah-1.png"
-        imageAlt="Redacted local authority tender award correspondence used as supporting evidence"
-        imageFit="contain"
+        image="/images/editorial/tenderlab-proof-hero-v1.webp"
+        imageAlt="A procurement specialist examining documented care-provider evidence and evaluator requirements"
+        imageFit="cover"
         primaryLabel="Discuss a similar tender"
         primaryHref="/contact"
         secondaryLabel="Browse the cases"
@@ -117,7 +117,7 @@ export default function CaseStudiesPage() {
         <div className="ep-shell ep-faq__grid">
           <div className="ep-section-head">
             <p className="ep-kicker">Case-study questions</p>
-            <h2>What these results do—and do not—prove.</h2>
+            <h2>What these results do, and do not, prove.</h2>
             <p>
               Evidence should reduce uncertainty, not create a promise that the next procurement will behave the same way.
             </p>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import type { BlogPost } from '@/lib/blogs'
 import { formatBlogDate } from '@/lib/blogs'
@@ -41,30 +40,6 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
 
   return (
     <>
-      <header className="blog-v2-hero">
-        <div className="container blog-v2-hero__grid">
-          <div className="blog-v2-hero__inner">
-            <p className="blog-v2-hero__kicker">Tender advice for care providers</p>
-            <h1 className="blog-v2-hero__title">Care tender advice and bid writing guides.</h1>
-            <p className="blog-v2-hero__sub">
-              Understand how to find suitable opportunities, test whether they fit, gather evidence
-              and write responses that evaluators can follow and score.
-            </p>
-          </div>
-          <figure className="blog-v2-hero__visual">
-            <Image
-              src="/images/editorial/tenderlab-blog-hero-v1.webp"
-              alt="An editor connecting operational care evidence to clear tender guidance"
-              fill
-              priority
-              quality={88}
-              sizes="(max-width: 900px) 100vw, 52vw"
-            />
-            <figcaption>Advice starts with the procurement documents and the evidence a provider can stand behind.</figcaption>
-          </figure>
-        </div>
-      </header>
-
       <div className="blog-v2-listing">
         <div className="container">
           {unavailable ? (
@@ -77,7 +52,14 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
               </div>
             </div>
           ) : posts.length === 0 ? (
-            <p className="blog-v2-empty">No articles have been published yet.</p>
+            <div className="blog-v2-empty blog-v2-empty--composed">
+              <strong>The publishing library is being prepared.</strong>
+              <span>Browse live care tenders or book a paid consultation while the current analysis is being prepared.</span>
+              <div className="blog-v2-cta-band__actions">
+                <Link href="/tenders" className="btn btn-primary">Browse live tenders</Link>
+                <Link href="/book-consultation" className="btn btn-ghost">Book a consultation</Link>
+              </div>
+            </div>
           ) : (
             <>
               <div className="blog-v2-toolbar">
@@ -171,7 +153,7 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
             <p className="blog-v2-section-label">Choose your next step</p>
             <h2 id="blog-paths-title">Move from reading to the work in front of you.</h2>
           </div>
-          <div className="blog-v2-paths__grid">
+          <div className="blog-v2-paths__index">
             <Link href="/tenders" className="blog-v2-path-card">
               <span>01</span>
               <h3>Find a live care tender</h3>

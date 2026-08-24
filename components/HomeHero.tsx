@@ -8,17 +8,14 @@ const slides = [
   {
     src: '/images/editorial/tenderlab-care-evidence-hero-v1.webp',
     alt: 'A care professional, operational evidence and a procurement evaluator connected through the tender process',
-    label: 'Care delivery',
   },
   {
     src: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
     alt: 'Tender specialists examining buyer documents alongside evidence from a care service',
-    label: 'Operational proof',
   },
   {
     src: '/images/editorial/tenderlab-proof-hero-v1.webp',
     alt: 'A tender evaluator reviewing evidence and scoring information from a care provider',
-    label: 'Evaluator clarity',
   },
 ]
 
@@ -35,11 +32,6 @@ export default function HomeHero() {
     const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 5000)
     return () => window.clearInterval(timer)
   }, [paused])
-
-  const select = (index: number) => {
-    setActive(index)
-    setPaused(true)
-  }
 
   return (
     <section className="tl-hero" aria-labelledby="tl-hero-title">
@@ -78,25 +70,10 @@ export default function HomeHero() {
               compliant and built for the scoring sheet.
             </p>
             <div className="tl-actions">
-              <Link href="/contact" className="tl-button tl-button--primary">
-                Discuss your tender <Arrow />
+              <Link href="/book-consultation" className="tl-button tl-button--primary">
+                Book a consultation <Arrow />
               </Link>
             </div>
-          </div>
-
-          <div className="tl-hero__controls" aria-label="Choose a hero image">
-            {slides.map((slide, index) => (
-              <button
-                key={slide.label}
-                type="button"
-                className={index === active ? 'is-active' : ''}
-                onClick={() => select(index)}
-                aria-pressed={index === active}
-              >
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                {slide.label}
-              </button>
-            ))}
           </div>
 
           <div className="tl-hero__contacts" aria-label="TenderLab contact details">

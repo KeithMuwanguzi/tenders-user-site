@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import JsonLd from '@/components/JsonLd'
+import EditorialHero from '@/components/EditorialHero'
 import {
   SITE_URL,
   defaultOpenGraph,
@@ -100,87 +100,63 @@ export default async function TendersPage() {
       <JsonLd id="ld-tenders-faq" data={faqSchema(FAQ)} />
 
       <main className="tenders-page">
-      <section className="tenders-search-hero" aria-labelledby="live-tenders-title">
-        <div className="container tenders-search-hero__grid">
-          <div className="tenders-search-hero__copy">
-            <p className="section-label">Current procurement opportunities</p>
-            <h1 id="live-tenders-title">Live care tenders across the UK.</h1>
-            <p>
-              Search current opportunities published through official UK notice sources. Filter by
-              care setting, open the complete tender record and examine the deadline, value, buyer and
-              submission documents before deciding whether to bid.
-            </p>
-          </div>
-          <figure className="tenders-search-hero__visual">
-            <Image
-              src="/images/editorial/tenderlab-live-tenders-hero-v1.webp"
-              alt="Care-provider leaders comparing public procurement opportunities with care delivery requirements"
-              fill
-              priority
-              quality={88}
-              sizes="(max-width: 900px) 100vw, 53vw"
-            />
-            <figcaption>
-              Use the official notice to confirm the requirement, then test whether the opportunity
-              fits before committing.
-            </figcaption>
-          </figure>
-          <div className="tenders-search-hero__actions">
-            <a href="#live-tender-results" className="btn btn-primary">Search live tenders</a>
-            <Link href="/contact?ref=tender-fit#enquiry" className="btn btn-ghost">Check whether a tender fits</Link>
-          </div>
-        </div>
-      </section>
+      <EditorialHero
+        eyebrow="Current UK procurement opportunities"
+        title="Live care tenders, organised for a responsible first decision."
+        intro="Search official notices by care setting, buyer or location. Open the complete TenderLab record, then use the original notice to confirm the requirement and submission route."
+        image="/images/editorial/tenderlab-live-tenders-hero-v1.webp"
+        imageAlt="Care-provider leaders comparing public procurement opportunities with care delivery requirements"
+        primaryLabel="Search live tenders"
+        primaryHref="#live-tender-search"
+        secondaryLabel="Book a tender consultation"
+        secondaryHref="/book-consultation"
+      />
 
       <div id="live-tender-search">
         <TendersClient initialTenders={initialTenders} />
       </div>
 
-      <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
-          <h2 style={{ fontSize: '1.75rem', color: '#0B1F3A', margin: '0 0 1rem' }}>
+      <section className="tenders-intro">
+        <div className="tenders-intro__inner">
+          <h2>
             Find the opportunity, then test whether it fits your organisation.
           </h2>
-          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: '0 0 1rem' }}>
+          <p>
             TenderLab brings together relevant notices across domiciliary care, supported living,
             residential and nursing care, children&apos;s services, supported accommodation, mental
             health, complex care, continuing healthcare and housing support. Each sector hub combines
             live opportunities with guidance on the evidence and delivery questions that commonly
             affect the bid decision.
           </p>
-          <p style={{ fontSize: '1rem', lineHeight: 1.7, color: '#1F2D3D', margin: 0 }}>
+          <p>
             Finding a notice is only the beginning. Review eligibility, evidence, mobilisation,
             staffing and commercial exposure before committing the team. If you have a live tender,
-              <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead#enquiry" style={{ color: '#C8102E', fontWeight: 600 }}> share the opportunity with TenderLab</Link> or
-            compare our <Link href="/services" style={{ color: '#C8102E', fontWeight: 600 }}>tender support services</Link>.
+              <Link href="/contact?utm_source=tenders&utm_medium=intro&utm_campaign=lead#enquiry"> share the opportunity with TenderLab</Link> or
+            compare our <Link href="/services">tender support services</Link>.
           </p>
         </div>
       </section>
 
-      <section className="hub-faq" style={{ background: '#F7F8FA', padding: '3rem 0' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 600, color: '#0B1F3A', margin: '0 0 1.5rem' }}>Frequently asked questions</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <section className="hub-faq tenders-faq">
+        <div className="tenders-faq__inner">
+          <h2>Frequently asked questions</h2>
+          <div className="tenders-faq__list">
             {FAQ.map((item, i) => (
-              <details key={i} style={{ background: '#fff', border: '1px solid #E0E4E8', borderRadius: 8, padding: '1rem 1.25rem' }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 600, color: '#0B1F3A' }}>{item.question}</summary>
-                <p style={{ margin: '0.75rem 0 0', color: '#3A4A5C', lineHeight: 1.7 }}>{item.answer}</p>
+              <details key={i}>
+                <summary><span>{String(i + 1).padStart(2, '0')}</span>{item.question}</summary>
+                <p>{item.answer}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="cta-banner">
-        <div className="container">
-          <div className="cta-banner__inner">
-            <h2>Have you found a tender that could change your business?</h2>
-            <p>Share the tender pack and deadline. We will explain the fit, the evidence required and the most useful next step before writing begins.</p>
-            <div className="cta-banner__actions">
-              <Link href="/contact?utm_source=tenders&utm_medium=cta&utm_campaign=lead#enquiry" className="btn btn-white">Discuss this opportunity</Link>
-              <Link href="/services/bid-writing" className="btn btn-outline-white">Explore bid writing</Link>
-            </div>
-          </div>
+      <section className="tenders-closing">
+        <div className="tenders-closing__inner">
+          <p className="ep-kicker">Before your team commits</p>
+          <h2>Use the tender pack, deadline and your real delivery position to make the decision.</h2>
+          <p>Book a paid consultation when you need TenderLab to examine the opportunity with you.</p>
+          <Link href="/book-consultation" className="ep-button ep-button--primary">Book a consultation <span aria-hidden="true">↗</span></Link>
         </div>
       </section>
       </main>
