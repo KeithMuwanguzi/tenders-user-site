@@ -15,7 +15,7 @@ export default function GuidesPage() {
       <EditorialHero
         eyebrow="Tender guides for decision-makers"
         title="Start with the question that is holding up the decision."
-        intro="Clear, tender-specific guidance for care-provider owners, directors and registered managers—from finding a council route to checking eligibility and understanding scores."
+        intro="Clear, tender-specific guidance for care-provider owners, directors and registered managers, from finding a council route to checking eligibility and understanding scores."
         image="/images/editorial/tenderlab-blog-intelligence-hero-v1.webp"
         imageAlt="Editorial collage connecting public procurement questions, care-provider evidence and tender decisions"
         primaryLabel="Browse the questions"

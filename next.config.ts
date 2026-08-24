@@ -72,6 +72,8 @@ const nextConfig: NextConfig = {
     return [
       // ── Renamed pages (old URL -> new URL) ────────────────────────────
       { source: '/live-tenders', destination: '/tenders', permanent: true },
+      { source: '/blogs', destination: '/blog', permanent: true },
+      { source: '/journal', destination: '/blog', permanent: true },
       { source: '/7-step-tender-writing-process', destination: '/process', permanent: true },
       { source: '/services/bid-team-coaching', destination: '/services/tender-training', permanent: true },
       { source: '/services/pipeline-tracking', destination: '/services/tender-retainer', permanent: true },
