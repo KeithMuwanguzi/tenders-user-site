@@ -6,6 +6,7 @@ import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { DIRECT_CLIENTS, VERIFIED_CLIENT_REVIEWS } from '@/lib/client-proof'
 import { DECISION_GUIDE_BY_SLUG } from '@/lib/decision-guides'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
+import HomeHero from '@/components/HomeHero'
 
 export const revalidate = 60
 
@@ -139,53 +140,7 @@ export default async function HomePage() {
 
   return (
     <main className="tl-home">
-      <section className="tl-hero" aria-labelledby="tl-hero-title">
-        <div className="tl-shell">
-          <p className="tl-eyebrow">UK health and social care procurement</p>
-          <h1 id="tl-hero-title" className="tl-hero__title">
-            <span>Good care is not enough.</span>
-            <span>The evaluator has to see it.</span>
-          </h1>
-
-          <div className="tl-hero__composition">
-            <div className="tl-hero__intro">
-              <p>
-                TenderLab turns operational reality into council, NHS and ICB submissions that are clear,
-                compliant and built for the scoring sheet.
-              </p>
-              <div className="tl-actions">
-                <Link href="/contact" className="tl-button tl-button--primary">
-                  Discuss your tender <Arrow />
-                </Link>
-                <Link href="/services" className="tl-text-link">
-                  Explore tender writing services <Arrow />
-                </Link>
-              </div>
-              <div className="tl-hero__contacts" aria-label="TenderLab contact details">
-                <a href="tel:+441707240393">01707 240393</a>
-                <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>
-              </div>
-            </div>
-
-            <div className="tl-hero__visual">
-              <Image
-                src="/images/editorial/tenderlab-care-evidence-hero-v1.webp"
-                alt="A care professional, operational evidence and a procurement evaluator connected through the tender process"
-                fill
-                priority
-                fetchPriority="high"
-                sizes="(max-width: 900px) 100vw, 72vw"
-                className="tl-hero__image"
-              />
-              <div className="tl-hero__caption">
-                <span>Care delivery</span>
-                <span>Operational proof</span>
-                <span>Evaluator clarity</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHero />
 
       <section className="tl-proof" aria-label="TenderLab recorded experience">
         <div className="tl-shell tl-proof__grid">

@@ -36,8 +36,8 @@ const footerGroups = [
       ['About TenderLab', '/about'],
       ['Our process', '/process'],
       ['Client reviews', '/reviews'],
+      ['Book a consultation', '/book-consultation'],
       ['Contact us', '/contact'],
-      ['Pre-submission review', '/services/pre-submission-review'],
     ],
   },
 ] as const

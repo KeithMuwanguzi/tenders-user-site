@@ -31,7 +31,7 @@ const NAV: NavItem[] = [
     label: 'Care Settings', href: '/care-settings', mega: true,
     children: [
       {
-        label: 'Adult Social Care', href: '/care-settings', color: '#B02727',
+        label: 'Adult Social Care', href: '/care-settings', color: '#B52E24',
         children: [
           { label: 'Domiciliary Care',      href: '/care-settings/domiciliary-care' },
           { label: 'Live-In Care',          href: '/care-settings/live-in-care' },
@@ -42,7 +42,7 @@ const NAV: NavItem[] = [
         ],
       },
       {
-        label: "Children's Services", href: '/care-settings', color: '#2E5E8C',
+        label: "Children's Services", href: '/care-settings', color: '#142535',
         children: [
           { label: "Children's Residential Care",   href: '/care-settings/childrens-residential-care' },
           { label: 'Supported Accommodation (16+)', href: '/care-settings/supported-accommodation' },
@@ -53,7 +53,7 @@ const NAV: NavItem[] = [
         ],
       },
       {
-        label: 'Housing and Support', href: '/care-settings', color: '#0A6E5A',
+        label: 'Housing and Support', href: '/care-settings', color: '#B52E24',
         children: [
           { label: 'Housing Related Support', href: '/care-settings/housing-related-support' },
           { label: 'Temporary Accommodation', href: '/care-settings/temporary-accommodation' },
@@ -62,7 +62,7 @@ const NAV: NavItem[] = [
         ],
       },
       {
-        label: 'Health & Clinical', href: '/care-settings', color: '#5B3A8B',
+        label: 'Health & Clinical', href: '/care-settings', color: '#142535',
         children: [
           { label: 'Community Health Services',         href: '/care-settings/community-health-services' },
           { label: 'Continuing Healthcare (CHC)',       href: '/care-settings/continuing-healthcare' },

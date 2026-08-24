@@ -9,17 +9,16 @@
 :root {
   --ep-paper: #fffdf8;
   --ep-cream: #f7f1e7;
-  --ep-ink: #192332;
-  --ep-copy: #40556d;
-  /* Deepened so small editorial labels and primary controls meet WCAG AA. */
-  --ep-coral: #861f18;
-  --ep-coral-soft: #f7cfc6;
-  --ep-peach: #f4a093;
-  --ep-blue: #d7eef0;
-  --ep-blue-deep: #264a63;
-  --ep-yellow: #f5db86;
-  --ep-sage: #d6e2c9;
-  --ep-line: rgba(25, 35, 50, 0.18);
+  --ep-ink: #142535;
+  --ep-copy: #3e5263;
+  --ep-coral: #b52e24;
+  --ep-coral-soft: #f6e3df;
+  --ep-peach: #f6e3df;
+  --ep-blue: #edf1f3;
+  --ep-blue-deep: #3e5263;
+  --ep-yellow: #f7f1e7;
+  --ep-sage: #edf1f3;
+  --ep-line: rgba(20, 37, 53, 0.18);
   --ep-shell: min(100% - 64px, 1500px);
   --ep-radius: 34px 10px 34px 34px;
   --ep-section-y: clamp(72px, 7vw, 112px);
@@ -85,8 +84,8 @@
 }
 
 .ep-hero--blue { background: var(--ep-blue); }
-.ep-hero--peach { background: #fae5df; }
-.ep-hero--yellow { background: #fbf0c6; }
+.ep-hero--peach { background: var(--ep-coral-soft); }
+.ep-hero--yellow { background: var(--ep-cream); }
 
 .ep-hero__grid {
   position: relative;

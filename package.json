@@ -14,6 +14,7 @@
     "verify": "npm run verify:public && npm run verify:contracts && npm run verify:claims && npm run typecheck && npm run build && npm run verify:built"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "@reduxjs/toolkit": "^2.11.2",
     "next": "^15.5.21",
     "nodemailer": "^9.0.3",
