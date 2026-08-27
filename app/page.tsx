@@ -144,6 +144,14 @@ const faqs = [
   },
 ]
 
+const tenderRailImages = [
+  '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg',
+  '/images/editorial/tenderlab-supported-living-hero-v1.jpg',
+  '/images/editorial/tenderlab-childrens-services-hero-v1.webp',
+  '/images/editorial/tenderlab-complex-care-chc-hero-v1.jpg',
+  '/images/editorial/tenderlab-residential-care-hero-v1.jpg',
+]
+
 function Arrow() {
   return <span aria-hidden="true">↗</span>
 }
@@ -173,6 +181,7 @@ export default async function HomePage() {
                   aria-hidden={index >= liveTenders.length ? true : undefined}
                   tabIndex={index >= liveTenders.length ? -1 : undefined}
                 >
+                  <span className="tl-tender-ticker__image"><Image src={tenderRailImages[index % tenderRailImages.length]} alt="" fill sizes="72px" /></span>
                   <strong>{tender.title}</strong>
                   <span>{tender.organisation || 'Public-sector buyer'}</span>
                   <em>{tenderDaysLeft(tender.deadline)}</em>
@@ -181,7 +190,7 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          <Link href="/tenders" className="tl-tender-ticker__all">All tenders <Arrow /></Link>
+          <Link href="/tenders" className="tl-tender-ticker__all">Go to tenders <Arrow /></Link>
         </section>
       ) : null}
 

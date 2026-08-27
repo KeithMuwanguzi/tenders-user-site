@@ -101,15 +101,21 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
 
       {step === 1 && <div className="booking-stage">
         <header className="booking-stage__intro">
-          <div><p className="booking-kicker">Book focused tender advice</p><h1 id="booking-flow-title">Choose the preparation you need.</h1></div>
-          <p>Four paid options. Each has a fixed price, a clear preparation requirement and a defined outcome.</p>
+          <div className="booking-stage__copy">
+            <p className="booking-kicker">Book focused tender advice</p>
+            <h1 id="booking-flow-title">Choose the preparation you need.</h1>
+            <p>Four paid options. Each has a fixed price, a clear preparation requirement and a defined outcome.</p>
+          </div>
+          <div className="booking-stage__visual" aria-hidden="true">
+            <Image src="/images/editorial/tenderlab-contact-briefing-hero-v1.webp" alt="" fill priority sizes="(max-width: 900px) 100vw, 560px" />
+            <span>Prepared advice. Clear next steps.</span>
+          </div>
         </header>
         <div className="booking-options" role="list">
           {consultations.map((item) => <button type="button" className={item.id === selectedId ? 'is-selected' : ''} aria-pressed={item.id === selectedId} onClick={() => chooseConsultation(item.id)} key={item.id}>
             <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span><h3>{item.title}</h3><p>{item.description}</p><div><strong>£{item.price}</strong><small>{item.duration}</small></div><b>Book now <span aria-hidden="true">→</span></b>
           </button>)}
         </div>
-        <div className="booking-figure" aria-hidden="true"><Image src="/images/editorial/tenderlab-contact-briefing-hero-v1.webp" alt="" fill sizes="520px" /></div>
       </div>}
 
       {step === 2 && <div className="booking-stage booking-stage--split">

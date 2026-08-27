@@ -74,15 +74,12 @@ export default function AnalyticsConsent() {
   }, [choice, pathname])
 
   useEffect(() => {
-    const shell = document.getElementById('site-shell')
     if (!panelOpen) {
-      shell?.removeAttribute('inert')
       previousFocusRef.current?.focus()
       return
     }
 
     previousFocusRef.current = document.activeElement as HTMLElement | null
-    shell?.setAttribute('inert', '')
     const controls = Array.from(
       dialogRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') || [],
     )
@@ -110,7 +107,6 @@ export default function AnalyticsConsent() {
     document.addEventListener('keydown', onKeyDown)
     return () => {
       document.removeEventListener('keydown', onKeyDown)
-      shell?.removeAttribute('inert')
     }
   }, [choice, choose, panelOpen])
 
@@ -121,33 +117,26 @@ export default function AnalyticsConsent() {
           ref={dialogRef}
           className="tl-consent"
           role="dialog"
-          aria-modal="true"
           aria-labelledby="tl-consent-title"
           aria-describedby="tl-consent-description"
         >
           <div>
-            <p className="tl-consent__kicker">Your privacy</p>
-            <h2 id="tl-consent-title">Choose whether we may measure visits.</h2>
+            <p className="tl-consent__kicker">Cookies</p>
+            <h2 id="tl-consent-title">We use cookies.</h2>
             <p id="tl-consent-description">
-              The website works without analytics. If you accept, anonymous visit information
-              helps us understand which tender guidance is useful. We do not use advertising cookies.
+              Necessary cookies keep the website working. With your permission, analytics cookies help us understand which tender guidance people use. We do not use advertising cookies.
               {' '}<Link href="/privacy-policy">Read the privacy policy</Link>.
             </p>
           </div>
           <div className="tl-consent__actions">
             <button type="button" className="tl-consent__accept" onClick={() => choose('accepted')}>
-              Accept analytics
+              Accept cookies
             </button>
             <button type="button" className="tl-consent__decline" onClick={() => choose('declined')}>
-              Continue without analytics
+              Reject optional cookies
             </button>
           </div>
         </section>
-      )}
-      {!panelOpen && choice && (
-        <button type="button" className="tl-consent-settings" onClick={() => setPanelOpen(true)}>
-          Privacy settings
-        </button>
       )}
     </>
   )

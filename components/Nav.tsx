@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef, useCallback } from 'react'
+import CallbackModal from './CallbackModal'
 
 type GrandChild = { label: string; href: string }
 type Child = {
@@ -78,11 +79,12 @@ const NAV: NavItem[] = [
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Blogs',         href: '/blog' },
   {
-    label: 'About', href: '/about',
+    label: 'About Us', href: '/about',
     children: [
       { label: 'Our Story',     href: '/about' },
       { label: 'Our Process',   href: '/process' },
       { label: 'Client Reviews', href: '/reviews' },
+      { label: 'Contact Us', href: '/contact', desc: 'Send a tender enquiry or share the buyer documents' },
     ],
   },
 ]
@@ -109,6 +111,7 @@ export default function Nav() {
   const [menuOpen,       setMenuOpen]        = useState(false)
   const [mobileExpanded, setMobileExpanded]  = useState<string | null>(null)
   const [openMenu,       setOpenMenu]        = useState<string | null>(null)
+  const [callbackOpen,   setCallbackOpen]    = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const drawerRef = useRef<HTMLDivElement | null>(null)
   const burgerRef = useRef<HTMLButtonElement | null>(null)
@@ -202,7 +205,8 @@ export default function Nav() {
     if (
       pathname === '/about' || pathname.startsWith('/about/') ||
       pathname === '/process' || pathname.startsWith('/process/') ||
-      pathname === '/reviews' || pathname.startsWith('/reviews/')
+      pathname === '/reviews' || pathname.startsWith('/reviews/') ||
+      pathname === '/contact' || pathname.startsWith('/contact/')
     ) return '/about'
     return pathname
   })()
@@ -305,23 +309,16 @@ export default function Nav() {
                 })}
               </ul>
 
-              <Link
-                href="/tenders"
-                className={`nav__live${activeSection === '/tenders' ? ' nav__live--active' : ''}`}
-                onClick={closeAll}
-              >
-                Live tenders
-              </Link>
-
               {/* Right actions */}
               <div className="nav__actions">
-                <Link href="/book-consultation" className="nav__book" onClick={closeAll}>
-                  Book consultation
+                <Link
+                  href="/tenders"
+                  className={`nav__live${activeSection === '/tenders' ? ' nav__live--active' : ''}`}
+                  onClick={closeAll}
+                >
+                  Live tenders
                 </Link>
-                <Link href="/contact" aria-current={pathname === '/contact' ? 'page' : undefined}
-                  className={`nav__cta${pathname === '/contact' ? ' nav__cta--active' : ''}`} onClick={closeAll}>
-                  Contact us
-                </Link>
+                <button type="button" className="nav__callback" onClick={() => setCallbackOpen(true)}>Request a callback</button>
               </div>
             </div>
           </div>
@@ -456,9 +453,7 @@ export default function Nav() {
             <Link href="/book-consultation" className="nav__drawer-book" onClick={closeAll}>
               Book a consultation
             </Link>
-            <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
-              Contact us
-            </Link>
+            <button type="button" className="nav__callback nav__callback--full" onClick={() => { closeAll(); setCallbackOpen(true) }}>Request a callback</button>
           </div>
         </div>
       </div>
@@ -467,6 +462,7 @@ export default function Nav() {
       {menuOpen && (
         <div className="nav__backdrop" onClick={closeAll} aria-hidden="true" />
       )}
+      <CallbackModal open={callbackOpen} onClose={() => setCallbackOpen(false)} />
     </>
   )
 }
