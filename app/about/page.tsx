@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
@@ -14,6 +15,12 @@ const method = [
   { n: '02', title: 'Understand the provider', text: 'We identify the real people, controls, records, case examples and outcomes that can support each promise in the submission.' },
   { n: '03', title: 'Build for the scoring sheet', text: 'The answer architecture follows the buyer’s requirements so evaluators can find the evidence and award marks without guesswork.' },
   { n: '04', title: 'Challenge before delivery', text: 'The draft is tested for compliance, completeness, operational credibility and clarity before it reaches the submission stage.' },
+]
+
+const specialistExperience = [
+  { n: '01', title: 'Care delivery experience', text: 'Carers and registered managers bring practical knowledge of staffing, safeguarding, records, governance and the way a commissioned service is actually run.', image: '/images/editorial/tenderlab-care-evidence-hero-v1.webp' },
+  { n: '02', title: 'Healthcare tender practice', text: 'Our writers work specifically with health and social care providers, so they stay close to the standards, commissioner expectations and evidence patterns that matter in this sector.', image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp' },
+  { n: '03', title: 'Council-side evaluation insight', text: 'Consultants with local-authority procurement and evaluation experience help us test how each response will be read, challenged and scored.', image: '/images/editorial/tenderlab-proof-hero-v1.webp' },
 ]
 
 const faqs = [
@@ -48,6 +55,13 @@ export default function AboutPage() {
             <p>Health and social care tenders are not writing exercises. They test whether a provider can meet participation conditions, mobilise safely, govern delivery, evidence outcomes and sustain the commercial model.</p>
             <p>Our work brings those requirements together. We support domiciliary care, supported living, children’s services, residential and nursing care, community health, complex care and housing support providers across UK public procurement.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="ep-section tl-expertise tl-expertise--about">
+        <div className="ep-shell">
+          <div className="tl-expertise__intro"><p className="ep-kicker">Healthcare is our only field</p><h2>Specialist experience from the service, the bid and the evaluator side.</h2><p>We concentrate on healthcare tender writing because credible submissions depend on understanding what happens behind the words.</p></div>
+          <div className="tl-expertise__grid">{specialistExperience.map((item) => <article key={item.n}><div className="tl-expertise__image"><Image src={item.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div><span>{item.n}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>
         </div>
       </section>
 

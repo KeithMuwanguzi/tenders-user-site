@@ -3,9 +3,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { fetchBlogs, formatBlogDate } from '@/lib/blogs'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
-import { DIRECT_CLIENTS, VERIFIED_CLIENT_REVIEWS } from '@/lib/client-proof'
+import { DIRECT_CLIENTS } from '@/lib/client-proof'
 import { DECISION_GUIDE_BY_SLUG } from '@/lib/decision-guides'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
+import HomeHero from '@/components/HomeHero'
+import HomeReviewCarousel from '@/components/HomeReviewCarousel'
+import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
 export const revalidate = 60
 
@@ -30,22 +33,24 @@ export const metadata: Metadata = {
 const services = [
   {
     number: '01',
+    title: 'Complete bid writing',
+    prompt: 'The tender is live and the submission still needs to be written.',
+    outcome:
+      'We map every scored requirement, gather operational proof and write the response through independent review and final quality control.',
+    deliverable: 'A submission-ready response aligned to the buyer documents.',
+    href: '/services/bid-writing',
+    image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
+    featured: true,
+  },
+  {
+    number: '02',
     title: 'Bid viability',
     prompt: 'You have found an opportunity and need to know whether it fits.',
     outcome:
       'We test the published conditions, available evidence, mobilisation position and price before your team commits.',
     deliverable: 'A recorded bid or no-bid recommendation, with risks and actions.',
     href: '/services/bid-viability',
-  },
-  {
-    number: '02',
-    title: 'Complete bid writing',
-    prompt: 'The tender is live and the submission still needs to be written.',
-    outcome:
-      'We map every scored requirement, gather operational proof and write the response through to final review.',
-    deliverable: 'A submission-ready response aligned to the buyer documents.',
-    href: '/services/bid-writing',
-    featured: true,
+    image: '/images/editorial/tenderlab-readiness-audit-hero-v1.webp',
   },
   {
     number: '03',
@@ -55,6 +60,7 @@ const services = [
       'We score the draft, expose unsupported claims and identify where an evaluator may struggle to award marks.',
     deliverable: 'A prioritised improvement plan with annotated, score-led feedback.',
     href: '/services/pre-submission-review',
+    image: '/images/editorial/tenderlab-pre-submission-review-hero-v1.webp',
   },
   {
     number: '04',
@@ -64,29 +70,7 @@ const services = [
       'We help manage the pipeline, strengthen the evidence bank and reserve writing capacity for suitable opportunities.',
     deliverable: 'A more controlled and repeatable tender function.',
     href: '/services/tender-retainer',
-  },
-]
-
-const decisionStages = [
-  {
-    number: '01',
-    title: 'Read the buyer documents',
-    text: 'We extract every condition, scored question, descriptor, submission rule and dependency before drafting starts.',
-  },
-  {
-    number: '02',
-    title: 'Build the response architecture',
-    text: 'Each section is mapped to the specification and evaluation criteria so the answer remains complete and easy to score.',
-  },
-  {
-    number: '03',
-    title: 'Develop the operational evidence',
-    text: 'Roles, controls, records, case examples and outcomes are made explicit, without inventing claims the provider cannot support.',
-  },
-  {
-    number: '04',
-    title: 'Challenge before submission',
-    text: 'The draft is tested for compliance, proof, clarity and evaluator effort before the final quality gate.',
+    image: '/images/editorial/tenderlab-retainer-hero-v1.webp',
   },
 ]
 
@@ -100,6 +84,38 @@ const decisionGuideSlugs = [
 const decisionGuides = decisionGuideSlugs
   .map((slug) => DECISION_GUIDE_BY_SLUG.get(slug))
   .filter((guide) => guide !== undefined)
+
+const expertise = [
+  {
+    number: '01',
+    title: 'Care experience from the frontline upwards',
+    text: 'Our team includes carers and registered managers who understand staffing, safeguarding, records, quality assurance and the day-to-day reality behind a care contract.',
+    image: '/images/editorial/tenderlab-care-evidence-hero-v1.webp',
+  },
+  {
+    number: '02',
+    title: 'Tender writers who work only in healthcare',
+    text: 'We do not move between unrelated industries. Our bid practice is built around health and social care standards, commissioning models and the evidence care providers actually hold.',
+    image: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
+  },
+  {
+    number: '03',
+    title: 'Insight from the evaluator side',
+    text: 'Consultants with local-authority procurement and evaluation experience help us test how each claim will be read, challenged and scored before it reaches the buyer.',
+    image: '/images/editorial/tenderlab-proof-hero-v1.webp',
+  },
+]
+
+function tenderDaysLeft(deadline: string | null) {
+  if (!deadline) return 'Deadline in notice'
+  const days = Math.ceil((new Date(deadline).getTime() - Date.now()) / 86_400_000)
+  if (days <= 0) return 'Closing today'
+  return `${days} day${days === 1 ? '' : 's'} left`
+}
+
+function isCurrentTender(tender: PublishedTenderSnapshot) {
+  return !tender.deadline || new Date(tender.deadline).getTime() >= Date.now()
+}
 
 const faqs = [
   {
@@ -133,106 +149,60 @@ function Arrow() {
 }
 
 export default async function HomePage() {
-  const blogPosts = await fetchBlogs()
+  const [blogPosts, publishedTenders] = await Promise.all([fetchBlogs(), fetchPublishedTenders(80)])
   const featuredCases = CASE_STUDIES.slice(0, 4)
   const featuredBlogs = blogPosts.slice(0, 3)
+  const liveTenders = publishedTenders
+    .filter(isCurrentTender)
+    .sort((a, b) => !a.deadline ? 1 : !b.deadline ? -1 : new Date(a.deadline).getTime() - new Date(b.deadline).getTime())
+    .slice(0, 8)
 
   return (
     <main className="tl-home">
-      <section className="tl-hero" aria-labelledby="tl-hero-title">
-        <div className="tl-shell">
-          <p className="tl-eyebrow">UK health and social care procurement</p>
-          <h1 id="tl-hero-title" className="tl-hero__title">
-            <span>Good care is not enough.</span>
-            <span>The evaluator has to see it.</span>
-          </h1>
+      <HomeHero />
 
-          <div className="tl-hero__composition">
-            <div className="tl-hero__intro">
-              <p>
-                TenderLab turns operational reality into council, NHS and ICB submissions that are clear,
-                compliant and built for the scoring sheet.
-              </p>
-              <div className="tl-actions">
-                <Link href="/contact" className="tl-button tl-button--primary">
-                  Discuss your tender <Arrow />
+      {liveTenders.length > 0 ? (
+        <section className="tl-tender-ticker" aria-label="Current healthcare tender opportunities">
+          <div className="tl-tender-ticker__label"><span>Live</span> Healthcare tenders</div>
+          <div className="tl-tender-ticker__viewport">
+            <div className="tl-tender-ticker__track">
+              {[...liveTenders, ...liveTenders].map((tender, index) => (
+                <Link
+                  href={`/tenders/${encodeURIComponent(tender.id)}`}
+                  key={`${tender.id}-${index}`}
+                  aria-hidden={index >= liveTenders.length ? true : undefined}
+                  tabIndex={index >= liveTenders.length ? -1 : undefined}
+                >
+                  <strong>{tender.title}</strong>
+                  <span>{tender.organisation || 'Public-sector buyer'}</span>
+                  <em>{tenderDaysLeft(tender.deadline)}</em>
+                  <b aria-hidden="true">↗</b>
                 </Link>
-                <Link href="/services" className="tl-text-link">
-                  Explore tender writing services <Arrow />
-                </Link>
-              </div>
-              <div className="tl-hero__contacts" aria-label="TenderLab contact details">
-                <a href="tel:+441707240393">01707 240393</a>
-                <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>
-              </div>
-            </div>
-
-            <div className="tl-hero__visual">
-              <Image
-                src="/images/editorial/tenderlab-care-evidence-hero-v1.webp"
-                alt="A care professional, operational evidence and a procurement evaluator connected through the tender process"
-                fill
-                priority
-                fetchPriority="high"
-                sizes="(max-width: 900px) 100vw, 72vw"
-                className="tl-hero__image"
-              />
-              <div className="tl-hero__caption">
-                <span>Care delivery</span>
-                <span>Operational proof</span>
-                <span>Evaluator clarity</span>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+          <Link href="/tenders" className="tl-tender-ticker__all">All tenders <Arrow /></Link>
+        </section>
+      ) : null}
 
-      <section className="tl-proof" aria-label="TenderLab recorded experience">
-        <div className="tl-shell tl-proof__grid">
-          <div className="tl-proof__intro">
-            <p className="tl-kicker">A record stated precisely</p>
-            <h2>Experience, with the qualification attached.</h2>
-          </div>
-          <div className="tl-stat tl-stat--coral">
-            <strong>92%</strong>
-            <span>Recorded historic win rate</span>
-          </div>
-          <div className="tl-stat tl-stat--blue">
-            <strong>200+</strong>
-            <span>Submissions supported</span>
-          </div>
-          <div className="tl-stat tl-stat--yellow">
-            <strong>£50M+</strong>
-            <span>Aggregate contract value</span>
-          </div>
-          <div className="tl-stat tl-stat--sage">
-            <strong>5/5</strong>
-            <span>Documented question scores</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="tl-section tl-section--blue">
+      <section className="tl-proof tl-proof--explained" aria-labelledby="record-heading">
         <div className="tl-shell">
-          <div className="tl-section-heading tl-section-heading--split">
-            <div>
-              <p className="tl-kicker">How the work is controlled</p>
-              <h2>From buyer documents to evidence an evaluator can score.</h2>
-            </div>
-            <p>
-              Health and social care tenders compress years of operational practice into a fixed set of questions.
-              Our job is to make the service model, safeguards and outcomes visible without forcing the evaluator to
-              search for them.
-            </p>
+          <div className="tl-proof__heading">
+            <div><p className="tl-kicker">Recorded TenderLab results</p><h2 id="record-heading">A high win rate begins before the first answer is written.</h2></div>
+            <p>We qualify the opportunity first, then put every response through separate drafting, independent review and evaluator-led final scoring.</p>
           </div>
-          <div className="tl-method">
-            {decisionStages.map((stage) => (
-              <article key={stage.number} className="tl-method__item">
-                <span>{stage.number}</span>
-                <h3>{stage.title}</h3>
-                <p>{stage.text}</p>
-              </article>
-            ))}
+          <div className="tl-proof__story">
+            <article className="tl-proof__feature">
+              <div><strong>92%</strong><span>Recorded historic win rate</span></div>
+              <p>Before accepting an instruction, we read the buyer documents and brief the client on eligibility, evidence, delivery risk and whether the opportunity is genuinely worth pursuing. Drafts then move from the writing team to independent reviewers and a final evaluator-experienced supervisor before the client approves submission.</p>
+              <small>If a bid is lost because our quality responses did not achieve the required marks, the next tender-writing fee is on us, subject to our terms of service.</small>
+              <Link href="/terms" className="tl-text-link">Read the terms <Arrow /></Link>
+            </article>
+            <div className="tl-proof__supporting">
+              <article><strong>200+</strong><span>Submissions supported</span></article>
+              <article><strong>£50M+</strong><span>Aggregate contract value</span></article>
+              <article><strong>5/5</strong><span>Documented question scores</span></article>
+            </div>
           </div>
         </div>
       </section>
@@ -250,39 +220,59 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="tl-service-compare">
-            {services.map((service) => (
-              <article
-                key={service.number}
-                className={`tl-service-card${service.featured ? ' tl-service-card--featured' : ''}`}
-              >
-                <div className="tl-service-card__top">
-                  <span>{service.number}</span>
-                  {service.featured && <em>Most requested</em>}
+          <Link href={services[0].href} className="tl-service-feature">
+            <div className="tl-service-feature__media">
+              <Image src={services[0].image} alt="Tender writers preparing a complete healthcare tender response" fill sizes="(max-width: 760px) 100vw, 55vw" />
+              <span>01</span>
+            </div>
+            <div className="tl-service-feature__body">
+              <div className="tl-service-card__top"><em>Most requested</em></div>
+              <h3>{services[0].title}</h3>
+              <p>{services[0].prompt}</p>
+              <p>{services[0].outcome}</p>
+              <strong>Explore complete tender writing <Arrow /></strong>
+            </div>
+          </Link>
+
+          <div className="tl-service-compare tl-service-compare--secondary">
+            {services.slice(1).map((service) => (
+              <Link key={service.number} href={service.href} className="tl-service-card">
+                <div className="tl-service-card__image"><Image src={service.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /><span>{service.number}</span></div>
+                <div className="tl-service-card__body">
+                  <h3>{service.title}</h3>
+                  <p className="tl-service-card__prompt">{service.prompt}</p>
+                  <p>{service.deliverable}</p>
+                  <strong>Explore the service <Arrow /></strong>
                 </div>
-                <h3>{service.title}</h3>
-                <p className="tl-service-card__prompt">{service.prompt}</p>
-                <dl>
-                  <div>
-                    <dt>What TenderLab does</dt>
-                    <dd>{service.outcome}</dd>
-                  </div>
-                  <div>
-                    <dt>What you receive</dt>
-                    <dd>{service.deliverable}</dd>
-                  </div>
-                </dl>
-                <Link href={service.href} className="tl-card-link">
-                  Explore {service.title.toLowerCase()} <Arrow />
-                </Link>
-              </article>
+              </Link>
             ))}
           </div>
           <div className="tl-services__footer">
-            <Link href="/services" className="tl-button tl-button--ink">
+            <Link href="/services" className="tl-button tl-button--primary">
               Compare all tender services <Arrow />
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className="tl-section tl-expertise" aria-labelledby="expertise-heading">
+        <div className="tl-shell">
+          <div className="tl-expertise__intro">
+            <p className="tl-kicker">Healthcare is our only field</p>
+            <h2 id="expertise-heading">We do not write tenders for every industry. We specialise in care.</h2>
+            <p>That single-sector focus means the people shaping your response understand the service, the management evidence and the way a public-sector evaluator reads it.</p>
+          </div>
+          <div className="tl-expertise__grid">
+            {expertise.map((item) => (
+              <article key={item.number}>
+                <div className="tl-expertise__image"><Image src={item.image} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div>
+                <span>{item.number}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+          <Link href="/services/bid-writing" className="tl-button tl-button--primary">Explore healthcare tender writing <Arrow /></Link>
         </div>
       </section>
 
@@ -310,7 +300,7 @@ export default async function HomePage() {
             ))}
           </div>
           <div className="tl-services__footer">
-            <Link href="/guides" className="tl-button tl-button--ink">
+            <Link href="/guides" className="tl-button tl-button--primary">
               Browse all tender guides <Arrow />
             </Link>
           </div>
@@ -337,6 +327,7 @@ export default async function HomePage() {
                 </div>
                 <div className="tl-case-card__body">
                   <span>{String(index + 1).padStart(2, '0')} · {study.categoryLabel}</span>
+                  <b className="tl-award-seal" aria-label="Contract award supported by TenderLab"><span>Contract</span><strong>won</strong></b>
                   <h3>{study.council}</h3>
                   <p>{study.result}</p>
                   <strong>Read the case study <Arrow /></strong>
@@ -388,22 +379,10 @@ export default async function HomePage() {
             <p className="tl-kicker">Independent client feedback</p>
             <h2>What long-term tender support feels like from the client side.</h2>
           </div>
-          <div className="tl-testimonials__grid">
-            {VERIFIED_CLIENT_REVIEWS.slice(0, 2).map((review) => (
-              <article key={review.organisation} className="tl-review">
-                <div className={`tl-review__brand${review.darkLogo ? ' tl-review__brand--dark' : ''}`}>
-                  {review.logo ? <Image src={review.logo} alt={review.organisation} width={176} height={64} /> : null}
-                </div>
-                <div className="tl-review__stars" aria-label="Five star review">★★★★★</div>
-                <blockquote>“{review.quote?.split('\n\n')[0]}”</blockquote>
-                <footer>
-                  <span><strong>{review.person}</strong>{review.role}</span>
-                  <a href={review.href} target="_blank" rel="noopener noreferrer">
-                    Read verified review <Arrow />
-                  </a>
-                </footer>
-              </article>
-            ))}
+          <HomeReviewCarousel />
+          <div className="tl-review-actions">
+            <a href="https://g.page/r/CarBdrVY3WO4EBM/review" target="_blank" rel="noopener noreferrer" className="tl-button tl-button--primary">Read our Google reviews <Arrow /></a>
+            <a href="https://uk.trustpilot.com/review/tenderlab.co.uk" target="_blank" rel="noopener noreferrer" className="tl-button">Read our Trustpilot reviews <Arrow /></a>
           </div>
         </div>
       </section>
@@ -418,13 +397,16 @@ export default async function HomePage() {
             <Link href="/blog" className="tl-text-link">Browse all blogs <Arrow /></Link>
           </div>
           {featuredBlogs.length > 0 ? (
-            <div className="tl-insights__grid">
+            <div className="tl-insights__grid tl-insights__grid--image-led">
               {featuredBlogs.map((post) => (
                 <Link href={`/blog/${post.slug}`} key={post.slug} className="tl-blog-card">
-                  <span>{post.category || 'Tender guidance'}</span>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                  <small>{formatBlogDate(post.publishedAt)} <Arrow /></small>
+                  <div className="tl-blog-card__image"><Image src={post.imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 33vw" /></div>
+                  <div className="tl-blog-card__body">
+                    <span>{post.category || 'Tender guidance'}</span>
+                    <h3>{post.title}</h3>
+                    <p>{post.excerpt}</p>
+                    <small>{formatBlogDate(post.publishedAt)} <Arrow /></small>
+                  </div>
                 </Link>
               ))}
             </div>

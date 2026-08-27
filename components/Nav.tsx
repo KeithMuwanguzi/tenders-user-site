@@ -25,6 +25,7 @@ const NAV: NavItem[] = [
       { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build an internal, repeatable method' },
       { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Turn winning promises into delivery actions' },
       { label: 'Retained Support',       href: '/services/tender-retainer',        desc: 'Manage tendering as an ongoing function' },
+      { label: 'Book a Consultation',    href: '/book-consultation',               desc: 'Choose and pay for focused tender advice' },
     ],
   },
   {
@@ -74,7 +75,6 @@ const NAV: NavItem[] = [
       },
     ],
   },
-  { label: 'Live Tenders', href: '/tenders' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Blogs',         href: '/blog' },
   {
@@ -305,8 +305,19 @@ export default function Nav() {
                 })}
               </ul>
 
+              <Link
+                href="/tenders"
+                className={`nav__live${activeSection === '/tenders' ? ' nav__live--active' : ''}`}
+                onClick={closeAll}
+              >
+                Live tenders
+              </Link>
+
               {/* Right actions */}
               <div className="nav__actions">
+                <Link href="/book-consultation" className="nav__book" onClick={closeAll}>
+                  Book consultation
+                </Link>
                 <Link href="/contact" aria-current={pathname === '/contact' ? 'page' : undefined}
                   className={`nav__cta${pathname === '/contact' ? ' nav__cta--active' : ''}`} onClick={closeAll}>
                   Contact us
@@ -439,6 +450,12 @@ export default function Nav() {
           </div>
 
           <div className="nav__drawer-foot">
+            <Link href="/tenders" className="nav__drawer-live" onClick={closeAll}>
+              See live tenders
+            </Link>
+            <Link href="/book-consultation" className="nav__drawer-book" onClick={closeAll}>
+              Book a consultation
+            </Link>
             <Link href="/contact" className="nav__cta nav__cta--full" onClick={closeAll}>
               Contact us
             </Link>
