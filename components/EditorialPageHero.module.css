@@ -3,7 +3,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #fff;
+  background: #fff url('/images/brand-landscapes/tenderlab-london-skyline.png') center bottom / cover no-repeat;
   border-bottom: 1px solid rgba(25, 34, 49, 0.12);
 }
 
@@ -11,25 +11,12 @@
   content: '';
   position: absolute;
   z-index: -1;
-  inset: auto 0 0;
-  width: auto;
-  height: 24%;
-  background: linear-gradient(173deg, transparent 0 37%, color-mix(in srgb, var(--hero-wash) 70%, white) 38% 66%, #bd3026 67%);
-  opacity: .38;
+  inset: 0;
+  background: url('/images/brand-landscapes/tenderlab-uk-map.png') center 48% / cover no-repeat;
+  opacity: .12;
 }
 
-.hero::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  right: 2%;
-  bottom: 0;
-  left: 46%;
-  height: 12%;
-  background: #bd3026;
-  clip-path: polygon(0 100%,0 54%,7% 54%,7% 19%,13% 19%,13% 71%,20% 71%,20% 38%,27% 38%,27% 100%,35% 100%,35% 46%,43% 46%,43% 0,48% 0,52% 68%,61% 68%,61% 28%,68% 28%,68% 100%,77% 100%,77% 55%,86% 55%,86% 79%,94% 79%,94% 44%,100% 44%,100% 100%);
-  opacity: .13;
-}
+.hero::after { content: none; }
 
 .peach { --hero-wash: #f1d2cc; }
 .yellow { --hero-wash: #dcecf0; }

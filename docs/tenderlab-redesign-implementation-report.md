@@ -18,7 +18,8 @@
 
 ## Implemented visual system
 
-- Five different London/Thames transition roles: layered foreground, solid architectural edge, quiet panorama, image-overlap transition and deep river/footer landing.
+- The two finished images supplied by the client on 28 August are now the artwork source: `tenderlab-london-skyline.png` and `tenderlab-uk-map.png`. They are rendered directly rather than traced, regenerated or approximated in CSS.
+- The supplied skyline and UK-map artwork alternate as complete section transitions on the homepage and shared internal-page layouts. They are not placed behind body copy or repeated twice at the footer.
 - A bright TenderLab palette led by company red, white, deep red and the established blue support tone.
 - Open editorial proof, provider, guide and FAQ layouts.
 - One dominant Complete Bid Writing feature followed by a compact comparison.
@@ -29,7 +30,7 @@
 
 ## Reference principles adapted
 
-- Access Point: a reusable landscape system with distinct foreground, line-art, saturated-edge, overlap and footer roles, translated into London/public-sector architecture rather than copied mountains.
+- Access Point: the section-to-section landscape rhythm remains the composition reference; the landscape itself now comes only from the client-supplied finished skyline and UK-map images.
 - Scroll Marquee / Tropical Berry: opposed editorial type movement, a practical image chapter and a direct Go to Tenders action.
 - Two Two: alternating editorial scale, asymmetric image placement and quieter typography-led chapters.
 - Daily Interaction 105: restrained depth and image movement; essential information remains visible without hover or animation.
@@ -54,7 +55,7 @@
 - Provider proof: separated direct provider engagements from review-platform evidence, restored the real provider logos and removed the incorrect Trustpilot substitute from Absolute Care Services.
 - Case studies: changed the soft equal-card grid into a staggered awards composition with contract-won seals, council names and direct case-study actions.
 - Guides/blogs: replaced the large pastel guide blocks with compact editorial rows and article-derived thumbnails; blog calls to action now say Book a consultation.
-- Repeated separators: removed the single thin skyline treatment and assigned five distinct transition roles so adjacent chapters do not repeat the same silhouette.
+- Repeated separators: removed the generated thin skyline and all improvised geometric city shapes. The supplied skyline and UK map now alternate without being redrawn.
 
 ## Final responsive and interaction QA
 

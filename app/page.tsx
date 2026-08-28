@@ -227,6 +227,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <LondonTransition variant="layered" />
+
       <section className="tl-section tl-services" id="services" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
@@ -297,6 +299,8 @@ export default async function HomePage() {
           <Link href="/services/bid-writing" className="tl-button tl-button--primary">Explore healthcare tender writing <Arrow /></Link>
         </div>
       </section>
+
+      <LondonTransition variant="edge" />
 
       <section className="tl-section tl-decision-guides" data-reveal>
         <div className="tl-shell">
@@ -399,6 +403,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <LondonTransition variant="overlap" />
+
       <section className="tl-section tl-testimonials" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading">
@@ -412,6 +418,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <LondonTransition variant="panorama" />
 
       <section className="tl-section tl-insights" data-reveal>
         <div className="tl-shell">
@@ -468,6 +476,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <LondonTransition variant="layered" />
 
       <section className="tl-contact-band" data-reveal>
         <div className="tl-shell tl-contact-band__inner">

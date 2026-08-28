@@ -1,19 +1,24 @@
+import Image from 'next/image'
+
 type LondonTransitionProps = {
   variant: 'layered' | 'panorama' | 'edge' | 'overlap' | 'river'
   className?: string
 }
 
-const buildings = Array.from({ length: 18 }, (_, index) => index)
+const UK_MAP_VARIANTS = new Set<LondonTransitionProps['variant']>(['edge', 'panorama'])
 
 export default function LondonTransition({ variant, className = '' }: LondonTransitionProps) {
+  const useMap = UK_MAP_VARIANTS.has(variant)
+  const src = useMap
+    ? '/images/brand-landscapes/tenderlab-uk-map.png'
+    : '/images/brand-landscapes/tenderlab-london-skyline.png'
+
   return (
-    <div className={`tl-london tl-london--${variant} ${className}`.trim()} aria-hidden="true">
-      <div className="tl-london__route"><span /><span /><span /></div>
-      <div className="tl-london__river" />
-      <div className="tl-london__city">
-        {buildings.map((building) => <span key={building} />)}
-      </div>
-      <div className="tl-london__bridge"><i /><i /><i /><i /></div>
-    </div>
+    <figure
+      className={`tl-london tl-london--${variant} ${useMap ? 'tl-london--map' : 'tl-london--skyline'} ${className}`.trim()}
+      aria-hidden="true"
+    >
+      <Image src={src} alt="" fill sizes="100vw" className="tl-london__art" />
+    </figure>
   )
 }

@@ -510,45 +510,25 @@
 .tl-hero__visual::before { content: ''; position: absolute; z-index: 2; inset: 0; background: linear-gradient(90deg,rgba(21,55,80,.26),transparent 44%); pointer-events: none; }
 .tl-hero__slide-status { right: 22px; bottom: 28px; border: 1px solid rgba(255,255,255,.6); }
 
-/* A family of five separators with different roles and silhouettes. */
-.tl-london { position: relative; z-index: 3; width: 100%; overflow: hidden; pointer-events: none; }
-.tl-london__city { position: absolute; right: 4%; bottom: 0; left: 4%; display: flex; align-items: flex-end; justify-content: space-between; gap: 1.2%; }
-.tl-london__city span { width: 4.4%; min-width: 22px; background: currentColor; }
-.tl-london__city span:nth-child(3n+1) { height: 52%; }
-.tl-london__city span:nth-child(3n+2) { height: 76%; clip-path: polygon(0 9%,35% 9%,50% 0,65% 9%,100% 9%,100% 100%,0 100%); }
-.tl-london__city span:nth-child(3n) { height: 38%; }
-.tl-london__city span:nth-child(7) { height: 100%; clip-path: polygon(38% 0,62% 0,72% 100%,20% 100%); }
-.tl-london__city span:nth-child(12) { height: 68%; border-radius: 50% 50% 0 0; }
-.tl-london__route span { position: absolute; height: 2px; border-radius: 50%; background: currentColor; transform-origin: left; }
-.tl-london__route span:nth-child(1) { width: 39%; transform: rotate(-4deg); }
-.tl-london__route span:nth-child(2) { width: 28%; transform: rotate(7deg); }
-.tl-london__route span:nth-child(3) { width: 20%; transform: rotate(-10deg); }
-.tl-london__bridge { position: absolute; left: 11%; bottom: 7%; width: 21%; height: 31%; border: 3px solid currentColor; border-bottom: 0; border-radius: 50% 50% 0 0; }
-.tl-london__bridge i { position: absolute; bottom: 0; width: 3px; height: 76%; background: currentColor; }
-.tl-london__bridge i:nth-child(1) { left: 16%; }.tl-london__bridge i:nth-child(2) { left: 38%; }.tl-london__bridge i:nth-child(3) { right: 38%; }.tl-london__bridge i:nth-child(4) { right: 16%; }
-.tl-london__river { position: absolute; right: -8%; bottom: -45%; left: -8%; height: 68%; border: 18px solid currentColor; border-right-color: transparent; border-left-color: transparent; border-radius: 50%; opacity: .7; }
-
-.tl-london--layered { height: 122px; margin-top: -86px; color: var(--tl-brand-red); background: linear-gradient(168deg,transparent 0 42%,#f5d5d0 43% 63%,var(--tl-brand-red) 64%); }
-.tl-london--layered .tl-london__city { height: 74%; color: #fff; opacity: .94; }
-.tl-london--layered .tl-london__bridge { color: #fff; opacity: .85; }
-.tl-london--layered .tl-london__route { display: none; }
-.tl-london--edge { height: 100px; color: var(--tl-brand-red); background: linear-gradient(176deg,#fff 0 48%,var(--tl-brand-red) 49%); }
-.tl-london--edge .tl-london__city { height: 72%; left: 48%; color: var(--tl-brand-red-deep); opacity: .28; }
-.tl-london--edge .tl-london__bridge,
-.tl-london--edge .tl-london__route { display: none; }
-.tl-london--reverse { transform: scaleX(-1); }
-.tl-london--panorama { height: 150px; color: var(--tl-brand-red); background: #fff; opacity: .42; }
-.tl-london--panorama .tl-london__city { height: 68%; color: transparent; }
-.tl-london--panorama .tl-london__city span { border: 2px solid var(--tl-brand-red); border-bottom: 0; background: transparent; }
-.tl-london--panorama .tl-london__route span:nth-child(1) { top: 35%; left: -2%; }.tl-london--panorama .tl-london__route span:nth-child(2) { top: 52%; left: 38%; }.tl-london--panorama .tl-london__route span:nth-child(3) { top: 28%; left: 76%; }
-.tl-london--panorama .tl-london__river { border-width: 4px; }
-.tl-london--overlap { height: 118px; margin-bottom: -40px; color: var(--tl-brand-red); background: linear-gradient(173deg,#fff 0 46%,#f3d0ca 47% 68%,var(--tl-brand-red) 69%); }
-.tl-london--overlap .tl-london__city { left: 6%; right: 58%; height: 80%; color: var(--tl-brand-blue); opacity: .35; }
-.tl-london--overlap .tl-london__bridge { left: 70%; color: #fff; }
-.tl-london--river { height: 170px; margin-bottom: -1px; color: #fff; background: linear-gradient(170deg,#fff 0 24%,var(--tl-brand-red) 25% 50%,var(--tl-brand-red-deep) 51%); }
-.tl-london--river .tl-london__city { height: 48%; color: rgba(255,255,255,.17); }
-.tl-london--river .tl-london__bridge { color: rgba(255,255,255,.36); }
-.tl-london--river .tl-london__river { bottom: -34%; border-width: 10px; }
+/* Use the supplied skyline and UK-map artwork directly. No generated city,
+   bridge, route or colour-wedge substitutes. */
+.tl-london {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: clamp(240px, 31vw, 470px);
+  margin: 0;
+  overflow: hidden;
+  background: #fff;
+  pointer-events: none;
+}
+.tl-london__art { object-fit: cover; object-position: center bottom; }
+.tl-london--layered { height: clamp(220px, 28vw, 420px); margin-top: -34px; }
+.tl-london--edge { height: clamp(260px, 31vw, 470px); }
+.tl-london--panorama { height: clamp(300px, 34vw, 510px); }
+.tl-london--overlap { height: clamp(240px, 30vw, 450px); margin-bottom: -24px; }
+.tl-london--river { height: clamp(250px, 31vw, 470px); margin-bottom: -1px; }
+.tl-london--map .tl-london__art { object-position: center 53%; }
 
 /* Live opportunities: an urgent branded information rail, never a dark ticker. */
 .tl-tender-ticker { position: relative; z-index: 4; min-height: 84px; border-block: 0; background: var(--tl-brand-red); color: #fff; box-shadow: none; }
@@ -764,4 +744,127 @@
   .ep-hero { padding-top: 108px; }
   .ep-hero h1 { font-size: clamp(44px,13vw,62px); }
   .ep-hero__image { min-height: 310px; }
+}
+
+/* --------------------------------------------------------------------------
+   Supplied brand landscapes — governing override
+   These are the two user-supplied finished artworks. They replace plain colour
+   panels and every procedurally drawn skyline/map treatment across the shared
+   homepage and internal-page system.
+   -------------------------------------------------------------------------- */
+.tl-tender-ticker {
+  border-block: 1px solid rgba(70, 86, 137, .2);
+  color: var(--tl-brand-blue);
+  background: #fff;
+}
+.tl-tender-ticker__label { background: rgba(189,48,38,.94); color: #fff; }
+.tl-tender-ticker__all { border-left: 1px solid rgba(70,86,137,.18); background: rgba(255,255,255,.92); color: var(--tl-brand-red); }
+.tl-tender-ticker__track a { border-color: rgba(70,86,137,.2); color: var(--tl-brand-blue); background: rgba(255,255,255,.82); }
+.tl-tender-ticker__track a:hover { background: #fff; }
+.tl-tender-ticker__track span { color: rgba(21,55,80,.76); }
+.tl-tender-ticker__track em { color: var(--tl-brand-red); }
+
+.tl-photo-chapter,
+.tl-proof--explained,
+.tl-expertise,
+.tl-cases,
+.tl-insights,
+.tl-clients,
+.tl-faqs {
+  background-color: #fff !important;
+  background-image: none !important;
+}
+.tl-photo-chapter__layout,
+.tl-proof--explained > .tl-shell,
+.tl-expertise > .tl-shell,
+.tl-cases > .tl-shell,
+.tl-insights > .tl-shell,
+.tl-clients > .tl-shell,
+.tl-faqs > .tl-shell { position: relative; z-index: 2; }
+
+.tl-services {
+  color: var(--tl-brand-blue);
+  background: #fff;
+}
+.tl-services .tl-kicker { color: var(--tl-brand-red); }
+.tl-services .tl-section-heading > p { color: #3c5569; }
+.tl-service-compare--secondary { background: transparent; gap: 18px; }
+.tl-service-compare--secondary .tl-service-card {
+  border: 1px solid rgba(70,86,137,.22);
+  color: var(--tl-brand-blue);
+  background: rgba(255,255,255,.9);
+  box-shadow: 8px 9px 0 rgba(98,112,164,.18);
+}
+.tl-service-card__body > p { color: #4e6172; }
+.tl-service-card__body strong { border-color: rgba(70,86,137,.22); }
+.tl-services__footer .tl-button { border-color: var(--tl-brand-red); color: var(--tl-brand-red); background: #fff; }
+
+.tl-decision-guides {
+  background: #fff;
+}
+.tl-testimonials {
+  color: var(--tl-brand-blue);
+  background: #fff;
+}
+.tl-testimonials .tl-kicker { color: var(--tl-brand-red); }
+.tl-review-controls button { border-color: var(--tl-brand-red); color: var(--tl-brand-red); background: rgba(255,255,255,.88); }
+.tl-review-actions .tl-button { border-color: var(--tl-brand-red); color: var(--tl-brand-red); background: #fff; }
+
+.tl-home .tl-contact-band {
+  color: var(--tl-brand-blue) !important;
+  background: #fff !important;
+}
+.tl-home .tl-contact-band h2,
+.tl-home .tl-contact-band p { color: var(--tl-brand-blue) !important; }
+.tl-contact-band__actions .tl-button { border-color: var(--tl-brand-red); color: #fff; background: var(--tl-brand-red); }
+.tl-contact-band__actions a:not(.tl-button) { color: var(--tl-brand-blue); }
+
+.tl-footer {
+  padding-top: 0;
+  color: var(--tl-brand-blue);
+  background: #fff;
+}
+.tl-footer__choices { border-color: rgba(70,86,137,.24); }
+.tl-footer__identity,
+.tl-footer__choice { color: var(--tl-brand-blue) !important; }
+.tl-footer__choice { border-color: rgba(70,86,137,.24); }
+.tl-footer__directory,
+.tl-footer__bottom { color: var(--tl-brand-blue); border-color: rgba(70,86,137,.24); }
+
+.ep-hero,
+.ep-hero--blue,
+.ep-hero--peach,
+.ep-hero--yellow {
+  background: #fff;
+}
+.ep-hero::before {
+  content: none;
+}
+.ep-hero::after { content: none; }
+.ep-page .ep-section {
+  background: #fff !important;
+}
+.ep-page .ep-section:nth-of-type(even) { background: #fff !important; }
+
+main:not(.tl-home) { background: #fff; }
+main:not(.tl-home) > section { position: relative; background-color: #fff !important; }
+main:not(.tl-home) > section + section::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: clamp(210px,27vw,410px);
+  margin-bottom: clamp(42px,5vw,78px);
+  background: #fff url('/images/brand-landscapes/tenderlab-london-skyline.png') center bottom / cover no-repeat;
+}
+main:not(.tl-home) > section:nth-of-type(even)::before {
+  background-image: url('/images/brand-landscapes/tenderlab-uk-map.png');
+}
+
+@media (max-width: 620px) {
+  .tl-london { height: 230px; }
+  .tl-london--layered { height: 205px; margin-top: -16px; }
+  .tl-london--panorama { height: 270px; }
+  .tl-london--river { height: 230px; }
+  .tl-london__art { object-position: center bottom; }
+  .tl-footer { padding-top: 0; }
 }
