@@ -69,4 +69,4 @@
 
 Calendly cannot be connected without the TenderLab Calendly event URL and account/API integration details. The booking interface and Stripe checkout route are present, but claiming a live Calendly integration without those details would be false. This is recorded as BLOCKED in tracker task 57 and keeps task 323 blocked.
 
-The preview deployment was also attempted from the required `tenderlab333` CLI account, but the currently linked Vercel team/project returned `Not authorized`. This does not affect the local production build or branch, but a hosted preview requires that account to be granted access to the linked Vercel project (or the project to be relinked by its owner).
+The worktree was relinked to the existing `tenderlab-website` project owned by the required `tenderlab333` account. A non-production Vercel preview was then built and published for review; the live production domain was not changed.

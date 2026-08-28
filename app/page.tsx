@@ -13,7 +13,10 @@ import LondonTransition from '@/components/LondonTransition'
 import TenderPhotoChapter from '@/components/TenderPhotoChapter'
 import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
-export const revalidate = 60
+// The homepage carries the current tender rail. Render it on request so the
+// portal's active-only feed is read at runtime instead of being swallowed by
+// static generation during a deployment build.
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: { absolute: 'Health and Social Care Tender Writing Services | TenderLab' },

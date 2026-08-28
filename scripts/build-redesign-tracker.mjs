@@ -6,7 +6,7 @@ const destination = new URL('../docs/tenderlab-redesign-qa-2026-08-28.csv', impo
 
 const blocked = new Map([
   [57, 'Calendly credentials and the TenderLab Calendly event URL were not supplied. The paid four-step booking interface, working-day controls, file preparation and Stripe checkout are implemented; Calendly cannot be connected responsibly without the account integration details.'],
-  [323, 'The unresolved-items list is not empty: task 57 is blocked by missing Calendly integration details, and the preview deployment is blocked because the required tenderlab333 account is not authorized for the linked Vercel team/project.'],
+  [323, 'The unresolved-items list is not empty because task 57 is blocked by the missing Calendly integration details.'],
 ])
 
 const evidenceFor = (id) => {
