@@ -13,6 +13,8 @@ import {
 import { fetchPublishedTenders } from '@/lib/published-tenders'
 import TendersClient from './TendersClient'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Live Care Tenders UK | Health and Social Care Contracts',
   description:

@@ -4,6 +4,7 @@ import { getTenderLandingPage } from '@/lib/tender-landing-pages'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 
 const page = getTenderLandingPage('supported-living')!
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: page.title,
   description: page.description,
