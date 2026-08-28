@@ -1,4 +1,12 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Consultation Confirmed | TenderLab',
+  description: 'Confirmation that a TenderLab consultation request and payment have been received.',
+  alternates: { canonical: '/book-consultation/confirmation' },
+  robots: { index: false, follow: false },
+}
 
 export default function ConsultationConfirmationPage() {
   return (

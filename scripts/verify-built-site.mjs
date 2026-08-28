@@ -29,7 +29,8 @@ const sourceRoutes = new Set(
   filesUnder(appSource)
     .filter((path) => path.endsWith('/page.tsx') && !path.includes('/['))
     .map((path) => {
-      const rel = relative(appSource, path).replace(/\\/g, '/').replace(/\/page\.tsx$/, '')
+      const sourceRelative = relative(appSource, path).replace(/\\/g, '/')
+      const rel = sourceRelative === 'page.tsx' ? '' : sourceRelative.replace(/\/page\.tsx$/, '')
       return rel ? `/${rel}` : '/'
     }),
 )

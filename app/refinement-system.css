@@ -857,7 +857,7 @@ main:not(.tl-home) > section + section::before {
   background: #fff url('/images/brand-landscapes/tenderlab-london-skyline.png') center bottom / cover no-repeat;
 }
 main:not(.tl-home) > section:nth-of-type(even)::before {
-  background-image: url('/images/brand-landscapes/tenderlab-uk-map.png');
+  background-image: url('/images/brand-landscapes/tenderlab-london-skyline.png');
 }
 
 @media (max-width: 620px) {
@@ -867,4 +867,416 @@ main:not(.tl-home) > section:nth-of-type(even)::before {
   .tl-london--river { height: 230px; }
   .tl-london__art { object-position: center bottom; }
   .tl-footer { padding-top: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Integrated landscape and interaction correction
+   The supplied skyline is now quiet background detail inside sections. The
+   standalone landscape banners and UK-map treatment are deliberately removed.
+   -------------------------------------------------------------------------- */
+.tl-london,
+main:not(.tl-home) > section + section::before { display: none !important; content: none !important; }
+
+.tl-hero {
+  min-height: 0;
+  padding: 132px 0 0;
+  isolation: isolate;
+  background: #fff;
+}
+.tl-hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: -22px;
+  left: 0;
+  height: clamp(180px,23vw,330px);
+  background: url('/images/brand-landscapes/tenderlab-london-skyline.png') center 58% / cover no-repeat;
+  opacity: .075;
+  filter: saturate(.65);
+  -webkit-mask-image: linear-gradient(to bottom,transparent 0,#000 28%,#000 72%,transparent 100%);
+  mask-image: linear-gradient(to bottom,transparent 0,#000 28%,#000 72%,transparent 100%);
+}
+.tl-hero > .tl-shell { position: relative; z-index: 1; padding-bottom: clamp(30px,4vw,58px); }
+.tl-hero__visual {
+  min-height: 520px;
+  overflow: hidden;
+  border-radius: 54px;
+  clip-path: none;
+  background: transparent;
+  -webkit-mask-image: radial-gradient(ellipse 105% 96% at 50% 50%,#000 58%,rgba(0,0,0,.88) 74%,transparent 100%);
+  mask-image: radial-gradient(ellipse 105% 96% at 50% 50%,#000 58%,rgba(0,0,0,.88) 74%,transparent 100%);
+}
+.tl-hero__visual::before {
+  background: linear-gradient(90deg,rgba(21,55,80,.13),transparent 34%,transparent 75%,rgba(255,255,255,.08));
+}
+.tl-hero__image { transform: scale(1.035); }
+.tl-hero--rotating .tl-hero__visual > .tl-hero__image { transform: scale(1.055); }
+.tl-hero--rotating .tl-hero__visual > .tl-hero__image.is-active { transform: scale(1.035); }
+
+.tl-tender-ticker {
+  z-index: 5;
+  min-height: 78px;
+  margin: 0;
+  border-block: 1px solid rgba(189,48,38,.22);
+  box-shadow: 0 12px 32px rgba(21,55,80,.06);
+}
+.tl-tender-ticker__image { border-radius: 14px; clip-path: none; }
+
+.tl-home > :is(.tl-proof,.tl-section,.tl-contact-band),
+.ep-page > .ep-section,
+.booking-page {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #fff !important;
+  background-image: none !important;
+}
+.tl-home > :is(.tl-proof,.tl-section,.tl-contact-band)::after,
+.ep-page > .ep-section::after,
+.booking-page::after {
+  content: '' !important;
+  position: absolute;
+  z-index: -1;
+  right: -4%;
+  bottom: -36px;
+  left: -4%;
+  height: clamp(108px,13vw,190px);
+  background: url('/images/brand-landscapes/tenderlab-london-skyline.png') center 61% / cover no-repeat;
+  opacity: .045;
+  filter: saturate(.55);
+  transform: none !important;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom,transparent,#000 42%,transparent 100%);
+  mask-image: linear-gradient(to bottom,transparent,#000 42%,transparent 100%);
+}
+.tl-home > :is(.tl-proof,.tl-section,.tl-contact-band):nth-of-type(3n)::after,
+.ep-page > .ep-section:nth-of-type(3n)::after { background-position: 18% 61%; }
+.tl-home > :is(.tl-proof,.tl-section,.tl-contact-band):nth-of-type(3n + 1)::after,
+.ep-page > .ep-section:nth-of-type(3n + 1)::after { background-position: 82% 61%; }
+.tl-home > :is(.tl-proof,.tl-section,.tl-contact-band) > *,
+.ep-page > .ep-section > *,
+.booking-page > * { position: relative; z-index: 1; }
+
+.tl-home .tl-section,
+.tl-home .tl-proof,
+.ep-page .ep-section { padding-block: clamp(58px,5.5vw,84px); }
+.tl-proof--explained { padding-top: clamp(52px,5vw,76px); }
+
+/* Results animate into a proof dashboard without becoming four AI-style tiles. */
+.tl-proof__feature {
+  border: 1px solid rgba(189,48,38,.38);
+  border-left: 8px solid var(--tl-brand-red);
+  border-radius: 32px;
+  padding: clamp(28px,3vw,46px);
+  background: rgba(255,255,255,.82);
+  box-shadow: 12px 14px 0 rgba(189,48,38,.13);
+  backdrop-filter: blur(10px);
+  transition: transform .55s cubic-bezier(.22,1,.36,1),box-shadow .55s ease;
+}
+.tl-proof__feature::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 22px;
+  width: clamp(108px,12vw,178px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(189,48,38,.3);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.6) rotate(-18deg);
+}
+.tl-proof--explained.is-visible .tl-proof__feature::before { animation: tlProofRing .9s .18s cubic-bezier(.22,1,.36,1) forwards; }
+.tl-proof__feature:hover { transform: translateY(-7px); box-shadow: 15px 18px 0 rgba(189,48,38,.12); }
+.tl-proof__supporting { gap: 12px; border: 0; }
+.tl-proof__supporting article {
+  border: 1px solid rgba(189,48,38,.32);
+  border-radius: 24px;
+  padding: 24px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 7px 8px 0 rgba(189,48,38,.11);
+  opacity: 0;
+  transform: translateX(32px);
+  transition: transform .5s cubic-bezier(.22,1,.36,1),box-shadow .3s ease,opacity .5s ease;
+}
+.tl-proof--explained.is-visible .tl-proof__supporting article { opacity: 1; transform: none; }
+.tl-proof--explained.is-visible .tl-proof__supporting article:nth-child(2) { transition-delay: .12s; }
+.tl-proof--explained.is-visible .tl-proof__supporting article:nth-child(3) { transition-delay: .24s; }
+.tl-proof__supporting article:hover { padding-left: 24px; transform: translateY(-5px); box-shadow: 9px 11px 0 rgba(189,48,38,.11); }
+@keyframes tlProofRing { to { opacity: .55; transform: scale(1) rotate(0); } }
+
+/* Image-led cards share one interaction system: image expansion and forward depth. */
+.tl-service-feature,
+.tl-service-card,
+.tl-expertise__grid article,
+.tl-guide-card,
+.tl-case-card,
+.tl-blog-card,
+.ep-service-showcase__card,
+.ep-case-card,
+.ep-guide-related__grid a {
+  border: 1px solid rgba(189,48,38,.34) !important;
+  border-radius: 28px !important;
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 8px 10px 0 rgba(189,48,38,.11);
+  transform: translateZ(0);
+  transition: transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s ease,border-color .3s ease;
+}
+.tl-service-feature:hover,
+.tl-service-card:hover,
+.tl-expertise__grid article:hover,
+.tl-guide-card:hover,
+.tl-case-card:hover,
+.tl-blog-card:hover,
+.ep-service-showcase__card:hover,
+.ep-case-card:hover,
+.ep-guide-related__grid a:hover {
+  z-index: 3;
+  border-color: rgba(189,48,38,.46) !important;
+  box-shadow: 13px 16px 0 rgba(189,48,38,.12);
+  transform: perspective(1100px) translateY(-9px) translateZ(18px);
+}
+.tl-service-feature__media,
+.tl-service-card__image,
+.tl-expertise__image,
+.tl-guide-card__image,
+.tl-case-card__image,
+.tl-blog-card__image,
+.ep-service-showcase__image,
+.ep-case-card__image { overflow: hidden; border-radius: 27px 27px 0 0; clip-path: none; }
+.tl-service-feature img,
+.tl-service-card img,
+.tl-expertise__grid img,
+.tl-guide-card img,
+.tl-case-card img,
+.tl-blog-card img,
+.ep-service-showcase__card img,
+.ep-case-card img { object-fit: cover; transition: transform .7s cubic-bezier(.22,1,.36,1),filter .5s ease; }
+.tl-service-feature:hover img,
+.tl-service-card:hover img,
+.tl-expertise__grid article:hover img,
+.tl-guide-card:hover img,
+.tl-case-card:hover img,
+.tl-blog-card:hover img,
+.ep-service-showcase__card:hover img,
+.ep-case-card:hover img { transform: scale(1.075); filter: saturate(1.05); }
+
+.tl-services { color: var(--tl-brand-blue); background: #fff; }
+.tl-service-feature { overflow: hidden; clip-path: none; }
+.tl-service-feature__body { background: rgba(255,255,255,.96); }
+.tl-service-compare--secondary { gap: 18px; background: transparent; }
+.tl-service-compare--secondary .tl-service-card { overflow: hidden; color: var(--tl-brand-blue); }
+.tl-service-card__body > p { color: #4e6172; }
+.tl-service-card__body strong { border-color: rgba(70,86,137,.2); }
+
+.tl-expertise { padding-top: clamp(64px,6vw,94px) !important; }
+.tl-expertise__grid article { overflow: hidden; padding-bottom: 8px; }
+.tl-expertise__grid article:nth-child(2),
+.tl-expertise__grid article:nth-child(3) { margin-top: 0; }
+.tl-expertise__image { min-height: 280px; }
+.tl-expertise__grid article > span,
+.tl-expertise__grid article > h3,
+.tl-expertise__grid article > p { margin-inline: 24px; }
+.tl-expertise__grid article > span { margin-top: 18px; }
+
+.ep-guide-index {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 18px;
+  overflow: visible;
+}
+.ep-guide-index > .tl-guide-card {
+  min-height: 470px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.34) !important;
+}
+.tl-guide-card__image {
+  position: relative;
+  width: calc(100% + 44px);
+  min-height: 190px;
+  margin: 0 -22px 20px;
+}
+.ep-guide-index .tl-guide-card > span:not(.tl-guide-card__image) { color: var(--tl-brand-red); font-size: 11px; font-weight: 850; }
+.ep-guide-index .tl-guide-card h3 { margin: 14px 0 10px; color: var(--tl-brand-blue); font-size: clamp(22px,2vw,30px); line-height: 1.05; letter-spacing: -.04em; }
+.ep-guide-index .tl-guide-card p { margin: 0; color: #4e6172; line-height: 1.55; }
+.ep-guide-index .tl-guide-card b { margin-top: auto; align-self: flex-end; color: var(--tl-brand-red); font-size: 20px; }
+
+.tl-cases__grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 18px; }
+.tl-case-card { overflow: hidden; margin-top: 0 !important; }
+.tl-case-card__image { min-height: 210px; }
+.tl-case-card__body {
+  min-height: 230px;
+  margin-top: -34px;
+  padding: 52px 22px 24px;
+  border: 0;
+  border-radius: 0 52px 0 0;
+  background: rgba(255,255,255,.97) !important;
+}
+.tl-award-seal { top: 16px; right: 16px; width: 64px; height: 64px; }
+
+.tl-client {
+  border: 1px solid rgba(189,48,38,.3) !important;
+  border-radius: 24px !important;
+  margin: 8px;
+  box-shadow: 6px 8px 0 rgba(189,48,38,.1);
+  transition: transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;
+}
+.tl-client:hover { transform: translateY(-7px); box-shadow: 10px 12px 0 rgba(189,48,38,.11); }
+.tl-client-grid { border: 0; gap: 4px; }
+
+.tl-insights__grid--image-led .tl-blog-card { overflow: hidden; padding: 0; }
+.tl-insights__grid--image-led .tl-blog-card:nth-child(2) { margin-top: 0; }
+.tl-blog-card__body { padding-inline: 25px; }
+
+/* Shared service page now uses the same image-led hierarchy as the homepage. */
+.ep-service-showcase { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.ep-service-showcase__card { position: relative; min-height: 500px; display: flex; flex-direction: column; overflow: hidden; color: var(--tl-brand-blue); }
+.ep-service-showcase__card--featured { grid-column: 1/-1; min-height: 470px; display: grid; grid-template-columns: 1.12fr .88fr; }
+.ep-service-showcase__image { position: relative; min-height: 220px; display: block; }
+.ep-service-showcase__card--featured .ep-service-showcase__image { min-height: 470px; border-radius: 27px 0 0 27px; }
+.ep-service-showcase__number { position: absolute; top: 18px; left: 18px; z-index: 2; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #fff; color: var(--tl-brand-red); font-size: 11px; font-weight: 850; }
+.ep-service-showcase__copy { display: flex; flex-direction: column; flex: 1; padding: 24px; }
+.ep-service-showcase__card--featured .ep-service-showcase__copy { justify-content: center; padding: clamp(32px,5vw,72px); }
+.ep-service-showcase__copy small { width: fit-content; padding: 7px 10px; border-radius: 999px; background: var(--tl-brand-red); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.ep-service-showcase__copy h3 { margin: 18px 0 12px; font-size: clamp(25px,2.4vw,38px); line-height: 1.03; letter-spacing: -.04em; }
+.ep-service-showcase__card--featured h3 { font-size: clamp(40px,4vw,62px); }
+.ep-service-showcase__copy p { color: #4e6172; line-height: 1.55; }
+.ep-service-showcase__copy strong { margin-top: 8px; font-size: 13px; line-height: 1.45; }
+.ep-service-showcase__copy b { margin-top: auto; padding-top: 20px; color: var(--tl-brand-red); }
+
+/* The testimonial's rounded pink outline and offset depth is the shared
+   container language, including the booking flow. */
+.booking-options button,
+.booking-upload,
+.booking-date,
+.booking-fields,
+.booking-summary {
+  border-color: rgba(189,48,38,.34) !important;
+  border-radius: 28px !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.1);
+}
+.booking-options button:hover,
+.booking-options button.is-selected {
+  box-shadow: 11px 13px 0 rgba(189,48,38,.14);
+}
+
+/* Shared page templates: no old pastel panels, no hard dividers, no banner gaps. */
+.ep-hero,
+.ep-hero--blue,
+.ep-hero--peach,
+.ep-hero--yellow { background: #fff !important; }
+.ep-hero::before {
+  content: '' !important;
+  position: absolute;
+  inset: auto 0 -26px !important;
+  width: auto !important;
+  height: clamp(140px,18vw,260px) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: url('/images/brand-landscapes/tenderlab-london-skyline.png') center 60% / cover no-repeat !important;
+  opacity: .065 !important;
+  filter: saturate(.6);
+  -webkit-mask-image: linear-gradient(to bottom,transparent,#000 38%,transparent 100%);
+  mask-image: linear-gradient(to bottom,transparent,#000 38%,transparent 100%);
+}
+.ep-hero__copy,.ep-hero__image { position: relative; z-index: 1; }
+.ep-hero__image {
+  border-radius: 46px;
+  clip-path: none;
+  background: transparent;
+  -webkit-mask-image: radial-gradient(ellipse 105% 96% at 50% 50%,#000 59%,rgba(0,0,0,.88) 75%,transparent 100%);
+  mask-image: radial-gradient(ellipse 105% 96% at 50% 50%,#000 59%,rgba(0,0,0,.88) 75%,transparent 100%);
+}
+.ep-hero__image::after { content: none; }
+.ep-page :is(.ep-service-row,.ep-method-grid article,.ep-contact-card,.ep-guide-index > a,.ep-guide-related__grid a,.ep-case-card,.ep-review-card,.ep-faq__list details,.ep-service-detail__deliverables,.ep-review-choice__panel,.ep-about-cta__panel) {
+  border-color: rgba(189,48,38,.3) !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.9) !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.1);
+  transition: transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s ease,border-color .3s ease;
+}
+.ep-page :is(.ep-service-row,.ep-method-grid article,.ep-contact-card,.ep-guide-index > a,.ep-guide-related__grid a,.ep-case-card,.ep-review-card):hover {
+  border-color: rgba(189,48,38,.42) !important;
+  box-shadow: 11px 13px 0 rgba(189,48,38,.11);
+  transform: translateY(-7px);
+}
+.ep-method-grid { gap: 16px; }
+.ep-method-grid article { border-right: 1px solid rgba(70,86,137,.18); }
+.ep-record__stats { gap: 14px; }
+.ep-record__stats > div {
+  border: 1px solid rgba(189,48,38,.3) !important;
+  border-radius: 24px;
+  background: rgba(255,255,255,.9) !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.1);
+  transition: transform .4s ease,box-shadow .4s ease;
+}
+.ep-record__stats > div:hover { transform: translateY(-7px); box-shadow: 10px 12px 0 rgba(189,48,38,.11); }
+.ep-service-proof,
+.ep-service-decisions,
+.ep-service-process,
+.ep-service-change,
+.ep-service-scope,
+.ep-about-method,
+.ep-record,
+.ep-faq,
+.ep-guide-related,
+.ep-case-evidence,
+.ep-case-narrative { background: #fff !important; }
+
+.tl-footer {
+  background-color: #fff;
+  background-image: linear-gradient(rgba(255,255,255,.9),rgba(255,255,255,.98)),url('/images/brand-landscapes/tenderlab-london-skyline.png');
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1050px) {
+  .ep-guide-index,.tl-cases__grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ep-service-showcase { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ep-service-showcase__card--featured { grid-column: 1/-1; }
+}
+
+@media (max-width: 760px) {
+  .tl-hero { padding-top: 102px; }
+  .tl-hero > .tl-shell { padding-bottom: 20px; }
+  .tl-hero__title {
+    max-width: 100%;
+    font-size: clamp(42px,12vw,52px);
+    line-height: .93;
+    letter-spacing: -.055em;
+  }
+  .tl-hero__title span { width: auto; max-width: 100%; }
+  .tl-hero__visual { min-height: 330px; border-radius: 30px; }
+  .tl-hero::after { height: 190px; opacity: .06; }
+  .tl-tender-ticker { grid-template-columns: 1fr auto; }
+  .tl-tender-ticker__label { display: none; }
+  .tl-tender-ticker__track a { min-width: 102vw; grid-template-columns: 58px minmax(180px,1fr) auto; gap: 10px; padding: 7px 14px; }
+  .tl-tender-ticker__track a > span:not(.tl-tender-ticker__image) { display: none; }
+  .tl-tender-ticker__image { width: 58px; height: 48px; }
+  .tl-proof__story,.tl-proof__feature { grid-template-columns: 1fr; }
+  .tl-proof__feature::before { width: 110px; }
+  .tl-service-feature,.ep-service-showcase__card--featured { grid-template-columns: 1fr; }
+  .tl-service-feature__media,.ep-service-showcase__card--featured .ep-service-showcase__image { min-height: 300px; border-radius: 27px 27px 0 0; }
+  .tl-service-compare--secondary,.tl-expertise__grid,.ep-guide-index,.tl-cases__grid,.ep-service-showcase { grid-template-columns: 1fr; }
+  .ep-guide-index > .tl-guide-card { min-height: 430px; }
+  .tl-case-card__image { min-height: 230px; }
+  .tl-home > :is(.tl-proof,.tl-section,.tl-contact-band)::after,.ep-page > .ep-section::after { height: 105px; opacity: .035; }
+  .tl-consent { gap: 12px !important; padding: 16px !important; }
+  .tl-consent > div { min-width: 0; }
+  .tl-consent p { overflow-wrap: anywhere; }
+  .tl-consent__actions { gap: 8px !important; }
+  .tl-consent__actions button { width: 100%; }
+}
+
+@media (max-width: 430px) {
+  .tl-consent__actions { grid-template-columns: 1fr !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-proof__feature::before,.tl-proof__supporting article { animation: none !important; opacity: 1; transform: none; }
+  .tl-service-feature,.tl-service-card,.tl-expertise__grid article,.tl-guide-card,.tl-case-card,.tl-blog-card,.ep-service-showcase__card,.ep-page [class*="card"] { transition: none !important; }
 }

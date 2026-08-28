@@ -3,17 +3,22 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #fff url('/images/brand-landscapes/tenderlab-london-skyline.png') center bottom / cover no-repeat;
-  border-bottom: 1px solid rgba(25, 34, 49, 0.12);
+  background: #fff;
 }
 
 .hero::before {
   content: '';
   position: absolute;
   z-index: -1;
-  inset: 0;
-  background: url('/images/brand-landscapes/tenderlab-uk-map.png') center 48% / cover no-repeat;
-  opacity: .12;
+  right: 0;
+  bottom: -2.5rem;
+  left: 0;
+  height: min(24vw, 21rem);
+  background: url('/images/brand-landscapes/tenderlab-london-skyline.png') center 58% / cover no-repeat;
+  opacity: .075;
+  filter: saturate(.7);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 32%, #000 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 32%, #000 70%, transparent 100%);
 }
 
 .hero::after { content: none; }
@@ -125,10 +130,10 @@
   position: absolute;
   inset: -1.1rem -1.1rem 1.1rem 18%;
   z-index: -1;
-  border-radius: 0;
-  background: color-mix(in srgb, var(--hero-wash) 75%, white);
-  transform: none;
-  clip-path: polygon(8% 0,100% 0,100% 91%,90% 100%,0 100%,0 18%);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--hero-wash) 58%, white);
+  filter: blur(2.2rem);
+  opacity: .62;
 }
 
 .imageFrame {
@@ -136,14 +141,16 @@
   overflow: hidden;
   aspect-ratio: 2.11 / 1;
   min-height: 26rem;
-  border-radius: 0;
+  border-radius: 3.5rem;
   background: #f4eee3;
-  box-shadow: 0 2rem 5rem rgba(25, 34, 49, 0.1);
-  clip-path: polygon(5% 0,100% 0,100% 88%,92% 100%,0 100%,0 12%);
+  box-shadow: 0 2rem 5rem rgba(25, 34, 49, 0.08);
+  -webkit-mask-image: radial-gradient(ellipse 104% 94% at 50% 50%, #000 62%, rgba(0,0,0,.86) 75%, transparent 100%);
+  mask-image: radial-gradient(ellipse 104% 94% at 50% 50%, #000 62%, rgba(0,0,0,.86) 75%, transparent 100%);
 }
 
 .image {
   object-fit: cover;
+  transform: scale(1.035);
 }
 
 .caption {
@@ -152,9 +159,9 @@
   margin: -2.2rem 1.7rem 0 auto;
   padding: 1.15rem 1.45rem;
   border: 1px solid rgba(25, 34, 49, 0.13);
-  border-radius: 0;
+  border-radius: 1.4rem;
   color: #192231;
-  border-left: .35rem solid #bd3026;
+  border-left: .26rem solid #bd3026;
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 0.9rem 2.2rem rgba(25, 34, 49, 0.08);
   font-size: 0.94rem;
@@ -188,7 +195,7 @@
   .title { max-width: 14ch; }
   .description { max-width: 38rem; }
   .figure { width: calc(100% + 1rem); margin-left: -0.5rem; }
-  .imageFrame { min-height: 19rem; border-radius: 3.4rem 1rem 3.4rem 1rem; }
+  .imageFrame { min-height: 19rem; border-radius: 2.5rem; }
   .caption { width: calc(100% - 2rem); margin-right: 1rem; }
 }
 

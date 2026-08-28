@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
@@ -42,6 +43,11 @@ const faqs = [
 ]
 
 export default function ServicesPage() {
+  const orderedServices = [
+    ...SERVICES_DATA.filter((service) => service.slug === 'bid-writing'),
+    ...SERVICES_DATA.filter((service) => service.slug !== 'bid-writing'),
+  ]
+
   return (
     <main className="ep-page">
       <EditorialHero
@@ -66,23 +72,25 @@ export default function ServicesPage() {
             <p>The comparison keeps the decision practical: when each service fits, what TenderLab does and what your team receives.</p>
           </div>
 
-          <div className="ep-service-table" role="list">
-            {SERVICES_DATA.map((service, index) => (
-              <Link href={`/services/${service.slug}`} className="ep-service-row" key={service.slug} role="listitem">
-                <span className="ep-service-row__number">{String(index + 1).padStart(2, '0')}</span>
-                <div className="ep-service-row__name">
-                  <small>Service</small>
+          <div className="ep-service-showcase" role="list">
+            {orderedServices.map((service, index) => (
+              <Link
+                href={`/services/${service.slug}`}
+                className={`ep-service-showcase__card${index === 0 ? ' ep-service-showcase__card--featured' : ''}`}
+                key={service.slug}
+                role="listitem"
+              >
+                <span className="ep-service-showcase__image">
+                  <Image src={service.heroImg} alt="" fill sizes={index === 0 ? '(max-width: 760px) 100vw, 55vw' : '(max-width: 760px) 100vw, 33vw'} />
+                </span>
+                <span className="ep-service-showcase__number">{String(index + 1).padStart(2, '0')}</span>
+                <span className="ep-service-showcase__copy">
+                  {index === 0 && <small>Most requested</small>}
                   <h3>{displayNames[service.slug] || service.title}</h3>
-                </div>
-                <div>
-                  <small>Choose this when</small>
                   <p>{decisionLabels[service.slug]}</p>
-                </div>
-                <div>
-                  <small>You receive</small>
-                  <p>{service.delivers[0]}</p>
-                </div>
-                <span className="ep-service-row__arrow" aria-hidden="true">↗</span>
+                  <strong>{service.delivers[0]}</strong>
+                  <b>Explore the service <span aria-hidden="true">↗</span></b>
+                </span>
               </Link>
             ))}
           </div>

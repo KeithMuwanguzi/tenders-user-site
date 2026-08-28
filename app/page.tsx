@@ -9,8 +9,6 @@ import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import HomeHero from '@/components/HomeHero'
 import HomeReviewCarousel from '@/components/HomeReviewCarousel'
 import HomeMotion from '@/components/HomeMotion'
-import LondonTransition from '@/components/LondonTransition'
-import TenderPhotoChapter from '@/components/TenderPhotoChapter'
 import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
 // The homepage carries the current tender rail. Render it on request so the
@@ -90,6 +88,13 @@ const decisionGuideSlugs = [
 const decisionGuides = decisionGuideSlugs
   .map((slug) => DECISION_GUIDE_BY_SLUG.get(slug))
   .filter((guide) => guide !== undefined)
+
+const decisionGuideImages = [
+  '/images/editorial/tenderlab-domiciliary-care-hero-v1.jpg',
+  '/images/editorial/tenderlab-supported-living-hero-v1.jpg',
+  '/images/editorial/tenderlab-care-evidence-hero-v1.webp',
+  '/images/editorial/tenderlab-proof-hero-v1.webp',
+]
 
 const expertise = [
   {
@@ -175,7 +180,6 @@ export default async function HomePage() {
     <main className="tl-home">
       <HomeMotion />
       <HomeHero />
-      <LondonTransition variant="layered" className="tl-london--after-hero" />
 
       {liveTenders.length > 0 ? (
         <section className="tl-tender-ticker" aria-label="Current healthcare tender opportunities">
@@ -202,9 +206,6 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <TenderPhotoChapter />
-      <LondonTransition variant="edge" />
-
       <section className="tl-proof tl-proof--explained" aria-labelledby="record-heading" data-reveal>
         <div className="tl-shell">
           <div className="tl-proof__heading">
@@ -226,8 +227,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <LondonTransition variant="layered" />
 
       <section className="tl-section tl-services" id="services" data-reveal>
         <div className="tl-shell">
@@ -277,8 +276,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="overlap" />
-
       <section className="tl-section tl-expertise" aria-labelledby="expertise-heading" data-reveal>
         <div className="tl-shell">
           <div className="tl-expertise__intro">
@@ -300,8 +297,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="edge" />
-
       <section className="tl-section tl-decision-guides" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
@@ -316,10 +311,11 @@ export default async function HomePage() {
           </div>
           <div className="ep-guide-index">
             {decisionGuides.map((guide, index) => (
-              <Link href={`/guides/${guide.slug}`} key={guide.slug}>
+              <Link href={`/guides/${guide.slug}`} key={guide.slug} className="tl-guide-card">
+                <span className="tl-guide-card__image"><Image src={decisionGuideImages[index]} alt="" fill sizes="(max-width: 760px) 100vw, 25vw" /></span>
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <small>{guide.eyebrow}</small>
-                <h2>{guide.title}</h2>
+                <h3>{guide.title}</h3>
                 <p>{guide.description}</p>
                 <b aria-hidden="true">↗</b>
               </Link>
@@ -332,8 +328,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <LondonTransition variant="panorama" />
 
       <section className="tl-section tl-cases" data-reveal>
         <div className="tl-shell">
@@ -369,8 +363,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="edge" className="tl-london--reverse" />
-
       <section className="tl-section tl-clients" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
@@ -403,8 +395,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="overlap" />
-
       <section className="tl-section tl-testimonials" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading">
@@ -418,8 +408,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <LondonTransition variant="panorama" />
 
       <section className="tl-section tl-insights" data-reveal>
         <div className="tl-shell">
@@ -453,8 +441,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="panorama" className="tl-london--quiet" />
-
       <section className="tl-section tl-faqs" data-reveal>
         <div className="tl-shell tl-faqs__layout">
           <div className="tl-section-heading">
@@ -477,8 +463,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <LondonTransition variant="layered" />
-
       <section className="tl-contact-band" data-reveal>
         <div className="tl-shell tl-contact-band__inner">
           <div>
@@ -492,7 +476,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <LondonTransition variant="river" />
     </main>
   )
 }
