@@ -453,7 +453,17 @@ export default function Nav() {
             <Link href="/book-consultation" className="nav__drawer-book" onClick={closeAll}>
               Book a consultation
             </Link>
-            <button type="button" className="nav__callback nav__callback--full" onClick={() => { closeAll(); setCallbackOpen(true) }}>Request a callback</button>
+            <button
+              type="button"
+              className="nav__callback nav__callback--full"
+              onClick={() => {
+                setMenuOpen(false)
+                setMobileExpanded(null)
+                setCallbackOpen(true)
+              }}
+            >
+              Request a callback
+            </button>
           </div>
         </div>
       </div>

@@ -211,8 +211,8 @@ export default function BlogListingView({ posts, faqs, unavailable = false }: Pr
           <h2>Move from general advice to the documents in front of you.</h2>
           <p>Share the tender pack and deadline so TenderLab can assess the fit and the work required.</p>
           <div className="blog-v2-cta-band__actions">
-            <Link href="/contact" className="btn btn-white">
-              Discuss your tender
+            <Link href="/book-consultation" className="btn btn-white">
+              Book a consultation
             </Link>
             <Link href="/services" className="btn btn-outline-white">
               View services

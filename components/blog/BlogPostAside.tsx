@@ -17,8 +17,8 @@ export default function BlogPostAside({ related, currentSlug }: Props) {
         <p className="blog-aside__text">
           Specialist support for health and social care providers, with a 92% recorded historic win rate and more than 200 submissions supported.
         </p>
-        <Link href="/contact" className="btn btn-primary btn-sm">
-          Discuss your tender
+        <Link href="/book-consultation" className="btn btn-primary btn-sm">
+          Book a consultation
         </Link>
       </div>
 

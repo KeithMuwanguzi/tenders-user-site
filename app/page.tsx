@@ -8,6 +8,9 @@ import { DECISION_GUIDE_BY_SLUG } from '@/lib/decision-guides'
 import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import HomeHero from '@/components/HomeHero'
 import HomeReviewCarousel from '@/components/HomeReviewCarousel'
+import HomeMotion from '@/components/HomeMotion'
+import LondonTransition from '@/components/LondonTransition'
+import TenderPhotoChapter from '@/components/TenderPhotoChapter'
 import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
 export const revalidate = 60
@@ -167,7 +170,9 @@ export default async function HomePage() {
 
   return (
     <main className="tl-home">
+      <HomeMotion />
       <HomeHero />
+      <LondonTransition variant="layered" className="tl-london--after-hero" />
 
       {liveTenders.length > 0 ? (
         <section className="tl-tender-ticker" aria-label="Current healthcare tender opportunities">
@@ -194,7 +199,10 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="tl-proof tl-proof--explained" aria-labelledby="record-heading">
+      <TenderPhotoChapter />
+      <LondonTransition variant="edge" />
+
+      <section className="tl-proof tl-proof--explained" aria-labelledby="record-heading" data-reveal>
         <div className="tl-shell">
           <div className="tl-proof__heading">
             <div><p className="tl-kicker">Recorded TenderLab results</p><h2 id="record-heading">A high win rate begins before the first answer is written.</h2></div>
@@ -216,7 +224,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-services" id="services">
+      <section className="tl-section tl-services" id="services" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -264,7 +272,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-expertise" aria-labelledby="expertise-heading">
+      <LondonTransition variant="overlap" />
+
+      <section className="tl-section tl-expertise" aria-labelledby="expertise-heading" data-reveal>
         <div className="tl-shell">
           <div className="tl-expertise__intro">
             <p className="tl-kicker">Healthcare is our only field</p>
@@ -285,7 +295,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-decision-guides">
+      <section className="tl-section tl-decision-guides" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -316,7 +326,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-cases">
+      <LondonTransition variant="panorama" />
+
+      <section className="tl-section tl-cases" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -350,7 +362,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-clients">
+      <LondonTransition variant="edge" className="tl-london--reverse" />
+
+      <section className="tl-section tl-clients" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -382,7 +396,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-testimonials">
+      <section className="tl-section tl-testimonials" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading">
             <p className="tl-kicker">Independent client feedback</p>
@@ -396,7 +410,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-insights">
+      <section className="tl-section tl-insights" data-reveal>
         <div className="tl-shell">
           <div className="tl-section-heading tl-section-heading--split">
             <div>
@@ -428,7 +442,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-faqs">
+      <LondonTransition variant="panorama" className="tl-london--quiet" />
+
+      <section className="tl-section tl-faqs" data-reveal>
         <div className="tl-shell tl-faqs__layout">
           <div className="tl-section-heading">
             <p className="tl-kicker">Frequently asked questions</p>
@@ -450,7 +466,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-contact-band">
+      <section className="tl-contact-band" data-reveal>
         <div className="tl-shell tl-contact-band__inner">
           <div>
             <p className="tl-kicker">Have a tender in front of you?</p>
@@ -463,6 +479,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      <LondonTransition variant="river" />
     </main>
   )
 }
