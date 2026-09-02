@@ -6,6 +6,7 @@ import { CASE_STUDIES } from '@/lib/case-studies-data'
 import { CASE_STUDY_DETAILS } from '@/lib/case-studies-detail'
 import { breadcrumbSchema, defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import GalleryGrid from './GalleryGrid'
+import ContractWonMedallion from '@/components/ContractWonMedallion'
 
 export function generateStaticParams() {
   return CASE_STUDIES.map((study) => ({ slug: study.slug }))
@@ -106,6 +107,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       <section className="ep-section ep-case-detail-overview">
         <div className="ep-shell ep-case-detail-overview__grid">
           <aside>
+            <ContractWonMedallion className="contract-won-medallion--detail" />
             <p className="ep-kicker">Case record</p>
             <dl>
               <div><dt>Provider</dt><dd>{study.provider}</dd></div>
@@ -229,6 +231,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             <div className="ep-case-related__grid">
               {related.map((item) => (
                 <Link key={item.slug} href={`/case-studies/${item.slug}`}>
+                  <ContractWonMedallion className="contract-won-medallion--related" />
                   <span>{item.categoryLabel} · {item.contractType}</span>
                   <h3>{item.title}</h3>
                   <p>{item.result} · {item.lots}</p>

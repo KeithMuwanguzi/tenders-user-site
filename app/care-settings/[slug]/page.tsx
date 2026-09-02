@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
+import ContractWonMedallion from '@/components/ContractWonMedallion'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import {
   breadcrumbSchema,
@@ -475,6 +476,7 @@ export default async function CareSettingPage({ params }: Props) {
           <div className="ep-care-related__grid">
             {cases.map(item => (
               <Link href={`/case-studies/${item.slug}`} key={item.slug}>
+                <ContractWonMedallion className="contract-won-medallion--related" />
                 <span>{item.categoryLabel}</span>
                 <h3>{item.council}</h3>
                 <p>{item.result}</p>

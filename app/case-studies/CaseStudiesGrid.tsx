@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import ContractWonMedallion from '@/components/ContractWonMedallion'
 import {
   CASE_STUDIES,
   CATEGORY_FILTERS,
@@ -88,6 +89,7 @@ export default function CaseStudiesGrid() {
                   <span>{study.categoryLabel}</span>
                 </div>
                 <div className="ep-case-card__body">
+                  <ContractWonMedallion className="contract-won-medallion--library" />
                   <p>{study.council} · {study.contractType}</p>
                   <h2>{study.title}</h2>
                   <dl>

@@ -9,6 +9,7 @@ import { defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import HomeHero from '@/components/HomeHero'
 import HomeReviewCarousel from '@/components/HomeReviewCarousel'
 import HomeMotion from '@/components/HomeMotion'
+import ContractWonMedallion from '@/components/ContractWonMedallion'
 import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
 
 // The homepage carries the current tender rail. Render it on request so the
@@ -370,7 +371,7 @@ export default async function HomePage() {
                 </div>
                 <div className="tl-case-card__body">
                   <span>{String(index + 1).padStart(2, '0')} · {study.categoryLabel}</span>
-                  <b className="tl-award-seal" aria-label="Contract award supported by TenderLab"><span>Contract</span><strong>won</strong></b>
+                  <ContractWonMedallion className="contract-won-medallion--home" />
                   <h3>{study.council}</h3>
                   <p>{study.result}</p>
                   <strong>Read the case study <Arrow /></strong>

@@ -1804,3 +1804,68 @@ main:not(.tl-home) > section + section::before { display: none !important; conte
   .tl-clients__trustpilot > span:nth-child(2) { padding: 14px 0; border: 0; border-block: 1px solid rgba(23,56,79,.18); }
   .tl-clients__trustpilot em { justify-self: start; }
 }
+
+/* Shared Contract Won medallion supplied on 2 September. This is the only
+   award marker used on homepage and case-study surfaces. */
+.contract-won-medallion {
+  display: block;
+  width: 92px;
+  aspect-ratio: 1;
+  line-height: 0;
+  pointer-events: none;
+}
+.contract-won-medallion img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  filter: none !important;
+  mix-blend-mode: multiply;
+}
+.contract-won-medallion--home {
+  position: absolute;
+  z-index: 3;
+  top: -46px;
+  right: 12px;
+  width: 98px;
+}
+.tl-home .tl-case-card:hover .contract-won-medallion img,
+.ep-case-card:hover .contract-won-medallion img { transform: none !important; }
+
+.ep-case-card__body { position: relative; }
+.ep-case-card__body::before { content: none !important; }
+.contract-won-medallion--library {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 12px;
+  width: 96px;
+}
+.ep-case-card__body:has(.contract-won-medallion--library) > p,
+.ep-case-card__body:has(.contract-won-medallion--library) > h2 { padding-right: 94px; }
+
+.ep-case-detail-overview__grid > aside { position: relative; }
+.contract-won-medallion--detail {
+  width: 118px;
+  margin: -18px 0 20px auto;
+}
+
+.ep-case-related__grid > a,
+.ep-care-related__grid > a { position: relative; }
+.contract-won-medallion--related {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  width: 72px;
+}
+.ep-case-related__grid > a:has(.contract-won-medallion--related),
+.ep-care-related__grid > a:has(.contract-won-medallion--related) { padding-right: 92px; }
+
+@media (max-width: 760px) {
+  .contract-won-medallion--home { top: -38px; width: 82px; }
+  .contract-won-medallion--library { width: 78px; }
+  .ep-case-card__body:has(.contract-won-medallion--library) > p,
+  .ep-case-card__body:has(.contract-won-medallion--library) > h2 { padding-right: 72px; }
+  .contract-won-medallion--detail { width: 96px; }
+  .contract-won-medallion--related { width: 62px; }
+}
