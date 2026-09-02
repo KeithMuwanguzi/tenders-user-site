@@ -1583,3 +1583,224 @@ main:not(.tl-home) > section + section::before { display: none !important; conte
   .ep-care-article .cs-block { padding: 24px !important; }
   .tl-faq-list details p,.ep-faq__list details p,.tender-landing__faq details p { padding-left: 22px !important; }
 }
+
+/* --------------------------------------------------------------------------
+   Four homepage compositions supplied on 2 September.
+   Deliberately scoped to results, services, cases and direct engagements.
+   -------------------------------------------------------------------------- */
+
+.tl-home .tl-proof--explained {
+  padding-block: clamp(40px,4.5vw,68px);
+  background: linear-gradient(110deg,#fff 0%,#fffaf7 55%,#fff 100%);
+}
+.tl-home .tl-proof__heading { display: none; }
+.tl-home .tl-proof__story {
+  grid-template-columns: minmax(0,1.08fr) minmax(255px,.58fr) minmax(320px,.82fr);
+  gap: 20px;
+}
+.tl-home .tl-proof__feature {
+  min-height: 360px;
+  grid-template-columns: .72fr 1.28fr;
+  gap: 26px 38px;
+  padding: 38px 34px 30px 42px;
+  border: 1px solid rgba(226,83,70,.25);
+  border-left: 8px solid #e34b3f;
+  border-radius: 24px;
+  background: rgba(255,255,255,.94);
+  box-shadow: 8px 10px 0 rgba(226,83,70,.09);
+}
+.tl-home .tl-proof__feature::before { width: 135px; height: 135px; left: 29px; top: 27px; }
+.tl-home .tl-proof__feature::after { content: none; }
+.tl-home .tl-proof__feature strong { color: #df3e32; font-family: Georgia,'Times New Roman',serif; font-size: clamp(74px,7vw,112px); }
+.tl-home .tl-proof__feature span { color: #102f48; font-size: 13px; font-weight: 850; }
+.tl-home .tl-proof__feature p { color: #18384f; font-size: 14px; line-height: 1.65; }
+.tl-home .tl-proof__feature small { padding-top: 16px; color: #244256; }
+.tl-home .tl-proof__supporting { gap: 10px; }
+.tl-home .tl-proof__supporting article {
+  min-height: 105px;
+  padding: 20px 72px 20px 24px;
+  border: 1px solid rgba(226,83,70,.24);
+  border-radius: 18px;
+  background: rgba(255,255,255,.95);
+  box-shadow: 5px 6px 0 rgba(226,83,70,.07);
+}
+.tl-home .tl-proof__supporting strong { color: #102f48; font-family: Georgia,'Times New Roman',serif; font-size: clamp(42px,4vw,64px); }
+.tl-home .tl-proof__supporting span { color: #102f48; font-size: 12px; font-weight: 800; }
+.tl-home .tl-proof__supporting article::after { background: linear-gradient(135deg,#f05246,#ff897d); }
+.tl-home .tl-proof__landmark {
+  min-height: 360px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.tl-home .tl-proof__landmark img { object-fit: cover; object-position: 56% center; opacity: .82; filter: saturate(.58) sepia(.12); }
+.tl-home .tl-proof__landmark figcaption { display: none; }
+
+.tl-home .tl-services,
+.tl-home .tl-cases,
+.tl-home .tl-clients--network {
+  background: linear-gradient(115deg,#fff 0%,#fffaf7 50%,#fff 100%);
+}
+.tl-home .tl-services .tl-section-heading h2,
+.tl-home .tl-cases .tl-section-heading h2,
+.tl-home .tl-clients--network h2 {
+  font-family: Georgia,'Times New Roman',serif;
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+.tl-home .tl-services .tl-section-heading h2 { max-width: 14ch; font-size: clamp(46px,5vw,76px); }
+.tl-home .tl-service-feature {
+  border: 1px solid rgba(226,83,70,.28) !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.95) !important;
+  box-shadow: 7px 9px 0 rgba(226,83,70,.08);
+}
+.tl-home .tl-service-feature__media { min-height: 410px; }
+.tl-home .tl-service-feature__body { padding: clamp(32px,4vw,62px); }
+.tl-home .tl-service-feature__body h3 { font-family: Georgia,'Times New Roman',serif; font-weight: 500; }
+.tl-home .tl-service-compare--secondary { gap: 14px; }
+.tl-home .tl-service-compare--secondary .tl-service-card {
+  border: 1px solid rgba(226,83,70,.25) !important;
+  border-radius: 20px !important;
+  box-shadow: 5px 7px 0 rgba(226,83,70,.065);
+}
+.tl-home .tl-service-card__image { min-height: 180px; }
+.tl-home .tl-service-card__body { min-height: 265px; padding: 22px; }
+.tl-home .tl-service-card__body h3 { font-family: Georgia,'Times New Roman',serif; font-size: 27px; font-weight: 500; }
+
+.tl-home .tl-cases .tl-section-heading h2 { max-width: 17ch; font-size: clamp(44px,4.6vw,70px); }
+.tl-home .tl-cases__grid { gap: 16px; }
+.tl-home .tl-case-card {
+  border: 1px solid rgba(226,83,70,.27) !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.97) !important;
+  box-shadow: 6px 8px 0 rgba(226,83,70,.075);
+}
+.tl-home .tl-case-card__image { min-height: 225px; border-radius: 21px 21px 0 0; background: #fff; }
+.tl-home .tl-case-card__image img { object-fit: contain; padding: 14px; filter: saturate(.68) contrast(.96); }
+.tl-home .tl-case-card__body {
+  min-height: 220px;
+  margin-top: 0;
+  padding: 28px 20px 20px;
+  border-radius: 0;
+  background: #fff !important;
+}
+.tl-home .tl-case-card__body h3 { margin-top: 18px; font-family: Georgia,'Times New Roman',serif; font-size: 23px; font-weight: 500; }
+.tl-home .tl-award-seal { top: -34px; right: 16px; }
+.tl-home .tl-cases__all { margin-left: 0; }
+
+.tl-home .tl-clients--network { position: relative; overflow: hidden; }
+.tl-home .tl-clients--network::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 58%;
+  background: url('/images/brand-landscapes/tenderlab-london-skyline.png') center bottom / cover no-repeat;
+  opacity: .045;
+  -webkit-mask-image: linear-gradient(transparent,#000);
+  mask-image: linear-gradient(transparent,#000);
+}
+.tl-clients__layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(280px,.66fr) minmax(0,1.34fr);
+  gap: clamp(38px,6vw,90px);
+  align-items: center;
+}
+.tl-clients__intro { display: block; margin: 0; }
+.tl-clients__intro h2 { max-width: 12ch; margin-top: 16px; font-size: clamp(46px,5.2vw,78px); line-height: .98; }
+.tl-clients__intro > p { max-width: 38ch; margin-top: 42px; color: #29475c; line-height: 1.65; }
+.tl-clients__network { position: relative; }
+.tl-clients__network::before {
+  content: '';
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: calc(50% - 40px);
+  height: 1px;
+  background: rgba(226,83,70,.55);
+}
+.tl-clients--network .tl-client-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 18px;
+  overflow: visible;
+}
+.tl-clients--network .tl-client {
+  position: relative;
+  z-index: 1;
+  min-height: 205px;
+  margin: 0;
+  padding: 28px 20px 20px;
+  border: 1px solid rgba(226,83,70,.28) !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.97) !important;
+  box-shadow: 6px 8px 0 rgba(226,83,70,.08);
+}
+.tl-clients--network .tl-client > i {
+  position: absolute;
+  top: -19px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #f25b4d;
+  color: #fff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 1px rgba(226,83,70,.38);
+}
+.tl-clients--network .tl-client__logo { min-height: 110px; }
+.tl-clients--network .tl-client small { color: #17384f; }
+.tl-clients__trustpilot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: .8fr 1.25fr .65fr;
+  gap: 22px;
+  align-items: center;
+  width: min(86%,760px);
+  min-height: 104px;
+  margin: 34px auto 0;
+  padding: 20px 26px;
+  border: 1px solid rgba(226,83,70,.28);
+  border-radius: 22px;
+  background: rgba(255,255,255,.97);
+  box-shadow: 6px 8px 0 rgba(226,83,70,.08);
+  color: #17384f;
+}
+.tl-clients__trustpilot > span { display: flex; align-items: center; gap: 10px; }
+.tl-clients__trustpilot > span:first-child b { color: #00b67a; font-size: 34px; }
+.tl-clients__trustpilot > span:first-child strong { font-size: 24px; }
+.tl-clients__trustpilot > span:nth-child(2) { flex-wrap: wrap; padding-inline: 18px; border-inline: 1px solid rgba(23,56,79,.18); }
+.tl-clients__trustpilot > span:nth-child(2) b { padding: 4px 6px; background: #00b67a; color: #fff; letter-spacing: 2px; }
+.tl-clients__trustpilot small { color: #496274; }
+.tl-clients__trustpilot em { justify-self: end; color: #e34b3f; font-size: 11px; font-style: normal; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+
+@media (max-width: 1180px) {
+  .tl-home .tl-proof__story { grid-template-columns: minmax(0,1.1fr) minmax(250px,.65fr); }
+  .tl-home .tl-proof__landmark { grid-column: 1/-1; min-height: 245px; }
+  .tl-clients__layout { grid-template-columns: 1fr; }
+  .tl-clients__intro h2 { max-width: 16ch; }
+  .tl-clients__intro > p { margin-top: 22px; }
+}
+
+@media (max-width: 780px) {
+  .tl-home .tl-proof__story,.tl-home .tl-proof__feature { grid-template-columns: 1fr; }
+  .tl-home .tl-proof__feature { padding: 30px 24px; }
+  .tl-home .tl-proof__feature small,.tl-home .tl-proof__feature .tl-text-link { grid-column: 1; }
+  .tl-home .tl-service-feature { grid-template-columns: 1fr; }
+  .tl-clients--network .tl-client-grid { grid-template-columns: 1fr; gap: 28px; }
+  .tl-clients__network::before { top: 3%; bottom: 14%; left: 50%; right: auto; width: 1px; height: auto; }
+  .tl-clients__trustpilot { grid-template-columns: 1fr; width: 100%; }
+  .tl-clients__trustpilot > span:nth-child(2) { padding: 14px 0; border: 0; border-block: 1px solid rgba(23,56,79,.18); }
+  .tl-clients__trustpilot em { justify-self: start; }
+}

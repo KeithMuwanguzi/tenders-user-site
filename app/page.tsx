@@ -384,9 +384,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="tl-section tl-clients" data-reveal>
-        <div className="tl-shell">
-          <div className="tl-section-heading tl-section-heading--split">
+      <section className="tl-section tl-clients tl-clients--network" data-reveal>
+        <div className="tl-shell tl-clients__layout">
+          <div className="tl-section-heading tl-clients__intro">
             <div>
               <p className="tl-kicker">Direct TenderLab engagements</p>
               <h2>Care providers that have worked directly with TenderLab.</h2>
@@ -396,22 +396,35 @@ export default async function HomePage() {
               lead to each provider’s own website.
             </p>
           </div>
-          <div className="tl-client-grid">
-            {DIRECT_CLIENTS.map((client) => (
-              <a
-                key={client.name}
-                href={client.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}
-                aria-label={`Visit provider — ${client.name} website`}
-              >
-                <span className={`tl-client__logo tl-client__logo--${client.treatment}`}>
-                  <Image src={client.logo} alt={client.name} width={220} height={86} />
-                </span>
-                <small>Visit provider <Arrow /></small>
-              </a>
-            ))}
+          <div className="tl-clients__network">
+            <div className="tl-client-grid">
+              {DIRECT_CLIENTS.filter((client) => client.name !== 'Absolute Care Services').map((client, index) => (
+                <a
+                  key={client.name}
+                  href={client.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}
+                  aria-label={`Visit provider — ${client.name} website`}
+                >
+                  <i aria-hidden="true">{index + 1}</i>
+                  <span className={`tl-client__logo tl-client__logo--${client.treatment}`}>
+                    <Image src={client.logo} alt={client.name} width={220} height={86} />
+                  </span>
+                  <small>Visit provider <Arrow /></small>
+                </a>
+              ))}
+            </div>
+            <a
+              className="tl-clients__trustpilot"
+              href="https://uk.trustpilot.com/review/tenderlab.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span><b aria-hidden="true">★</b><strong>Trustpilot</strong></span>
+              <span><small>Excellent</small><b>★★★★★</b><small>Independent reviews</small></span>
+              <em>Read reviews <Arrow /></em>
+            </a>
           </div>
         </div>
       </section>
