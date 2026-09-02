@@ -197,7 +197,11 @@ export default function AnalyticsConsent() {
           </section>
         </div>
       )}
-      {!panelOpen && preferences && <button type="button" className="tl-consent-settings" onClick={openSettings}>Cookie settings</button>}
+      {!panelOpen && preferences && (
+        <button type="button" className="tl-consent-settings" onClick={openSettings} aria-label="Open cookie settings" title="Cookie settings">
+          <span aria-hidden="true">🍪</span>
+        </button>
+      )}
     </>
   )
 }
