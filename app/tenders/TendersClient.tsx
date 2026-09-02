@@ -14,7 +14,6 @@ import {
 } from '@/lib/tender-categories'
 import {
   officialNoticeUrl,
-  officialSourceLinkLabel,
 } from '@/lib/tender-sources'
 
 const SOURCES = [
@@ -24,6 +23,40 @@ const SOURCES = [
 ] as const
 
 const DEFAULT_ITEMS_PER_PAGE = 15
+const SAVED_TENDERS_KEY = 'tenderlab-saved-tenders'
+
+type MetaIconName = 'authority' | 'value' | 'published' | 'deadline'
+
+function TenderMetaIcon({ name }: { name: MetaIconName }) {
+  if (name === 'value') return <span aria-hidden>£</span>
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      {name === 'authority' && <><path d="M3 21h18" /><path d="M5 21V9l7-4 7 4v12" /><path d="M9 21v-7h6v7" /><path d="M8 11h.01M12 11h.01M16 11h.01" /></>}
+      {name === 'published' && <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /><path d="M8 14h2M14 14h2M8 17h2M14 17h2" /></>}
+      {name === 'deadline' && <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>}
+    </svg>
+  )
+}
+
+function BookmarkIcon({ filled = false }: { filled?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-3.5L6 21Z" />
+    </svg>
+  )
+}
+
+function paginationRange(current: number, total: number): Array<number | 'ellipsis'> {
+  if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1)
+  const pages = new Set([1, total, current - 1, current, current + 1])
+  const ordered = [...pages].filter((item) => item > 0 && item <= total).sort((a, b) => a - b)
+  const result: Array<number | 'ellipsis'> = []
+  ordered.forEach((item, index) => {
+    if (index > 0 && item - ordered[index - 1] > 1) result.push('ellipsis')
+    result.push(item)
+  })
+  return result
+}
 
 function buildTenderEnquiryHref(tender: {
   id: string
@@ -65,7 +98,18 @@ export default function TendersClient({
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'newest' | 'deadline'>('newest')
   const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE)
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
+  const [savedTenderIds, setSavedTenderIds] = useState<Set<string>>(new Set())
   const availableTenders = allTenders.length > 0 ? allTenders : initialTenders
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(SAVED_TENDERS_KEY) || '[]') as unknown
+      if (Array.isArray(stored)) setSavedTenderIds(new Set(stored.filter((item): item is string => typeof item === 'string')))
+    } catch {
+      window.localStorage.removeItem(SAVED_TENDERS_KEY)
+    }
+  }, [])
 
   useEffect(() => {
     if (initialCategory) dispatch(setCategory(initialCategory))
@@ -147,6 +191,21 @@ export default function TendersClient({
     (page - 1) * itemsPerPage,
     page * itemsPerPage,
   )
+
+  const toggleSavedTender = (id: string) => {
+    setSavedTenderIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      window.localStorage.setItem(SAVED_TENDERS_KEY, JSON.stringify([...next]))
+      return next
+    })
+  }
+
+  const changePage = (nextPage: number) => {
+    dispatch(setPage(Math.min(totalPages, Math.max(1, nextPage))))
+    window.scrollTo({ top: 280, behavior: 'smooth' })
+  }
 
   const sidebarFilters = (
     <nav className="tenders-sidebar__nav" aria-label="Filter by care setting">
@@ -368,105 +427,69 @@ export default function TendersClient({
 
           {!loading && !error && filteredTenders.length > 0 && (
             <>
-              <div className="tenders-list__count">
-                {category ? (
-                  <>
-                    <span className="tenders-list__count-filter">{activeCategoryLabel}</span>
-                    {' · '}
-                  </>
-                ) : null}
-                {sortBy === 'deadline' ? 'Closing soon' : 'Newest first'}
-                {newCount > 0 ? ` · ${newCount} new since your last refresh` : ''}
-                {' · '}
-                Showing {(page - 1) * itemsPerPage + 1}–
-                {Math.min(page * itemsPerPage, filteredTenders.length)} of{' '}
-                {filteredTenders.length}{' '}
-                {filteredTenders.length === 1 ? 'opportunity' : 'opportunities'}
+              <div className="tenders-list__summary">
+                <div className="tenders-list__count">
+                  {category ? <><span className="tenders-list__count-filter">{activeCategoryLabel}</span>{' · '}</> : null}
+                  Showing {(page - 1) * itemsPerPage + 1}–{Math.min(page * itemsPerPage, filteredTenders.length)} of {filteredTenders.length} {filteredTenders.length === 1 ? 'tender' : 'tenders'}
+                </div>
+                <div className="tenders-view-toggle" role="group" aria-label="Tender card layout">
+                  <button type="button" className={viewMode === 'list' ? 'is-active' : ''} aria-pressed={viewMode === 'list'} onClick={() => setViewMode('list')} title="List view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg>
+                    <span className="sr-only">List view</span>
+                  </button>
+                  <button type="button" className={viewMode === 'grid' ? 'is-active' : ''} aria-pressed={viewMode === 'grid'} onClick={() => setViewMode('grid')} title="Grid view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
+                    <span className="sr-only">Grid view</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="tenders-list__grid">
+              <div className={`tenders-list__grid tenders-list__grid--${viewMode}`}>
                 {pageTenders.map((tender, idx) => {
                   const urgency = daysUntilDeadline(tender.deadline)
+                  const saved = savedTenderIds.has(tender.id)
                   return (
                     <article
                       key={`${tender.id}-${(page - 1) * itemsPerPage + idx}`}
                       className={`tender-card${tender.isNew ? ' tender-card--new' : ''}`}
                     >
-                      <div className="tender-card__header">
-                        {tender.isNew && (
-                          <span className="tender-card__new">New</span>
-                        )}
-                        <span className="tender-card__status">{tender.status}</span>
-                        {urgency && (
-                          <span
-                            className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}
-                          >
-                            {urgency}
-                          </span>
-                        )}
+                      <button type="button" className={`tender-card__bookmark${saved ? ' is-saved' : ''}`} aria-pressed={saved} onClick={() => toggleSavedTender(tender.id)} title={saved ? 'Remove from saved tenders' : 'Save this tender'}>
+                        <BookmarkIcon filled={saved} />
+                        <span className="sr-only">{saved ? 'Remove from saved tenders' : 'Save this tender'}</span>
+                      </button>
+                      <div className="tender-card__main">
+                        <div className="tender-card__header">
+                          {tender.isNew && <span className="tender-card__new">New</span>}
+                          <span className="tender-card__status">{tender.status}</span>
+                          {urgency && <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>{urgency}</span>}
+                        </div>
+                        <h3 className="tender-card__title">{tender.title}</h3>
+                        <p className="tender-card__desc">{tender.description.length > 220 ? tender.description.slice(0, 220) + '…' : tender.description}</p>
+                        <div className="tender-card__actions">
+                          <Link href={`/tenders/${encodeURIComponent(tender.id)}`} className="btn btn-primary">View full tender <span aria-hidden>↗</span></Link>
+                          <a href={officialNoticeUrl(tender.id, tender.source, tender.url)} target="_blank" rel="noopener noreferrer" className="btn btn-ghost tender-card__source-link">View official notice <span aria-hidden>↗</span></a>
+                          <Link href={buildTenderEnquiryHref(tender)} className="btn btn-ghost">Ask about this tender <span aria-hidden>▢</span></Link>
+                        </div>
                       </div>
-                      <h3 className="tender-card__title">{tender.title}</h3>
-                      <p className="tender-card__desc">
-                        {tender.description.length > 200
-                          ? tender.description.slice(0, 200) + '…'
-                          : tender.description}
-                      </p>
                       <div className="tender-card__meta">
-                        {tender.organisation && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Authority</span>
-                            <span>{tender.organisation}</span>
-                          </div>
-                        )}
-                        {tender.location && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Location</span>
-                            <span>{tender.location}</span>
-                          </div>
-                        )}
-                        {tender.value && (
-                          <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Value</span>
-                            <span>{tender.value}</span>
-                          </div>
-                        )}
                         <div className="tender-card__meta-item">
-                          <span className="tender-card__meta-label">Published</span>
-                          <span>{formatDate(tender.publishedDate)}</span>
+                          <span className="tender-card__meta-icon"><TenderMetaIcon name="authority" /></span>
+                          <span><span className="tender-card__meta-label">Authority</span><strong>{tender.organisation || 'Not stated'}</strong>{tender.location && <small>{tender.location}</small>}</span>
+                        </div>
+                        <div className="tender-card__meta-item">
+                          <span className="tender-card__meta-icon"><TenderMetaIcon name="value" /></span>
+                          <span><span className="tender-card__meta-label">Value</span><strong>{tender.value || 'Not stated'}</strong></span>
+                        </div>
+                        <div className="tender-card__meta-item">
+                          <span className="tender-card__meta-icon"><TenderMetaIcon name="published" /></span>
+                          <span><span className="tender-card__meta-label">Published</span><strong>{formatDate(tender.publishedDate)}</strong></span>
                         </div>
                         {tender.deadline && (
                           <div className="tender-card__meta-item">
-                            <span className="tender-card__meta-label">Deadline</span>
-                            <span>{formatDate(tender.deadline)}</span>
+                            <span className="tender-card__meta-icon"><TenderMetaIcon name="deadline" /></span>
+                            <span><span className="tender-card__meta-label">Deadline</span><strong>{formatDate(tender.deadline)}</strong></span>
                           </div>
                         )}
-                      </div>
-                      <div className="tender-card__actions">
-                        <Link
-                          href={`/tenders/${encodeURIComponent(tender.id)}`}
-                          className="btn btn-primary"
-                        >
-                          Read the full tender
-                        </Link>
-                        <a
-                          href={officialNoticeUrl(
-                            tender.id,
-                            tender.source,
-                            tender.url,
-                          )}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-ghost tender-card__source-link"
-                        >
-                          {officialSourceLinkLabel(tender.source)}
-                          <span aria-hidden> ↗</span>
-                        </a>
-                        <Link
-                          href={buildTenderEnquiryHref(tender)}
-                          className="btn btn-ghost"
-                        >
-                          Ask about this tender
-                        </Link>
                       </div>
                     </article>
                   )
@@ -474,33 +497,13 @@ export default function TendersClient({
               </div>
 
               {totalPages > 1 && (
-                <div className="tenders-list__pagination">
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    disabled={page <= 1}
-                    onClick={() => {
-                      dispatch(setPage(Math.max(1, page - 1)))
-                      window.scrollTo({ top: 280, behavior: 'smooth' })
-                    }}
-                  >
-                    Previous
-                  </button>
-                  <span className="tenders-list__page">
-                    Page {page} of {totalPages}
-                  </span>
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    disabled={page >= totalPages}
-                    onClick={() => {
-                      dispatch(setPage(page + 1))
-                      window.scrollTo({ top: 280, behavior: 'smooth' })
-                    }}
-                  >
-                    Next
-                  </button>
-                </div>
+                <nav className="tenders-list__pagination" aria-label="Tender result pages">
+                  <button type="button" disabled={page <= 1} onClick={() => changePage(page - 1)} aria-label="Previous page">‹</button>
+                  {paginationRange(page, totalPages).map((item, index) => item === 'ellipsis'
+                    ? <span key={`ellipsis-${index}`} className="tenders-list__ellipsis">…</span>
+                    : <button key={item} type="button" className={page === item ? 'is-current' : ''} aria-current={page === item ? 'page' : undefined} onClick={() => changePage(item)}>{item}</button>)}
+                  <button type="button" disabled={page >= totalPages} onClick={() => changePage(page + 1)} aria-label="Next page">›</button>
+                </nav>
               )}
             </>
           )}

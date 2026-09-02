@@ -325,7 +325,7 @@ export default function Nav() {
                 >
                   Book a consultation
                 </Link>
-                <button type="button" className="nav__callback" onClick={() => setCallbackOpen(true)}>Request a callback</button>
+                <button type="button" className="nav__callback" onClick={() => setCallbackOpen(true)}>Request a call back</button>
               </div>
             </div>
           </div>
@@ -469,7 +469,7 @@ export default function Nav() {
                 setCallbackOpen(true)
               }}
             >
-              Request a callback
+              Request a call back
             </button>
           </div>
         </div>
