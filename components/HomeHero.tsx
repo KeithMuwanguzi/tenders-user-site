@@ -23,6 +23,7 @@ const rotatingLines = [
   'The evaluator has to see it.',
   'Your experience must appear in every answer.',
   'Your response must reflect the care you deliver.',
+  'Your strength must match the scoring criteria.',
 ]
 
 export default function HomeHero() {
@@ -49,7 +50,7 @@ export default function HomeHero() {
       <div className="tl-shell">
         <p className="tl-eyebrow">UK health and social care procurement</p>
         <h1 id="tl-hero-title" className="tl-hero__title">
-          <span>Good care is not enough.</span>
+          <span>Good care is not enough...</span>
           <span key={activeLine} className="tl-hero__rotating-line" aria-live="polite">
             {rotatingLines[activeLine]}
           </span>

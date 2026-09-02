@@ -15,6 +15,7 @@ const footerGroups = [
       ['Complete bid writing', '/services/bid-writing'],
       ['Pre-submission review', '/services/pre-submission-review'],
       ['Tender training', '/services/tender-training'],
+      ['Tender pipeline monitoring', '/services/tender-pipeline-monitoring'],
       ['Retained support', '/services/tender-retainer'],
       ['Compare all services', '/services'],
     ],

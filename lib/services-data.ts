@@ -314,6 +314,49 @@ export const SERVICES_DATA: ServiceData[] = [
     ],
   },
   {
+    slug: 'tender-pipeline-monitoring',
+    title: 'Tender Pipeline Monitoring',
+    tagline: 'See suitable opportunities early enough to make a responsible bid decision.',
+    description: 'Structured monitoring of UK health and social care procurement opportunities, filtered around the provider’s services, geography, buyer priorities and realistic delivery capacity.',
+    heroImg: '/images/editorial/tenderlab-live-tenders-hero-v1.webp',
+    paragraphs: [
+      'Tender Pipeline Monitoring gives care providers a focused view of opportunities that may fit their organisation. TenderLab agrees the services, locations, buyer types, contract sizes and notice sources that matter, then applies those criteria to the published market rather than forwarding every notice containing a broad care keyword.',
+      'Each relevant alert records the buyer, service, geography, estimated value, deadline and source link, together with an initial explanation of why it may fit. Monitoring is an early-warning service, not a substitute for reading the procurement pack. A formal bid decision still requires the participation conditions, specification, mobilisation demands, evidence and commercial model to be checked.',
+      'The pipeline record also helps leadership plan ahead. It separates immediate opportunities from future notices, market engagement and expiring contracts, so the team can prepare evidence and capacity before a suitable tender becomes urgent.',
+    ],
+    whenUsed: [
+      'Your team checks several portals and needs one focused care-sector opportunity view.',
+      'Relevant notices are being found too late for a controlled qualification and response process.',
+      'Leadership wants visibility of upcoming procurements as well as tenders that are already open.',
+      'The provider operates in defined services and regions and does not want generic tender alerts.',
+    ],
+    delivers: [
+      'An agreed monitoring profile covering care settings, geography, buyers, value, exclusions and notice sources.',
+      'Focused opportunity alerts with key dates, source links and an initial reason for relevance.',
+      'A maintained pipeline separating live tenders, early market activity, future prospects and closed decisions.',
+    ],
+    howItWorks: [
+      { step: 'Set the monitoring profile', desc: 'Agree what a relevant opportunity looks like, including services, locations, buyer types, values and exclusions.' },
+      { step: 'Review the published market', desc: 'Monitor official notice sources and classify opportunities against the agreed profile.' },
+      { step: 'Record and alert', desc: 'Share suitable notices with the deadline, buyer, source and initial reason they may fit.' },
+      { step: 'Maintain the pipeline', desc: 'Track decisions, future prospects and evidence actions so useful intelligence is not lost between deadlines.' },
+    ],
+    solves: [
+      'Relevant opportunities found after too much of the response period has passed.',
+      'Generic alerts that overwhelm the team with unrelated contracts.',
+      'No shared record of live decisions, future notices and early preparation actions.',
+    ],
+    transforms: [
+      { from: 'Disconnected portal searches', to: 'One focused opportunity view' },
+      { from: 'Generic keyword alerts', to: 'Provider-specific monitoring criteria' },
+      { from: 'Late reactive decisions', to: 'Earlier qualification and preparation' },
+    ],
+    tiers: [
+      { name: 'Focused monitoring', desc: 'One defined care setting, service area or regional opportunity profile.' },
+      { name: 'Multi-service pipeline', desc: 'Several services or regions with separate filters, decisions and preparation actions.' },
+    ],
+  },
+  {
     slug: 'tender-retainer',
     title: 'Retained Tender and Bid Support',
     tagline: 'Build a controlled tender function, not a series of isolated deadlines.',

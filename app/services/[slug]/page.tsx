@@ -45,6 +45,10 @@ const SERVICE_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
     src: '/images/editorial/tenderlab-retainer-hero-v1.webp',
     alt: 'A care provider and tender adviser managing a year-round pipeline, evidence library, reviews and tender strategy',
   },
+  'tender-pipeline-monitoring': {
+    src: '/images/editorial/tenderlab-live-tenders-hero-v1.webp',
+    alt: 'Care provider leaders reviewing a focused pipeline of relevant UK health and social care procurement opportunities',
+  },
 }
 
 const SERVICE_TONES = ['peach', 'blue', 'yellow', 'cream'] as const
@@ -150,6 +154,19 @@ const SERVICE_PAGE_DETAILS: Record<string, ServicePageDetail> = {
       'Separate deadlines become a managed tender programme connected to the organisation’s services, capacity and realistic growth priorities.',
       'Teams stop searching repeatedly for the same proof because approved evidence, feedback and examples are maintained between procurements.',
       'Opportunities are qualified consistently before capacity is reserved, reducing reactive bidding and protecting leadership time for contracts that fit.',
+    ],
+  },
+  'tender-pipeline-monitoring': {
+    processOutputs: [
+      'You receive a written monitoring profile showing the services, regions, buyers, values, notice types and exclusions that determine whether an opportunity is relevant.',
+      'Published notices are screened against that profile so broad keyword matches do not automatically become alerts for your team.',
+      'Each suitable alert records the buyer, service, value, deadline, source link and the initial reason it may fit your current position.',
+      'The maintained pipeline separates open tenders, early market engagement, future prospects, bid decisions and evidence actions for leadership review.',
+    ],
+    improvements: [
+      'Separate portal searches become one focused view of opportunities connected to the organisation’s actual care services and growth area.',
+      'Generic alerts are replaced with agreed provider-specific criteria, reducing the time spent opening contracts that do not fit.',
+      'Earlier visibility creates time for qualification, evidence gathering and management decisions before the submission window becomes urgent.',
     ],
   },
 }

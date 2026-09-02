@@ -25,6 +25,15 @@ const SOURCES = [
 const DEFAULT_ITEMS_PER_PAGE = 15
 const SAVED_TENDERS_KEY = 'tenderlab-saved-tenders'
 
+function decodeTenderText(value: string | null | undefined) {
+  return String(value || '')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#0*39;|&apos;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+}
+
 type MetaIconName = 'authority' | 'value' | 'published' | 'deadline'
 
 function TenderMetaIcon({ name }: { name: MetaIconName }) {
@@ -100,6 +109,8 @@ export default function TendersClient({
   const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE)
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
   const [savedTenderIds, setSavedTenderIds] = useState<Set<string>>(new Set())
+  const [savedOnly, setSavedOnly] = useState(false)
+  const [bookmarkNotice, setBookmarkNotice] = useState('')
   const availableTenders = allTenders.length > 0 ? allTenders : initialTenders
 
   useEffect(() => {
@@ -123,9 +134,12 @@ export default function TendersClient({
 
   const filteredTenders = useMemo(() => {
     const categoryMatches = filterTendersByCareCategory(availableTenders, category)
+    const savedMatches = savedOnly
+      ? categoryMatches.filter((tender) => savedTenderIds.has(tender.id))
+      : categoryMatches
     const query = searchQuery.trim().toLowerCase()
     const searched = query
-      ? categoryMatches.filter((tender) =>
+      ? savedMatches.filter((tender) =>
           [
             tender.title,
             tender.description,
@@ -138,7 +152,7 @@ export default function TendersClient({
             .toLowerCase()
             .includes(query),
         )
-      : categoryMatches
+      : savedMatches
 
     return [...searched].sort((a, b) => {
       if (sortBy === 'deadline') {
@@ -148,7 +162,7 @@ export default function TendersClient({
       }
       return new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
     })
-  }, [availableTenders, category, searchQuery, sortBy])
+  }, [availableTenders, category, savedOnly, savedTenderIds, searchQuery, sortBy])
 
   const activeCategoryLabel =
     getCareCategoryById(category)?.label ?? ALL_CARE_CATEGORY.label
@@ -195,8 +209,13 @@ export default function TendersClient({
   const toggleSavedTender = (id: string) => {
     setSavedTenderIds((current) => {
       const next = new Set(current)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
+      if (next.has(id)) {
+        next.delete(id)
+        setBookmarkNotice('Tender removed from your saved list.')
+      } else {
+        next.add(id)
+        setBookmarkNotice('Tender saved on this device. Use “Saved tenders” to view it again.')
+      }
       window.localStorage.setItem(SAVED_TENDERS_KEY, JSON.stringify([...next]))
       return next
     })
@@ -388,7 +407,21 @@ export default function TendersClient({
               </svg>
               Refresh
             </button>
+            <button
+              type="button"
+              className={`tenders-main__saved${savedOnly ? ' is-active' : ''}`}
+              aria-pressed={savedOnly}
+              onClick={() => {
+                setSavedOnly((current) => !current)
+                dispatch(setPage(1))
+              }}
+            >
+              <BookmarkIcon filled={savedOnly} />
+              Saved tenders <span>{savedTenderIds.size}</span>
+            </button>
           </div>
+
+          <p className="tenders-save-notice" role="status" aria-live="polite">{bookmarkNotice}</p>
 
           {loading && (
             <div className="tenders-list__loading">
@@ -409,17 +442,22 @@ export default function TendersClient({
           {!loading && !error && filteredTenders.length === 0 && (
             <div className="tenders-list__empty">
               <p>
-                {category
+                {savedOnly
+                  ? 'You have no saved tenders in this view. Select the bookmark on any tender to keep it on this device.'
+                  : category
                   ? `No published tenders match “${activeCategoryLabel}” right now. Try another care setting or check back soon.`
                   : 'No active tenders published yet. Check back soon.'}
               </p>
-              {category && (
+              {(category || savedOnly) && (
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  onClick={() => handleCategorySelect('')}
+                  onClick={() => {
+                    handleCategorySelect('')
+                    setSavedOnly(false)
+                  }}
                 >
-                  Show all care settings
+                  Show all live tenders
                 </button>
               )}
             </div>
@@ -463,18 +501,18 @@ export default function TendersClient({
                           <span className="tender-card__status">{tender.status}</span>
                           {urgency && <span className={`tender-card__urgency${urgency === 'Closed' ? ' tender-card__urgency--closed' : ''}`}>{urgency}</span>}
                         </div>
-                        <h3 className="tender-card__title">{tender.title}</h3>
-                        <p className="tender-card__desc">{tender.description.length > 220 ? tender.description.slice(0, 220) + '…' : tender.description}</p>
+                        <h3 className="tender-card__title">{decodeTenderText(tender.title)}</h3>
+                        <p className="tender-card__desc">{decodeTenderText(tender.description.length > 220 ? tender.description.slice(0, 220) + '…' : tender.description)}</p>
                         <div className="tender-card__actions">
                           <Link href={`/tenders/${encodeURIComponent(tender.id)}`} className="btn btn-primary">View full tender <span aria-hidden>↗</span></Link>
                           <a href={officialNoticeUrl(tender.id, tender.source, tender.url)} target="_blank" rel="noopener noreferrer" className="btn btn-ghost tender-card__source-link">View official notice <span aria-hidden>↗</span></a>
-                          <Link href={buildTenderEnquiryHref(tender)} className="btn btn-ghost">Ask about this tender <span aria-hidden>▢</span></Link>
+                          <Link href={buildTenderEnquiryHref(tender)} className="btn btn-ghost">Ask about this tender <span aria-hidden="true">↗</span></Link>
                         </div>
                       </div>
                       <div className="tender-card__meta">
                         <div className="tender-card__meta-item">
                           <span className="tender-card__meta-icon"><TenderMetaIcon name="authority" /></span>
-                          <span><span className="tender-card__meta-label">Authority</span><strong>{tender.organisation || 'Not stated'}</strong>{tender.location && <small>{tender.location}</small>}</span>
+                          <span><span className="tender-card__meta-label">Authority</span><strong>{decodeTenderText(tender.organisation) || 'Not stated'}</strong>{tender.location && <small>{decodeTenderText(tender.location)}</small>}</span>
                         </div>
                         <div className="tender-card__meta-item">
                           <span className="tender-card__meta-icon"><TenderMetaIcon name="value" /></span>

@@ -20,6 +20,7 @@ const displayNames: Record<string, string> = {
   'tender-training': 'Tender training and bid team coaching',
   'mobilisation-support': 'Mobilisation support',
   'tender-retainer': 'Retained tender support',
+  'tender-pipeline-monitoring': 'Tender pipeline monitoring',
 }
 
 const decisionLabels: Record<string, string> = {
@@ -31,6 +32,7 @@ const decisionLabels: Record<string, string> = {
   'tender-training': 'Your team needs practical tender training built around real buyer documents and a repeatable writing method.',
   'mobilisation-support': 'You have won and need to convert the promises into controlled delivery actions.',
   'tender-retainer': 'Tendering is an ongoing growth function rather than a single project.',
+  'tender-pipeline-monitoring': 'You need relevant care opportunities identified early and organised in one decision-ready pipeline.',
 }
 
 const faqs = [

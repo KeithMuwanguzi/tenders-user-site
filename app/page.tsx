@@ -69,6 +69,16 @@ const services = [
   },
   {
     number: '04',
+    title: 'Tender pipeline monitoring',
+    prompt: 'You need suitable care opportunities identified before deadlines become urgent.',
+    outcome:
+      'We monitor the published market against your services, geography, buyers and realistic delivery capacity.',
+    deliverable: 'A focused pipeline of relevant opportunities, future notices and bid decisions.',
+    href: '/services/tender-pipeline-monitoring',
+    image: '/images/editorial/tenderlab-live-tenders-hero-v1.webp',
+  },
+  {
+    number: '05',
     title: 'Retained tender support',
     prompt: 'Tendering is part of your growth plan, not a one-off project.',
     outcome:

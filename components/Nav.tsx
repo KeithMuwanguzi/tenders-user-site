@@ -25,6 +25,7 @@ const NAV: NavItem[] = [
       { label: 'Tender Readiness',       href: '/services/tender-readiness-audit', desc: 'Strengthen evidence before the next tender' },
       { label: 'Tender Training',        href: '/services/tender-training',        desc: 'Build an internal, repeatable method' },
       { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Turn winning promises into delivery actions' },
+      { label: 'Pipeline Monitoring',    href: '/services/tender-pipeline-monitoring', desc: 'Track suitable care opportunities early' },
       { label: 'Retained Support',       href: '/services/tender-retainer',        desc: 'Manage tendering as an ongoing function' },
       { label: 'Book a Consultation',    href: '/book-consultation',               desc: 'Choose and pay for focused tender advice' },
     ],
