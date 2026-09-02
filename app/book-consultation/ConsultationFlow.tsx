@@ -30,6 +30,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState('')
   const selected = useMemo(() => consultations.find((item) => item.id === selectedId) || consultations[0], [consultations, selectedId])
+  const isFree = selected.price === 0
   const set = (key: keyof Details) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDetails((value) => ({ ...value, [key]: event.target.value }))
 
   const showStep = (nextStep: number) => {
@@ -104,7 +105,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
           <div className="booking-stage__copy">
             <p className="booking-kicker">Book focused tender advice</p>
             <h1 id="booking-flow-title">Choose the preparation you need.</h1>
-            <p>Four paid options. Each has a fixed price, a clear preparation requirement and a defined outcome.</p>
+            <p>Start with a free 30-minute tender consultation, or choose a prepared specialist review with a fixed fee and defined outcome.</p>
           </div>
           <div className="booking-stage__visual" aria-hidden="true">
             <Image src="/images/editorial/tenderlab-contact-briefing-hero-v1.webp" alt="" fill priority sizes="(max-width: 900px) 100vw, 560px" />
@@ -113,7 +114,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
         </header>
         <div className="booking-options" role="list">
           {consultations.map((item) => <button type="button" className={item.id === selectedId ? 'is-selected' : ''} aria-pressed={item.id === selectedId} onClick={() => chooseConsultation(item.id)} key={item.id}>
-            <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span><h3>{item.title}</h3><p>{item.description}</p><div><strong>£{item.price}</strong><small>{item.duration}</small></div><b>Book now <span aria-hidden="true">→</span></b>
+            <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span><h3>{item.title}</h3><p>{item.description}</p><div><strong>{item.price === 0 ? 'Free' : `£${item.price}`}</strong><small>{item.duration}</small></div><b>Book now <span aria-hidden="true">→</span></b>
           </button>)}
         </div>
       </div>}
@@ -129,11 +130,11 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
       </div>}
 
       {step === 4 && <form className="booking-stage booking-stage--form" onSubmit={submit}>
-        <header><p className="booking-kicker">Your information</p><h2>Complete the booking and continue to secure payment.</h2></header>
+        <header><p className="booking-kicker">Your information</p><h2>{isFree ? 'Complete your free consultation booking.' : 'Complete the booking and continue to secure payment.'}</h2></header>
         <div className="booking-fields"><label>First name<input required autoComplete="given-name" value={details.firstName} onChange={set('firstName')} /></label><label>Last name<input required autoComplete="family-name" value={details.lastName} onChange={set('lastName')} /></label><label>Email address<input required type="email" autoComplete="email" value={details.email} onChange={set('email')} /></label><label>Telephone<input required type="tel" autoComplete="tel" value={details.phone} onChange={set('phone')} /></label><label className="wide">Organisation<input required autoComplete="organization" value={details.organisation} onChange={set('organisation')} /></label><label className="wide">Anything we should know?<textarea rows={4} value={details.notes} onChange={set('notes')} /></label></div>
-        <aside className="booking-summary"><span>{selected.title}</span><strong>£{selected.price}</strong><p>{date} at {time} · {selected.duration} · {attendees} attendee{attendees === 1 ? '' : 's'}</p><small>You will continue to secure payment.</small></aside>
+        <aside className="booking-summary"><span>{selected.title}</span><strong>{isFree ? 'Free' : `£${selected.price}`}</strong><p>{date} at {time} · {selected.duration} · {attendees} attendee{attendees === 1 ? '' : 's'}</p><small>{isFree ? 'No payment is required for this consultation.' : 'You will continue to secure payment.'}</small></aside>
         {submitting && files.length > 0 && <p className="booking-upload-progress" role="status">Securely uploading documents: {uploadProgress}%</p>}
-        <button disabled={submitting} type="submit">{submitting ? 'Preparing secure payment…' : `Continue to payment · £${selected.price}`}</button>
+        <button disabled={submitting} type="submit">{submitting ? (isFree ? 'Confirming booking…' : 'Preparing secure payment…') : (isFree ? 'Confirm free consultation' : `Continue to payment · £${selected.price}`)}</button>
       </form>}
 
       {error && <p className="booking-error" role="alert">{error}</p>}

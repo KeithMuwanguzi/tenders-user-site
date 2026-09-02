@@ -49,6 +49,111 @@ const SERVICE_HERO_IMAGES: Record<string, { src: string; alt: string }> = {
 
 const SERVICE_TONES = ['peach', 'blue', 'yellow', 'cream'] as const
 
+type ServicePageDetail = {
+  processOutputs: string[]
+  improvements: string[]
+}
+
+const SERVICE_PAGE_DETAILS: Record<string, ServicePageDetail> = {
+  'bid-viability': {
+    processOutputs: [
+      'You receive a requirements register showing the pass or fail conditions, scored areas, dates, dependencies and points that need clarification.',
+      'We record where your current registration, experience, evidence, staffing, mobilisation and commercial position meet the requirement and where they do not.',
+      'You receive a written bid, resolve-first or no-bid recommendation, with the reasons, remaining risks and named actions needed before any writing engagement begins.',
+    ],
+    improvements: [
+      'Instead of deciding from the headline contract value, leadership can see whether the organisation meets the buyer’s actual conditions and can deliver the service safely.',
+      'Assumptions become a recorded list of evidence gaps, commercial questions and mobilisation dependencies, each with an owner or a clear reason to stop.',
+      'The final decision is explained in plain language, so management time and writing fees are committed only when the available evidence supports proceeding.',
+    ],
+  },
+  'bid-writing': {
+    processOutputs: [
+      'You receive a controlled response plan that links every question and subpoint to the specification, scoring descriptors, word limit, evidence owner and internal deadline.',
+      'We interview the people responsible for delivery and build an evidence record covering roles, controls, records, case examples, outcomes and realistic commitments.',
+      'Each draft follows the buyer’s order and makes the method, ownership, frequency, evidence and intended outcome visible without asking the evaluator to infer them.',
+      'An independent reviewer checks compliance and scoring coverage before a final supervisor resolves findings and prepares the client-approved submission version.',
+    ],
+    improvements: [
+      'A complicated procurement pack becomes one working plan, so contributors know exactly what information is needed and when it must be supplied.',
+      'Operational knowledge becomes usable tender evidence by naming who does the work, how it is controlled, what record proves it and how performance is reviewed.',
+      'Separate contributions become one consistent submission, with conflicting promises, repeated content and unsupported claims corrected before handover.',
+    ],
+  },
+  'pre-submission-review': {
+    processOutputs: [
+      'We produce a requirement checklist for every reviewed answer, including the question wording, specification references, scoring descriptors and mandatory submission rules.',
+      'The draft is annotated with specific gaps, contradictions, unsupported claims and places where useful evidence is present but difficult for an evaluator to find.',
+      'You receive a prioritised correction plan separating material compliance or scoring risks from optional refinements, so the remaining review time is used where it matters most.',
+    ],
+    improvements: [
+      'Internal confidence is tested against the published documents by a reviewer who was not responsible for producing the original draft.',
+      'The team stops editing everything equally and instead works through a ranked list of missing requirements, weak evidence and cross-answer inconsistencies.',
+      'Important proof is repositioned and signposted so the evaluator can connect each claim to the responsible role, control, record and outcome.',
+    ],
+  },
+  'lost-bid-debrief': {
+    processOutputs: [
+      'You receive one evaluation trail bringing together the question, scoring descriptors, submitted answer, awarded score and every relevant buyer comment.',
+      'We distinguish procurement-specific issues from recurring weaknesses in evidence, answer structure, commitments and evaluator signposting.',
+      'The findings become a practical improvement plan with example rewrites, evidence actions, owners and material suitable for the future answer bank.',
+    ],
+    improvements: [
+      'A short score and buyer comment becomes a traceable explanation of what the answer covered, what remained unclear and what should change next time.',
+      'General disappointment becomes a prioritised set of writing, evidence and operational actions that leadership can assign and review.',
+      'Feedback no longer sits in a file. Useful learning is converted into reusable case examples, evidence prompts and stronger answer material.',
+    ],
+  },
+  'tender-readiness-audit': {
+    processOutputs: [
+      'We define the commissioners, services, contract types and likely participation conditions the organisation is preparing to pursue.',
+      'You receive an evidence inventory showing what already exists, what needs organising, what can be strengthened and what can only be built through genuine delivery.',
+      'The final readiness plan ranks actions by tender risk and lead time, with named owners, dependencies and a clear explanation of any material constraint.',
+    ],
+    improvements: [
+      'A general policy folder becomes an evidence library organised around the questions and conditions used in the provider’s target procurements.',
+      'Scattered responsibility becomes a visible action plan across operations, quality, HR and finance, with ownership agreed before a deadline begins.',
+      'Gaps are discovered early enough to resolve responsibly, rather than being hidden by rushed writing after the tender has gone live.',
+    ],
+  },
+  'tender-training': {
+    processOutputs: [
+      'We identify the exact points where qualification, evidence gathering, drafting or review currently breaks down and tailor the learning to each participant’s role.',
+      'Participants work with relevant buyer documents and provider evidence to practise requirement mapping, answer planning, proof selection and scoring review.',
+      'The team leaves with an agreed method, reusable prompts, review questions and clear responsibilities that can be applied to the next real procurement.',
+    ],
+    improvements: [
+      'Individual writing habits become one shared process that operational contributors, bid leads and reviewers can follow consistently.',
+      'Generic theory becomes practical judgement developed through the same documents, constraints and evidence choices the team faces in live tenders.',
+      'Review meetings use consistent questions about compliance, delivery, ownership and proof, instead of relying on one person’s undocumented instinct.',
+    ],
+  },
+  'mobilisation-support': {
+    processOutputs: [
+      'You receive a commitment register covering the promises, milestones, dependencies and reporting duties contained in the winning response and buyer documents.',
+      'Every material action is assigned an owner, due date, evidence requirement, dependency and escalation route agreed with the people responsible for delivery.',
+      'A review rhythm tracks progress against the buyer’s actual timetable and produces the evidence needed for mobilisation meetings and service commencement.',
+    ],
+    improvements: [
+      'Promises made in the tender become visible operational actions, so recruitment, training, systems and governance commitments are not lost after award.',
+      'Work owned across several teams is brought into one controlled record that makes dependencies, delays and escalation decisions visible.',
+      'Buyer updates are supported by planned records and review points, rather than assembled at the last minute from inconsistent information.',
+    ],
+  },
+  'tender-retainer': {
+    processOutputs: [
+      'We agree the target buyers, services, geography, qualification rules, internal responsibilities and realistic specialist capacity for the period.',
+      'Your evidence base is maintained between deadlines by capturing outcomes, case examples, buyer feedback, operational changes and reusable approved material.',
+      'When a relevant opportunity appears, the agreed qualification, writing, review or coaching support is activated with a clear scope and ownership record.',
+    ],
+    improvements: [
+      'Separate deadlines become a managed tender programme connected to the organisation’s services, capacity and realistic growth priorities.',
+      'Teams stop searching repeatedly for the same proof because approved evidence, feedback and examples are maintained between procurements.',
+      'Opportunities are qualified consistently before capacity is reserved, reducing reactive bidding and protecting leadership time for contracts that fit.',
+    ],
+  },
+}
+
 function makeFaq(service: ServiceData) {
   const isTraining = service.slug === 'tender-training'
   return [
@@ -130,6 +235,7 @@ export default async function ServicePage({
   const serviceIndex = SERVICES_DATA.findIndex((item) => item.slug === slug)
   const faq = makeFaq(service)
   const contactHref = `/contact?serviceType=${encodeURIComponent(service.title)}#enquiry`
+  const pageDetail = SERVICE_PAGE_DETAILS[slug]
 
   const structuredData = [
     serviceSchema({
@@ -227,6 +333,10 @@ export default async function ServicePage({
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <h3>{step.step}</h3>
                 <p>{step.desc}</p>
+                <div className="ep-method-grid__output">
+                  <small>What you receive at this stage</small>
+                  <p>{pageDetail?.processOutputs[index] || service.delivers[index] || service.delivers[0]}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -237,7 +347,8 @@ export default async function ServicePage({
         <div className="ep-shell ep-service-change__grid">
           <div>
             <p className="ep-kicker">The practical change</p>
-            <h2>What the engagement is intended to improve.</h2>
+            <h2>What changes for your team and your next submission.</h2>
+            <p className="ep-service-change__intro">These are practical working changes, not abstract labels. Each one explains what becomes clearer, more controlled or easier to evidence after the engagement.</p>
             <ul className="ep-service-change__problems">
               {service.solves.map((item) => <li key={item}>{item}</li>)}
             </ul>
@@ -246,9 +357,12 @@ export default async function ServicePage({
             {service.transforms.map((item, index) => (
               <article key={item.from}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
-                <div><small>From</small><p>{item.from}</p></div>
-                <b aria-hidden="true">→</b>
-                <div><small>To</small><p>{item.to}</p></div>
+                <div>
+                  <small>Practical improvement</small>
+                  <h3>{item.to}</h3>
+                  <p>{pageDetail?.improvements[index] || `${item.from} is replaced by ${item.to.toLowerCase()}, supported by a clear record the client can use.`}</p>
+                  <aside><b>Starting issue</b> {item.from}</aside>
+                </div>
               </article>
             ))}
           </div>

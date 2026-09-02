@@ -33,12 +33,17 @@ export async function POST(request: Request) {
     const documents = (Array.isArray(body.documents) ? body.documents : []).slice(0,5).map((document) => ({ name: clean(document.name,220), pathname: clean(document.pathname,500), url: clean(document.url,900) }))
     if (consultation.documentsRequired && documents.length === 0) return NextResponse.json({ error: 'This service requires documents at booking.' }, { status: 400 })
     if (documents.some((document) => !document.pathname.startsWith(`consultations/${bookingReference}/`) || !/^https:\/\/[^/]+\.blob\.vercel-storage\.com\//.test(document.url))) return NextResponse.json({ error: 'One or more document references are invalid.' }, { status: 400 })
-    if (!process.env.STRIPE_SECRET_KEY) return NextResponse.json({ error: 'Secure payment is not configured on this preview yet. Your card has not been charged.' }, { status: 503 })
-
-    const record = { bookingReference, consultationId: consultation.id, serviceTitle: consultation.title, price: consultation.price, date, time, attendees, details, documents, createdAt: new Date().toISOString(), paymentStatus: 'checkout-created' }
+    const origin = new URL(request.url).origin
+    const isFree = consultation.price === 0
+    const record = { bookingReference, consultationId: consultation.id, serviceTitle: consultation.title, price: consultation.price, date, time, attendees, details, documents, createdAt: new Date().toISOString(), paymentStatus: isFree ? 'not-required' : 'checkout-created' }
     if (process.env.BLOB_READ_WRITE_TOKEN) await put(`consultations/${bookingReference}/booking.json`, JSON.stringify(record,null,2), { access:'private', contentType:'application/json', addRandomSuffix:false })
 
-    const origin = new URL(request.url).origin
+    if (isFree) {
+      return NextResponse.json({ url: `${origin}/book-consultation/confirmation?booking_reference=${encodeURIComponent(bookingReference)}&free=1` })
+    }
+
+    if (!process.env.STRIPE_SECRET_KEY) return NextResponse.json({ error: 'Secure payment is not configured on this preview yet. Your card has not been charged.' }, { status: 503 })
+
     const checkout = await getStripe().checkout.sessions.create({
       mode: 'payment',
       success_url: `${origin}/book-consultation/confirmation?session_id={CHECKOUT_SESSION_ID}`,

@@ -12,6 +12,7 @@ import {
 } from '@/lib/seo'
 import { fetchPublishedTenders } from '@/lib/published-tenders'
 import TendersClient from './TendersClient'
+import { getCareCategoryById } from '@/lib/tender-categories'
 
 export const dynamic = 'force-dynamic'
 
@@ -83,7 +84,13 @@ const FAQ = [
   },
 ]
 
-export default async function TendersPage() {
+export default async function TendersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>
+}) {
+  const requestedCategory = (await searchParams).category || ''
+  const initialCategory = getCareCategoryById(requestedCategory)?.id
   const initialTenders = await fetchPublishedTenders(150)
 
   return (
@@ -135,7 +142,7 @@ export default async function TendersPage() {
       </section>
 
       <div id="live-tender-search">
-        <TendersClient initialTenders={initialTenders} />
+        <TendersClient initialTenders={initialTenders} initialCategory={initialCategory} />
       </div>
 
       <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>

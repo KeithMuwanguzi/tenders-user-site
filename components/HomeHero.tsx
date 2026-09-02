@@ -19,12 +19,28 @@ const slides = [
   },
 ]
 
+const rotatingLines = [
+  'The evaluator has to see it.',
+  'Your experience must appear in every answer.',
+  'Your response must reflect the care you deliver.',
+]
+
 export default function HomeHero() {
   const [active, setActive] = useState(0)
+  const [activeLine, setActiveLine] = useState(0)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 5000)
+    return () => window.clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setInterval(
+      () => setActiveLine((current) => (current + 1) % rotatingLines.length),
+      4000,
+    )
     return () => window.clearInterval(timer)
   }, [])
 
@@ -34,7 +50,9 @@ export default function HomeHero() {
         <p className="tl-eyebrow">UK health and social care procurement</p>
         <h1 id="tl-hero-title" className="tl-hero__title">
           <span>Good care is not enough.</span>
-          <span>The evaluator has to see it.</span>
+          <span key={activeLine} className="tl-hero__rotating-line" aria-live="polite">
+            {rotatingLines[activeLine]}
+          </span>
         </h1>
 
         <div className="tl-hero__composition">

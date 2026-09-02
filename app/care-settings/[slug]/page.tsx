@@ -89,6 +89,46 @@ const CASE_STUDY_COHORT: Record<string, string> = {
   'substance-misuse-services': 'mental-health',
 }
 
+const TENDER_CATEGORY_BY_SETTING: Record<string, string> = {
+  'domiciliary-care': 'domiciliary',
+  'live-in-care': 'live-in',
+  'reablement-services': 'reablement',
+  'rehabilitation-services': 'reablement',
+  'hospital-discharge-services': 'discharge',
+  'supported-living': 'supported-living',
+  'residential-care': 'residential',
+  'care-home-accommodation': 'residential',
+  'extra-care-housing': 'extra-care',
+  'supported-accommodation': 'supported-accommodation',
+  'nursing-care': 'nursing',
+  'childrens-services': 'children',
+  'childrens-residential-care': 'children',
+  'childrens-short-breaks': 'children',
+  'family-support-and-outreach': 'children',
+  'fostering-services': 'fostering',
+  'leaving-care-services': 'leaving-care',
+  'mental-health-services': 'mental-health',
+  'crisis-rapid-response': 'mental-health',
+  'community-health-services': 'community-health',
+  'health-services': 'community-health',
+  'continuing-healthcare': 'chc',
+  'complex-care': 'complex-chc',
+  'complex-care-and-continuing-healthcare': 'complex-chc',
+  'end-of-life-and-palliative-care': 'palliative',
+  'learning-disability-services': 'learning-disability',
+  'autism-services': 'autism',
+  'substance-misuse-services': 'substance-misuse',
+  'housing-related-support': 'housing-support',
+  'housing-support': 'housing-support',
+  'supported-housing': 'housing-support',
+  'temporary-accommodation': 'housing-support',
+  'emergency-accommodation': 'housing-support',
+  'outreach-community-support': 'housing-support',
+  'day-services': 'day-services',
+  'short-breaks-and-respite': 'day-services',
+  'shared-lives': 'supported-living',
+}
+
 export async function generateStaticParams() {
   try {
     const files = await readdir(HTML_DIR)
@@ -422,7 +462,7 @@ export default async function CareSettingPage({ params }: Props) {
         primaryLabel="Ask us to assess a tender"
         primaryHref="/contact#enquiry"
         secondaryLabel="Browse live tenders"
-        secondaryHref="/tenders"
+        secondaryHref={`/tenders?category=${encodeURIComponent(TENDER_CATEGORY_BY_SETTING[slug] || '')}#live-tender-search`}
       />
 
       <nav className="ep-care-toc" aria-label="On this page">
