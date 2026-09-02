@@ -205,8 +205,13 @@ export default function PrivacyPolicyPage() {
                 <h2><span className="num">Section 09</span>Cookies and PECR consent</h2>
                 <p>The <a href="https://www.legislation.gov.uk/uksi/2003/2426/contents" target="_blank" rel="noopener noreferrer">Privacy and Electronic Communications Regulations 2003</a> (PECR) govern cookies and electronic marketing. This site uses two categories of cookie.</p>
                 <p><strong>Strictly necessary cookies.</strong> Required to deliver the page, remember your consent choices and protect against fraud. PECR Regulation 6(4) does not require consent for these.</p>
-                <p><strong>Optional analytics cookies.</strong> Set only when you accept the optional category in the consent banner. We use privacy-respecting analytics that aggregate visitor behaviour. You can decline at any time, change your mind via the banner or block cookies in your browser settings.</p>
+                <p><strong>Optional analytics cookies.</strong> Google Analytics is loaded only after you accept this category. It helps us understand page visits, navigation and site performance using aggregated usage information. If you reject analytics, the analytics script is not loaded.</p>
                 <p>We do not use third-party advertising cookies, behavioural advertising cookies or cross-site tracking pixels.</p>
+                <div className="he-cookie-table" role="region" aria-label="TenderLab cookie categories">
+                  <div><strong>Necessary</strong><span>Consent preference and essential site operation</span><em>Always active</em></div>
+                  <div><strong>Analytics</strong><span>Google Analytics page and navigation measurement</span><em>Optional</em></div>
+                </div>
+                <p>Use the <strong>Cookie settings</strong> control at the bottom of any page to review, accept or withdraw analytics consent whenever you choose.</p>
                 <p>Marketing emails are sent only with prior consent (PECR Regulation 22) or to existing customers about closely related services with a one-click unsubscribe (the "soft opt-in").</p>
               </section>
 

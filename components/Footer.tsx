@@ -118,6 +118,7 @@ export default function Footer() {
           <span>128 City Road, London, EC1V 2NX</span>
           <div>
             <Link href="/privacy-policy">Privacy policy</Link>
+            <Link href="/privacy-policy#sec-09">Cookie policy</Link>
             <Link href="/terms">Terms of service</Link>
           </div>
         </div>
