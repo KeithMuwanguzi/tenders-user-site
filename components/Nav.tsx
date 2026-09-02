@@ -318,6 +318,13 @@ export default function Nav() {
                 >
                   Live tenders
                 </Link>
+                <Link
+                  href="/book-consultation"
+                  className={`nav__live nav__book${activeSection === '/book-consultation' ? ' nav__live--active' : ''}`}
+                  onClick={closeAll}
+                >
+                  Book consultation
+                </Link>
                 <button type="button" className="nav__callback" onClick={() => setCallbackOpen(true)}>Request a callback</button>
               </div>
             </div>

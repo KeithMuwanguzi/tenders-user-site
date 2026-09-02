@@ -1280,3 +1280,306 @@ main:not(.tl-home) > section + section::before { display: none !important; conte
   .tl-proof__feature::before,.tl-proof__supporting article { animation: none !important; opacity: 1; transform: none; }
   .tl-service-feature,.tl-service-card,.tl-expertise__grid article,.tl-guide-card,.tl-case-card,.tl-blog-card,.ep-service-showcase__card,.ep-page [class*="card"] { transition: none !important; }
 }
+
+/* --------------------------------------------------------------------------
+   29 August constrained correction
+   Only the remaining statistics, empty-space, FAQ, footer, care-setting,
+   case-study and live-tender inconsistencies are addressed below.
+   -------------------------------------------------------------------------- */
+
+/* Keep the three requested desktop actions together. */
+.nav__actions .nav__live,
+.nav__actions .nav__book {
+  min-height: 44px;
+  padding-inline: 17px;
+  white-space: nowrap;
+}
+.nav__actions .nav__book { margin-left: 0; }
+.nav__actions .nav__callback { padding-inline: 17px; white-space: nowrap; }
+
+/* Recorded results: feature story, supporting figures and a meaningful UK
+   landmark composition share one compact visual system. */
+.tl-proof__story {
+  grid-template-columns: minmax(0,1.05fr) minmax(240px,.53fr) minmax(280px,.72fr);
+  gap: 18px;
+  align-items: stretch;
+}
+.tl-proof__supporting article {
+  position: relative;
+  overflow: hidden;
+  padding-right: 74px;
+}
+.tl-proof__supporting article::after {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,var(--tl-brand-red),#ef756c);
+  color: #fff;
+  font-size: 19px;
+  transform: translateY(-50%);
+  box-shadow: 0 7px 16px rgba(189,48,38,.18);
+}
+.tl-proof__supporting article:nth-child(1)::after { content: '▤'; }
+.tl-proof__supporting article:nth-child(2)::after { content: '↗'; }
+.tl-proof__supporting article:nth-child(3)::after { content: '★'; }
+.tl-proof__landmark {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.25);
+  border-radius: 30px;
+  background: linear-gradient(180deg,#fff 0%,#f9eee9 100%);
+  box-shadow: 7px 9px 0 rgba(189,48,38,.1);
+}
+.tl-proof__landmark::after {
+  content: '';
+  position: absolute;
+  inset: auto -12% -9% -12%;
+  height: 38%;
+  background: repeating-radial-gradient(ellipse at 50% 100%,transparent 0 12px,rgba(189,48,38,.13) 13px 15px,transparent 16px 26px);
+  opacity: .65;
+}
+.tl-proof__landmark img { object-fit: cover; object-position: center 58%; opacity: .8; filter: saturate(.75) contrast(.92); }
+.tl-proof__landmark figcaption {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  bottom: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.94);
+  color: var(--tl-brand-blue);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* The specialist-field introduction now uses its previously empty right-hand
+   area for one relevant care-sector image and a concise expertise caption. */
+.tl-home .tl-expertise__intro:has(.tl-expertise__focus) {
+  display: grid;
+  grid-template-columns: minmax(0,.86fr) minmax(340px,.64fr);
+  column-gap: clamp(32px,6vw,90px);
+  align-items: center;
+  max-width: none;
+}
+.tl-home .tl-expertise__intro:has(.tl-expertise__focus) > :not(.tl-expertise__focus) { grid-column: 1; }
+.tl-expertise__focus {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  min-height: 330px;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.3);
+  border-radius: 34px;
+  box-shadow: 8px 10px 0 rgba(189,48,38,.11);
+}
+.tl-expertise__focus::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,transparent 42%,rgba(16,50,73,.84));
+}
+.tl-expertise__focus img { object-fit: cover; }
+.tl-expertise__focus div {
+  position: absolute;
+  z-index: 1;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  color: #fff;
+}
+.tl-expertise__focus span { display: block; margin-bottom: 7px; color: #ffd9d3; font-size: 10px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.tl-expertise__focus strong { display: block; font-size: 17px; line-height: 1.35; }
+
+/* FAQs use designed cards rather than bare separator rules. */
+.tl-faq-list,
+.ep-faq__list { display: grid; gap: 14px; border: 0 !important; }
+.tl-faq-list details,
+.ep-page .ep-faq__list details,
+.tender-landing__faq details,
+.hub-faq details {
+  margin: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.3) !important;
+  border-radius: 22px !important;
+  background: rgba(255,255,255,.96) !important;
+  box-shadow: 6px 8px 0 rgba(189,48,38,.09) !important;
+  transition: transform .3s ease,box-shadow .3s ease,border-color .3s ease;
+}
+.tl-faq-list details:hover,
+.ep-page .ep-faq__list details:hover,
+.tender-landing__faq details:hover,
+.hub-faq details:hover { transform: translateY(-3px); box-shadow: 9px 11px 0 rgba(189,48,38,.11) !important; }
+.tl-faq-list details[open],
+.ep-page .ep-faq__list details[open],
+.tender-landing__faq details[open],
+.hub-faq details[open] { border-color: rgba(189,48,38,.5) !important; }
+.tl-faq-list summary,
+.ep-faq__list summary,
+.tender-landing__faq summary { min-height: 72px; padding: 20px 22px !important; }
+.tl-faq-list details p,
+.ep-faq__list details p,
+.tender-landing__faq details p { padding: 0 22px 22px 64px !important; }
+
+/* Remove the last old yellow/plain care-setting treatment. The page-specific
+   image is used once in the sticky approach card; article sections become
+   compact evidence cards with their own numbered hierarchy. */
+.ep-care-content { background: #fff !important; }
+.ep-care-content__grid { gap: clamp(28px,5vw,72px); }
+.ep-care-content__grid > aside {
+  padding: 0 0 26px !important;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.32) !important;
+  border-radius: 28px !important;
+  background: rgba(255,255,255,.97) !important;
+  box-shadow: 8px 10px 0 rgba(189,48,38,.1);
+}
+.ep-care-content__visual { position: relative; min-height: 220px; margin-bottom: 25px; overflow: hidden; }
+.ep-care-content__visual::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent,rgba(16,50,73,.3)); }
+.ep-care-content__visual img { object-fit: cover; }
+.ep-care-content__grid > aside > :not(.ep-care-content__visual) { margin-inline: 25px; }
+.ep-care-content__grid > aside h2 { font-size: clamp(29px,2.6vw,42px); }
+.ep-care-article { display: grid; gap: 18px; }
+.ep-care-article .cs-block {
+  position: relative;
+  margin: 0 !important;
+  padding: clamp(24px,3vw,38px) !important;
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.26) !important;
+  border-radius: 26px !important;
+  background: rgba(255,255,255,.97);
+  box-shadow: 7px 9px 0 rgba(189,48,38,.085);
+  transition: transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+}
+.ep-care-article .cs-block:hover { transform: translateY(-4px); border-color: rgba(189,48,38,.42) !important; box-shadow: 10px 12px 0 rgba(189,48,38,.11); }
+.ep-care-article .cs-block::after {
+  content: '';
+  position: absolute;
+  right: -44px;
+  top: -52px;
+  width: 140px;
+  height: 140px;
+  border: 22px solid rgba(189,48,38,.045);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.ep-care-article .cs-block h2 { padding-left: 0; border-left: 0; }
+.ep-care-article .cs-block h2 .num { width: fit-content; padding: 7px 10px; border-radius: 999px; background: #fbe9e6; }
+.ep-care-related__grid { gap: 16px; }
+.ep-care-related__grid > a,
+.ep-care-related__grid > a:nth-child(2),
+.ep-care-related__grid > a:nth-child(3) {
+  border: 1px solid rgba(189,48,38,.3) !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.96) !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.09);
+}
+
+/* Case-study library: retain the real case imagery, but add the documented
+   award treatment and the same outlined depth used elsewhere. */
+.ep-case-grid { gap: 20px; }
+.ep-case-card {
+  overflow: hidden;
+  border: 1px solid rgba(189,48,38,.3) !important;
+  border-radius: 26px !important;
+  background: #fff !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.09) !important;
+}
+.ep-case-card__image { min-height: 245px; background: #f8f4ef; }
+.ep-case-card__body { position: relative; background: #fff !important; }
+.ep-case-card__body::before {
+  content: 'CONTRACT\A WON';
+  white-space: pre;
+  position: absolute;
+  right: 18px;
+  top: -33px;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 2px solid #c89535;
+  border-radius: 50%;
+  background: #fff8df;
+  color: #8f671c;
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1.05;
+  text-align: center;
+  box-shadow: 0 5px 13px rgba(143,103,28,.16);
+}
+
+/* Live-tender search and category pages: compact opportunity cards, no dark or
+   flat colour blocks, and a consistent designed FAQ/introduction treatment. */
+#live-tender-search .tender-card {
+  border: 1px solid rgba(189,48,38,.28) !important;
+  border-radius: 24px !important;
+  background: #fff !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.085) !important;
+}
+#live-tender-search .tender-card::before { background: var(--tl-brand-red) !important; }
+#live-tender-search .tender-card:nth-child(3n+2)::before,
+#live-tender-search .tender-card:nth-child(3n+3)::before { background: var(--tl-brand-red) !important; }
+#live-tender-search .tender-card__meta-item { border-radius: 14px; background: #fbf6f2; padding: 9px 10px; }
+.tenders-intro { padding: 34px 0 !important; border: 0 !important; background: #fff !important; }
+.tenders-intro > div {
+  padding: 30px !important;
+  border: 1px solid rgba(189,48,38,.28);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.085);
+}
+.hub-faq { background: #fff !important; }
+.tender-landing__faq { background: #fff !important; }
+.tender-landing__evidence-grid > *,
+.tender-landing__checklist {
+  border: 1px solid rgba(189,48,38,.28) !important;
+  border-radius: 24px !important;
+  background: #fff !important;
+  box-shadow: 7px 9px 0 rgba(189,48,38,.085);
+}
+
+/* Footer copy must remain legible over the approved pale skyline. */
+.tl-footer { color: var(--tl-brand-blue); }
+.tl-footer__identity p,
+.tl-footer__directory li,
+.tl-footer__directory a,
+.tl-footer__trust,
+.tl-footer__trust a,
+.tl-footer__bottom,
+.tl-footer__bottom a {
+  color: #17364b !important;
+  font-weight: 650 !important;
+  opacity: 1 !important;
+}
+.tl-footer__directory h2 { color: var(--tl-brand-red) !important; font-weight: 850 !important; }
+.tl-footer__bottom { font-weight: 700 !important; }
+
+@media (max-width: 1240px) {
+  .nav__actions .nav__live,.nav__actions .nav__book,.nav__actions .nav__callback { padding-inline: 12px; font-size: 11px; }
+  .tl-proof__story { grid-template-columns: minmax(0,1.05fr) minmax(230px,.58fr); }
+  .tl-proof__landmark { grid-column: 1 / -1; min-height: 240px; }
+}
+
+@media (max-width: 900px) {
+  .tl-home .tl-expertise__intro:has(.tl-expertise__focus) { grid-template-columns: 1fr; }
+  .tl-home .tl-expertise__intro:has(.tl-expertise__focus) > :not(.tl-expertise__focus),
+  .tl-expertise__focus { grid-column: 1; }
+  .tl-expertise__focus { grid-row: auto; min-height: 310px; margin-top: 18px; }
+}
+
+@media (max-width: 760px) {
+  .tl-proof__story { grid-template-columns: 1fr; }
+  .tl-proof__landmark { grid-column: auto; min-height: 220px; }
+  .tl-proof__supporting article { padding-right: 68px; }
+  .ep-care-content__visual { min-height: 250px; }
+  .ep-care-article .cs-block { padding: 24px !important; }
+  .tl-faq-list details p,.ep-faq__list details p,.tender-landing__faq details p { padding-left: 22px !important; }
+}

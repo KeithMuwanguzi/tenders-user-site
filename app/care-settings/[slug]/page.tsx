@@ -1,5 +1,6 @@
 import { readFile, readdir } from 'fs/promises'
 import path from 'path'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
@@ -439,6 +440,9 @@ export default async function CareSettingPage({ params }: Props) {
       <section className="ep-section ep-care-content">
         <div className="ep-shell ep-care-content__grid">
           <aside>
+            <div className="ep-care-content__visual">
+              <Image src={visual.image} alt={visual.alt} fill sizes="(max-width: 900px) 100vw, 32vw" />
+            </div>
             <p className="ep-kicker">The TenderLab approach</p>
             <h2>Make the service clear enough to score.</h2>
             <p>

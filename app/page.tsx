@@ -224,6 +224,15 @@ export default async function HomePage() {
               <article><strong>£50M+</strong><span>Aggregate contract value</span></article>
               <article><strong>5/5</strong><span>Documented question scores</span></article>
             </div>
+            <figure className="tl-proof__landmark" aria-label="TenderLab supports care providers across the United Kingdom">
+              <Image
+                src="/images/brand-landscapes/tenderlab-london-skyline.png"
+                alt="Illustrated London skyline with public-sector landmarks"
+                fill
+                sizes="(max-width: 760px) 100vw, 31vw"
+              />
+              <figcaption>UK care-sector tender expertise</figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -282,6 +291,18 @@ export default async function HomePage() {
             <p className="tl-kicker">Healthcare is our only field</p>
             <h2 id="expertise-heading">We do not write tenders for every industry. We specialise in care.</h2>
             <p>That single-sector focus means the people shaping your response understand the service, the management evidence and the way a public-sector evaluator reads it.</p>
+            <aside className="tl-expertise__focus" aria-label="TenderLab's specialist care-sector perspective">
+              <Image
+                src="/images/editorial/tenderlab-care-evidence-hero-v1.webp"
+                alt="Care-sector specialists reviewing service evidence for a tender response"
+                fill
+                sizes="(max-width: 760px) 100vw, 36vw"
+              />
+              <div>
+                <span>One specialist field</span>
+                <strong>Frontline care · tender writing · evaluator insight</strong>
+              </div>
+            </aside>
           </div>
           <div className="tl-expertise__grid">
             {expertise.map((item) => (
