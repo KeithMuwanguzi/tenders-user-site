@@ -13,6 +13,12 @@ const requiredFiles = [
   'app/tenders/[id]/page.tsx',
   'app/blog/[slug]/page.tsx',
   'lib/portal-api.ts',
+  'lib/seo.ts',
+  'app/robots.ts',
+  'app/sitemap.ts',
+  'app/sitemap-tenders.xml/route.ts',
+  'public/llms.txt',
+  'public/llms-full.txt',
   'contracts/portal-inquiry.contract.json',
 ]
 
@@ -25,6 +31,10 @@ const inquiryRoute = read('app/api/inquiries/route.ts')
 const tenderRoute = read('app/api/tenders/route.ts')
 const blogRoute = read('app/api/blogs/route.ts')
 const portalContract = JSON.parse(read('contracts/portal-inquiry.contract.json'))
+const robots = read('app/robots.ts')
+const sitemap = read('app/sitemap.ts')
+const seo = read('lib/seo.ts')
+const llms = read('public/llms.txt')
 
 for (const field of [
   'name',
@@ -78,5 +88,23 @@ assert.match(tenderRoute, /cache:\s*['"]no-store['"]/)
 assert.match(blogRoute, /\/api\/blogs\/published\?limit=100/)
 assert.match(blogRoute, /NextResponse\.json\(\{\s*posts\s*\}\)/)
 assert.match(blogRoute, /cache:\s*['"]no-store['"]/)
+
+// Keep the search and answer-engine discovery layer from silently regressing.
+for (const crawler of ['OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot']) {
+  assert.match(robots, new RegExp(crawler), `AI discovery rule is missing: ${crawler}`)
+}
+assert.match(robots, /sitemap\.xml/)
+assert.match(robots, /sitemap-tenders\.xml/)
+assert.match(sitemap, /SERVICES_DATA/)
+assert.match(sitemap, /CARE_SETTING_SLUGS/)
+assert.match(sitemap, /TENDER_LANDING_PAGES/)
+assert.match(sitemap, /DECISION_GUIDES/)
+assert.match(sitemap, /CASE_STUDIES/)
+for (const schemaType of ['Organization', 'WebSite', 'Service', 'BreadcrumbList', 'BlogPosting', 'FAQPage']) {
+  assert.match(seo, new RegExp(schemaType), `Shared schema coverage is missing: ${schemaType}`)
+}
+assert.match(llms, /Companies House number 17184263/)
+assert.match(llms, /Past performance does not guarantee/)
+assert.match(llms, /canonical website/)
 
 console.log('Website integration contracts verified.')
