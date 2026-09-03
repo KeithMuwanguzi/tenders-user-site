@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const session = event.data.object
     if (session.payment_status === 'paid') {
       const metadata = session.metadata || {}
-      const record = { bookingReference: metadata.bookingReference, serviceTitle: metadata.serviceTitle, date: metadata.preferredDate, time: metadata.preferredTime, attendees: metadata.attendees, organisation: metadata.organisation, phone: metadata.phone, contactName: metadata.contactName, email: session.customer_details?.email || session.customer_email || '', stripeSessionId: session.id, paidAt: new Date().toISOString(), paymentStatus: 'paid' }
+      const record = { bookingReference: metadata.bookingReference, consultationId: metadata.consultationId, serviceTitle: metadata.serviceTitle, duration: metadata.duration, attendees: metadata.attendees, organisation: metadata.organisation, phone: metadata.phone, contactName: metadata.contactName, email: session.customer_details?.email || session.customer_email || '', stripeSessionId: session.id, paidAt: new Date().toISOString(), paymentStatus: 'paid', schedulingStatus: metadata.duration === 'Written briefing' ? 'not-required' : 'awaiting-calendar-selection' }
       if (process.env.BLOB_READ_WRITE_TOKEN && metadata.bookingReference) await put(`consultations/${metadata.bookingReference}/payment.json`, JSON.stringify(record,null,2), { access:'private', contentType:'application/json', addRandomSuffix:false })
       try { await notifyPaidConsultation(record) } catch (error) { console.error('[paid consultation notification]', error) }
     }

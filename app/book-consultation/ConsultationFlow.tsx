@@ -8,22 +8,11 @@ import type { Consultation } from '@/lib/consultations'
 type Details = { firstName: string; lastName: string; email: string; phone: string; organisation: string; notes: string }
 type UploadedDocument = { name: string; pathname: string; url: string }
 
-const UK_BANK_HOLIDAYS = new Set(['2026-01-01','2026-04-03','2026-04-06','2026-05-04','2026-05-25','2026-08-31','2026-12-25','2026-12-28','2027-01-01','2027-03-26','2027-03-29','2027-05-03','2027-05-31','2027-08-30','2027-12-27','2027-12-28'])
-const TIMES = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00']
-
-function validWorkingDate(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || UK_BANK_HOLIDAYS.has(value)) return false
-  const day = new Date(`${value}T12:00:00`).getDay()
-  return day !== 0 && day !== 6
-}
-
 export default function ConsultationFlow({ consultations }: { consultations: Consultation[] }) {
   const flowRef = useRef<HTMLElement>(null)
   const [step, setStep] = useState(1)
   const [selectedId, setSelectedId] = useState(consultations[0].id)
   const [attendees, setAttendees] = useState(1)
-  const [date, setDate] = useState('')
-  const [time, setTime] = useState('10:00')
   const [files, setFiles] = useState<File[]>([])
   const [details, setDetails] = useState<Details>({ firstName: '', lastName: '', email: '', phone: '', organisation: '', notes: '' })
   const [submitting, setSubmitting] = useState(false)
@@ -60,7 +49,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
   const next = () => {
     setError('')
     if (step === 2 && selected.documentsRequired && files.length === 0) return setError('Upload the required documents before continuing.')
-    if (step === 3 && !validWorkingDate(date)) return setError('Choose a weekday that is not a UK bank holiday.')
+    if (step === 3 && (!details.firstName || !details.lastName || !/^\S+@\S+\.\S+$/.test(details.email) || !details.phone || !details.organisation)) return setError('Complete all required contact details before continuing.')
     showStep(Math.min(4, step + 1))
   }
 
@@ -85,7 +74,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
       }
       const response = await fetch('/api/consultations/checkout', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bookingReference, consultationId: selected.id, date, time, attendees, details, documents }),
+        body: JSON.stringify({ bookingReference, consultationId: selected.id, attendees, details, documents }),
       })
       const data = await response.json()
       if (!response.ok || !data.url) throw new Error(data.error || 'The booking could not be started.')
@@ -98,7 +87,7 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
 
   return (
     <section ref={flowRef} className="booking-flow" aria-labelledby="booking-flow-title">
-      <div className="booking-progress" aria-label={`Step ${step} of 4`}><span style={{ width: `${step * 25}%` }} /><p>Step {step} of 4</p></div>
+      <div className="booking-progress" role="progressbar" aria-label="Booking progress" aria-valuemin={1} aria-valuemax={4} aria-valuenow={step}><span style={{ width: `${step * 25}%` }} /><p>Step {step} of 4</p></div>
 
       {step === 1 && <div className="booking-stage">
         <header className="booking-stage__intro">
@@ -112,9 +101,9 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
             <span>Prepared advice. Clear next steps.</span>
           </div>
         </header>
-        <div className="booking-options" role="list">
+        <div className="booking-options">
           {consultations.map((item) => <button type="button" className={item.id === selectedId ? 'is-selected' : ''} aria-pressed={item.id === selectedId} onClick={() => chooseConsultation(item.id)} key={item.id}>
-            <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span><h3>{item.title}</h3><p>{item.description}</p><div><strong>{item.price === 0 ? 'Free' : `£${item.price}`}</strong><small>{item.duration}</small></div><b>Book now <span aria-hidden="true">→</span></b>
+            <span>{item.documentsRequired ? 'Preparation included' : 'Focused advice'}</span><h2>{item.title}</h2><p>{item.description}</p><div><strong>{item.price === 0 ? 'Free' : `£${item.price}`}</strong><small>{item.duration}</small></div><b>Book now <span aria-hidden="true">→</span></b>
           </button>)}
         </div>
       </div>}
@@ -125,14 +114,13 @@ export default function ConsultationFlow({ consultations }: { consultations: Con
       </div>}
 
       {step === 3 && <div className="booking-stage booking-stage--split">
-        <header><p className="booking-kicker">Date and time</p><h2>Choose a working-day appointment.</h2><p>Appointments run Monday to Friday, 10am to 5pm. Weekends and UK bank holidays are unavailable.</p></header>
-        <div className="booking-date"><label>Preferred date<input type="date" min={new Date().toISOString().slice(0,10)} value={date} onChange={(event) => { setDate(event.target.value); setError('') }} /></label><div className="booking-times" role="group" aria-label="Preferred time">{TIMES.map((value) => <button type="button" key={value} className={time === value ? 'is-selected' : ''} onClick={() => setTime(value)}>{value}</button>)}</div><p>Times are shown in Europe/London.</p></div>
+        <header><p className="booking-kicker">Your information</p><h2>Tell us who is booking.</h2><p>Your details are used for the consultation, receipt and calendar invitation. The available appointment is selected securely after confirmation or payment.</p></header>
+        <div className="booking-fields"><label>First name<input required autoComplete="given-name" value={details.firstName} onChange={set('firstName')} /></label><label>Last name<input required autoComplete="family-name" value={details.lastName} onChange={set('lastName')} /></label><label>Email address<input required type="email" autoComplete="email" value={details.email} onChange={set('email')} /></label><label>Telephone<input required type="tel" autoComplete="tel" value={details.phone} onChange={set('phone')} /></label><label className="wide">Organisation<input required autoComplete="organization" value={details.organisation} onChange={set('organisation')} /></label><label className="wide">Anything we should know?<textarea rows={4} value={details.notes} onChange={set('notes')} /></label></div>
       </div>}
 
       {step === 4 && <form className="booking-stage booking-stage--form" onSubmit={submit}>
-        <header><p className="booking-kicker">Your information</p><h2>{isFree ? 'Complete your free consultation booking.' : 'Complete the booking and continue to secure payment.'}</h2></header>
-        <div className="booking-fields"><label>First name<input required autoComplete="given-name" value={details.firstName} onChange={set('firstName')} /></label><label>Last name<input required autoComplete="family-name" value={details.lastName} onChange={set('lastName')} /></label><label>Email address<input required type="email" autoComplete="email" value={details.email} onChange={set('email')} /></label><label>Telephone<input required type="tel" autoComplete="tel" value={details.phone} onChange={set('phone')} /></label><label className="wide">Organisation<input required autoComplete="organization" value={details.organisation} onChange={set('organisation')} /></label><label className="wide">Anything we should know?<textarea rows={4} value={details.notes} onChange={set('notes')} /></label></div>
-        <aside className="booking-summary"><span>{selected.title}</span><strong>{isFree ? 'Free' : `£${selected.price}`}</strong><p>{date} at {time} · {selected.duration} · {attendees} attendee{attendees === 1 ? '' : 's'}</p><small>{isFree ? 'No payment is required for this consultation.' : 'You will continue to secure payment.'}</small></aside>
+        <header><p className="booking-kicker">Review and confirm</p><h2>{isFree ? 'Confirm your free consultation.' : 'Continue to secure payment.'}</h2><p>After confirmation, the live calendar will show genuine availability and create the meeting invitation.</p></header>
+        <aside className="booking-summary"><span>{selected.title}</span><strong>{isFree ? 'Free' : `£${selected.price}`}</strong><p>{selected.duration} · {attendees} attendee{attendees === 1 ? '' : 's'}</p><small>{isFree ? 'No payment is required. Choose the appointment from the live calendar next.' : 'Payment is handled securely by Stripe. Choose the appointment from the live calendar afterwards.'}</small></aside>
         {submitting && files.length > 0 && <p className="booking-upload-progress" role="status">Securely uploading documents: {uploadProgress}%</p>}
         <button disabled={submitting} type="submit">{submitting ? (isFree ? 'Confirming booking…' : 'Preparing secure payment…') : (isFree ? 'Confirm free consultation' : `Continue to payment · £${selected.price}`)}</button>
       </form>}

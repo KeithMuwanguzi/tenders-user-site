@@ -47,7 +47,7 @@ export default function Footer() {
   return (
     <footer className="tl-footer">
       <div className="tl-footer__shell">
-        <div className="tl-footer__choices" aria-label="TenderLab next steps">
+        <div className="tl-footer__choices" role="group" aria-label="TenderLab next steps">
           <div className="tl-footer__identity">
             <Link href="/" aria-label="TenderLab home">
               <Image

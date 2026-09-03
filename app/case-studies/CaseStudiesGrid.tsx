@@ -33,7 +33,7 @@ export default function CaseStudiesGrid() {
   return (
     <section className="ep-case-library">
       <div className="ep-shell">
-        <div className="ep-case-filters" aria-label="Filter case studies">
+        <div className="ep-case-filters" role="group" aria-label="Filter case studies">
           <label>
             <span>Care setting</span>
             <select value={category} onChange={(event) => setCategory(event.target.value)}>

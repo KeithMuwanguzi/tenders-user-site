@@ -401,6 +401,7 @@ main [class*="button"] { border-radius: 14px !important; }
 .booking-options button:hover,
 .booking-options button.is-selected { transform: translateY(-5px); border-color: var(--heritage-red); box-shadow: 7px 8px 0 var(--heritage-red-soft); }
 .booking-options button > span { color: var(--heritage-red); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.booking-options h2,
 .booking-options h3 { margin: 24px 0 12px; font-size: 26px; }
 .booking-options p { color: var(--slate); font-size: 15px; }
 .booking-options button > div { display: flex; align-items: flex-end; justify-content: space-between; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--tl-refine-line); }
@@ -2528,6 +2529,134 @@ main button, main input, main select, main textarea, main .btn, main [class*="bu
   .ep-care-article .cs-block { padding:22px 18px; }
   .ep-transform-list article { grid-template-columns:38px 1fr !important; }
 }
+
+/* Final homepage release refinements: image-led results and contextual hero labels. */
+.tl-hero__intro .tl-actions { gap: 14px; }
+.tl-hero__contacts {
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: 0;
+}
+.tl-hero__evidence-bar {
+  position: absolute;
+  z-index: 4;
+  right: 24px;
+  bottom: 18px;
+  left: 24px;
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 999px;
+  background: rgba(255,253,249,.9);
+  box-shadow: 0 10px 30px rgba(16,47,72,.12);
+  backdrop-filter: blur(12px);
+  animation: tlEvidenceBarIn .55s cubic-bezier(.22,1,.36,1) both;
+}
+.tl-hero__evidence-bar span {
+  min-width: 0;
+  padding: 12px 14px;
+  color: var(--tl-brand-blue);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.tl-hero__evidence-bar span + span { border-left: 1px solid rgba(16,47,72,.16); }
+.tl-hero__slide-status { top: 22px; right: 24px; bottom: auto; }
+@keyframes tlEvidenceBarIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tl-home .tl-proof__feature {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-left: 34px;
+  border-left: 1px solid rgba(226,83,70,.25);
+  background: linear-gradient(135deg,rgba(255,255,255,.98),rgba(255,248,244,.93));
+}
+.tl-home .tl-proof__feature::before,
+.tl-home .tl-proof__feature::after { content: none; }
+.tl-proof__feature-art {
+  position: absolute;
+  z-index: -1;
+  bottom: -30px;
+  left: -46px;
+  width: 46%;
+  height: 58%;
+  opacity: .16;
+  transform: rotate(-3deg);
+  -webkit-mask-image: linear-gradient(135deg,#000,transparent 82%);
+  mask-image: linear-gradient(135deg,#000,transparent 82%);
+}
+.tl-proof__feature-art img { object-fit: cover; object-position: 35% center; }
+.tl-home .tl-proof__feature > :not(.tl-proof__feature-art) { position: relative; z-index: 1; }
+.tl-home .tl-proof__supporting article {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 52px;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 20px 20px 24px;
+  overflow: visible;
+  background:
+    radial-gradient(circle at 12% 20%,rgba(226,83,70,.08) 0 2px,transparent 3px) 0 0/18px 18px,
+    rgba(255,255,255,.96);
+}
+.tl-home .tl-proof__supporting article::after { content: none; }
+.tl-home .tl-proof__supporting article > div { min-width: 0; display: grid; grid-template-columns: 1fr; align-items: center; gap: 7px; }
+.tl-home .tl-proof__supporting article > div span { max-width: none; line-height: 1.35; }
+.tl-home .tl-proof__supporting article { opacity: 1; transform: none; }
+.tl-home .tl-proof__supporting article i {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: linear-gradient(135deg,#f05246,#ff897d);
+  place-items: center;
+  box-shadow: 0 8px 18px rgba(189,48,38,.2);
+}
+.tl-home .tl-proof__supporting article i svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 720px) {
+  .tl-hero__contacts { margin-top: 16px; }
+  .tl-hero__evidence-bar { right: 10px; bottom: 10px; left: 10px; border-radius: 18px; }
+  .tl-hero__evidence-bar span { padding: 10px 5px; font-size: 8px; letter-spacing: .055em; }
+  .tl-home .tl-proof__supporting article > div { gap: 6px; }
+  .tl-proof__feature-art { width: 78%; height: 45%; opacity: .12; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl-hero__evidence-bar { animation: none; }
+}
+
+.booking-confirmation {
+  align-content: start;
+  gap: 24px;
+  padding: clamp(110px,9vw,150px) clamp(16px,4vw,48px) 60px;
+  background: linear-gradient(135deg,#fff 0%,#fff7f2 100%);
+}
+.booking-confirmation > section { width: min(100%,980px); max-width: 980px; }
+.booking-confirmation > section:first-child { text-align: center; }
+.booking-calendar {
+  display: grid;
+  gap: 22px;
+  padding: clamp(24px,4vw,42px) !important;
+  border-radius: 30px !important;
+  box-shadow: 9px 11px 0 rgba(189,48,38,.1);
+}
+.booking-calendar header { max-width: 720px; }
+.booking-calendar header > p { margin: 0 0 8px; color: var(--heritage-red); font-size: 11px; font-weight: 850; letter-spacing: .11em; text-transform: uppercase; }
+.booking-calendar h2 { margin: 0 0 10px; color: var(--tl-brand-blue); font-size: clamp(32px,4vw,52px); }
+.booking-calendar header span,
+.booking-calendar--unavailable p { color: var(--slate); line-height: 1.65; }
+.booking-calendar iframe { width: 100%; height: 720px; border: 0; border-radius: 22px; background: #fff; }
+.booking-calendar__success { padding: 15px 18px; border: 1px solid rgba(31,120,74,.25); border-radius: 16px; background: #eef9f2; color: #175f3b; font-weight: 750; }
+@media (max-width:720px) {
+  .booking-calendar iframe { height: 760px; }
+}
 @media (prefers-reduced-motion:reduce) {
   .tl-hero__rotating-line { animation:none; }
   .ep-care-article .cs-block, .ep-method-grid > article, .ep-transform-list > article,
@@ -2617,3 +2746,10 @@ main button, main input, main select, main textarea, main .btn, main [class*="bu
   #live-tender-search .tender-card__desc { display: block; overflow: visible; padding-right: 2px; -webkit-line-clamp: unset; }
   .tenders-main__saved { width: 100%; justify-content: center; }
 }
+
+/* Final accessibility pass: these editorial accents stay on-brand while
+   reaching AA contrast on the pale peach cards. */
+.ep-care-article .cs-block h2 .num { color: #98251f; }
+.ep-care-article .transform-strip .from { color: #26354a; }
+.ep-care-article .transform-strip .to { color: #26354a; }
+.ep-care-article .related-cases .tag { color: #8b3d12; }

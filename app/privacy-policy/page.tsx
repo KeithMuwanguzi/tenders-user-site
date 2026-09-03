@@ -153,7 +153,8 @@ export default function PrivacyPolicyPage() {
                   <li><strong>Hosting and CDN:</strong> Vercel Inc. (United States, with UK Data Bridge safeguards) and Cloudflare Inc.</li>
                   <li><strong>Email and document storage:</strong> Google LLC (Google Workspace).</li>
                   <li><strong>Accounting and bookkeeping:</strong> our accountants for statutory reporting under the Companies Act 2006 and HMRC rules.</li>
-                  <li><strong>Payment infrastructure:</strong> our bank and your bank or accounts payable provider for invoice settlement.</li>
+                  <li><strong>Payment infrastructure:</strong> Stripe for secure card payments, and our bank and your bank or accounts payable provider for invoice settlement. TenderLab does not receive or store complete card details.</li>
+                  <li><strong>Appointment scheduling:</strong> Calendly for selecting an available appointment and issuing booking confirmations. Where enabled on the event, Google Calendar and Google Meet provide the calendar invitation and online meeting link.</li>
                   <li><strong>Professional advisors:</strong> legal, insurance and indemnity advisors on a need-to-know basis.</li>
                   <li><strong>Regulators, law enforcement or courts:</strong> where we are legally compelled to disclose.</li>
                   <li><strong>A successor entity:</strong> in the event of a merger, acquisition or sale of business, subject to confidentiality safeguards.</li>
@@ -206,6 +207,7 @@ export default function PrivacyPolicyPage() {
                 <p>The <a href="https://www.legislation.gov.uk/uksi/2003/2426/contents" target="_blank" rel="noopener noreferrer">Privacy and Electronic Communications Regulations 2003</a> (PECR) govern cookies and electronic marketing. This site uses two categories of cookie.</p>
                 <p><strong>Strictly necessary cookies.</strong> Required to deliver the page, remember your consent choices and protect against fraud. PECR Regulation 6(4) does not require consent for these.</p>
                 <p><strong>Optional analytics cookies.</strong> Google Analytics is loaded only after you accept this category. It helps us understand page visits, navigation and site performance using aggregated usage information. If you reject analytics, the analytics script is not loaded.</p>
+                <p><strong>Booking services.</strong> If you choose to book, the confirmation page can load Calendly so you can select a genuine available appointment. Paid services redirect to Stripe Checkout. These services may use cookies or similar storage required to complete the booking, prevent fraud and remember the transaction.</p>
                 <p>We do not use third-party advertising cookies, behavioural advertising cookies or cross-site tracking pixels.</p>
                 <div className="he-cookie-table" role="region" aria-label="TenderLab cookie categories">
                   <div><strong>Necessary</strong><span>Consent preference and essential site operation</span><em>Always active</em></div>

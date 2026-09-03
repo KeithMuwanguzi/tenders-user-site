@@ -4,7 +4,7 @@ import { CONSULTATIONS } from '@/lib/consultations'
 
 export const metadata: Metadata = {
   title: 'Book a Tender Consultation | TenderLab',
-  description: 'Choose and pay for focused tender advice, a bid feedback debrief, a tender readiness review or a full tender briefing with TenderLab.',
+  description: 'Book a free 30-minute tender consultation or choose fixed-fee bid feedback, tender readiness and briefing support from TenderLab.',
   alternates: { canonical: '/book-consultation' },
 }
 

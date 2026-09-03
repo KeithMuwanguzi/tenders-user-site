@@ -2,6 +2,9 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Keep titles, descriptions and canonicals inside <head> for every crawler
+  // and audit client instead of relying on streamed body metadata.
+  htmlLimitedBots: /.*/,
   poweredByHeader: false,
   trailingSlash: false,
   // Low-memory VPS builds: one page at a time, longer timeout for heavy routes.
@@ -45,6 +48,7 @@ const nextConfig: NextConfig = {
       "base-uri 'self'",
       "object-src 'none'",
       "frame-ancestors 'none'",
+      "frame-src 'self' https://calendly.com https://*.calendly.com",
       "form-action 'self'",
       "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",

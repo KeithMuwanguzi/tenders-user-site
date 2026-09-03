@@ -27,7 +27,7 @@ const NAV: NavItem[] = [
       { label: 'Mobilisation Support',   href: '/services/mobilisation-support',   desc: 'Turn winning promises into delivery actions' },
       { label: 'Pipeline Monitoring',    href: '/services/tender-pipeline-monitoring', desc: 'Track suitable care opportunities early' },
       { label: 'Retained Support',       href: '/services/tender-retainer',        desc: 'Manage tendering as an ongoing function' },
-      { label: 'Book a Consultation',    href: '/book-consultation',               desc: 'Choose and pay for focused tender advice' },
+      { label: 'Book a Consultation',    href: '/book-consultation',               desc: 'Book free or fixed-fee focused tender advice' },
     ],
   },
   {

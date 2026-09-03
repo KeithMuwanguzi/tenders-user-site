@@ -8,14 +8,17 @@ const slides = [
   {
     src: '/images/editorial/tenderlab-care-evidence-hero-v1.webp',
     alt: 'A care professional, operational evidence and a procurement evaluator connected through the tender process',
+    labels: ['Care delivery', 'Operational proof', 'Evaluator clarity'],
   },
   {
     src: '/images/editorial/tenderlab-bid-writing-hero-v1.webp',
     alt: 'Tender specialists examining buyer documents alongside evidence from a care service',
+    labels: ['Buyer requirements', 'Evidence mapping', 'Quality review'],
   },
   {
     src: '/images/editorial/tenderlab-proof-hero-v1.webp',
     alt: 'A tender evaluator reviewing evidence and scoring information from a care provider',
+    labels: ['Care evidence', 'Evaluator review', 'Scoring confidence'],
   },
 ]
 
@@ -32,8 +35,15 @@ export default function HomeHero() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 5000)
-    return () => window.clearInterval(timer)
+    let interval = 0
+    const firstRotation = window.setTimeout(() => {
+      setActive((current) => (current + 1) % slides.length)
+      interval = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 6000)
+    }, 12000)
+    return () => {
+      window.clearTimeout(firstRotation)
+      if (interval) window.clearInterval(interval)
+    }
   }, [])
 
   useEffect(() => {
@@ -70,7 +80,7 @@ export default function HomeHero() {
                 Explore tender writing services <span aria-hidden="true">↗</span>
               </Link>
             </div>
-            <div className="tl-hero__contacts" aria-label="TenderLab contact details">
+            <div className="tl-hero__contacts" role="group" aria-label="TenderLab contact details">
               <a href="tel:+441707240393">01707 240393</a>
               <a href="mailto:info@tenderlab.co.uk">info@tenderlab.co.uk</a>
             </div>
@@ -90,6 +100,9 @@ export default function HomeHero() {
                 aria-hidden={index !== active}
               />
             ))}
+            <div key={`labels-${active}`} className="tl-hero__evidence-bar" role="group" aria-label="What the current image represents">
+              {slides[active].labels.map((label) => <span key={label}>{label}</span>)}
+            </div>
             <div className="tl-hero__slide-status" aria-hidden="true">
               {slides.map((slide, index) => <span key={slide.src} className={index === active ? 'is-active' : ''} />)}
             </div>

@@ -14,7 +14,7 @@ export default function HomeReviewCarousel() {
 
   return (
     <>
-      <div className="tl-review-controls" aria-label="Client review controls">
+      <div className="tl-review-controls" role="group" aria-label="Client review controls">
         <button type="button" onClick={() => move(-1)} aria-label="Show previous review">←</button>
         <button type="button" onClick={() => move(1)} aria-label="Show next review">→</button>
       </div>
@@ -24,7 +24,7 @@ export default function HomeReviewCarousel() {
             <div className={`tl-review__brand${review.darkLogo ? ' tl-review__brand--dark' : ''}`}>
               {review.logo ? <Image src={review.logo} alt={review.organisation} width={176} height={64} /> : <strong>{review.organisation}</strong>}
             </div>
-            <div className="tl-review__stars" aria-label="Five star review">★★★★★</div>
+            <div className="tl-review__stars" role="img" aria-label="Five star review">★★★★★</div>
             <blockquote>“{(review.quote || review.summary || '').split('\n\n')[0]}”</blockquote>
             <footer>
               <span><strong>{review.person}</strong>{review.role}</span>

@@ -178,6 +178,12 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>
 }
 
+function ResultIcon({ type }: { type: 'submissions' | 'value' | 'scores' }) {
+  if (type === 'submissions') return <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 6.5h11l4 4V26H9z"/><path d="M20 6.5v5h5M13 16h7M13 20h7"/></svg>
+  if (type === 'value') return <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 25h18M10 22v-5M16 22V11M22 22v-8"/><path d="m8 12 6-5 5 3 6-5"/><path d="M21 5h4v4"/></svg>
+  return <svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 5 3.3 6.7 7.4 1.1-5.4 5.2 1.3 7.4-6.6-3.5-6.6 3.5 1.3-7.4-5.4-5.2 7.4-1.1z"/></svg>
+}
+
 export default async function HomePage() {
   const [blogPosts, publishedTenders] = await Promise.all([fetchBlogs(), fetchPublishedTenders(80)])
   const featuredCases = CASE_STUDIES.slice(0, 4)
@@ -225,15 +231,18 @@ export default async function HomePage() {
           </div>
           <div className="tl-proof__story">
             <article className="tl-proof__feature">
+              <div className="tl-proof__feature-art" aria-hidden="true">
+                <Image src="/images/editorial/tenderlab-process-hero-v1.webp" alt="" fill sizes="420px" />
+              </div>
               <div><strong>92%</strong><span>Recorded historic win rate</span></div>
               <p>Before accepting an instruction, we read the buyer documents and brief the client on eligibility, evidence, delivery risk and whether the opportunity is genuinely worth pursuing. Drafts then move from the writing team to independent reviewers and a final evaluator-experienced supervisor before the client approves submission.</p>
               <small>If a bid is lost because our quality responses did not achieve the required marks, the next tender-writing fee is on us, subject to our terms of service.</small>
               <Link href="/terms" className="tl-text-link">Read the terms <Arrow /></Link>
             </article>
             <div className="tl-proof__supporting">
-              <article><strong>200+</strong><span>Submissions supported</span></article>
-              <article><strong>£50M+</strong><span>Aggregate contract value</span></article>
-              <article><strong>5/5</strong><span>Documented question scores</span></article>
+              <article><div><strong>200+</strong><span>Submissions supported</span></div><i><ResultIcon type="submissions" /></i></article>
+              <article><div><strong>£50M+</strong><span>Aggregate contract value</span></div><i><ResultIcon type="value" /></i></article>
+              <article><div><strong>5/5</strong><span>Documented question scores</span></div><i><ResultIcon type="scores" /></i></article>
             </div>
             <figure className="tl-proof__landmark" aria-label="TenderLab supports care providers across the United Kingdom">
               <Image
@@ -403,28 +412,16 @@ export default async function HomePage() {
               <h2>Care providers that have worked directly with TenderLab.</h2>
             </div>
             <p>
-              Selected health and social care organisations supported through direct TenderLab engagements. Links
-              lead to each provider’s own website.
+              Selected health and social care organisations supported through direct TenderLab engagements. Where a
+              verified provider website is available, the card links to it.
             </p>
           </div>
           <div className="tl-clients__network">
             <div className="tl-client-grid">
-              {DIRECT_CLIENTS.filter((client) => client.name !== 'Absolute Care Services').map((client, index) => (
-                <a
-                  key={client.name}
-                  href={client.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}
-                  aria-label={`Visit provider — ${client.name} website`}
-                >
-                  <i aria-hidden="true">{index + 1}</i>
-                  <span className={`tl-client__logo tl-client__logo--${client.treatment}`}>
-                    <Image src={client.logo} alt={client.name} width={220} height={86} />
-                  </span>
-                  <small>Visit provider <Arrow /></small>
-                </a>
-              ))}
+              {DIRECT_CLIENTS.filter((client) => client.name !== 'Absolute Care Services').map((client, index) => {
+                const contents = <><i aria-hidden="true">{index + 1}</i><span className={`tl-client__logo tl-client__logo--${client.treatment}`}><Image src={client.logo} alt={client.name} width={220} height={86} /></span><small>{client.href ? <>Visit provider <Arrow /></> : 'Provider website unavailable'}</small></>
+                return client.href ? <a key={client.name} href={client.href} target="_blank" rel="noopener noreferrer" className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}>{contents}</a> : <div key={client.name} className={`tl-client${client.dark ? ' tl-client--dark' : ''}`}>{contents}</div>
+              })}
             </div>
             <a
               className="tl-clients__trustpilot"

@@ -81,27 +81,15 @@ export default function ReviewsPage() {
               <h2>Selected care providers that have worked directly with us.</h2>
             </div>
             <p>
-              Living Plus Care appears first by design. Every tile links to the provider&apos;s own website and is
-              included as a named relationship, not as a claim that every engagement produced the same outcome.
+              Living Plus Care appears first by design. Verified website links are provided where available. Each
+              organisation is included as a named relationship, not as a claim that every engagement produced the same outcome.
             </p>
           </div>
           <div className="ep-review-clients__grid">
-            {DIRECT_CLIENTS.map((client) => (
-              <a
-                key={client.name}
-                href={client.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`ep-review-client${client.dark ? ' ep-review-client--dark' : ''}`}
-                aria-label={`Visit ${client.name} website`}
-              >
-                <span className={`ep-review-client__logo ep-review-client__logo--${client.treatment}`}>
-                  <Image src={client.logo} alt={client.name} width={220} height={86} />
-                </span>
-                <span>{client.name}</span>
-                <Arrow />
-              </a>
-            ))}
+            {DIRECT_CLIENTS.map((client) => {
+              const contents = <><span className={`ep-review-client__logo ep-review-client__logo--${client.treatment}`}><Image src={client.logo} alt={client.name} width={220} height={86} /></span><span>{client.name}</span>{client.href ? <Arrow /> : <small>Website unavailable</small>}</>
+              return client.href ? <a key={client.name} href={client.href} target="_blank" rel="noopener noreferrer" className={`ep-review-client${client.dark ? ' ep-review-client--dark' : ''}`}>{contents}</a> : <div key={client.name} className={`ep-review-client${client.dark ? ' ep-review-client--dark' : ''}`}>{contents}</div>
+            })}
           </div>
         </div>
       </section>

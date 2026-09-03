@@ -1,6 +1,6 @@
 export type DirectClient = {
   name: string
-  href: string
+  href?: string
   logo: string
   treatment: 'wide' | 'mark'
   dark?: boolean
@@ -58,7 +58,6 @@ export const DIRECT_CLIENTS: DirectClient[] = [
   },
   {
     name: 'Your Hope Care',
-    href: 'https://yourhopecare.com/',
     logo: '/images/clients/your-hope-care-transparent.png',
     treatment: 'mark',
   },
