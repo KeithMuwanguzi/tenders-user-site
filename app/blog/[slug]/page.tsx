@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import BlogDetailView from '@/components/blog/BlogDetailView'
 import { fetchBlogBySlug, fetchBlogs } from '@/lib/blogs'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -53,6 +54,7 @@ export default async function BlogSlugPage({ params }: Props) {
       />
       <main className="blog-v2 blog-v2--detail">
         <BlogDetailView post={post} posts={posts} />
+        <ContextualResourcePanel eyebrow="Put the guidance to work" title="Complete one relevant TenderLab check next." slugs={['tools/tender-readiness-assessment']} />
       </main>
     </>
   )

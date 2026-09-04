@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 import { DECISION_GUIDES, DECISION_GUIDE_BY_SLUG } from '@/lib/decision-guides'
 import { articleSchema, breadcrumbSchema, defaultOpenGraph, defaultTwitter, faqSchema } from '@/lib/seo'
 
@@ -97,6 +98,8 @@ export default async function DecisionGuidePage({ params }: { params: Promise<{ 
           </div>
         </section>
       )}
+
+      <ContextualResourcePanel eyebrow="Use this guidance" title="Turn the reading into a documented decision." slugs={[slug.includes('score') || slug.includes('lose') ? 'tools/score-my-response' : slug.includes('turnover') || slug.includes('cqc') ? 'tools/tender-eligibility-checker' : 'tools/what-tenders-can-we-bid-for']} />
 
       <EditorialFaq title={`Questions about ${guide.title.toLowerCase()}.`} items={guide.faq} />
     </main>

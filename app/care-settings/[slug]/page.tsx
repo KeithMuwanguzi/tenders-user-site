@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
 import ContractWonMedallion from '@/components/ContractWonMedallion'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 import { CASE_STUDIES } from '@/lib/case-studies-data'
 import {
   breadcrumbSchema,
@@ -526,6 +527,16 @@ export default async function CareSettingPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      <ContextualResourcePanel
+        eyebrow="Tools for this care setting"
+        title={`Test your ${setting.toLowerCase()} tender position.`}
+        slugs={[
+          'tools/what-tenders-can-we-bid-for',
+          slug === 'domiciliary-care' || slug === 'live-in-care' ? 'calculators/tender-pricing' : 'calculators/mobilisation-capacity',
+          'tools/evidence-health-check',
+        ]}
+      />
 
       <EditorialFaq
         title={`Questions about ${setting.toLowerCase()} tenders`}

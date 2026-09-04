@@ -77,8 +77,38 @@ const NAV: NavItem[] = [
       },
     ],
   },
+  {
+    label: 'Resources', href: '/resources', mega: true,
+    children: [
+      { label: 'Assess your organisation', href: '/resources', color: '#E74839', children: [
+        { label: 'Tender Readiness Assessment', href: '/resources/tools/tender-readiness-assessment' },
+        { label: 'What Tenders Can We Bid For?', href: '/resources/tools/what-tenders-can-we-bid-for' },
+        { label: 'Evidence Health Check', href: '/resources/tools/evidence-health-check' },
+      ] },
+      { label: 'Assess an opportunity', href: '/resources', color: '#C58A16', children: [
+        { label: 'Tender Eligibility Checker', href: '/resources/tools/tender-eligibility-checker' },
+        { label: 'Bid / No-Bid Decision Tool', href: '/resources/tools/bid-no-bid' },
+        { label: 'Submission Risk Checker', href: '/resources/tools/submission-risk-checker' },
+      ] },
+      { label: 'Improve a bid', href: '/resources', color: '#2E5E8C', children: [
+        { label: 'Score My Response', href: '/resources/tools/score-my-response' },
+        { label: 'Compliance Matrix Builder', href: '/resources/builders/compliance-matrix' },
+        { label: 'Case Study Builder', href: '/resources/builders/tender-case-study' },
+      ] },
+      { label: 'Plan delivery', href: '/resources', color: '#0A6E5A', children: [
+        { label: 'Tender Pricing Calculator', href: '/resources/calculators/tender-pricing' },
+        { label: 'Mobilisation Capacity', href: '/resources/calculators/mobilisation-capacity' },
+        { label: 'Social Value Builder', href: '/resources/builders/social-value' },
+      ] },
+      { label: 'Learn', href: '/resources', color: '#5B3A8B', children: [
+        { label: 'Organisation Profile', href: '/resources/profile' },
+        { label: 'Tender Guides', href: '/guides' },
+        { label: 'Downloadable Handbooks', href: '/resources#learn' },
+        { label: 'Blogs and Insights', href: '/blog' },
+      ] },
+    ],
+  },
   { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Blogs',         href: '/blog' },
   {
     label: 'About Us', href: '/about',
     children: [
@@ -202,6 +232,7 @@ export default function Nav() {
     if (pathname === '/care-settings' || pathname.startsWith('/care-settings/')) return '/care-settings'
     if (pathname === '/tenders' || pathname.startsWith('/tenders/')) return '/tenders'
     if (pathname === '/case-studies' || pathname.startsWith('/case-studies/')) return '/case-studies'
+    if (pathname === '/resources' || pathname.startsWith('/resources/')) return '/resources'
     if (pathname === '/blog' || pathname.startsWith('/blog/')) return '/blog'
     if (
       pathname === '/about' || pathname.startsWith('/about/') ||
@@ -368,8 +399,8 @@ export default function Nav() {
                     ))}
                   </div>
                   <div className="nav__mega-foot">
-                    <Link href="/care-settings" className="nav__mega-cta" onClick={closeAll}>
-                      Browse all care settings <ArrowRight />
+                    <Link href={item.href} className="nav__mega-cta" onClick={closeAll}>
+                      {item.label === 'Resources' ? 'Open the full resource centre' : 'Browse all care settings'} <ArrowRight />
                     </Link>
                   </div>
                 </div>

@@ -13,6 +13,7 @@ import {
 import { fetchPublishedTenders } from '@/lib/published-tenders'
 import TendersClient from './TendersClient'
 import { getCareCategoryById } from '@/lib/tender-categories'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -136,14 +137,18 @@ export default async function TendersPage({
           </figure>
           <div className="tenders-search-hero__actions">
             <a href="#live-tender-results" className="btn btn-primary">Search live tenders</a>
-            <Link href="/contact?ref=tender-fit#enquiry" className="btn btn-ghost">Check whether a tender fits</Link>
+            <Link href="/resources/tools/tender-eligibility-checker" className="btn btn-ghost">Check whether a tender fits</Link>
           </div>
         </div>
       </section>
 
+      <ContextualResourcePanel eyebrow="Know what fits you" title="Qualify the opportunity before committing bid time." slugs={['tools/what-tenders-can-we-bid-for','tools/tender-eligibility-checker','tools/bid-no-bid']} />
+
       <div id="live-tender-search">
         <TendersClient initialTenders={initialTenders} initialCategory={initialCategory} />
       </div>
+
+      <ContextualResourcePanel eyebrow="After your search" title="Turn a shortlisted tender into a recorded decision." slugs={['tools/tender-eligibility-checker','tools/bid-no-bid','reports/opportunity-qualification']} />
 
       <section className="tenders-intro" style={{ background: '#fff', padding: '2rem 0', borderBottom: '1px solid #E0E4E8' }}>
         <div style={{ maxWidth: 920, margin: '0 auto', padding: '0 1.5rem' }}>

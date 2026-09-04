@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import EditorialHero from '@/components/EditorialHero'
 import EditorialFaq from '@/components/EditorialFaq'
 import { SERVICES_DATA, getServiceBySlug, type ServiceData } from '@/lib/services-data'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 import {
   defaultOpenGraph,
   defaultTwitter,
@@ -403,6 +404,22 @@ export default async function ServicePage({
           </div>
         </div>
       </section>
+
+      <ContextualResourcePanel
+        eyebrow="Free preparation tool"
+        title="Complete a useful first diagnosis before choosing paid support."
+        slugs={[{
+          'bid-viability': 'tools/bid-no-bid',
+          'bid-writing': 'builders/compliance-matrix',
+          'pre-submission-review': 'tools/score-my-response',
+          'lost-bid-debrief': 'tools/tender-feedback-analysis',
+          'tender-readiness-audit': 'tools/tender-readiness-assessment',
+          'tender-training': 'tools/tender-improvement-plan',
+          'mobilisation-support': 'calculators/mobilisation-capacity',
+          'tender-pipeline-monitoring': 'tools/what-tenders-can-we-bid-for',
+          'tender-retainer': 'tools/tender-improvement-plan',
+        }[slug] || 'tools/tender-readiness-assessment']}
+      />
 
       <EditorialFaq title={`Questions about ${service.title.toLowerCase()}.`} items={faq} />
     </main>

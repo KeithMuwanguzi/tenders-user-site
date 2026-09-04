@@ -11,6 +11,9 @@ import HomeReviewCarousel from '@/components/HomeReviewCarousel'
 import HomeMotion from '@/components/HomeMotion'
 import ContractWonMedallion from '@/components/ContractWonMedallion'
 import { fetchPublishedTenders, type PublishedTenderSnapshot } from '@/lib/published-tenders'
+import ResourceCard from '@/app/resources/ResourceCard'
+import { RESOURCES } from '@/lib/resources-data'
+import resourceStyles from '@/app/resources/resources.module.css'
 
 // The homepage carries the current tender rail. Render it on request so the
 // portal's active-only feed is read at runtime instead of being swallowed by
@@ -222,6 +225,19 @@ export default async function HomePage() {
           <Link href="/tenders" className="tl-tender-ticker__all">Go to tenders <Arrow /></Link>
         </section>
       ) : null}
+
+      <section className={`${resourceStyles.featured} tl-home-resources`} aria-labelledby="home-resources-heading" data-reveal>
+        <div className="tl-shell">
+          <div className={resourceStyles.sectionHead}>
+            <div><span>Free TenderLab tools</span><h2 id="home-resources-heading">You have found an opportunity. Now test whether it fits.</h2></div>
+            <p>Use a focused diagnostic before committing bid time. Each result shows what is working, what needs verification and the exact next action.</p>
+          </div>
+          <div className={resourceStyles.libraryGrid}>
+            {RESOURCES.filter((resource) => ['tools/tender-readiness-assessment', 'tools/tender-eligibility-checker', 'tools/score-my-response'].includes(resource.slug)).map((resource) => <ResourceCard key={resource.slug} resource={resource} />)}
+          </div>
+          <div className="tl-services__footer"><Link href="/resources" className="tl-button tl-button--primary">Explore the resource centre <Arrow /></Link></div>
+        </div>
+      </section>
 
       <section className="tl-proof tl-proof--explained" aria-labelledby="record-heading" data-reveal>
         <div className="tl-shell">

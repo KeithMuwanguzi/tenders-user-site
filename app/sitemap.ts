@@ -4,6 +4,7 @@ import { SERVICES_DATA } from '@/lib/services-data'
 import { fetchBlogsResult } from '@/lib/server-blogs'
 import { TENDER_LANDING_PAGES } from '@/lib/tender-landing-pages'
 import { DECISION_GUIDES } from '@/lib/decision-guides'
+import { RESOURCES, resourceHref } from '@/lib/resources-data'
 
 const BASE = 'https://www.tenderlab.co.uk'
 const STRUCTURAL_UPDATED = new Date('2026-07-30T00:00:00.000Z')
@@ -71,6 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/case-studies`, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BASE}/tenders`, changeFrequency: 'daily', priority: 0.8 },
     { url: `${BASE}/blog`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${BASE}/resources`, changeFrequency: 'weekly', priority: 0.95 },
     { url: `${BASE}/process`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE}/reviews`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE}/proof`, changeFrequency: 'monthly', priority: 0.8 },
@@ -106,6 +108,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  const resources: MetadataRoute.Sitemap = RESOURCES.map((resource) => ({
+    url: `${BASE}${resourceHref(resource)}`,
+    lastModified: new Date('2026-09-04T00:00:00.000Z'),
+    changeFrequency: 'monthly' as const,
+    priority: resource.featured ? 0.9 : 0.8,
+  }))
+
   const caseStudies: MetadataRoute.Sitemap = CASE_STUDIES.map((cs) => ({
     url: `${BASE}/case-studies/${cs.slug}`,
     changeFrequency: 'monthly' as const,
@@ -137,5 +146,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }))
 
-  return [...core, ...services, ...careSettings, ...tenderHubs, ...guides, ...caseStudies, ...blog]
+  return [...core, ...services, ...careSettings, ...tenderHubs, ...guides, ...resources, ...caseStudies, ...blog]
 }

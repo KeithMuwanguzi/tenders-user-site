@@ -2757,3 +2757,16 @@ main button, main input, main select, main textarea, main .btn, main [class*="bu
 .ep-care-article .transform-strip .from { color: #26354a; }
 .ep-care-article .transform-strip .to { color: #26354a; }
 .ep-care-article .related-cases .tag { color: #8b3d12; }
+/* Resource-centre tender fit panel: contextual tools without a registration wall. */
+.tender-detail__fit-panel{margin:24px 0;padding:clamp(24px,4vw,42px);border:1px solid #eadfd3;border-radius:26px;background:linear-gradient(135deg,#fffaf3 0%,#fff 100%);box-shadow:0 12px 30px rgba(16,47,73,.07)}
+.tender-detail__fit-panel h2{max-width:760px;margin:8px 0 12px}
+.tender-detail__fit-panel>p:not(.ep-kicker){max-width:760px;line-height:1.65}
+.tender-detail__fit-panel>small{display:block;max-width:760px;margin-top:22px;color:#5d6d78;line-height:1.5}
+.nav__mega-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0 28px}
+.tl-context-resources{background:#f8f3ea}
+.tl-context-resources__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tl-context-resources__grid>a{display:flex;flex-direction:column;min-height:290px;padding:25px;border:1px solid #eadfd3;border-radius:24px;background:#fff;color:#102f49;text-decoration:none;box-shadow:0 8px 24px rgba(16,47,73,.05);transition:transform .18s ease,box-shadow .18s ease}
+.tl-context-resources__grid>a:hover{transform:translateY(-4px);box-shadow:0 15px 34px rgba(16,47,73,.1)}
+.tl-context-resources__grid>a>span{color:#e74839;font-weight:800}.tl-context-resources__grid small{text-transform:uppercase;letter-spacing:.12em;color:#e74839;font-weight:800;margin-top:28px}.tl-context-resources__grid h3{font-family:Georgia,'Times New Roman',serif;font-size:1.6rem;line-height:1.08;margin:8px 0 12px}.tl-context-resources__grid p{line-height:1.55;margin:0}.tl-context-resources__grid strong{margin-top:auto;padding-top:18px}
+@media(max-width:760px){.tl-context-resources__grid{grid-template-columns:1fr}.tl-context-resources__grid>a{min-height:240px}}
+@media(prefers-reduced-motion:reduce){.tl-context-resources__grid>a{transition:none}.tl-context-resources__grid>a:hover{transform:none}}

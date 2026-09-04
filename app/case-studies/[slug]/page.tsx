@@ -7,6 +7,7 @@ import { CASE_STUDY_DETAILS } from '@/lib/case-studies-detail'
 import { breadcrumbSchema, defaultOpenGraph, defaultTwitter } from '@/lib/seo'
 import GalleryGrid from './GalleryGrid'
 import ContractWonMedallion from '@/components/ContractWonMedallion'
+import ContextualResourcePanel from '@/components/ContextualResourcePanel'
 
 export function generateStaticParams() {
   return CASE_STUDIES.map((study) => ({ slug: study.slug }))
@@ -260,6 +261,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </div>
         </div>
       </section>
+      <ContextualResourcePanel eyebrow="Turn delivery into proof" title="Build evidence that can withstand evaluator scrutiny." slugs={['builders/tender-case-study','tools/evidence-health-check']} />
     </main>
   )
 }

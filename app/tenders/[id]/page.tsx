@@ -9,6 +9,7 @@ import {
   breadcrumbSchema,
 } from '@/lib/seo'
 import { fetchPublishedTenderById } from '@/lib/published-tenders'
+import TenderFitPanel from '@/components/TenderFitPanel'
 import { inferCareCategoryLabel } from '@/lib/tender-categories'
 import {
   mergeGovAndPublished,
@@ -370,6 +371,8 @@ export default async function TenderDetailPage({ params, searchParams }: Props) 
                   </Link>
                 </div>
               </div>
+
+              <TenderFitPanel id={id} title={tender.title} />
 
               <div className="tender-detail__source-note">
                 <p>

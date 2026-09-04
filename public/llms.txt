@@ -1,5 +1,12 @@
 # TenderLab
 
+## Resource centre
+- [TenderLab resource centre](https://www.tenderlab.co.uk/resources): Free tender assessments, eligibility and bid decision tools, pricing and mobilisation calculators, response improvement builders and practical UK care tender guides.
+- [Tender readiness assessment](https://www.tenderlab.co.uk/resources/tools/tender-readiness-assessment): Evidence-led preliminary readiness diagnosis for UK care providers.
+- [Tender eligibility checker](https://www.tenderlab.co.uk/resources/tools/tender-eligibility-checker): Condition-by-condition check against a live procurement.
+- [Bid / No-Bid decision tool](https://www.tenderlab.co.uk/resources/tools/bid-no-bid): Recorded opportunity qualification decision.
+- [Score My Response](https://www.tenderlab.co.uk/resources/tools/score-my-response): Structured self-check against the question, specification and published scoring descriptors.
+
 > TenderLab is a UK tender-writing and bid consultancy specialising in health and social care procurement.
 
 Canonical website: https://www.tenderlab.co.uk/
