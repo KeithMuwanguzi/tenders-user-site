@@ -16,6 +16,9 @@ export async function POST(request: Request) {
     const body = (await request.json()) as BookingBody
     const consultation = CONSULTATION_BY_ID.get(clean(body.consultationId, 80))
     if (!consultation) return NextResponse.json({ error: 'Choose a valid consultation.' }, { status: 400 })
+    if (consultation.price > 0 && process.env.ENABLE_PAID_CONSULTATIONS !== 'true') {
+      return NextResponse.json({ error: 'Paid consultations are not accepting bookings yet. Please choose the free tender consultation.' }, { status: 503 })
+    }
     const bookingReference = clean(body.bookingReference, 36)
     const details = { firstName: clean(body.details?.firstName,100), lastName: clean(body.details?.lastName,100), email: clean(body.details?.email,254), phone: clean(body.details?.phone,50), organisation: clean(body.details?.organisation,180), notes: clean(body.details?.notes,2000) }
     const attendees = Number.isInteger(body.attendees) && Number(body.attendees) >= 1 && Number(body.attendees) <= 6 ? Number(body.attendees) : 1
