@@ -4,7 +4,7 @@ import { PUBLIC_CONSULTATIONS } from '@/lib/consultations'
 
 export const metadata: Metadata = {
   title: 'Book a Tender Consultation | TenderLab',
-  description: 'Book a free 30-minute tender consultation with TenderLab.',
+  description: 'Book a free 30-minute tender consultation or request a fixed-fee written Tender Briefing from TenderLab.',
   alternates: { canonical: '/book-consultation' },
 }
 

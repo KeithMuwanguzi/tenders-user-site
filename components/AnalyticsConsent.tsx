@@ -99,9 +99,25 @@ export default function AnalyticsConsent() {
     const stored = readPreferences()
     setPreferences(stored)
     setAnalyticsEnabled(stored?.analytics ?? false)
-    if (!stored) setPanelOpen(true)
-    else if (stored.analytics) startAnalytics()
+    if (stored?.analytics) startAnalytics()
     else stopAnalytics()
+
+    if (stored) return
+
+    const showAtPageMiddle = () => {
+      const scrollableDistance = document.documentElement.scrollHeight - window.innerHeight
+      if (scrollableDistance <= 0 || window.scrollY < scrollableDistance / 2) return
+      setPanelOpen(true)
+      window.removeEventListener('scroll', showAtPageMiddle)
+      window.removeEventListener('resize', showAtPageMiddle)
+    }
+
+    window.addEventListener('scroll', showAtPageMiddle, { passive: true })
+    window.addEventListener('resize', showAtPageMiddle)
+    return () => {
+      window.removeEventListener('scroll', showAtPageMiddle)
+      window.removeEventListener('resize', showAtPageMiddle)
+    }
   }, [])
 
   useEffect(() => {

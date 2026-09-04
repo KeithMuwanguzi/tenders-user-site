@@ -54,7 +54,9 @@ export const CONSULTATIONS: Consultation[] = [
 
 export const CONSULTATION_BY_ID = new Map(CONSULTATIONS.map((item) => [item.id, item]))
 
-// Calendly's current plan supports one active event type. Keep paid services
-// defined for a future upgrade, but only offer the free consultation publicly
-// until their dedicated calendars can be activated.
-export const PUBLIC_CONSULTATIONS = CONSULTATIONS.filter((item) => item.price === 0)
+// Calendly's current plan supports one active event type. The written Tender
+// Briefing does not require a calendar event, so it can be offered alongside
+// the free consultation while paid video consultations remain unavailable.
+export const PUBLIC_CONSULTATIONS = CONSULTATIONS.filter(
+  (item) => item.price === 0 || item.id === 'tender-briefing',
+)
