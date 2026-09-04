@@ -2714,6 +2714,10 @@ main button, main input, main select, main textarea, main .btn, main [class*="bu
   overflow-wrap: anywhere;
   word-break: normal;
 }
+#live-tender-search .tender-card__desc {
+  box-sizing: border-box;
+  padding-left: 4px;
+}
 #live-tender-search .tender-card__actions .btn { min-width: 0; text-align: center; }
 
 .tenders-main__saved {
